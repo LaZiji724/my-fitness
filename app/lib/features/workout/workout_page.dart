@@ -81,7 +81,11 @@ class _WorkoutBody extends ConsumerWidget {
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('继续练')),
           if (done == 0)
-            TextButton(onPressed: () => Navigator.pop(ctx, 'discard'), child: const Text('放弃训练'))
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, 'discard'),
+              style: TextButton.styleFrom(foregroundColor: context.colors.danger),
+              child: const Text('放弃训练'),
+            )
           else
             TextButton(onPressed: () => Navigator.pop(ctx, 'finish'), child: const Text('结束并保存')),
         ],

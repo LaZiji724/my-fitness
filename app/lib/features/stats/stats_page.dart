@@ -191,7 +191,7 @@ class _RangeTabs extends StatelessWidget {
                     height: 32,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: r == value ? c.surface : Colors.transparent,
+                      color: r == value ? c.raised : Colors.transparent,
                       borderRadius: BorderRadius.circular(9),
                     ),
                     child: Text(r.label,

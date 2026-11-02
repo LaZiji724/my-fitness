@@ -88,38 +88,72 @@ class ProgramDetailPage extends ConsumerWidget {
           ),
         ],
       ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, AppSpace.s12),
-          child: Row(
+      bottomNavigationBar: DecoratedBox(
+        decoration: BoxDecoration(
+          color: c.surface,
+          border: Border(top: BorderSide(color: c.line)),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(AppSpace.s8, AppSpace.s8, AppSpace.pageGutter, AppSpace.s8),
+            child: Row(
+              children: [
+                _BarAction(
+                  icon: isJoined ? Icons.event_available_rounded : Icons.playlist_add_rounded,
+                  label: isJoined ? '已加入' : '加入计划',
+                  highlighted: isJoined,
+                  onTap: () => joinProgram(context, ref, program),
+                ),
+                _BarAction(
+                  icon: Icons.calendar_month_outlined,
+                  label: '添加到日历',
+                  onTap: () => addProgramToCalendar(context, ref, program),
+                ),
+                const SizedBox(width: AppSpace.s8),
+                Expanded(
+                  child: FilledButton(
+                    style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
+                    onPressed: () => startNextSession(context, ref, program),
+                    child: const Text('去训练'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 底栏左侧的小操作：图标在上、文字在下，给「去训练」主按钮留出宽度。
+class _BarAction extends StatelessWidget {
+  const _BarAction({required this.icon, required this.label, required this.onTap, this.highlighted = false});
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final bool highlighted;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    final color = highlighted ? c.accentText : c.text;
+    return Semantics(
+      button: true,
+      label: label,
+      excludeSemantics: true,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: AppRadius.button,
+        child: SizedBox(
+          width: 68,
+          height: AppSize.buttonLarge,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(AppSize.buttonLarge), padding: EdgeInsets.zero),
-                  onPressed: () => joinProgram(context, ref, program),
-                  child: Text(isJoined ? '已加入' : '加入计划'),
-                ),
-              ),
-              const SizedBox(width: AppSpace.s8),
-              Expanded(
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(AppSize.buttonLarge), padding: EdgeInsets.zero),
-                  onPressed: () => addProgramToCalendar(context, ref, program),
-                  child: const Text('添加到日历'),
-                ),
-              ),
-              const SizedBox(width: AppSpace.s8),
-              Expanded(
-                flex: 12,
-                child: FilledButton(
-                  style: FilledButton.styleFrom(
-                      minimumSize: const Size.fromHeight(AppSize.buttonLarge), padding: EdgeInsets.zero),
-                  onPressed: () => startNextSession(context, ref, program),
-                  child: const Text('去训练'),
-                ),
-              ),
+              Icon(icon, size: 22, color: color),
+              const SizedBox(height: 2),
+              Text(label, style: AppText.caption.copyWith(color: color, fontWeight: FontWeight.w600)),
             ],
           ),
         ),
@@ -198,11 +232,9 @@ class _WeekStrip extends StatelessWidget {
                     color: program.schedule[i] == '.' ? c.sunken : c.accentSoft,
                     borderRadius: BorderRadius.circular(AppRadius.sm),
                   ),
-                  child: Text(
-                    program.schedule[i] == '.' ? '休' : program.schedule[i],
-                    style: AppText.numSmall
-                        .copyWith(color: program.schedule[i] == '.' ? c.text3 : c.accentText),
-                  ),
+                  child: program.schedule[i] == '.'
+                      ? Text('休', style: AppText.label.copyWith(color: c.text3))
+                      : Text(program.schedule[i], style: AppText.numSmall.copyWith(color: c.accentText)),
                 ),
               ],
             ),
@@ -243,8 +275,11 @@ class _SessionRow extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(session.name, style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
-                    Text('${session.items.length} 个动作 · ${session.totalSets} 组 · 约 ${session.minutes} 分钟 · ${session.focus}',
+                    const SizedBox(height: 2),
+                    Text('${session.items.length} 个动作 · ${session.totalSets} 组',
                         maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.label.copyWith(color: c.text2)),
+                    Text(['约 ${session.minutes} 分钟', if (session.focus.isNotEmpty) session.focus].join(' · '),
+                        maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption.copyWith(color: c.text3)),
                   ],
                 ),
               ),

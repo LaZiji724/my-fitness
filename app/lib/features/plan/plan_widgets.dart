@@ -120,7 +120,12 @@ Future<bool> confirmDialog(
       content: Text(message),
       actions: [
         TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('取消')),
-        TextButton(onPressed: () => Navigator.pop(ctx, true), child: Text(confirm)),
+        TextButton(
+          onPressed: () => Navigator.pop(ctx, true),
+          // 删除类操作用警示红，避免和普通确认混淆
+          style: confirm.contains('删除') ? TextButton.styleFrom(foregroundColor: ctx.colors.danger) : null,
+          child: Text(confirm),
+        ),
       ],
     ),
   );
@@ -219,7 +224,7 @@ class SegmentTabs extends StatelessWidget {
                       height: AppSize.segmented - 8,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: i == index ? c.surface : Colors.transparent,
+                        color: i == index ? c.raised : Colors.transparent,
                         borderRadius: BorderRadius.circular(AppRadius.md - 3),
                       ),
                       child: Text(

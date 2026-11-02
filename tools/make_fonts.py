@@ -2,8 +2,8 @@
 """生成 App 内置字体（均为 SIL OFL 授权）。
 
 - Noto Sans SC：从 Google Fonts 的可变字体切出 400/500/700 三个静态字重，
-  并裁剪到 GB2312 常用汉字 + ASCII + 常用标点（体积从 17MB/份降到约 2–3MB/份）。
-  App 里偶尔出现的生僻字会自动回退到系统字体。
+  并裁剪到 GB2312 常用汉字 + ASCII + 常用标点（体积从 17MB/份降到约 2–3MB/份），
+  再补上 App 代码和内置数据里实际用到的字（如「腘」「−」「⌫」），保证界面里不出现回退字体。
 - Barlow Condensed：直接下载 500/600/700 三个静态字重（数字专用，体积很小）。
 
 用法：
@@ -41,8 +41,16 @@ def gb2312_chars() -> str:
     return "".join(chars)
 
 
+def app_chars() -> set[int]:
+    """App 源码与内置数据（动作库、计划库）里出现的所有非 ASCII 字符。"""
+    app = OUT.parent.parent
+    files = [p for p in (app / "lib").rglob("*.dart") if not p.name.endswith(".g.dart")]
+    files += list((app / "assets" / "seed").glob("*.json"))
+    return {ord(c) for p in files for c in p.read_text(encoding="utf-8") if ord(c) > 0x7F}
+
+
 def unicodes() -> list[int]:
-    cps = set(ord(c) for c in gb2312_chars())
+    cps = set(ord(c) for c in gb2312_chars()) | app_chars()
     for a, b in [(0x20, 0x7E), (0xA0, 0xFF), (0x2000, 0x206F), (0x2190, 0x21FF),
                  (0x2460, 0x24FF), (0x25A0, 0x25FF), (0x2600, 0x26FF), (0x2700, 0x27BF),
                  (0x3000, 0x303F), (0xFF00, 0xFFEF)]:

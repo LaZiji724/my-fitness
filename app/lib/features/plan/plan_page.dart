@@ -346,17 +346,26 @@ class _TemplateCard extends StatelessWidget {
         onTap: () => context.push('/template/${view.template.id}'),
         child: Padding(
           padding: const EdgeInsets.all(AppSpace.cardPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Text(view.template.name, style: AppText.titleSmall.copyWith(color: c.text)),
-              const SizedBox(height: 2),
-              Text('${view.exercises.length} 个动作 · $sets 组',
-                  style: AppText.label.copyWith(color: c.text2)),
-              if (names.isNotEmpty) ...[
-                const SizedBox(height: AppSpace.s8),
-                Text(names, maxLines: 2, overflow: TextOverflow.ellipsis, style: AppText.label.copyWith(color: c.text3)),
-              ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(view.template.name, style: AppText.titleSmall.copyWith(color: c.text)),
+                    const SizedBox(height: 2),
+                    Text('${view.exercises.length} 个动作 · $sets 组',
+                        style: AppText.label.copyWith(color: c.text2)),
+                    if (names.isNotEmpty) ...[
+                      const SizedBox(height: AppSpace.s8),
+                      Text(names,
+                          maxLines: 2, overflow: TextOverflow.ellipsis, style: AppText.label.copyWith(color: c.text3)),
+                    ],
+                  ],
+                ),
+              ),
+              const SizedBox(width: AppSpace.s8),
+              Icon(Icons.chevron_right_rounded, color: c.text3),
             ],
           ),
         ),

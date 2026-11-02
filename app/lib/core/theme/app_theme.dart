@@ -39,6 +39,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.bg,
     required this.surface,
     required this.sunken,
+    required this.raised,
     required this.line,
     required this.text,
     required this.text2,
@@ -76,6 +77,9 @@ class AppColors extends ThemeExtension<AppColors> {
 
   /// 输入框、数字格、次要按钮、凹槽
   final Color sunken;
+
+  /// 凹槽里被选中的那一块（分段切换的选中项）：浅色是白，深色比凹槽亮一档
+  final Color raised;
 
   /// 分隔线、未选中描边
   final Color line;
@@ -136,6 +140,7 @@ class AppColors extends ThemeExtension<AppColors> {
     bg: Color(0xFFF3F2EF),
     surface: Color(0xFFFFFFFF),
     sunken: Color(0xFFECEAE6),
+    raised: Color(0xFFFFFFFF),
     line: Color(0xFFE2E0DB),
     text: Color(0xFF141416),
     text2: Color(0xFF55545A),
@@ -175,6 +180,7 @@ class AppColors extends ThemeExtension<AppColors> {
     bg: Color(0xFF0D0D0F),
     surface: Color(0xFF17171A),
     sunken: Color(0xFF222226),
+    raised: Color(0xFF34343A),
     line: Color(0xFF2A2A2F),
     text: Color(0xFFF3F2EF),
     text2: Color(0xFFA6A5AB),
@@ -291,11 +297,14 @@ abstract final class AppText {
   static const String numeric = 'BarlowCondensed';
   static const List<FontFeature> _tnum = [FontFeature.tabularFigures()];
 
+  /// 数字样式里偶尔夹带的中文（「休」「入门」「天」）回退到思源黑体，不出现方块或系统字体。
+  static const List<String> _numFallback = [sans];
+
   // 数字
-  static const numDisplay = TextStyle(fontFamily: numeric, fontSize: 56, height: 1.0, fontWeight: FontWeight.w600, fontFeatures: _tnum);
-  static const numLarge = TextStyle(fontFamily: numeric, fontSize: 34, height: 1.1, fontWeight: FontWeight.w600, fontFeatures: _tnum);
-  static const numMedium = TextStyle(fontFamily: numeric, fontSize: 22, height: 1.2, fontWeight: FontWeight.w600, fontFeatures: _tnum);
-  static const numSmall = TextStyle(fontFamily: numeric, fontSize: 17, height: 1.2, fontWeight: FontWeight.w600, fontFeatures: _tnum);
+  static const numDisplay = TextStyle(fontFamily: numeric, fontSize: 56, height: 1.0, fontWeight: FontWeight.w600, fontFeatures: _tnum, fontFamilyFallback: _numFallback);
+  static const numLarge = TextStyle(fontFamily: numeric, fontSize: 34, height: 1.1, fontWeight: FontWeight.w600, fontFeatures: _tnum, fontFamilyFallback: _numFallback);
+  static const numMedium = TextStyle(fontFamily: numeric, fontSize: 22, height: 1.2, fontWeight: FontWeight.w600, fontFeatures: _tnum, fontFamilyFallback: _numFallback);
+  static const numSmall = TextStyle(fontFamily: numeric, fontSize: 17, height: 1.2, fontWeight: FontWeight.w600, fontFeatures: _tnum, fontFamilyFallback: _numFallback);
 
   // 文字
   static const titleLarge = TextStyle(fontFamily: sans, fontSize: 28, height: 1.25, fontWeight: FontWeight.w700);
@@ -442,8 +451,10 @@ abstract final class AppTheme {
       segmentedButtonTheme: SegmentedButtonThemeData(
         style: ButtonStyle(
           minimumSize: const WidgetStatePropertyAll(Size(0, AppSize.segmented)),
-          backgroundColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? c.surface : c.sunken),
-          foregroundColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? c.text : c.text2),
+          // 选中项用「墨色」实心块（与筛选胶囊一致），放在白卡片上也一眼能看出选了哪个
+          backgroundColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? c.text : c.sunken),
+          foregroundColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? c.bg : c.text2),
+          textStyle: WidgetStatePropertyAll(AppText.label.copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
           side: const WidgetStatePropertyAll(BorderSide.none),
           shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(11))),
         ),
@@ -481,6 +492,33 @@ abstract final class AppTheme {
         dragHandleColor: c.line,
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl))),
       ),
+      // 对话框与弹出菜单：白底大圆角，和卡片同一套语言（默认会用凹槽灰做底）
+      dialogTheme: DialogThemeData(
+        backgroundColor: c.surface,
+        surfaceTintColor: Colors.transparent,
+        barrierColor: c.scrim,
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.card),
+        titleTextStyle: t(AppText.titleMedium, c.text),
+        contentTextStyle: t(AppText.body, c.text2),
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: c.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 6,
+        shadowColor: const Color(0x33000000),
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.button, side: BorderSide(color: c.line)),
+        textStyle: t(AppText.body, c.text),
+        labelTextStyle: WidgetStatePropertyAll(t(AppText.body, c.text)),
+      ),
+      datePickerTheme: DatePickerThemeData(
+        backgroundColor: c.surface,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: AppRadius.card),
+        headerBackgroundColor: c.hero,
+        headerForegroundColor: c.onHero,
+      ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(color: c.accent, linearTrackColor: c.sunken),
+      listTileTheme: ListTileThemeData(iconColor: c.text2, textColor: c.text),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: c.hero,
         contentTextStyle: t(AppText.body, c.onHero),

@@ -93,6 +93,11 @@ class TodayPage extends ConsumerWidget {
 
     final tpl = entry?.template;
     final tplSets = tpl?.exercises.fold<int>(0, (n, e) => n + e.targetSets) ?? 0;
+    final byId = ref.watch(exerciseByIdProvider);
+    // 今日计划卡片里预览前几个动作，开练前心里有数
+    final preview = active == null && tpl != null
+        ? tpl.exercises.map((e) => byId[e.exerciseId]?.nameZh).whereType<String>().take(4).join(' · ')
+        : '';
 
     String heroLabel;
     String heroTitle;
@@ -166,11 +171,33 @@ class TodayPage extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(heroLabel, style: AppText.label.copyWith(color: c.onHero2)),
+                    Row(
+                      children: [
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(color: c.accent, shape: BoxShape.circle),
+                        ),
+                        const SizedBox(width: AppSpace.s8),
+                        Expanded(
+                          child: Text(heroLabel,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppText.label.copyWith(color: c.onHero2)),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: AppSpace.s8),
                     Text(heroTitle, style: AppText.titleMedium.copyWith(color: c.onHero)),
                     const SizedBox(height: AppSpace.s4),
                     Text(heroSub, style: AppText.body.copyWith(color: c.onHero2)),
+                    if (preview.isNotEmpty) ...[
+                      const SizedBox(height: AppSpace.s12),
+                      Text(preview,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppText.label.copyWith(color: c.onHero)),
+                    ],
                     const SizedBox(height: AppSpace.s16),
                     FilledButton(
                       style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
