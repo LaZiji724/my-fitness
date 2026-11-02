@@ -1,0 +1,3 @@
+动作数量：235
+图片数量：470，总大小 8.3 MB，平均 18 KB
+部位分布：arms 55，back 32，chest 34，core 23，glutes 8，legs 52，shoulders 31
