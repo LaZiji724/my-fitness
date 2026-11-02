@@ -1,0 +1,29 @@
+# Supabase 免费版 7 天没有请求会暂停项目。每周发一次读请求，保持项目活跃。
+# 需要在仓库 Settings → Secrets and variables → Actions 里添加：
+#   SUPABASE_URL        例如 https://xxxx.supabase.co
+#   SUPABASE_ANON_KEY   anon / publishable key（可公开的那一把，不是 service_role）
+# 平时每天用 App 的话不需要这个；长时间不用（出差、休训）时它能防止暂停。
+name: supabase-keepalive
+
+on:
+  schedule:
+    - cron: "17 3 * * 1"   # 每周一 03:17 UTC
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 请求一次动作库（只读）
+        env:
+          URL: ${{ secrets.SUPABASE_URL }}
+          KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$URL" ] || [ -z "$KEY" ]; then
+            echo "还没有配置 SUPABASE_URL / SUPABASE_ANON_KEY，跳过"; exit 0
+          fi
+          code=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "apikey: $KEY" -H "Authorization: Bearer $KEY" \
+            "$URL/rest/v1/exercises?select=id&limit=1")
+          echo "HTTP $code"
+          test "$code" = "200"

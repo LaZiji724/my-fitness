@@ -1,0 +1,4706 @@
+[
+ {
+  "id": "378a864f-f8d0-5178-9e5e-6fa9bc25d173",
+  "slug": "Barbell_Bench_Press_-_Medium_Grip",
+  "name_zh": "杠铃卧推",
+  "name_en": "Barbell Bench Press - Medium Grip",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Barbell_Bench_Press_-_Medium_Grip/0.webp",
+   "Barbell_Bench_Press_-_Medium_Grip/1.webp"
+  ]
+ },
+ {
+  "id": "9de4411c-12db-57e7-8d0e-4191c581efa9",
+  "slug": "Wide-Grip_Barbell_Bench_Press",
+  "name_zh": "宽握杠铃卧推",
+  "name_en": "Wide-Grip Barbell Bench Press",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Wide-Grip_Barbell_Bench_Press/0.webp",
+   "Wide-Grip_Barbell_Bench_Press/1.webp"
+  ]
+ },
+ {
+  "id": "a1d6b53b-6feb-52a3-a5d6-d2c83f39a98b",
+  "slug": "Close-Grip_Barbell_Bench_Press",
+  "name_zh": "窄握杠铃卧推",
+  "name_en": "Close-Grip Barbell Bench Press",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [
+   "chest",
+   "shoulders"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Close-Grip_Barbell_Bench_Press/0.webp",
+   "Close-Grip_Barbell_Bench_Press/1.webp"
+  ]
+ },
+ {
+  "id": "54d9a924-55f9-55f0-8e1f-a7a4787cb448",
+  "slug": "Barbell_Incline_Bench_Press_-_Medium_Grip",
+  "name_zh": "杠铃上斜卧推",
+  "name_en": "Barbell Incline Bench Press - Medium Grip",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Barbell_Incline_Bench_Press_-_Medium_Grip/0.webp",
+   "Barbell_Incline_Bench_Press_-_Medium_Grip/1.webp"
+  ]
+ },
+ {
+  "id": "8e0cccf1-c5fb-5bc5-873f-17fdb02e9511",
+  "slug": "Decline_Barbell_Bench_Press",
+  "name_zh": "杠铃下斜卧推",
+  "name_en": "Decline Barbell Bench Press",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Decline_Barbell_Bench_Press/0.webp",
+   "Decline_Barbell_Bench_Press/1.webp"
+  ]
+ },
+ {
+  "id": "d22e6834-55c6-5512-9f38-3b4ee661d91f",
+  "slug": "Dumbbell_Bench_Press",
+  "name_zh": "哑铃卧推",
+  "name_en": "Dumbbell Bench Press",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dumbbell_Bench_Press/0.webp",
+   "Dumbbell_Bench_Press/1.webp"
+  ]
+ },
+ {
+  "id": "6d0ff0d0-bd47-5899-9a2a-beeea57af0f0",
+  "slug": "Incline_Dumbbell_Press",
+  "name_zh": "哑铃上斜卧推",
+  "name_en": "Incline Dumbbell Press",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Incline_Dumbbell_Press/0.webp",
+   "Incline_Dumbbell_Press/1.webp"
+  ]
+ },
+ {
+  "id": "28ed3b39-9a05-57b6-9868-db1015b719e5",
+  "slug": "Decline_Dumbbell_Bench_Press",
+  "name_zh": "哑铃下斜卧推",
+  "name_en": "Decline Dumbbell Bench Press",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Decline_Dumbbell_Bench_Press/0.webp",
+   "Decline_Dumbbell_Bench_Press/1.webp"
+  ]
+ },
+ {
+  "id": "846bc2b6-0645-5c80-936f-e70f716b403c",
+  "slug": "Dumbbell_Floor_Press",
+  "name_zh": "哑铃地板卧推",
+  "name_en": "Dumbbell Floor Press",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [
+   "chest",
+   "shoulders"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dumbbell_Floor_Press/0.webp",
+   "Dumbbell_Floor_Press/1.webp"
+  ]
+ },
+ {
+  "id": "427fe537-9b31-56f3-95b2-4222d7503b63",
+  "slug": "One_Arm_Dumbbell_Bench_Press",
+  "name_zh": "单臂哑铃卧推",
+  "name_en": "One Arm Dumbbell Bench Press",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "One_Arm_Dumbbell_Bench_Press/0.webp",
+   "One_Arm_Dumbbell_Bench_Press/1.webp"
+  ]
+ },
+ {
+  "id": "d45f2310-8721-56b1-9bd1-1834b85a0afb",
+  "slug": "Dumbbell_Flyes",
+  "name_zh": "哑铃飞鸟",
+  "name_en": "Dumbbell Flyes",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dumbbell_Flyes/0.webp",
+   "Dumbbell_Flyes/1.webp"
+  ]
+ },
+ {
+  "id": "a1fb8c12-3517-5b22-b64b-24bac7ca50eb",
+  "slug": "Incline_Dumbbell_Flyes",
+  "name_zh": "哑铃上斜飞鸟",
+  "name_en": "Incline Dumbbell Flyes",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Incline_Dumbbell_Flyes/0.webp",
+   "Incline_Dumbbell_Flyes/1.webp"
+  ]
+ },
+ {
+  "id": "4904e6b5-f1a8-524e-b89e-417c7bcb1cd9",
+  "slug": "Decline_Dumbbell_Flyes",
+  "name_zh": "哑铃下斜飞鸟",
+  "name_en": "Decline Dumbbell Flyes",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Decline_Dumbbell_Flyes/0.webp",
+   "Decline_Dumbbell_Flyes/1.webp"
+  ]
+ },
+ {
+  "id": "3b06f9bd-1c5a-5c32-83e7-1581562a4bea",
+  "slug": "Machine_Bench_Press",
+  "name_zh": "器械坐姿推胸",
+  "name_en": "Machine Bench Press",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Machine_Bench_Press/0.webp",
+   "Machine_Bench_Press/1.webp"
+  ]
+ },
+ {
+  "id": "e9b4460e-bda0-5dd4-92e0-44be6e7539b6",
+  "slug": "Leverage_Chest_Press",
+  "name_zh": "杠杆式推胸机",
+  "name_en": "Leverage Chest Press",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Leverage_Chest_Press/0.webp",
+   "Leverage_Chest_Press/1.webp"
+  ]
+ },
+ {
+  "id": "18c61cc0-997f-5390-a511-ca9576c2a011",
+  "slug": "Leverage_Incline_Chest_Press",
+  "name_zh": "杠杆式上斜推胸机",
+  "name_en": "Leverage Incline Chest Press",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Leverage_Incline_Chest_Press/0.webp",
+   "Leverage_Incline_Chest_Press/1.webp"
+  ]
+ },
+ {
+  "id": "8d3c4cc2-a8b1-5299-a187-415672a906b6",
+  "slug": "Leverage_Decline_Chest_Press",
+  "name_zh": "杠杆式下斜推胸机",
+  "name_en": "Leverage Decline Chest Press",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Leverage_Decline_Chest_Press/0.webp",
+   "Leverage_Decline_Chest_Press/1.webp"
+  ]
+ },
+ {
+  "id": "5dbd147c-5ac3-5207-8330-7140e1f7af4e",
+  "slug": "Butterfly",
+  "name_zh": "蝴蝶机夹胸",
+  "name_en": "Butterfly",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Butterfly/0.webp",
+   "Butterfly/1.webp"
+  ]
+ },
+ {
+  "id": "c22c5163-f3c2-5d13-8dce-9fab40231c12",
+  "slug": "Cable_Crossover",
+  "name_zh": "龙门架夹胸",
+  "name_en": "Cable Crossover",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Cable_Crossover/0.webp",
+   "Cable_Crossover/1.webp"
+  ]
+ },
+ {
+  "id": "3f686c67-35ea-5592-9fba-ad4f8409528e",
+  "slug": "Low_Cable_Crossover",
+  "name_zh": "绳索低位夹胸",
+  "name_en": "Low Cable Crossover",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Low_Cable_Crossover/0.webp",
+   "Low_Cable_Crossover/1.webp"
+  ]
+ },
+ {
+  "id": "412a2945-998c-5e1a-b7bc-d66d384ca997",
+  "slug": "Single-Arm_Cable_Crossover",
+  "name_zh": "单臂绳索夹胸",
+  "name_en": "Single-Arm Cable Crossover",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Single-Arm_Cable_Crossover/0.webp",
+   "Single-Arm_Cable_Crossover/1.webp"
+  ]
+ },
+ {
+  "id": "065244e6-bef9-5f96-9cc6-7f692c37680c",
+  "slug": "Cable_Chest_Press",
+  "name_zh": "绳索推胸",
+  "name_en": "Cable Chest Press",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Cable_Chest_Press/0.webp",
+   "Cable_Chest_Press/1.webp"
+  ]
+ },
+ {
+  "id": "91b3d867-703a-5322-8896-64c63fb3d26d",
+  "slug": "Standing_Cable_Chest_Press",
+  "name_zh": "站姿绳索推胸",
+  "name_en": "Standing Cable Chest Press",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Standing_Cable_Chest_Press/0.webp",
+   "Standing_Cable_Chest_Press/1.webp"
+  ]
+ },
+ {
+  "id": "ee657c05-068f-519e-ab68-c63e6b7c2cb4",
+  "slug": "Incline_Cable_Chest_Press",
+  "name_zh": "绳索上斜推胸",
+  "name_en": "Incline Cable Chest Press",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Incline_Cable_Chest_Press/0.webp",
+   "Incline_Cable_Chest_Press/1.webp"
+  ]
+ },
+ {
+  "id": "2246896d-703d-58ac-b524-35efd4a60301",
+  "slug": "Flat_Bench_Cable_Flyes",
+  "name_zh": "平凳绳索飞鸟",
+  "name_en": "Flat Bench Cable Flyes",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Flat_Bench_Cable_Flyes/0.webp",
+   "Flat_Bench_Cable_Flyes/1.webp"
+  ]
+ },
+ {
+  "id": "5f77f7d4-1669-5016-afd7-9c01da251a0c",
+  "slug": "Incline_Cable_Flye",
+  "name_zh": "绳索上斜飞鸟",
+  "name_en": "Incline Cable Flye",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Incline_Cable_Flye/0.webp",
+   "Incline_Cable_Flye/1.webp"
+  ]
+ },
+ {
+  "id": "92694451-0ebb-5d8a-8b93-25f77c3fc314",
+  "slug": "Smith_Machine_Bench_Press",
+  "name_zh": "史密斯卧推",
+  "name_en": "Smith Machine Bench Press",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Smith_Machine_Bench_Press/0.webp",
+   "Smith_Machine_Bench_Press/1.webp"
+  ]
+ },
+ {
+  "id": "b93eddf9-e4a2-5949-adfe-dfe97498a997",
+  "slug": "Smith_Machine_Incline_Bench_Press",
+  "name_zh": "史密斯上斜卧推",
+  "name_en": "Smith Machine Incline Bench Press",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Smith_Machine_Incline_Bench_Press/0.webp",
+   "Smith_Machine_Incline_Bench_Press/1.webp"
+  ]
+ },
+ {
+  "id": "ee4c7919-f9e9-5b90-a539-3625d774f3fd",
+  "slug": "Smith_Machine_Decline_Press",
+  "name_zh": "史密斯下斜卧推",
+  "name_en": "Smith Machine Decline Press",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Smith_Machine_Decline_Press/0.webp",
+   "Smith_Machine_Decline_Press/1.webp"
+  ]
+ },
+ {
+  "id": "096cc1ad-f139-53e9-8a9c-b48c5b826fd6",
+  "slug": "Pushups",
+  "name_zh": "俯卧撑",
+  "name_en": "Pushups",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Pushups/0.webp",
+   "Pushups/1.webp"
+  ]
+ },
+ {
+  "id": "6138a0ba-1fcd-557b-819e-3c1cfb1d16ad",
+  "slug": "Push-Up_Wide",
+  "name_zh": "宽距俯卧撑",
+  "name_en": "Push-Up Wide",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "abdominals",
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Push-Up_Wide/0.webp",
+   "Push-Up_Wide/1.webp"
+  ]
+ },
+ {
+  "id": "21f87f4a-ad05-50dd-a7f9-de8295a2d360",
+  "slug": "Push-Ups_-_Close_Triceps_Position",
+  "name_zh": "窄距俯卧撑",
+  "name_en": "Push-Ups - Close Triceps Position",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [
+   "chest",
+   "shoulders"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Push-Ups_-_Close_Triceps_Position/0.webp",
+   "Push-Ups_-_Close_Triceps_Position/1.webp"
+  ]
+ },
+ {
+  "id": "3abbc122-f8aa-5141-aea3-394200db79c5",
+  "slug": "Push-Ups_With_Feet_Elevated",
+  "name_zh": "脚抬高俯卧撑",
+  "name_en": "Push-Ups With Feet Elevated",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Push-Ups_With_Feet_Elevated/0.webp",
+   "Push-Ups_With_Feet_Elevated/1.webp"
+  ]
+ },
+ {
+  "id": "83404192-e5a9-5b98-8351-b41fe58cc8f2",
+  "slug": "Incline_Push-Up",
+  "name_zh": "上斜俯卧撑",
+  "name_en": "Incline Push-Up",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Incline_Push-Up/0.webp",
+   "Incline_Push-Up/1.webp"
+  ]
+ },
+ {
+  "id": "b9c762af-2671-5744-a6ef-1698f306bfee",
+  "slug": "Dips_-_Chest_Version",
+  "name_zh": "双杠臂屈伸（胸）",
+  "name_en": "Dips - Chest Version",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "other",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dips_-_Chest_Version/0.webp",
+   "Dips_-_Chest_Version/1.webp"
+  ]
+ },
+ {
+  "id": "a332ef9f-da18-55b3-aa09-8b88c01a99a8",
+  "slug": "Dips_-_Triceps_Version",
+  "name_zh": "双杠臂屈伸（三头）",
+  "name_en": "Dips - Triceps Version",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [
+   "chest",
+   "shoulders"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dips_-_Triceps_Version/0.webp",
+   "Dips_-_Triceps_Version/1.webp"
+  ]
+ },
+ {
+  "id": "aebd9e13-785e-563e-945c-6f47cba4e9ab",
+  "slug": "Dip_Machine",
+  "name_zh": "臂屈伸机",
+  "name_en": "Dip Machine",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [
+   "chest",
+   "shoulders"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dip_Machine/0.webp",
+   "Dip_Machine/1.webp"
+  ]
+ },
+ {
+  "id": "71a49a3f-f19c-59c8-86e2-9c60a1a7b062",
+  "slug": "Bench_Dips",
+  "name_zh": "凳上臂屈伸",
+  "name_en": "Bench Dips",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [
+   "chest",
+   "shoulders"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Bench_Dips/0.webp",
+   "Bench_Dips/1.webp"
+  ]
+ },
+ {
+  "id": "9a0f259e-7326-5449-a78d-ad53de1c59fa",
+  "slug": "Pullups",
+  "name_zh": "引体向上",
+  "name_en": "Pullups",
+  "body_part": "back",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "middle back"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Pullups/0.webp",
+   "Pullups/1.webp"
+  ]
+ },
+ {
+  "id": "befa3b2f-2d52-5536-bbdb-0a61f42f88e0",
+  "slug": "Chin-Up",
+  "name_zh": "反握引体向上",
+  "name_en": "Chin-Up",
+  "body_part": "back",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "forearms",
+   "middle back"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Chin-Up/0.webp",
+   "Chin-Up/1.webp"
+  ]
+ },
+ {
+  "id": "170ebc20-89a9-53ad-b2f2-d2edd13225c7",
+  "slug": "V-Bar_Pullup",
+  "name_zh": "对握引体向上",
+  "name_en": "V-Bar Pullup",
+  "body_part": "back",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "middle back",
+   "shoulders"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "V-Bar_Pullup/0.webp",
+   "V-Bar_Pullup/1.webp"
+  ]
+ },
+ {
+  "id": "24d061e9-cec2-539a-8f26-c979b139e8cd",
+  "slug": "Wide-Grip_Lat_Pulldown",
+  "name_zh": "宽握高位下拉",
+  "name_en": "Wide-Grip Lat Pulldown",
+  "body_part": "back",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "middle back",
+   "shoulders"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Wide-Grip_Lat_Pulldown/0.webp",
+   "Wide-Grip_Lat_Pulldown/1.webp"
+  ]
+ },
+ {
+  "id": "b5699115-ed15-5da5-aa36-e97f376b5f8e",
+  "slug": "Close-Grip_Front_Lat_Pulldown",
+  "name_zh": "窄握高位下拉",
+  "name_en": "Close-Grip Front Lat Pulldown",
+  "body_part": "back",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "middle back",
+   "shoulders"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Close-Grip_Front_Lat_Pulldown/0.webp",
+   "Close-Grip_Front_Lat_Pulldown/1.webp"
+  ]
+ },
+ {
+  "id": "571fae33-976d-55eb-b94a-23c040fa43b1",
+  "slug": "V-Bar_Pulldown",
+  "name_zh": "V 把高位下拉",
+  "name_en": "V-Bar Pulldown",
+  "body_part": "back",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "middle back",
+   "shoulders"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "V-Bar_Pulldown/0.webp",
+   "V-Bar_Pulldown/1.webp"
+  ]
+ },
+ {
+  "id": "a6b40546-2942-58c8-85cb-b941521e163d",
+  "slug": "Underhand_Cable_Pulldowns",
+  "name_zh": "反握高位下拉",
+  "name_en": "Underhand Cable Pulldowns",
+  "body_part": "back",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "middle back",
+   "shoulders"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Underhand_Cable_Pulldowns/0.webp",
+   "Underhand_Cable_Pulldowns/1.webp"
+  ]
+ },
+ {
+  "id": "84894526-a744-5cb7-a66a-b841d83994d6",
+  "slug": "One_Arm_Lat_Pulldown",
+  "name_zh": "单臂高位下拉",
+  "name_en": "One Arm Lat Pulldown",
+  "body_part": "back",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "middle back"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "One_Arm_Lat_Pulldown/0.webp",
+   "One_Arm_Lat_Pulldown/1.webp"
+  ]
+ },
+ {
+  "id": "9d0dee02-054d-50e3-96a2-6db829ab4d07",
+  "slug": "Straight-Arm_Pulldown",
+  "name_zh": "直臂下压",
+  "name_en": "Straight-Arm Pulldown",
+  "body_part": "back",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Straight-Arm_Pulldown/0.webp",
+   "Straight-Arm_Pulldown/1.webp"
+  ]
+ },
+ {
+  "id": "ae24ef97-9ea3-54db-ae77-576859123f70",
+  "slug": "Rope_Straight-Arm_Pulldown",
+  "name_zh": "绳索直臂下压",
+  "name_en": "Rope Straight-Arm Pulldown",
+  "body_part": "back",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Rope_Straight-Arm_Pulldown/0.webp",
+   "Rope_Straight-Arm_Pulldown/1.webp"
+  ]
+ },
+ {
+  "id": "77e37fe1-ea24-5b67-9a81-ddff79bb8ebf",
+  "slug": "Seated_Cable_Rows",
+  "name_zh": "坐姿绳索划船",
+  "name_en": "Seated Cable Rows",
+  "body_part": "back",
+  "primary_muscles": [
+   "middle back"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "lats",
+   "shoulders"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Seated_Cable_Rows/0.webp",
+   "Seated_Cable_Rows/1.webp"
+  ]
+ },
+ {
+  "id": "b7faa91a-6dc1-5112-ac5b-62e46591e4f4",
+  "slug": "Seated_One-arm_Cable_Pulley_Rows",
+  "name_zh": "坐姿单臂绳索划船",
+  "name_en": "Seated One-arm Cable Pulley Rows",
+  "body_part": "back",
+  "primary_muscles": [
+   "middle back"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "lats",
+   "traps"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Seated_One-arm_Cable_Pulley_Rows/0.webp",
+   "Seated_One-arm_Cable_Pulley_Rows/1.webp"
+  ]
+ },
+ {
+  "id": "bf4a077d-6d4e-50e3-a563-64d1e986f6d3",
+  "slug": "Bent_Over_Barbell_Row",
+  "name_zh": "杠铃俯身划船",
+  "name_en": "Bent Over Barbell Row",
+  "body_part": "back",
+  "primary_muscles": [
+   "middle back"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "lats",
+   "shoulders"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Bent_Over_Barbell_Row/0.webp",
+   "Bent_Over_Barbell_Row/1.webp"
+  ]
+ },
+ {
+  "id": "a2e8801f-4149-5588-8286-82717b57f625",
+  "slug": "Reverse_Grip_Bent-Over_Rows",
+  "name_zh": "反握杠铃划船",
+  "name_en": "Reverse Grip Bent-Over Rows",
+  "body_part": "back",
+  "primary_muscles": [
+   "middle back"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "lats",
+   "shoulders"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Reverse_Grip_Bent-Over_Rows/0.webp",
+   "Reverse_Grip_Bent-Over_Rows/1.webp"
+  ]
+ },
+ {
+  "id": "459d548f-01a4-54e7-a04e-9609df191a4e",
+  "slug": "One-Arm_Dumbbell_Row",
+  "name_zh": "单臂哑铃划船",
+  "name_en": "One-Arm Dumbbell Row",
+  "body_part": "back",
+  "primary_muscles": [
+   "middle back"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "lats",
+   "shoulders"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "One-Arm_Dumbbell_Row/0.webp",
+   "One-Arm_Dumbbell_Row/1.webp"
+  ]
+ },
+ {
+  "id": "eaf2b97e-41d8-530b-bc48-52de5645614a",
+  "slug": "Bent_Over_Two-Dumbbell_Row",
+  "name_zh": "双哑铃俯身划船",
+  "name_en": "Bent Over Two-Dumbbell Row",
+  "body_part": "back",
+  "primary_muscles": [
+   "middle back"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "lats",
+   "shoulders"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Bent_Over_Two-Dumbbell_Row/0.webp",
+   "Bent_Over_Two-Dumbbell_Row/1.webp"
+  ]
+ },
+ {
+  "id": "42491a09-c215-5123-a68a-d01a6a9cf510",
+  "slug": "Dumbbell_Incline_Row",
+  "name_zh": "上斜凳哑铃划船",
+  "name_en": "Dumbbell Incline Row",
+  "body_part": "back",
+  "primary_muscles": [
+   "middle back"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "forearms",
+   "lats",
+   "shoulders"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dumbbell_Incline_Row/0.webp",
+   "Dumbbell_Incline_Row/1.webp"
+  ]
+ },
+ {
+  "id": "69566b41-f75f-51ed-834d-0dcedba35329",
+  "slug": "T-Bar_Row_with_Handle",
+  "name_zh": "T 杠划船",
+  "name_en": "T-Bar Row with Handle",
+  "body_part": "back",
+  "primary_muscles": [
+   "middle back"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "lats"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "T-Bar_Row_with_Handle/0.webp",
+   "T-Bar_Row_with_Handle/1.webp"
+  ]
+ },
+ {
+  "id": "07334899-473f-5f76-803e-5bcf16a574dd",
+  "slug": "Lying_T-Bar_Row",
+  "name_zh": "俯卧 T 杠划船",
+  "name_en": "Lying T-Bar Row",
+  "body_part": "back",
+  "primary_muscles": [
+   "middle back"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "lats"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Lying_T-Bar_Row/0.webp",
+   "Lying_T-Bar_Row/1.webp"
+  ]
+ },
+ {
+  "id": "3e9bb2cb-d48e-5085-9909-04e21c9d07aa",
+  "slug": "Leverage_High_Row",
+  "name_zh": "杠杆式高位划船",
+  "name_en": "Leverage High Row",
+  "body_part": "back",
+  "primary_muscles": [
+   "middle back"
+  ],
+  "secondary_muscles": [
+   "lats"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Leverage_High_Row/0.webp",
+   "Leverage_High_Row/1.webp"
+  ]
+ },
+ {
+  "id": "26341bda-113d-53eb-b8c5-73b492a01509",
+  "slug": "Leverage_Iso_Row",
+  "name_zh": "杠杆式单侧划船",
+  "name_en": "Leverage Iso Row",
+  "body_part": "back",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "middle back"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Leverage_Iso_Row/0.webp",
+   "Leverage_Iso_Row/1.webp"
+  ]
+ },
+ {
+  "id": "20d1e1dd-b2b7-5459-8f9a-2cea517b8b9c",
+  "slug": "Smith_Machine_Bent_Over_Row",
+  "name_zh": "史密斯俯身划船",
+  "name_en": "Smith Machine Bent Over Row",
+  "body_part": "back",
+  "primary_muscles": [
+   "middle back"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "lats",
+   "shoulders"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Smith_Machine_Bent_Over_Row/0.webp",
+   "Smith_Machine_Bent_Over_Row/1.webp"
+  ]
+ },
+ {
+  "id": "854b5180-abf3-5d60-9d06-17d1f5041b34",
+  "slug": "Bent-Arm_Barbell_Pullover",
+  "name_zh": "杠铃屈臂上拉",
+  "name_en": "Bent-Arm Barbell Pullover",
+  "body_part": "back",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [
+   "chest",
+   "lats",
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Bent-Arm_Barbell_Pullover/0.webp",
+   "Bent-Arm_Barbell_Pullover/1.webp"
+  ]
+ },
+ {
+  "id": "8e144954-037a-50e3-9a79-bfc434cfcc35",
+  "slug": "Bent-Arm_Dumbbell_Pullover",
+  "name_zh": "哑铃屈臂上拉",
+  "name_en": "Bent-Arm Dumbbell Pullover",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "lats",
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Bent-Arm_Dumbbell_Pullover/0.webp",
+   "Bent-Arm_Dumbbell_Pullover/1.webp"
+  ]
+ },
+ {
+  "id": "b74d4026-797e-51c8-9d9f-768fbdeb01d9",
+  "slug": "Straight-Arm_Dumbbell_Pullover",
+  "name_zh": "哑铃直臂上拉",
+  "name_en": "Straight-Arm Dumbbell Pullover",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "lats",
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Straight-Arm_Dumbbell_Pullover/0.webp",
+   "Straight-Arm_Dumbbell_Pullover/1.webp"
+  ]
+ },
+ {
+  "id": "8c04182f-2d28-5e4b-a1b1-5f91f1eb0cd2",
+  "slug": "Barbell_Deadlift",
+  "name_zh": "杠铃硬拉",
+  "name_en": "Barbell Deadlift",
+  "body_part": "back",
+  "primary_muscles": [
+   "lower back"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "forearms",
+   "glutes",
+   "hamstrings",
+   "lats",
+   "middle back",
+   "quadriceps",
+   "traps"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Barbell_Deadlift/0.webp",
+   "Barbell_Deadlift/1.webp"
+  ]
+ },
+ {
+  "id": "d46bc4c7-64c9-54b8-a0de-8f6e848087d2",
+  "slug": "Romanian_Deadlift",
+  "name_zh": "罗马尼亚硬拉",
+  "name_en": "Romanian Deadlift",
+  "body_part": "legs",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "lower back"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Romanian_Deadlift/0.webp",
+   "Romanian_Deadlift/1.webp"
+  ]
+ },
+ {
+  "id": "757b4dad-0e15-5560-a6e9-d8cab55813bb",
+  "slug": "Sumo_Deadlift",
+  "name_zh": "相扑硬拉",
+  "name_en": "Sumo Deadlift",
+  "body_part": "legs",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "adductors",
+   "forearms",
+   "glutes",
+   "lower back",
+   "middle back",
+   "quadriceps",
+   "traps"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Sumo_Deadlift/0.webp",
+   "Sumo_Deadlift/1.webp"
+  ]
+ },
+ {
+  "id": "4b0ab3e9-f9ca-5754-b0b8-2f3f7345d9e6",
+  "slug": "Stiff-Legged_Barbell_Deadlift",
+  "name_zh": "直腿硬拉",
+  "name_en": "Stiff-Legged Barbell Deadlift",
+  "body_part": "legs",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "glutes",
+   "lower back"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Stiff-Legged_Barbell_Deadlift/0.webp",
+   "Stiff-Legged_Barbell_Deadlift/1.webp"
+  ]
+ },
+ {
+  "id": "c3efd552-282f-55e3-8cdd-27b255d6d1ad",
+  "slug": "Rack_Pulls",
+  "name_zh": "架上拉（半程硬拉）",
+  "name_en": "Rack Pulls",
+  "body_part": "back",
+  "primary_muscles": [
+   "lower back"
+  ],
+  "secondary_muscles": [
+   "forearms",
+   "glutes",
+   "hamstrings",
+   "traps"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Rack_Pulls/0.webp",
+   "Rack_Pulls/1.webp"
+  ]
+ },
+ {
+  "id": "5b631081-564f-544d-8031-4ec4d718c1fd",
+  "slug": "Good_Morning",
+  "name_zh": "早安式体前屈",
+  "name_en": "Good Morning",
+  "body_part": "legs",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "abdominals",
+   "glutes",
+   "lower back"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Good_Morning/0.webp",
+   "Good_Morning/1.webp"
+  ]
+ },
+ {
+  "id": "1fde082e-b718-51dc-9b88-d233970c6fbb",
+  "slug": "Hyperextensions_Back_Extensions",
+  "name_zh": "背部伸展（山羊挺身）",
+  "name_en": "Hyperextensions (Back Extensions)",
+  "body_part": "back",
+  "primary_muscles": [
+   "lower back"
+  ],
+  "secondary_muscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "other",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Hyperextensions_Back_Extensions/0.webp",
+   "Hyperextensions_Back_Extensions/1.webp"
+  ]
+ },
+ {
+  "id": "33730286-7dea-5fcc-9396-0b42375b50b1",
+  "slug": "Reverse_Hyperextension",
+  "name_zh": "反向背伸展",
+  "name_en": "Reverse Hyperextension",
+  "body_part": "legs",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Reverse_Hyperextension/0.webp",
+   "Reverse_Hyperextension/1.webp"
+  ]
+ },
+ {
+  "id": "4ad853f7-3c45-57c7-b1ee-3a3992db1d8e",
+  "slug": "Barbell_Shrug",
+  "name_zh": "杠铃耸肩",
+  "name_en": "Barbell Shrug",
+  "body_part": "back",
+  "primary_muscles": [
+   "traps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Barbell_Shrug/0.webp",
+   "Barbell_Shrug/1.webp"
+  ]
+ },
+ {
+  "id": "d6cb481a-0177-5cda-bb74-49b9a6fbc9b7",
+  "slug": "Dumbbell_Shrug",
+  "name_zh": "哑铃耸肩",
+  "name_en": "Dumbbell Shrug",
+  "body_part": "back",
+  "primary_muscles": [
+   "traps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dumbbell_Shrug/0.webp",
+   "Dumbbell_Shrug/1.webp"
+  ]
+ },
+ {
+  "id": "303829a0-3bcd-51b5-9427-29145d940c52",
+  "slug": "Leverage_Shrug",
+  "name_zh": "杠杆耸肩",
+  "name_en": "Leverage Shrug",
+  "body_part": "back",
+  "primary_muscles": [
+   "traps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Leverage_Shrug/0.webp",
+   "Leverage_Shrug/1.webp"
+  ]
+ },
+ {
+  "id": "6d1b7a68-8712-51e4-acdd-ee115d98155d",
+  "slug": "Cable_Shrugs",
+  "name_zh": "绳索耸肩",
+  "name_en": "Cable Shrugs",
+  "body_part": "back",
+  "primary_muscles": [
+   "traps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Cable_Shrugs/0.webp",
+   "Cable_Shrugs/1.webp"
+  ]
+ },
+ {
+  "id": "59da090c-a519-5477-9e98-c803279bb732",
+  "slug": "Face_Pull",
+  "name_zh": "面拉",
+  "name_en": "Face Pull",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "middle back"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Face_Pull/0.webp",
+   "Face_Pull/1.webp"
+  ]
+ },
+ {
+  "id": "ba421e45-d81f-593f-be8c-f9ca3a197bc5",
+  "slug": "Band_Pull_Apart",
+  "name_zh": "弹力带拉开",
+  "name_en": "Band Pull Apart",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "middle back",
+   "traps"
+  ],
+  "equipment": "bands",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Band_Pull_Apart/0.webp",
+   "Band_Pull_Apart/1.webp"
+  ]
+ },
+ {
+  "id": "a81a7c25-6eca-540b-af22-2b594710fe16",
+  "slug": "Barbell_Shoulder_Press",
+  "name_zh": "杠铃肩推",
+  "name_en": "Barbell Shoulder Press",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "chest",
+   "triceps"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Barbell_Shoulder_Press/0.webp",
+   "Barbell_Shoulder_Press/1.webp"
+  ]
+ },
+ {
+  "id": "e9085605-21b0-5793-8678-959df40be380",
+  "slug": "Seated_Barbell_Military_Press",
+  "name_zh": "坐姿杠铃军事推举",
+  "name_en": "Seated Barbell Military Press",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "triceps"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Seated_Barbell_Military_Press/0.webp",
+   "Seated_Barbell_Military_Press/1.webp"
+  ]
+ },
+ {
+  "id": "38cb85e2-df82-5b4c-92f8-08285b80990b",
+  "slug": "Standing_Military_Press",
+  "name_zh": "站姿军事推举",
+  "name_en": "Standing Military Press",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "triceps"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Standing_Military_Press/0.webp",
+   "Standing_Military_Press/1.webp"
+  ]
+ },
+ {
+  "id": "c078f4b1-395d-5e13-9ef5-6bbade66d7ca",
+  "slug": "Standing_Barbell_Press_Behind_Neck",
+  "name_zh": "杠铃颈后推举",
+  "name_en": "Standing Barbell Press Behind Neck",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "triceps"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Standing_Barbell_Press_Behind_Neck/0.webp",
+   "Standing_Barbell_Press_Behind_Neck/1.webp"
+  ]
+ },
+ {
+  "id": "c814e4c9-4c29-58ea-9a1a-a1c0176bbc33",
+  "slug": "Dumbbell_Shoulder_Press",
+  "name_zh": "哑铃肩推",
+  "name_en": "Dumbbell Shoulder Press",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "triceps"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dumbbell_Shoulder_Press/0.webp",
+   "Dumbbell_Shoulder_Press/1.webp"
+  ]
+ },
+ {
+  "id": "1c39809a-2d6d-5ffe-8f78-920880f68242",
+  "slug": "Seated_Dumbbell_Press",
+  "name_zh": "坐姿哑铃推举",
+  "name_en": "Seated Dumbbell Press",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "triceps"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Seated_Dumbbell_Press/0.webp",
+   "Seated_Dumbbell_Press/1.webp"
+  ]
+ },
+ {
+  "id": "f50f79f2-e963-5f7e-8672-f7ee06b37cb9",
+  "slug": "Standing_Dumbbell_Press",
+  "name_zh": "站姿哑铃推举",
+  "name_en": "Standing Dumbbell Press",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "triceps"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Standing_Dumbbell_Press/0.webp",
+   "Standing_Dumbbell_Press/1.webp"
+  ]
+ },
+ {
+  "id": "e0ff6b48-f9e0-5cfc-962c-b07bf3544b8f",
+  "slug": "Arnold_Dumbbell_Press",
+  "name_zh": "阿诺德推举",
+  "name_en": "Arnold Dumbbell Press",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "triceps"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Arnold_Dumbbell_Press/0.webp",
+   "Arnold_Dumbbell_Press/1.webp"
+  ]
+ },
+ {
+  "id": "987c1cff-dabc-5f40-a415-617450347867",
+  "slug": "Machine_Shoulder_Military_Press",
+  "name_zh": "器械肩推",
+  "name_en": "Machine Shoulder (Military) Press",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "triceps"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Machine_Shoulder_Military_Press/0.webp",
+   "Machine_Shoulder_Military_Press/1.webp"
+  ]
+ },
+ {
+  "id": "d1dd1b4d-6ddd-5eb1-bade-cfcf3819e7a6",
+  "slug": "Leverage_Shoulder_Press",
+  "name_zh": "杠杆式肩推",
+  "name_en": "Leverage Shoulder Press",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "triceps"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Leverage_Shoulder_Press/0.webp",
+   "Leverage_Shoulder_Press/1.webp"
+  ]
+ },
+ {
+  "id": "e019b5c0-9fde-5028-8f6e-47748f0686f0",
+  "slug": "Smith_Machine_Overhead_Shoulder_Press",
+  "name_zh": "史密斯肩推",
+  "name_en": "Smith Machine Overhead Shoulder Press",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "triceps"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Smith_Machine_Overhead_Shoulder_Press/0.webp",
+   "Smith_Machine_Overhead_Shoulder_Press/1.webp"
+  ]
+ },
+ {
+  "id": "c6b2a430-7a5c-5080-83dc-7119b45b99db",
+  "slug": "Cable_Shoulder_Press",
+  "name_zh": "绳索肩推",
+  "name_en": "Cable Shoulder Press",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "triceps"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Cable_Shoulder_Press/0.webp",
+   "Cable_Shoulder_Press/1.webp"
+  ]
+ },
+ {
+  "id": "bba2bf9a-153b-5fc7-aa39-731221ebaad8",
+  "slug": "Cuban_Press",
+  "name_zh": "古巴推举",
+  "name_en": "Cuban Press",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "traps"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Cuban_Press/0.webp",
+   "Cuban_Press/1.webp"
+  ]
+ },
+ {
+  "id": "6b5def07-4611-5a86-9d5e-cbbfdd4233bd",
+  "slug": "Side_Lateral_Raise",
+  "name_zh": "哑铃侧平举",
+  "name_en": "Side Lateral Raise",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Side_Lateral_Raise/0.webp",
+   "Side_Lateral_Raise/1.webp"
+  ]
+ },
+ {
+  "id": "55e489c3-08b9-573d-bdb5-1e1ac8a1997e",
+  "slug": "Seated_Side_Lateral_Raise",
+  "name_zh": "坐姿哑铃侧平举",
+  "name_en": "Seated Side Lateral Raise",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Seated_Side_Lateral_Raise/0.webp",
+   "Seated_Side_Lateral_Raise/1.webp"
+  ]
+ },
+ {
+  "id": "bbb798f9-e8ec-5b9b-b814-d83160a2e123",
+  "slug": "Cable_Seated_Lateral_Raise",
+  "name_zh": "坐姿绳索侧平举",
+  "name_en": "Cable Seated Lateral Raise",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "middle back",
+   "traps"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Cable_Seated_Lateral_Raise/0.webp",
+   "Cable_Seated_Lateral_Raise/1.webp"
+  ]
+ },
+ {
+  "id": "7ac4cb13-77bc-5b49-9c0b-8f65fedb5401",
+  "slug": "Lateral_Raise_-_With_Bands",
+  "name_zh": "弹力带侧平举",
+  "name_en": "Lateral Raise - With Bands",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [],
+  "equipment": "bands",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Lateral_Raise_-_With_Bands/0.webp",
+   "Lateral_Raise_-_With_Bands/1.webp"
+  ]
+ },
+ {
+  "id": "9c06de6f-4d1f-51ae-9c9f-882881afeceb",
+  "slug": "One-Arm_Side_Laterals",
+  "name_zh": "单臂侧平举",
+  "name_en": "One-Arm Side Laterals",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "One-Arm_Side_Laterals/0.webp",
+   "One-Arm_Side_Laterals/1.webp"
+  ]
+ },
+ {
+  "id": "afbd0814-f365-552a-bfac-a554b49a0e17",
+  "slug": "Front_Dumbbell_Raise",
+  "name_zh": "哑铃前平举",
+  "name_en": "Front Dumbbell Raise",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Front_Dumbbell_Raise/0.webp",
+   "Front_Dumbbell_Raise/1.webp"
+  ]
+ },
+ {
+  "id": "dfea4a5c-14a0-5400-9f78-a8a991f198d0",
+  "slug": "Front_Two-Dumbbell_Raise",
+  "name_zh": "双哑铃前平举",
+  "name_en": "Front Two-Dumbbell Raise",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Front_Two-Dumbbell_Raise/0.webp",
+   "Front_Two-Dumbbell_Raise/1.webp"
+  ]
+ },
+ {
+  "id": "a0499095-947d-51b5-8ebb-c0c0a60f157f",
+  "slug": "Front_Cable_Raise",
+  "name_zh": "绳索前平举",
+  "name_en": "Front Cable Raise",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Front_Cable_Raise/0.webp",
+   "Front_Cable_Raise/1.webp"
+  ]
+ },
+ {
+  "id": "7eeac1e8-0973-52ea-8398-aa40fb226212",
+  "slug": "Reverse_Flyes",
+  "name_zh": "哑铃俯身反向飞鸟",
+  "name_en": "Reverse Flyes",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Reverse_Flyes/0.webp",
+   "Reverse_Flyes/1.webp"
+  ]
+ },
+ {
+  "id": "3a608666-1a02-51e1-8dc2-209478c46098",
+  "slug": "Reverse_Machine_Flyes",
+  "name_zh": "器械反向飞鸟",
+  "name_en": "Reverse Machine Flyes",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Reverse_Machine_Flyes/0.webp",
+   "Reverse_Machine_Flyes/1.webp"
+  ]
+ },
+ {
+  "id": "db023441-ea05-5984-a708-ee3cfa18ee80",
+  "slug": "Cable_Rear_Delt_Fly",
+  "name_zh": "绳索后束飞鸟",
+  "name_en": "Cable Rear Delt Fly",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Cable_Rear_Delt_Fly/0.webp",
+   "Cable_Rear_Delt_Fly/1.webp"
+  ]
+ },
+ {
+  "id": "2288bf6c-6f7b-53d0-abb6-2fa23ad1e167",
+  "slug": "Seated_Bent-Over_Rear_Delt_Raise",
+  "name_zh": "坐姿俯身后束飞鸟",
+  "name_en": "Seated Bent-Over Rear Delt Raise",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Seated_Bent-Over_Rear_Delt_Raise/0.webp",
+   "Seated_Bent-Over_Rear_Delt_Raise/1.webp"
+  ]
+ },
+ {
+  "id": "e30fbbbd-c001-5039-b7b4-7ef4bece8b0d",
+  "slug": "Bent_Over_Dumbbell_Rear_Delt_Raise_With_Head_On_Bench",
+  "name_zh": "俯身哑铃后束飞鸟（头靠凳）",
+  "name_en": "Bent Over Dumbbell Rear Delt Raise With Head On Bench",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Bent_Over_Dumbbell_Rear_Delt_Raise_With_Head_On_Bench/0.webp",
+   "Bent_Over_Dumbbell_Rear_Delt_Raise_With_Head_On_Bench/1.webp"
+  ]
+ },
+ {
+  "id": "29a07cd9-9cee-596b-96e4-214730f32c97",
+  "slug": "Upright_Barbell_Row",
+  "name_zh": "杠铃直立划船",
+  "name_en": "Upright Barbell Row",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "traps"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Upright_Barbell_Row/0.webp",
+   "Upright_Barbell_Row/1.webp"
+  ]
+ },
+ {
+  "id": "cf4246bc-401a-58a4-8452-4ac04ab1194f",
+  "slug": "Standing_Dumbbell_Upright_Row",
+  "name_zh": "哑铃直立划船",
+  "name_en": "Standing Dumbbell Upright Row",
+  "body_part": "back",
+  "primary_muscles": [
+   "traps"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "shoulders"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Standing_Dumbbell_Upright_Row/0.webp",
+   "Standing_Dumbbell_Upright_Row/1.webp"
+  ]
+ },
+ {
+  "id": "89a128f7-e7f7-5039-9aba-16a1db4756cd",
+  "slug": "Upright_Cable_Row",
+  "name_zh": "绳索直立划船",
+  "name_en": "Upright Cable Row",
+  "body_part": "back",
+  "primary_muscles": [
+   "traps"
+  ],
+  "secondary_muscles": [
+   "shoulders"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Upright_Cable_Row/0.webp",
+   "Upright_Cable_Row/1.webp"
+  ]
+ },
+ {
+  "id": "c73513eb-dfdd-5407-aa9b-11137ce2e3ad",
+  "slug": "External_Rotation",
+  "name_zh": "哑铃肩外旋",
+  "name_en": "External Rotation",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "External_Rotation/0.webp",
+   "External_Rotation/1.webp"
+  ]
+ },
+ {
+  "id": "7a5c3bbc-f55a-5f36-99b2-43e01174faf0",
+  "slug": "External_Rotation_with_Cable",
+  "name_zh": "绳索肩外旋",
+  "name_en": "External Rotation with Cable",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "External_Rotation_with_Cable/0.webp",
+   "External_Rotation_with_Cable/1.webp"
+  ]
+ },
+ {
+  "id": "e0768be3-0ed7-5597-a903-a9e992cac38a",
+  "slug": "Barbell_Curl",
+  "name_zh": "杠铃弯举",
+  "name_en": "Barbell Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Barbell_Curl/0.webp",
+   "Barbell_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "9e9c7904-ae67-55f4-84d4-5f0255c685cf",
+  "slug": "EZ-Bar_Curl",
+  "name_zh": "EZ 杠弯举",
+  "name_en": "EZ-Bar Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "e-z curl bar",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "EZ-Bar_Curl/0.webp",
+   "EZ-Bar_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "149ef0ca-1f47-5f13-a982-04eb8746d717",
+  "slug": "Close-Grip_EZ_Bar_Curl",
+  "name_zh": "窄握 EZ 杠弯举",
+  "name_en": "Close-Grip EZ Bar Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Close-Grip_EZ_Bar_Curl/0.webp",
+   "Close-Grip_EZ_Bar_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "20f70f68-c735-585d-9166-0c3e45d099bd",
+  "slug": "Wide-Grip_Standing_Barbell_Curl",
+  "name_zh": "宽握杠铃弯举",
+  "name_en": "Wide-Grip Standing Barbell Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Wide-Grip_Standing_Barbell_Curl/0.webp",
+   "Wide-Grip_Standing_Barbell_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "bca2e451-e0b7-5b7f-b462-9ecf3b19b8fe",
+  "slug": "Dumbbell_Bicep_Curl",
+  "name_zh": "哑铃弯举",
+  "name_en": "Dumbbell Bicep Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dumbbell_Bicep_Curl/0.webp",
+   "Dumbbell_Bicep_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "9e38546c-a5a8-52f1-bdc8-d23319140585",
+  "slug": "Dumbbell_Alternate_Bicep_Curl",
+  "name_zh": "哑铃交替弯举",
+  "name_en": "Dumbbell Alternate Bicep Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dumbbell_Alternate_Bicep_Curl/0.webp",
+   "Dumbbell_Alternate_Bicep_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "0503c6b0-0812-5529-bd60-0f376a048942",
+  "slug": "Seated_Dumbbell_Curl",
+  "name_zh": "坐姿哑铃弯举",
+  "name_en": "Seated Dumbbell Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Seated_Dumbbell_Curl/0.webp",
+   "Seated_Dumbbell_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "2b52f993-51ae-5f69-b002-f94fc22b5338",
+  "slug": "Hammer_Curls",
+  "name_zh": "锤式弯举",
+  "name_en": "Hammer Curls",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Hammer_Curls/0.webp",
+   "Hammer_Curls/1.webp"
+  ]
+ },
+ {
+  "id": "1aebb901-9e45-5b16-aefd-04f7f81410f6",
+  "slug": "Alternate_Hammer_Curl",
+  "name_zh": "交替锤式弯举",
+  "name_en": "Alternate Hammer Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Alternate_Hammer_Curl/0.webp",
+   "Alternate_Hammer_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "bbaed029-f552-5959-9f96-71f035497d1f",
+  "slug": "Cross_Body_Hammer_Curl",
+  "name_zh": "交叉锤式弯举",
+  "name_en": "Cross Body Hammer Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Cross_Body_Hammer_Curl/0.webp",
+   "Cross_Body_Hammer_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "4e1e58df-38b9-59c5-8c83-bfd49a2cff74",
+  "slug": "Incline_Dumbbell_Curl",
+  "name_zh": "上斜哑铃弯举",
+  "name_en": "Incline Dumbbell Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Incline_Dumbbell_Curl/0.webp",
+   "Incline_Dumbbell_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "28a4ab31-d450-5133-98ba-ea9086c2992e",
+  "slug": "Alternate_Incline_Dumbbell_Curl",
+  "name_zh": "交替上斜哑铃弯举",
+  "name_en": "Alternate Incline Dumbbell Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Alternate_Incline_Dumbbell_Curl/0.webp",
+   "Alternate_Incline_Dumbbell_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "2671e140-cc82-54c3-821a-4992be0c5441",
+  "slug": "Incline_Hammer_Curls",
+  "name_zh": "上斜锤式弯举",
+  "name_en": "Incline Hammer Curls",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Incline_Hammer_Curls/0.webp",
+   "Incline_Hammer_Curls/1.webp"
+  ]
+ },
+ {
+  "id": "e0d972e6-70bd-561c-8ce6-b1daa7d3c2d6",
+  "slug": "Preacher_Curl",
+  "name_zh": "牧师凳弯举",
+  "name_en": "Preacher Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Preacher_Curl/0.webp",
+   "Preacher_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "8ad93a4c-a7c3-56bd-b249-262add527793",
+  "slug": "Machine_Preacher_Curls",
+  "name_zh": "器械牧师凳弯举",
+  "name_en": "Machine Preacher Curls",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Machine_Preacher_Curls/0.webp",
+   "Machine_Preacher_Curls/1.webp"
+  ]
+ },
+ {
+  "id": "ab1b7b43-c0ea-56a5-bef6-747cfe80f66c",
+  "slug": "Machine_Bicep_Curl",
+  "name_zh": "器械二头弯举",
+  "name_en": "Machine Bicep Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Machine_Bicep_Curl/0.webp",
+   "Machine_Bicep_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "c8a384ed-6ad9-5eaf-a35f-0deb520f32ef",
+  "slug": "One_Arm_Dumbbell_Preacher_Curl",
+  "name_zh": "单臂哑铃牧师凳弯举",
+  "name_en": "One Arm Dumbbell Preacher Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "One_Arm_Dumbbell_Preacher_Curl/0.webp",
+   "One_Arm_Dumbbell_Preacher_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "29c8799e-f4cb-5902-a514-6684207de4c9",
+  "slug": "Cable_Preacher_Curl",
+  "name_zh": "绳索牧师凳弯举",
+  "name_en": "Cable Preacher Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Cable_Preacher_Curl/0.webp",
+   "Cable_Preacher_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "b81df881-fbe8-5245-aed6-c9e124a0bf59",
+  "slug": "Concentration_Curls",
+  "name_zh": "集中弯举",
+  "name_en": "Concentration Curls",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Concentration_Curls/0.webp",
+   "Concentration_Curls/1.webp"
+  ]
+ },
+ {
+  "id": "f3f444cf-7d47-5ff5-a14a-a24e920dd307",
+  "slug": "Standing_Biceps_Cable_Curl",
+  "name_zh": "站姿绳索弯举",
+  "name_en": "Standing Biceps Cable Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Standing_Biceps_Cable_Curl/0.webp",
+   "Standing_Biceps_Cable_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "adf818a1-5680-5788-8397-a76bd6942e3b",
+  "slug": "High_Cable_Curls",
+  "name_zh": "高位绳索弯举",
+  "name_en": "High Cable Curls",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "High_Cable_Curls/0.webp",
+   "High_Cable_Curls/1.webp"
+  ]
+ },
+ {
+  "id": "7a6fd9d8-12d0-5723-8a0b-fc0994c3f742",
+  "slug": "Overhead_Cable_Curl",
+  "name_zh": "过头绳索弯举",
+  "name_en": "Overhead Cable Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Overhead_Cable_Curl/0.webp",
+   "Overhead_Cable_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "8aae87a6-fea9-59ea-96e6-8e09985d47e3",
+  "slug": "Cable_Hammer_Curls_-_Rope_Attachment",
+  "name_zh": "绳索锤式弯举",
+  "name_en": "Cable Hammer Curls - Rope Attachment",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Cable_Hammer_Curls_-_Rope_Attachment/0.webp",
+   "Cable_Hammer_Curls_-_Rope_Attachment/1.webp"
+  ]
+ },
+ {
+  "id": "d312554e-7489-5bb2-b641-d0e557d05844",
+  "slug": "Spider_Curl",
+  "name_zh": "蜘蛛弯举",
+  "name_en": "Spider Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "e-z curl bar",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Spider_Curl/0.webp",
+   "Spider_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "e002fe06-7e51-5ab3-89fc-780223d8a23d",
+  "slug": "Zottman_Curl",
+  "name_zh": "佐特曼弯举",
+  "name_en": "Zottman Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Zottman_Curl/0.webp",
+   "Zottman_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "1e76ec0d-c68b-5e60-9310-38ac72340360",
+  "slug": "Drag_Curl",
+  "name_zh": "拖曳弯举",
+  "name_en": "Drag Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Drag_Curl/0.webp",
+   "Drag_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "c674b9a9-73fc-5a2a-b7c6-afcb9223f172",
+  "slug": "Reverse_Barbell_Curl",
+  "name_zh": "反握杠铃弯举",
+  "name_en": "Reverse Barbell Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Reverse_Barbell_Curl/0.webp",
+   "Reverse_Barbell_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "2e270571-a5ce-560f-b752-c67e5e5ae0ea",
+  "slug": "Reverse_Cable_Curl",
+  "name_zh": "反握绳索弯举",
+  "name_en": "Reverse Cable Curl",
+  "body_part": "arms",
+  "primary_muscles": [
+   "biceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Reverse_Cable_Curl/0.webp",
+   "Reverse_Cable_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "fac856cb-e967-51d6-ac4e-21d25bdda387",
+  "slug": "Palms-Up_Barbell_Wrist_Curl_Over_A_Bench",
+  "name_zh": "杠铃腕弯举（掌心向上）",
+  "name_en": "Palms-Up Barbell Wrist Curl Over A Bench",
+  "body_part": "arms",
+  "primary_muscles": [
+   "forearms"
+  ],
+  "secondary_muscles": [],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Palms-Up_Barbell_Wrist_Curl_Over_A_Bench/0.webp",
+   "Palms-Up_Barbell_Wrist_Curl_Over_A_Bench/1.webp"
+  ]
+ },
+ {
+  "id": "5665f19c-042b-5983-a3d5-4a002bce80cd",
+  "slug": "Palms-Down_Wrist_Curl_Over_A_Bench",
+  "name_zh": "杠铃反腕弯举（掌心向下）",
+  "name_en": "Palms-Down Wrist Curl Over A Bench",
+  "body_part": "arms",
+  "primary_muscles": [
+   "forearms"
+  ],
+  "secondary_muscles": [],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Palms-Down_Wrist_Curl_Over_A_Bench/0.webp",
+   "Palms-Down_Wrist_Curl_Over_A_Bench/1.webp"
+  ]
+ },
+ {
+  "id": "85970ea3-1874-5711-b76b-dfb19fa323df",
+  "slug": "Triceps_Pushdown",
+  "name_zh": "三头下压（直杆）",
+  "name_en": "Triceps Pushdown",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Triceps_Pushdown/0.webp",
+   "Triceps_Pushdown/1.webp"
+  ]
+ },
+ {
+  "id": "cd500811-ff83-52de-bdce-2b04227db5db",
+  "slug": "Triceps_Pushdown_-_Rope_Attachment",
+  "name_zh": "绳索三头下压",
+  "name_en": "Triceps Pushdown - Rope Attachment",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Triceps_Pushdown_-_Rope_Attachment/0.webp",
+   "Triceps_Pushdown_-_Rope_Attachment/1.webp"
+  ]
+ },
+ {
+  "id": "ed0a7c3e-ddc5-5870-adff-a7e32bd2c822",
+  "slug": "Triceps_Pushdown_-_V-Bar_Attachment",
+  "name_zh": "V 把三头下压",
+  "name_en": "Triceps Pushdown - V-Bar Attachment",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Triceps_Pushdown_-_V-Bar_Attachment/0.webp",
+   "Triceps_Pushdown_-_V-Bar_Attachment/1.webp"
+  ]
+ },
+ {
+  "id": "8f305a5c-6723-5303-b94b-81f6e933b3ee",
+  "slug": "Reverse_Grip_Triceps_Pushdown",
+  "name_zh": "反握三头下压",
+  "name_en": "Reverse Grip Triceps Pushdown",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Reverse_Grip_Triceps_Pushdown/0.webp",
+   "Reverse_Grip_Triceps_Pushdown/1.webp"
+  ]
+ },
+ {
+  "id": "e0951889-69d8-5fbe-ab2c-da42b238b5f2",
+  "slug": "Cable_One_Arm_Tricep_Extension",
+  "name_zh": "单臂绳索臂屈伸",
+  "name_en": "Cable One Arm Tricep Extension",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Cable_One_Arm_Tricep_Extension/0.webp",
+   "Cable_One_Arm_Tricep_Extension/1.webp"
+  ]
+ },
+ {
+  "id": "210fc59b-d3c3-59f3-9ea5-35ce884f3ddc",
+  "slug": "Cable_Rope_Overhead_Triceps_Extension",
+  "name_zh": "绳索过头臂屈伸",
+  "name_en": "Cable Rope Overhead Triceps Extension",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Cable_Rope_Overhead_Triceps_Extension/0.webp",
+   "Cable_Rope_Overhead_Triceps_Extension/1.webp"
+  ]
+ },
+ {
+  "id": "7c548dab-7bdc-59f7-9c7f-d1810118e8b4",
+  "slug": "Kneeling_Cable_Triceps_Extension",
+  "name_zh": "跪姿绳索臂屈伸",
+  "name_en": "Kneeling Cable Triceps Extension",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Kneeling_Cable_Triceps_Extension/0.webp",
+   "Kneeling_Cable_Triceps_Extension/1.webp"
+  ]
+ },
+ {
+  "id": "27f51c8f-3700-52cd-9ec8-cc930decfd40",
+  "slug": "Low_Cable_Triceps_Extension",
+  "name_zh": "低位绳索臂屈伸",
+  "name_en": "Low Cable Triceps Extension",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Low_Cable_Triceps_Extension/0.webp",
+   "Low_Cable_Triceps_Extension/1.webp"
+  ]
+ },
+ {
+  "id": "10dc4b7a-3db3-51b3-8761-5863e18984aa",
+  "slug": "EZ-Bar_Skullcrusher",
+  "name_zh": "EZ 杠仰卧臂屈伸（碎颅式）",
+  "name_en": "EZ-Bar Skullcrusher",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [
+   "forearms"
+  ],
+  "equipment": "e-z curl bar",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "EZ-Bar_Skullcrusher/0.webp",
+   "EZ-Bar_Skullcrusher/1.webp"
+  ]
+ },
+ {
+  "id": "5046aec6-9a92-503e-9a84-d2c7f3f6872e",
+  "slug": "Lying_Triceps_Press",
+  "name_zh": "仰卧杠铃臂屈伸",
+  "name_en": "Lying Triceps Press",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "e-z curl bar",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Lying_Triceps_Press/0.webp",
+   "Lying_Triceps_Press/1.webp"
+  ]
+ },
+ {
+  "id": "9854411e-a309-5dc0-ae15-301bc5c7d7e7",
+  "slug": "Lying_Dumbbell_Tricep_Extension",
+  "name_zh": "哑铃仰卧臂屈伸",
+  "name_en": "Lying Dumbbell Tricep Extension",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [
+   "chest",
+   "shoulders"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Lying_Dumbbell_Tricep_Extension/0.webp",
+   "Lying_Dumbbell_Tricep_Extension/1.webp"
+  ]
+ },
+ {
+  "id": "fc69a669-24f2-52fb-9eb3-824d20908953",
+  "slug": "Decline_EZ_Bar_Triceps_Extension",
+  "name_zh": "EZ 杠下斜臂屈伸",
+  "name_en": "Decline EZ Bar Triceps Extension",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Decline_EZ_Bar_Triceps_Extension/0.webp",
+   "Decline_EZ_Bar_Triceps_Extension/1.webp"
+  ]
+ },
+ {
+  "id": "fc3bb294-5add-58e2-a65e-a1b2ba2314a1",
+  "slug": "Standing_Dumbbell_Triceps_Extension",
+  "name_zh": "站姿哑铃过头臂屈伸",
+  "name_en": "Standing Dumbbell Triceps Extension",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Standing_Dumbbell_Triceps_Extension/0.webp",
+   "Standing_Dumbbell_Triceps_Extension/1.webp"
+  ]
+ },
+ {
+  "id": "42052fe0-04b2-5429-bd29-10ec312d2506",
+  "slug": "Seated_Triceps_Press",
+  "name_zh": "坐姿哑铃过头臂屈伸",
+  "name_en": "Seated Triceps Press",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Seated_Triceps_Press/0.webp",
+   "Seated_Triceps_Press/1.webp"
+  ]
+ },
+ {
+  "id": "7a1307c9-5d96-5c6c-8a02-719380e627c9",
+  "slug": "Dumbbell_One-Arm_Triceps_Extension",
+  "name_zh": "单臂哑铃过头臂屈伸",
+  "name_en": "Dumbbell One-Arm Triceps Extension",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dumbbell_One-Arm_Triceps_Extension/0.webp",
+   "Dumbbell_One-Arm_Triceps_Extension/1.webp"
+  ]
+ },
+ {
+  "id": "dd7ed25c-4f6e-5331-a080-51c4cf601586",
+  "slug": "Tricep_Dumbbell_Kickback",
+  "name_zh": "哑铃俯身臂屈伸（后踢）",
+  "name_en": "Tricep Dumbbell Kickback",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Tricep_Dumbbell_Kickback/0.webp",
+   "Tricep_Dumbbell_Kickback/1.webp"
+  ]
+ },
+ {
+  "id": "a0535d01-7eae-58ec-a022-6dd547d41b9b",
+  "slug": "Machine_Triceps_Extension",
+  "name_zh": "器械臂屈伸",
+  "name_en": "Machine Triceps Extension",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Machine_Triceps_Extension/0.webp",
+   "Machine_Triceps_Extension/1.webp"
+  ]
+ },
+ {
+  "id": "8e538d34-01f8-523f-80aa-cbda1415b8e2",
+  "slug": "Smith_Machine_Close-Grip_Bench_Press",
+  "name_zh": "史密斯窄握卧推",
+  "name_en": "Smith Machine Close-Grip Bench Press",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [
+   "chest",
+   "shoulders"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Smith_Machine_Close-Grip_Bench_Press/0.webp",
+   "Smith_Machine_Close-Grip_Bench_Press/1.webp"
+  ]
+ },
+ {
+  "id": "1871de9a-d81c-52a9-a285-43d7b929a9f0",
+  "slug": "JM_Press",
+  "name_zh": "JM 卧推",
+  "name_en": "JM Press",
+  "body_part": "arms",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [
+   "chest",
+   "shoulders"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "JM_Press/0.webp",
+   "JM_Press/1.webp"
+  ]
+ },
+ {
+  "id": "d53866f5-066a-5fd3-b4d0-435a789942ae",
+  "slug": "Barbell_Squat",
+  "name_zh": "杠铃深蹲",
+  "name_en": "Barbell Squat",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings",
+   "lower back"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Barbell_Squat/0.webp",
+   "Barbell_Squat/1.webp"
+  ]
+ },
+ {
+  "id": "53670a10-5221-5c10-a468-de1103f0440a",
+  "slug": "Barbell_Full_Squat",
+  "name_zh": "杠铃全蹲",
+  "name_en": "Barbell Full Squat",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings",
+   "lower back"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Barbell_Full_Squat/0.webp",
+   "Barbell_Full_Squat/1.webp"
+  ]
+ },
+ {
+  "id": "0cdc73d7-269d-56cd-8081-515193daa22a",
+  "slug": "Front_Barbell_Squat",
+  "name_zh": "杠铃前蹲",
+  "name_en": "Front Barbell Squat",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Front_Barbell_Squat/0.webp",
+   "Front_Barbell_Squat/1.webp"
+  ]
+ },
+ {
+  "id": "487e5e52-4cdc-5dca-b744-9544ad6670eb",
+  "slug": "Wide_Stance_Barbell_Squat",
+  "name_zh": "宽距杠铃深蹲",
+  "name_en": "Wide Stance Barbell Squat",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings",
+   "lower back"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Wide_Stance_Barbell_Squat/0.webp",
+   "Wide_Stance_Barbell_Squat/1.webp"
+  ]
+ },
+ {
+  "id": "6e58cd14-3a52-50b9-8555-97544d586c91",
+  "slug": "Box_Squat",
+  "name_zh": "箱式深蹲",
+  "name_en": "Box Squat",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "adductors",
+   "calves",
+   "glutes",
+   "hamstrings",
+   "lower back"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Box_Squat/0.webp",
+   "Box_Squat/1.webp"
+  ]
+ },
+ {
+  "id": "e25f6ae1-98ed-5231-8836-fd6ad64d1ac3",
+  "slug": "Smith_Machine_Squat",
+  "name_zh": "史密斯深蹲",
+  "name_en": "Smith Machine Squat",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings",
+   "lower back"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Smith_Machine_Squat/0.webp",
+   "Smith_Machine_Squat/1.webp"
+  ]
+ },
+ {
+  "id": "20f55b15-ea92-593f-a1bb-a06e145b3fe2",
+  "slug": "Goblet_Squat",
+  "name_zh": "高脚杯深蹲",
+  "name_en": "Goblet Squat",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings",
+   "shoulders"
+  ],
+  "equipment": "kettlebells",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Goblet_Squat/0.webp",
+   "Goblet_Squat/1.webp"
+  ]
+ },
+ {
+  "id": "f98e7f96-e145-5efe-b0b5-1ac32fb427c6",
+  "slug": "Dumbbell_Squat",
+  "name_zh": "哑铃深蹲",
+  "name_en": "Dumbbell Squat",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings",
+   "lower back"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dumbbell_Squat/0.webp",
+   "Dumbbell_Squat/1.webp"
+  ]
+ },
+ {
+  "id": "658f5522-4425-534a-ab99-c61db85bb141",
+  "slug": "Bodyweight_Squat",
+  "name_zh": "自重深蹲",
+  "name_en": "Bodyweight Squat",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Bodyweight_Squat/0.webp",
+   "Bodyweight_Squat/1.webp"
+  ]
+ },
+ {
+  "id": "5f405aee-52a6-5336-8878-e2d8be7c25a2",
+  "slug": "Hack_Squat",
+  "name_zh": "哈克深蹲",
+  "name_en": "Hack Squat",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Hack_Squat/0.webp",
+   "Hack_Squat/1.webp"
+  ]
+ },
+ {
+  "id": "7128d1b9-8e89-591c-a0bc-47f4e148e7ed",
+  "slug": "Barbell_Hack_Squat",
+  "name_zh": "杠铃哈克深蹲",
+  "name_en": "Barbell Hack Squat",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "forearms",
+   "hamstrings"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Barbell_Hack_Squat/0.webp",
+   "Barbell_Hack_Squat/1.webp"
+  ]
+ },
+ {
+  "id": "296e466f-1274-5d2a-b21f-46b7f4a4a903",
+  "slug": "Plie_Dumbbell_Squat",
+  "name_zh": "哑铃相扑深蹲",
+  "name_en": "Plie Dumbbell Squat",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "abdominals",
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Plie_Dumbbell_Squat/0.webp",
+   "Plie_Dumbbell_Squat/1.webp"
+  ]
+ },
+ {
+  "id": "6f1f6657-8904-50ad-9ef1-c9bd813b626b",
+  "slug": "Zercher_Squats",
+  "name_zh": "泽奇深蹲",
+  "name_en": "Zercher Squats",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Zercher_Squats/0.webp",
+   "Zercher_Squats/1.webp"
+  ]
+ },
+ {
+  "id": "1a6f3550-1c61-5341-8b08-1c8f0cdc4655",
+  "slug": "Weighted_Sissy_Squat",
+  "name_zh": "负重西西深蹲",
+  "name_en": "Weighted Sissy Squat",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Weighted_Sissy_Squat/0.webp",
+   "Weighted_Sissy_Squat/1.webp"
+  ]
+ },
+ {
+  "id": "a270bb0f-6079-5853-a562-18d0ab360cb6",
+  "slug": "One_Leg_Barbell_Squat",
+  "name_zh": "杠铃单腿深蹲",
+  "name_en": "One Leg Barbell Squat",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "One_Leg_Barbell_Squat/0.webp",
+   "One_Leg_Barbell_Squat/1.webp"
+  ]
+ },
+ {
+  "id": "f584e903-444a-5744-a523-39d5117a9141",
+  "slug": "Lying_Machine_Squat",
+  "name_zh": "躺式器械深蹲",
+  "name_en": "Lying Machine Squat",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Lying_Machine_Squat/0.webp",
+   "Lying_Machine_Squat/1.webp"
+  ]
+ },
+ {
+  "id": "c51a78b0-4092-544e-93e9-a5be5742cb13",
+  "slug": "Leg_Press",
+  "name_zh": "腿举",
+  "name_en": "Leg Press",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Leg_Press/0.webp",
+   "Leg_Press/1.webp"
+  ]
+ },
+ {
+  "id": "bec87cb9-54c8-5346-a254-e51a2baaf993",
+  "slug": "Narrow_Stance_Leg_Press",
+  "name_zh": "窄站距腿举",
+  "name_en": "Narrow Stance Leg Press",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Narrow_Stance_Leg_Press/0.webp",
+   "Narrow_Stance_Leg_Press/1.webp"
+  ]
+ },
+ {
+  "id": "98e870ac-6c0c-5546-81e4-bf05ac4976c7",
+  "slug": "Leg_Extensions",
+  "name_zh": "坐姿腿屈伸",
+  "name_en": "Leg Extensions",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Leg_Extensions/0.webp",
+   "Leg_Extensions/1.webp"
+  ]
+ },
+ {
+  "id": "c0921f3b-fc66-55d8-b652-62a9ff021a5e",
+  "slug": "Single-Leg_Leg_Extension",
+  "name_zh": "单腿腿屈伸",
+  "name_en": "Single-Leg Leg Extension",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Single-Leg_Leg_Extension/0.webp",
+   "Single-Leg_Leg_Extension/1.webp"
+  ]
+ },
+ {
+  "id": "98fc9f29-b1d7-557f-a1b1-a94a7a5e7d4e",
+  "slug": "Lying_Leg_Curls",
+  "name_zh": "俯卧腿弯举",
+  "name_en": "Lying Leg Curls",
+  "body_part": "legs",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Lying_Leg_Curls/0.webp",
+   "Lying_Leg_Curls/1.webp"
+  ]
+ },
+ {
+  "id": "1b94d5b2-7324-5a87-8170-cf80e8a03a53",
+  "slug": "Seated_Leg_Curl",
+  "name_zh": "坐姿腿弯举",
+  "name_en": "Seated Leg Curl",
+  "body_part": "legs",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Seated_Leg_Curl/0.webp",
+   "Seated_Leg_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "54209919-3bc3-5497-8e03-c83fe9bf00c4",
+  "slug": "Standing_Leg_Curl",
+  "name_zh": "站姿腿弯举",
+  "name_en": "Standing Leg Curl",
+  "body_part": "legs",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Standing_Leg_Curl/0.webp",
+   "Standing_Leg_Curl/1.webp"
+  ]
+ },
+ {
+  "id": "305fa316-c76d-5529-a67e-f689e547ade7",
+  "slug": "Barbell_Lunge",
+  "name_zh": "杠铃弓步",
+  "name_en": "Barbell Lunge",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Barbell_Lunge/0.webp",
+   "Barbell_Lunge/1.webp"
+  ]
+ },
+ {
+  "id": "388d8cce-f583-55f2-b275-145dad01628d",
+  "slug": "Barbell_Walking_Lunge",
+  "name_zh": "杠铃行走弓步",
+  "name_en": "Barbell Walking Lunge",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Barbell_Walking_Lunge/0.webp",
+   "Barbell_Walking_Lunge/1.webp"
+  ]
+ },
+ {
+  "id": "c1e0cd91-bbfa-57c4-b938-ccd2d7701e72",
+  "slug": "Dumbbell_Lunges",
+  "name_zh": "哑铃弓步",
+  "name_en": "Dumbbell Lunges",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dumbbell_Lunges/0.webp",
+   "Dumbbell_Lunges/1.webp"
+  ]
+ },
+ {
+  "id": "5ab87551-3df4-54cc-91ca-6f62601ae902",
+  "slug": "Dumbbell_Rear_Lunge",
+  "name_zh": "哑铃后撤步弓步",
+  "name_en": "Dumbbell Rear Lunge",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dumbbell_Rear_Lunge/0.webp",
+   "Dumbbell_Rear_Lunge/1.webp"
+  ]
+ },
+ {
+  "id": "7d3ac285-9fc3-5ecb-9810-2496d9b28ec8",
+  "slug": "Split_Squat_with_Dumbbells",
+  "name_zh": "哑铃分腿蹲",
+  "name_en": "Split Squat with Dumbbells",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Split_Squat_with_Dumbbells/0.webp",
+   "Split_Squat_with_Dumbbells/1.webp"
+  ]
+ },
+ {
+  "id": "e46ee075-1c6a-5061-b5d7-9a422e88c63c",
+  "slug": "Smith_Single-Leg_Split_Squat",
+  "name_zh": "史密斯分腿蹲",
+  "name_en": "Smith Single-Leg Split Squat",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Smith_Single-Leg_Split_Squat/0.webp",
+   "Smith_Single-Leg_Split_Squat/1.webp"
+  ]
+ },
+ {
+  "id": "cf81b0c7-1829-5a7f-bf43-50a60534ce5d",
+  "slug": "Barbell_Step_Ups",
+  "name_zh": "杠铃踏台阶",
+  "name_en": "Barbell Step Ups",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings",
+   "quadriceps"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Barbell_Step_Ups/0.webp",
+   "Barbell_Step_Ups/1.webp"
+  ]
+ },
+ {
+  "id": "097c074b-fe85-57ee-8fd5-8a22a74a6949",
+  "slug": "Dumbbell_Step_Ups",
+  "name_zh": "哑铃踏台阶",
+  "name_en": "Dumbbell Step Ups",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dumbbell_Step_Ups/0.webp",
+   "Dumbbell_Step_Ups/1.webp"
+  ]
+ },
+ {
+  "id": "887a4224-1f9f-5f5b-a20c-a3041016da13",
+  "slug": "Stiff-Legged_Dumbbell_Deadlift",
+  "name_zh": "哑铃直腿硬拉",
+  "name_en": "Stiff-Legged Dumbbell Deadlift",
+  "body_part": "legs",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "glutes",
+   "lower back"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Stiff-Legged_Dumbbell_Deadlift/0.webp",
+   "Stiff-Legged_Dumbbell_Deadlift/1.webp"
+  ]
+ },
+ {
+  "id": "982e612f-4576-54a0-93f0-8863e8bf1ecf",
+  "slug": "Smith_Machine_Stiff-Legged_Deadlift",
+  "name_zh": "史密斯直腿硬拉",
+  "name_en": "Smith Machine Stiff-Legged Deadlift",
+  "body_part": "legs",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "glutes",
+   "lower back"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Smith_Machine_Stiff-Legged_Deadlift/0.webp",
+   "Smith_Machine_Stiff-Legged_Deadlift/1.webp"
+  ]
+ },
+ {
+  "id": "f3799982-c435-57e6-938b-6244b12921dd",
+  "slug": "Kettlebell_One-Legged_Deadlift",
+  "name_zh": "壶铃单腿硬拉",
+  "name_en": "Kettlebell One-Legged Deadlift",
+  "body_part": "legs",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "glutes",
+   "lower back"
+  ],
+  "equipment": "kettlebells",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Kettlebell_One-Legged_Deadlift/0.webp",
+   "Kettlebell_One-Legged_Deadlift/1.webp"
+  ]
+ },
+ {
+  "id": "fd43a42e-fd6c-5527-93d7-c88ee61ea0af",
+  "slug": "Thigh_Abductor",
+  "name_zh": "髋外展机",
+  "name_en": "Thigh Abductor",
+  "body_part": "legs",
+  "primary_muscles": [
+   "abductors"
+  ],
+  "secondary_muscles": [
+   "glutes"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Thigh_Abductor/0.webp",
+   "Thigh_Abductor/1.webp"
+  ]
+ },
+ {
+  "id": "7f615468-f50b-5abe-b2ff-4f85222301a1",
+  "slug": "Thigh_Adductor",
+  "name_zh": "髋内收机",
+  "name_en": "Thigh Adductor",
+  "body_part": "legs",
+  "primary_muscles": [
+   "adductors"
+  ],
+  "secondary_muscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Thigh_Adductor/0.webp",
+   "Thigh_Adductor/1.webp"
+  ]
+ },
+ {
+  "id": "11553e24-40bc-550c-9aef-d3597a4370a0",
+  "slug": "Glute_Ham_Raise",
+  "name_zh": "臀腿屈伸",
+  "name_en": "Glute Ham Raise",
+  "body_part": "legs",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes"
+  ],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Glute_Ham_Raise/0.webp",
+   "Glute_Ham_Raise/1.webp"
+  ]
+ },
+ {
+  "id": "4747f93b-dea8-5e8d-94e2-6a3275ba2e4b",
+  "slug": "Standing_Calf_Raises",
+  "name_zh": "站姿提踵",
+  "name_en": "Standing Calf Raises",
+  "body_part": "legs",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Standing_Calf_Raises/0.webp",
+   "Standing_Calf_Raises/1.webp"
+  ]
+ },
+ {
+  "id": "d4be86b4-228f-5ec1-ab7e-21647af74aa3",
+  "slug": "Seated_Calf_Raise",
+  "name_zh": "坐姿提踵",
+  "name_en": "Seated Calf Raise",
+  "body_part": "legs",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Seated_Calf_Raise/0.webp",
+   "Seated_Calf_Raise/1.webp"
+  ]
+ },
+ {
+  "id": "85f87826-59da-5a66-a7d0-efdb303a71cc",
+  "slug": "Standing_Dumbbell_Calf_Raise",
+  "name_zh": "哑铃站姿提踵",
+  "name_en": "Standing Dumbbell Calf Raise",
+  "body_part": "legs",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Standing_Dumbbell_Calf_Raise/0.webp",
+   "Standing_Dumbbell_Calf_Raise/1.webp"
+  ]
+ },
+ {
+  "id": "cfc3cb66-15ce-51b7-9b57-86988d5c0f98",
+  "slug": "Standing_Barbell_Calf_Raise",
+  "name_zh": "杠铃站姿提踵",
+  "name_en": "Standing Barbell Calf Raise",
+  "body_part": "legs",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Standing_Barbell_Calf_Raise/0.webp",
+   "Standing_Barbell_Calf_Raise/1.webp"
+  ]
+ },
+ {
+  "id": "08780e46-5184-58bf-9b3d-a1c8a5e1d9d6",
+  "slug": "Calf_Press_On_The_Leg_Press_Machine",
+  "name_zh": "腿举机提踵",
+  "name_en": "Calf Press On The Leg Press Machine",
+  "body_part": "legs",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Calf_Press_On_The_Leg_Press_Machine/0.webp",
+   "Calf_Press_On_The_Leg_Press_Machine/1.webp"
+  ]
+ },
+ {
+  "id": "c99e95cc-557a-55fa-a44a-057484299ce6",
+  "slug": "Calf_Press",
+  "name_zh": "小腿推举机",
+  "name_en": "Calf Press",
+  "body_part": "legs",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Calf_Press/0.webp",
+   "Calf_Press/1.webp"
+  ]
+ },
+ {
+  "id": "dd75b711-2b9a-54bd-a327-bf8fdca87b09",
+  "slug": "Smith_Machine_Calf_Raise",
+  "name_zh": "史密斯提踵",
+  "name_en": "Smith Machine Calf Raise",
+  "body_part": "legs",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Smith_Machine_Calf_Raise/0.webp",
+   "Smith_Machine_Calf_Raise/1.webp"
+  ]
+ },
+ {
+  "id": "53eea985-b179-501f-aab6-8a7ba152a56a",
+  "slug": "Dumbbell_Seated_One-Leg_Calf_Raise",
+  "name_zh": "哑铃坐姿单腿提踵",
+  "name_en": "Dumbbell Seated One-Leg Calf Raise",
+  "body_part": "legs",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dumbbell_Seated_One-Leg_Calf_Raise/0.webp",
+   "Dumbbell_Seated_One-Leg_Calf_Raise/1.webp"
+  ]
+ },
+ {
+  "id": "16734ab6-1ca6-51ed-a3e8-22b675e54fed",
+  "slug": "Monster_Walk",
+  "name_zh": "弹力带怪兽步",
+  "name_en": "Monster Walk",
+  "body_part": "legs",
+  "primary_muscles": [
+   "abductors"
+  ],
+  "secondary_muscles": [],
+  "equipment": "bands",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Monster_Walk/0.webp",
+   "Monster_Walk/1.webp"
+  ]
+ },
+ {
+  "id": "98635b84-9801-5834-b5b5-ee6d54270bc9",
+  "slug": "Barbell_Hip_Thrust",
+  "name_zh": "杠铃臀推",
+  "name_en": "Barbell Hip Thrust",
+  "body_part": "glutes",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "hamstrings"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Barbell_Hip_Thrust/0.webp",
+   "Barbell_Hip_Thrust/1.webp"
+  ]
+ },
+ {
+  "id": "573a0b8c-d268-56f8-8c3a-0a34f12c2328",
+  "slug": "Barbell_Glute_Bridge",
+  "name_zh": "杠铃臀桥",
+  "name_en": "Barbell Glute Bridge",
+  "body_part": "glutes",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "hamstrings"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Barbell_Glute_Bridge/0.webp",
+   "Barbell_Glute_Bridge/1.webp"
+  ]
+ },
+ {
+  "id": "12235757-22aa-5d8f-b8b3-efd452402ee2",
+  "slug": "Single_Leg_Glute_Bridge",
+  "name_zh": "单腿臀桥",
+  "name_en": "Single Leg Glute Bridge",
+  "body_part": "glutes",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Single_Leg_Glute_Bridge/0.webp",
+   "Single_Leg_Glute_Bridge/1.webp"
+  ]
+ },
+ {
+  "id": "cfa1ca83-1513-5eee-b9a5-bcbf3e85dfdc",
+  "slug": "Butt_Lift_Bridge",
+  "name_zh": "臀桥",
+  "name_en": "Butt Lift (Bridge)",
+  "body_part": "glutes",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Butt_Lift_Bridge/0.webp",
+   "Butt_Lift_Bridge/1.webp"
+  ]
+ },
+ {
+  "id": "2eea44aa-63da-5bf3-954c-6b33792a5c93",
+  "slug": "Glute_Kickback",
+  "name_zh": "臀部后踢",
+  "name_en": "Glute Kickback",
+  "body_part": "glutes",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Glute_Kickback/0.webp",
+   "Glute_Kickback/1.webp"
+  ]
+ },
+ {
+  "id": "ed80d145-6407-5247-827a-7f32a9bf1647",
+  "slug": "One-Legged_Cable_Kickback",
+  "name_zh": "绳索单腿后踢",
+  "name_en": "One-Legged Cable Kickback",
+  "body_part": "glutes",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "One-Legged_Cable_Kickback/0.webp",
+   "One-Legged_Cable_Kickback/1.webp"
+  ]
+ },
+ {
+  "id": "8fbb2c34-a389-563a-b853-5c9e7e8cf9ef",
+  "slug": "Pull_Through",
+  "name_zh": "绳索拉穿",
+  "name_en": "Pull Through",
+  "body_part": "glutes",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings",
+   "lower back"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Pull_Through/0.webp",
+   "Pull_Through/1.webp"
+  ]
+ },
+ {
+  "id": "7480069b-a846-5d36-ad7d-0c5d696d2c24",
+  "slug": "One-Arm_Kettlebell_Swings",
+  "name_zh": "单臂壶铃摆动",
+  "name_en": "One-Arm Kettlebell Swings",
+  "body_part": "legs",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "lower back",
+   "shoulders"
+  ],
+  "equipment": "kettlebells",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "One-Arm_Kettlebell_Swings/0.webp",
+   "One-Arm_Kettlebell_Swings/1.webp"
+  ]
+ },
+ {
+  "id": "6cae54fc-8a8c-5e01-9ed6-b361cfc6a549",
+  "slug": "Crunches",
+  "name_zh": "卷腹",
+  "name_en": "Crunches",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Crunches/0.webp",
+   "Crunches/1.webp"
+  ]
+ },
+ {
+  "id": "d0ed0817-04d7-5df3-91f2-6c3946d35407",
+  "slug": "Decline_Crunch",
+  "name_zh": "下斜卷腹",
+  "name_en": "Decline Crunch",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Decline_Crunch/0.webp",
+   "Decline_Crunch/1.webp"
+  ]
+ },
+ {
+  "id": "4756d276-66b6-5ebb-b602-08177f3dff44",
+  "slug": "Cable_Crunch",
+  "name_zh": "绳索卷腹",
+  "name_en": "Cable Crunch",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Cable_Crunch/0.webp",
+   "Cable_Crunch/1.webp"
+  ]
+ },
+ {
+  "id": "20624760-4d92-5baa-a772-dceb790a21d0",
+  "slug": "Cable_Seated_Crunch",
+  "name_zh": "坐姿绳索卷腹",
+  "name_en": "Cable Seated Crunch",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Cable_Seated_Crunch/0.webp",
+   "Cable_Seated_Crunch/1.webp"
+  ]
+ },
+ {
+  "id": "a91dd6b8-a32d-5fbe-b163-2cbe0cfc7c20",
+  "slug": "Ab_Crunch_Machine",
+  "name_zh": "卷腹机",
+  "name_en": "Ab Crunch Machine",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "machine",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Ab_Crunch_Machine/0.webp",
+   "Ab_Crunch_Machine/1.webp"
+  ]
+ },
+ {
+  "id": "86213782-ce0a-5cd5-aa91-03fe8b76e873",
+  "slug": "Reverse_Crunch",
+  "name_zh": "反向卷腹",
+  "name_en": "Reverse Crunch",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Reverse_Crunch/0.webp",
+   "Reverse_Crunch/1.webp"
+  ]
+ },
+ {
+  "id": "78d9d2a6-b067-58fe-b38f-9bd8aa402223",
+  "slug": "Oblique_Crunches",
+  "name_zh": "侧向卷腹",
+  "name_en": "Oblique Crunches",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Oblique_Crunches/0.webp",
+   "Oblique_Crunches/1.webp"
+  ]
+ },
+ {
+  "id": "33912a12-1535-5f04-8a2c-9ffeabd7ffa3",
+  "slug": "Russian_Twist",
+  "name_zh": "俄罗斯转体",
+  "name_en": "Russian Twist",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [
+   "lower back"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Russian_Twist/0.webp",
+   "Russian_Twist/1.webp"
+  ]
+ },
+ {
+  "id": "db391c5c-c0a5-5129-8eb9-653a912941dd",
+  "slug": "Cable_Russian_Twists",
+  "name_zh": "绳索俄罗斯转体",
+  "name_en": "Cable Russian Twists",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Cable_Russian_Twists/0.webp",
+   "Cable_Russian_Twists/1.webp"
+  ]
+ },
+ {
+  "id": "24f2a5f9-6f0a-5519-8345-619fbf1d3624",
+  "slug": "Sit-Up",
+  "name_zh": "仰卧起坐",
+  "name_en": "Sit-Up",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Sit-Up/0.webp",
+   "Sit-Up/1.webp"
+  ]
+ },
+ {
+  "id": "d6510718-c583-5ad2-b4dd-88071e1ee2cd",
+  "slug": "Jackknife_Sit-Up",
+  "name_zh": "折刀仰卧起坐",
+  "name_en": "Jackknife Sit-Up",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Jackknife_Sit-Up/0.webp",
+   "Jackknife_Sit-Up/1.webp"
+  ]
+ },
+ {
+  "id": "06ae2322-12e0-5ccd-8586-12b7bee78928",
+  "slug": "Hanging_Leg_Raise",
+  "name_zh": "悬垂举腿",
+  "name_en": "Hanging Leg Raise",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Hanging_Leg_Raise/0.webp",
+   "Hanging_Leg_Raise/1.webp"
+  ]
+ },
+ {
+  "id": "81514d50-a83f-5534-aab3-8110d622d9e3",
+  "slug": "Flat_Bench_Lying_Leg_Raise",
+  "name_zh": "平凳仰卧举腿",
+  "name_en": "Flat Bench Lying Leg Raise",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Flat_Bench_Lying_Leg_Raise/0.webp",
+   "Flat_Bench_Lying_Leg_Raise/1.webp"
+  ]
+ },
+ {
+  "id": "7ca16973-887d-5ed9-a66d-2409a1a7317d",
+  "slug": "Flutter_Kicks",
+  "name_zh": "交替打腿",
+  "name_en": "Flutter Kicks",
+  "body_part": "glutes",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Flutter_Kicks/0.webp",
+   "Flutter_Kicks/1.webp"
+  ]
+ },
+ {
+  "id": "1a88d43e-8023-55e5-bbdb-e00522ceab27",
+  "slug": "Dead_Bug",
+  "name_zh": "死虫式",
+  "name_en": "Dead Bug",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dead_Bug/0.webp",
+   "Dead_Bug/1.webp"
+  ]
+ },
+ {
+  "id": "b8907aad-b6db-5e27-b030-84084de8108e",
+  "slug": "Plank",
+  "name_zh": "平板支撑",
+  "name_en": "Plank",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": null,
+  "image_paths": [
+   "Plank/0.webp",
+   "Plank/1.webp"
+  ]
+ },
+ {
+  "id": "61a39939-be2b-5a73-be71-3cd8c716cc7c",
+  "slug": "Side_Bridge",
+  "name_zh": "侧平板支撑",
+  "name_en": "Side Bridge",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [
+   "shoulders"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": null,
+  "image_paths": [
+   "Side_Bridge/0.webp",
+   "Side_Bridge/1.webp"
+  ]
+ },
+ {
+  "id": "cb351ae1-6db2-518b-a422-af530b16821e",
+  "slug": "Barbell_Ab_Rollout",
+  "name_zh": "杠铃卷腹轮",
+  "name_en": "Barbell Ab Rollout",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [
+   "lower back",
+   "shoulders"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Barbell_Ab_Rollout/0.webp",
+   "Barbell_Ab_Rollout/1.webp"
+  ]
+ },
+ {
+  "id": "9cdb3395-f406-50d1-9cef-c0dd0496936f",
+  "slug": "Barbell_Ab_Rollout_-_On_Knees",
+  "name_zh": "跪姿杠铃卷腹轮",
+  "name_en": "Barbell Ab Rollout - On Knees",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [
+   "lower back",
+   "shoulders"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Barbell_Ab_Rollout_-_On_Knees/0.webp",
+   "Barbell_Ab_Rollout_-_On_Knees/1.webp"
+  ]
+ },
+ {
+  "id": "b579cd43-d0f3-51d8-ae7e-72b8359ae129",
+  "slug": "Pallof_Press",
+  "name_zh": "帕洛夫推",
+  "name_en": "Pallof Press",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [
+   "chest",
+   "shoulders",
+   "triceps"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Pallof_Press/0.webp",
+   "Pallof_Press/1.webp"
+  ]
+ },
+ {
+  "id": "c2888cbf-aa2d-5746-9403-e6503c45751a",
+  "slug": "Standing_Cable_Wood_Chop",
+  "name_zh": "绳索伐木",
+  "name_en": "Standing Cable Wood Chop",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [
+   "shoulders"
+  ],
+  "equipment": "cable",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Standing_Cable_Wood_Chop/0.webp",
+   "Standing_Cable_Wood_Chop/1.webp"
+  ]
+ },
+ {
+  "id": "10b23f44-3eac-5661-ad7a-3a93c0b713cd",
+  "slug": "Barbell_Side_Bend",
+  "name_zh": "杠铃侧弯",
+  "name_en": "Barbell Side Bend",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [
+   "lower back"
+  ],
+  "equipment": "barbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Barbell_Side_Bend/0.webp",
+   "Barbell_Side_Bend/1.webp"
+  ]
+ },
+ {
+  "id": "09950fe5-3929-5d80-92e6-bc6c6554b669",
+  "slug": "Dumbbell_Side_Bend",
+  "name_zh": "哑铃侧弯",
+  "name_en": "Dumbbell Side Bend",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "dumbbell",
+  "tracking_type": "weight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Dumbbell_Side_Bend/0.webp",
+   "Dumbbell_Side_Bend/1.webp"
+  ]
+ },
+ {
+  "id": "96bf66ce-382c-56d9-8b18-00f8338fd74f",
+  "slug": "Air_Bike",
+  "name_zh": "空中脚踏车",
+  "name_en": "Air Bike",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": null,
+  "image_paths": [
+   "Air_Bike/0.webp",
+   "Air_Bike/1.webp"
+  ]
+ }
+]
