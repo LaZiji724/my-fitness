@@ -67,7 +67,7 @@ void main() {
 
   setUp(() {
     remote = FakeRemote();
-    clock = DateTime(2026, 11, 2, 9);
+    clock = DateTime.utc(2026, 11, 2, 9);
     dbA = AppDatabase.forTesting(NativeDatabase.memory());
     dbB = AppDatabase.forTesting(NativeDatabase.memory());
     syncA = SyncService(dbA, remote, userId: () => 'u1');
@@ -165,9 +165,9 @@ void main() {
     await syncB.syncNow();
 
     // B 先改（早），A 后改（晚）；B 还没同步
-    clock = DateTime(2026, 11, 2, 10);
+    clock = DateTime.utc(2026, 11, 2, 10);
     await PlanRepository(dbB, userId: () => 'u1', now: () => clock).renameTemplate(t, 'B的名字');
-    clock = DateTime(2026, 11, 2, 11);
+    clock = DateTime.utc(2026, 11, 2, 11);
     await plansA.renameTemplate(t, 'A的名字');
     remote.serverNow = DateTime.utc(2026, 11, 2, 11, 5);
     await syncA.syncNow(); // 云端 = A的名字，updated_at=11:05（服务器时间）
@@ -184,13 +184,13 @@ void main() {
     await syncA.syncNow();
     await syncB.syncNow();
 
-    clock = DateTime(2026, 11, 2, 10);
+    clock = DateTime.utc(2026, 11, 2, 10);
     remote.serverNow = DateTime.utc(2026, 11, 2, 10, 5);
     await plansA.renameTemplate(t, 'A的名字');
     await syncA.syncNow();
 
     // B 在更晚的时间改名，然后同步：先推（云端更新时间变成 serverNow），再拉回自己
-    clock = DateTime(2026, 11, 2, 12);
+    clock = DateTime.utc(2026, 11, 2, 12);
     remote.serverNow = DateTime.utc(2026, 11, 2, 12, 5);
     await PlanRepository(dbB, userId: () => 'u1', now: () => clock).renameTemplate(t, 'B的名字');
     await syncB.syncNow();
