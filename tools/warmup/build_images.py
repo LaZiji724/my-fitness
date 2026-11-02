@@ -1,4 +1,4 @@
-"""动作图与计划封面：照片（free-exercise-db，The Unlicense）统一暖黑白处理 + 原创示意图。
+"""动作图与计划封面：照片（free-exercise-db，The Unlicense）+ 原创示意图。动作图保留照片原色，计划封面仍是暖黑白调。
 
 动作图 → app/assets/exercises/{slug}_{0,1}.webp（640×480）；新增 / 补图的动作才生成，原有 235 个动作的图不动。
 计划封面 → app/assets/programs/{slug}.webp（640×360）。
@@ -62,8 +62,8 @@ def _subject_cx(gray: Image.Image, thr: int = 80) -> float:
     return (lo + hi + 1) / 2 * 5
 
 
-def crop_ratio(img: Image.Image, ratio: float, out: tuple[int, int]) -> Image.Image:
-    """按人物位置水平居中裁成 ratio（宽/高），灰度 + 自动对比 + 暖调三色映射。"""
+def crop_ratio(img: Image.Image, ratio: float, out: tuple[int, int], color: bool = False) -> Image.Image:
+    """按人物位置水平居中裁成 ratio（宽/高）。color=True 保留原色；否则灰度 + 自动对比 + 暖调三色映射。"""
     w, h = img.size
     gray = ImageOps.autocontrast(ImageOps.grayscale(img), cutoff=1)
     cw = min(w, int(h * ratio))
@@ -71,6 +71,8 @@ def crop_ratio(img: Image.Image, ratio: float, out: tuple[int, int]) -> Image.Im
     cx = _subject_cx(gray)
     left = int(min(max(cx - cw / 2, 0), w - cw))
     top = int(min(max((h - ch) * 0.35, 0), h - ch))
+    if color:
+        return img.crop((left, top, left + cw, top + ch)).resize(out, Image.LANCZOS)
     return tone(gray.crop((left, top, left + cw, top + ch))).resize(out, Image.LANCZOS)
 
 
@@ -99,7 +101,7 @@ def build_exercise_images(exercises: list[dict], base_count: int) -> dict[str, s
     def one(job):
         slug, did = job
         for i in (0, 1):
-            save_webp(crop_ratio(photo(did, i), 4 / 3, (640, 480)), EX_OUT / f"{slug}_{i}.webp")
+            save_webp(crop_ratio(photo(did, i), 4 / 3, (640, 480), color=True), EX_OUT / f"{slug}_{i}.webp")
 
     with ThreadPoolExecutor(8) as pool:
         list(pool.map(one, jobs))
