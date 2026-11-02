@@ -38,15 +38,27 @@ class WorkoutSummaryPage extends ConsumerWidget {
     final byId = ref.watch(exerciseByIdProvider);
     final prs = summary.prs.entries.where((e) => e.value.isNotEmpty).toList();
 
-    Widget stat(String value, String label) => Expanded(
-          child: Column(
-            children: [
-              Text(value, style: AppText.titleMedium.copyWith(color: c.onHero)),
-              const SizedBox(height: 2),
-              Text(label, style: AppText.caption.copyWith(color: c.onHero2)),
-            ],
-          ),
-        );
+    // 数字用等宽数字字体放大，单位缩小放在后面：一眼先看到「52」「12.35」「14」
+    Widget stat(String text, String label) {
+      final m = RegExp(r'^([0-9.]+)\s*(.*)$').firstMatch(text);
+      final number = m?.group(1) ?? text;
+      final unit = m?.group(2) ?? '';
+      return Expanded(
+        child: Column(
+          children: [
+            Text.rich(
+              TextSpan(children: [
+                TextSpan(text: number, style: AppText.numLarge.copyWith(color: c.onHero)),
+                if (unit.isNotEmpty) TextSpan(text: ' $unit', style: AppText.label.copyWith(color: c.onHero2)),
+              ]),
+              maxLines: 1,
+            ),
+            const SizedBox(height: 2),
+            Text(label, style: AppText.caption.copyWith(color: c.onHero2)),
+          ],
+        ),
+      );
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -55,15 +67,26 @@ class WorkoutSummaryPage extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: AppSpace.s24),
+              const SizedBox(height: AppSpace.s16),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(color: c.accent, shape: BoxShape.circle),
+                  child: Icon(Icons.local_fire_department_rounded, size: 32, color: c.onAccent),
+                ),
+              ),
+              const SizedBox(height: AppSpace.s16),
               Text('训练完成', style: AppText.titleLarge.copyWith(color: c.text)),
               const SizedBox(height: AppSpace.s4),
-              Text('这次练得不错，记录已保存', style: AppText.body.copyWith(color: c.text2)),
+              Text(prs.isEmpty ? '这次练得不错，记录已保存' : '破了 ${prs.length} 个动作的纪录，记录已保存',
+                  style: AppText.body.copyWith(color: c.text2)),
               const SizedBox(height: AppSpace.s24),
               DecoratedBox(
                 decoration: BoxDecoration(color: c.hero, borderRadius: AppRadius.card),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpace.s24, horizontal: AppSpace.s12),
+                  padding: const EdgeInsets.symmetric(vertical: AppSpace.s20, horizontal: AppSpace.s8),
                   child: Row(
                     children: [
                       stat(formatSpan(summary.duration), '时长'),
@@ -84,12 +107,17 @@ class WorkoutSummaryPage extends ConsumerWidget {
                         Padding(
                           padding: const EdgeInsets.only(bottom: AppSpace.s8),
                           child: DecoratedBox(
-                            decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(16)),
+                            decoration: BoxDecoration(color: c.surface, borderRadius: AppRadius.card),
                             child: Padding(
                               padding: const EdgeInsets.all(AppSpace.s16),
                               child: Row(
                                 children: [
-                                  Icon(Icons.emoji_events_rounded, color: c.accent),
+                                  Container(
+                                    width: 40,
+                                    height: 40,
+                                    decoration: BoxDecoration(color: c.accentSoft, shape: BoxShape.circle),
+                                    child: Icon(Icons.emoji_events_rounded, size: 22, color: c.accentText),
+                                  ),
                                   const SizedBox(width: AppSpace.s12),
                                   Expanded(
                                     child: Column(
@@ -98,7 +126,7 @@ class WorkoutSummaryPage extends ConsumerWidget {
                                         Text(byId[e.key]?.nameZh ?? '动作',
                                             style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
                                         Text(e.value.map(prLabel).join(' · '),
-                                            style: AppText.caption.copyWith(color: c.text2)),
+                                            style: AppText.label.copyWith(color: c.accentText)),
                                       ],
                                     ),
                                   ),
@@ -115,7 +143,7 @@ class WorkoutSummaryPage extends ConsumerWidget {
               _SaveTemplateButton(workoutId: summary.workoutId),
               const SizedBox(height: AppSpace.s12),
               FilledButton(
-                style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
+                style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
                 onPressed: () => context.go('/today'),
                 child: const Text('完成'),
               ),

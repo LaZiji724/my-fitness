@@ -124,9 +124,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('训练完成'), findsOneWidget);
-    expect(find.text('52分钟'), findsOneWidget);
-    expect(find.text('12.35 吨'), findsOneWidget);
-    expect(find.text('14'), findsOneWidget);
+    // 数字与单位分开排版（Text.rich），按整段文字查找
+    expect(find.text('52 分钟', findRichText: true), findsOneWidget);
+    expect(find.text('12.35 吨', findRichText: true), findsOneWidget);
+    expect(find.text('14', findRichText: true), findsOneWidget);
     expect(find.text('重量纪录 · 1RM 纪录'), findsOneWidget);
 
     await tester.tap(find.text('完成'));

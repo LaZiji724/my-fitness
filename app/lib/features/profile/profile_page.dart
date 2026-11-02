@@ -20,7 +20,11 @@ class ProfilePage extends ConsumerWidget {
         content: const Text('退出后需要重新输入用户名和密码。'),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('取消')),
-          TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('退出')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: TextButton.styleFrom(foregroundColor: context.colors.danger),
+            child: const Text('退出'),
+          ),
         ],
       ),
     );
@@ -36,11 +40,15 @@ class ProfilePage extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(AppSpace.pageGutter),
         children: [
+          const SizedBox(height: AppSpace.s8),
           Center(
-            child: AvatarView(
-              kind: profile?.avatarKind ?? 'preset',
-              avatarRef: profile?.avatarRef ?? 'avatar_01',
-              size: 88,
+            child: DecoratedBox(
+              decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: c.surface, width: 4)),
+              child: AvatarView(
+                kind: profile?.avatarKind ?? 'preset',
+                avatarRef: profile?.avatarRef ?? 'avatar_01',
+                size: 88,
+              ),
             ),
           ),
           const SizedBox(height: AppSpace.s12),
@@ -52,13 +60,20 @@ class ProfilePage extends ConsumerWidget {
             child: Text('@${profile?.username ?? ''}',
                 style: AppText.label.copyWith(color: c.text3)),
           ),
-          const SizedBox(height: AppSpace.s24),
+          const SizedBox(height: AppSpace.s32),
+          Padding(
+            padding: const EdgeInsets.only(left: AppSpace.s4, bottom: AppSpace.s8),
+            child: Text('数据与同步', style: AppText.label.copyWith(color: c.text2, fontWeight: FontWeight.w700)),
+          ),
           const _SyncSection(),
           const SizedBox(height: AppSpace.s24),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(foregroundColor: c.danger, backgroundColor: c.surface),
             onPressed: () => _confirmSignOut(context, ref),
             child: const Text('退出登录'),
           ),
+          const SizedBox(height: AppSpace.s12),
+          Center(child: Text('我的健身 · 数据保存在本机，并自动同步到你的账号', style: AppText.caption.copyWith(color: c.text3))),
         ],
       ),
     );
@@ -79,14 +94,23 @@ class _SyncSection extends ConsumerWidget {
       _ => s.lastSync == null ? '还没有同步过' : '上次同步：${formatAgo(s.lastSync!, DateTime.now())}${s.pending ? '，还有改动待上传' : ''}',
     };
     Widget row(IconData icon, String title, String? sub, VoidCallback? onTap, {Widget? trailing}) => ListTile(
-          leading: Icon(icon, color: c.text2),
+          leading: Container(
+            width: 36,
+            height: 36,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(color: c.sunken, borderRadius: BorderRadius.circular(AppRadius.sm)),
+            child: Icon(icon, size: 20, color: c.text2),
+          ),
           title: Text(title, style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
           subtitle: sub == null ? null : Text(sub, style: AppText.label.copyWith(color: s.phase == SyncPhase.error && title == '云同步' ? c.danger : c.text2)),
           trailing: trailing ?? Icon(Icons.chevron_right_rounded, color: c.text3),
           onTap: onTap,
         );
-    return DecoratedBox(
-      decoration: BoxDecoration(color: c.surface, borderRadius: AppRadius.card),
+    // 用 Material 而不是 DecoratedBox 做卡片底，点按时的水波纹才看得见
+    return Material(
+      color: c.surface,
+      borderRadius: AppRadius.card,
+      clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
           row(
@@ -98,9 +122,9 @@ class _SyncSection extends ConsumerWidget {
                 ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
                 : Text('立即同步', style: AppText.label.copyWith(color: c.accentText, fontWeight: FontWeight.w600)),
           ),
-          const Divider(height: 1, indent: 16, endIndent: 16),
+          const Divider(height: 1, indent: 68, endIndent: 16),
           row(Icons.ios_share_rounded, '导出备份', '把全部训练数据保存成一个文件', () => exportBackup(context, ref)),
-          const Divider(height: 1, indent: 16, endIndent: 16),
+          const Divider(height: 1, indent: 68, endIndent: 16),
           row(Icons.file_open_outlined, '导入备份', '从备份文件恢复数据', () => importBackup(context, ref)),
         ],
       ),

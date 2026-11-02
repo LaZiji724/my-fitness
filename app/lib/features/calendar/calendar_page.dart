@@ -154,19 +154,12 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
             Text(formatMd(_selected), style: AppText.titleSmall.copyWith(color: c.text)),
             const SizedBox(height: AppSpace.s12),
             if (selectedWorkouts.isEmpty)
-              DecoratedBox(
-                decoration: BoxDecoration(color: c.surface, borderRadius: AppRadius.card),
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpace.cardPadding),
-                  child: Center(
-                    child: Text(
-                      selectedPlan != null && !_selected.isBefore(today)
-                          ? (selectedPlan.isRest ? '计划：休息' : '计划：${selectedPlan.template!.template.name}')
-                          : '这天没有训练记录',
-                      style: AppText.body.copyWith(color: c.text2),
-                    ),
-                  ),
-                ),
+              _EmptyDay(
+                planned: selectedPlan != null && !_selected.isBefore(today),
+                text: selectedPlan != null && !_selected.isBefore(today)
+                    ? (selectedPlan.isRest ? '计划：休息' : '计划：${selectedPlan.template!.template.name}')
+                    : '这天没有训练记录',
+                rest: selectedPlan?.isRest ?? false,
               )
             else
               for (final w in selectedWorkouts) ...[
@@ -372,6 +365,51 @@ class _ExerciseLine extends StatelessWidget {
             Text(best, style: AppText.label.copyWith(color: c.text2)),
           ],
         ],
+      ),
+    );
+  }
+}
+
+/// 选中日没有训练记录时的提示：有计划就显示当天安排，否则一句空状态。
+class _EmptyDay extends StatelessWidget {
+  const _EmptyDay({required this.planned, required this.text, required this.rest});
+  final bool planned;
+  final String text;
+  final bool rest;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    final icon = !planned
+        ? Icons.event_busy_outlined
+        : rest
+            ? Icons.self_improvement_rounded
+            : Icons.fitness_center_rounded;
+    return DecoratedBox(
+      decoration: BoxDecoration(color: c.surface, borderRadius: AppRadius.card),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpace.cardPadding),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: planned && !rest ? c.accentSoft : c.sunken,
+                borderRadius: BorderRadius.circular(AppRadius.sm),
+              ),
+              child: Icon(icon, size: 20, color: planned && !rest ? c.accentText : c.text3),
+            ),
+            const SizedBox(width: AppSpace.s12),
+            Expanded(
+              child: Text(text,
+                  style: AppText.body.copyWith(
+                    color: planned ? c.text : c.text2,
+                    fontWeight: planned ? FontWeight.w600 : FontWeight.w400,
+                  )),
+            ),
+          ],
+        ),
       ),
     );
   }

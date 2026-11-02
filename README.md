@@ -95,7 +95,7 @@ cd app && flutter analyze && flutter test
 
 内置动作来自 [free-exercise-db](https://github.com/yuhonas/free-exercise-db)（The Unlicense，公有领域），
 手工精选 235 个常用动作并汉化（`tools/seed/curated.txt`）。构建产物已提交在 `tools/seed/out/`
-（`exercises.json` + 470 张 480px WebP，共约 8 MB；图片按设计稿统一成暖色黑白、居中方形裁切，规则在 `build_seed.py` 的 `stylize`），**不需要联网重新构建**。
+（`exercises.json` + 470 张 480px WebP，共约 10 MB；图片保留照片原有色彩、居中方形裁切，规则在 `build_seed.py` 的 `stylize`），**不需要联网重新构建**。
 
 把它们上传到你自己的 Supabase（只在你的电脑上运行，service_role 密钥不要发给任何人、不要提交）：
 

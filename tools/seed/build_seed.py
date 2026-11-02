@@ -20,7 +20,7 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor
 
 import requests
-from PIL import Image, ImageOps
+from PIL import Image
 
 HERE = pathlib.Path(__file__).resolve().parent
 CACHE = HERE / "cache"
@@ -79,18 +79,15 @@ def parse_curated() -> list[tuple[str, str, str | None]]:
     return rows
 
 
-# 统一风格（来自 UI 设计稿「动作图统一处理」）：居中裁成正方形 → 灰度 + 自动对比度 →
-# 黑 #1C1A19 / 中灰 #8B8580 / 白 #F6F3EE 三色映射 → 480×480。
-# 去掉健身房实拍里杂乱的颜色，整库像一套，橙色强调是界面里唯一的彩色。
+# 动作图处理：居中裁成正方形 → 480×480，保留照片原有色彩。
+# （最早的版本做过灰度 + 暖调三色映射，用户希望看到真实的颜色，所以去掉了。）
 def stylize(img: Image.Image) -> Image.Image:
     img = img.convert("RGB")
     w, h = img.size
     side = min(w, h)
     left, top = (w - side) // 2, (h - side) // 2
     img = img.crop((left, top, left + side, top + side))
-    gray = ImageOps.autocontrast(ImageOps.grayscale(img), cutoff=1)
-    out = ImageOps.colorize(gray, black="#1C1A19", mid="#8B8580", white="#F6F3EE")
-    return out.resize((480, 480), Image.LANCZOS)
+    return img.resize((480, 480), Image.LANCZOS)
 
 
 def convert_image(slug: str, idx: int) -> int:

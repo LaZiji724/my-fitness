@@ -255,7 +255,13 @@ class StatBlock extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text.rich(TextSpan(children: [
-            TextSpan(text: value, style: AppText.numLarge.copyWith(color: c.onHero)),
+            TextSpan(
+              text: value,
+              // 「入门」「进阶」这类文字值用黑体，与数字的视觉高度对齐
+              style: _isNumeric(value)
+                  ? AppText.numLarge.copyWith(color: c.onHero)
+                  : AppText.titleMedium.copyWith(color: c.onHero, height: 1.5),
+            ),
             TextSpan(text: ' $unit', style: AppText.caption.copyWith(color: c.onHero2, fontSize: 12)),
           ])),
           Text(label, style: AppText.caption.copyWith(color: c.onHero2)),
@@ -264,3 +270,5 @@ class StatBlock extends StatelessWidget {
     );
   }
 }
+
+bool _isNumeric(String v) => RegExp(r'^[0-9.\-–+]+$').hasMatch(v);
