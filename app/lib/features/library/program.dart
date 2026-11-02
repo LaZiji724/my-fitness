@@ -13,6 +13,7 @@ enum LibraryCategory {
   shaping('塑形美体'),
   muscle('增肌增重'),
   health('健康改善'),
+  activation('激活热身'),
   stretch('拉伸放松'),
   glute('丰满翘臀');
 
@@ -62,10 +63,14 @@ class ProgramItem {
     this.distanceM,
     required this.restSec,
     this.note,
+    this.section = 'main',
   });
 
   final String id;
   final String exerciseId;
+
+  /// warmup 热身 / main 正式训练 / cooldown 放松
+  final String section;
   final int position;
   final int warmupSets;
   final int sets;
@@ -94,6 +99,7 @@ class ProgramItem {
         distanceM: j['distance_m'] as int?,
         restSec: j['rest_sec'] as int,
         note: j['note'] as String?,
+        section: (j['section'] as String?) ?? 'main',
       );
 }
 

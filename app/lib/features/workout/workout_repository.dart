@@ -5,6 +5,7 @@ import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:my_fitness/core/db/app_database.dart';
+import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/workout/workout_math.dart';
 
 /// 一个动作及其所有组。
@@ -147,10 +148,39 @@ class WorkoutRepository {
               ..where((t) => t.workoutExerciseId.isIn(ids) & t.deletedAt.isNull())
               ..orderBy([(t) => OrderingTerm.asc(t.setIndex)]))
             .get();
+    // 分区顺序：热身 → 正式训练 → 放松（同一分区内按加入顺序）
+    const order = ['warmup', 'main', 'cooldown'];
+    int rank(String s) => order.contains(s) ? order.indexOf(s) : 1;
+    final sorted = [...exercises]..sort((a, b) {
+        final r = rank(a.section).compareTo(rank(b.section));
+        return r != 0 ? r : a.position.compareTo(b.position);
+      });
     return WorkoutView(
       w,
-      [for (final e in exercises) ExerciseBlock(e, sets.where((s) => s.workoutExerciseId == e.id).toList())],
+      [for (final e in sorted) ExerciseBlock(e, sets.where((s) => s.workoutExerciseId == e.id).toList())],
     );
+  }
+
+  /// 训练中给动作换分区（热身 / 正式 / 放松）。
+  Future<void> setSection(String workoutExerciseId, String section) async {
+    await (_db.update(_db.workoutExercises)..where((e) => e.id.equals(workoutExerciseId))).write(
+        WorkoutExercisesCompanion(section: Value(section), updatedAt: Value(_now()), dirty: const Value(true)));
+  }
+
+  /// 训练中把动作在「按次数 / 按时间」之间切换后，给还没完成的组补上对应的目标量。
+  Future<void> retargetSets(String workoutExerciseId, {required bool timed, int? seconds, int? reps}) async {
+    final t = _now();
+    final sets = await (_db.select(_db.workoutSets)
+          ..where((s) => s.workoutExerciseId.equals(workoutExerciseId) & s.deletedAt.isNull() & s.completed.equals(false)))
+        .get();
+    for (final s in sets) {
+      await (_db.update(_db.workoutSets)..where((x) => x.id.equals(s.id))).write(WorkoutSetsCompanion(
+        durationSec: timed ? Value(s.durationSec ?? seconds ?? 30) : const Value.absent(),
+        reps: timed ? const Value.absent() : Value(s.reps ?? reps ?? 10),
+        updatedAt: Value(t),
+        dirty: const Value(true),
+      ));
+    }
   }
 
   // ---------------------------------------------------------------- 动作与组
@@ -161,6 +191,9 @@ class WorkoutRepository {
   /// 没有上次记录时用 [defaultReps] 预填次数。
   /// [warmupSets] 个热身组排在正式组前面；[defaultDurationSec] 给按时间的动作预填每组秒数；
   /// [note] 是这个动作的要点，会显示在训练页。
+  /// [tracking] 是该动作当前生效的记录方式（已含用户的次数 / 时间偏好）：按时间的只预填秒数，按次数的只预填次数；
+  /// 计划里写的目标与它不一致时，改用 [fallbackReps] / [fallbackSeconds]（动作自带的建议量）。
+  /// [section] 是分区：warmup 热身 / main 正式训练 / cooldown 放松。
   Future<String> addExercise(
     String workoutId,
     String exerciseId, {
@@ -171,8 +204,16 @@ class WorkoutRepository {
     int warmupSets = 0,
     int? defaultDurationSec,
     String? note,
+    TrackingType? tracking,
+    int? fallbackReps,
+    int? fallbackSeconds,
+    String section = 'main',
   }) async {
     final t = _now();
+    final timed = tracking == TrackingType.duration;
+    final repsTracked = tracking != null && !timed;
+    if (timed) defaultDurationSec ??= fallbackSeconds ?? 30;
+    if (repsTracked) defaultReps ??= fallbackReps;
     final count = await (_db.selectOnly(_db.workoutExercises)
           ..addColumns([_db.workoutExercises.id.count()])
           ..where(_db.workoutExercises.workoutId.equals(workoutId) &
@@ -192,6 +233,7 @@ class WorkoutRepository {
             position: count,
             restSec: Value(restSec),
             note: Value(note),
+            section: Value(section),
           ));
       final n = exactSets || last.isEmpty ? defaultSets + warmupSets : last.length;
       for (var i = 0; i < n; i++) {
@@ -209,8 +251,8 @@ class WorkoutRepository {
               setIndex: i,
               kind: Value(kind),
               weightKg: Value(prev?.weightKg),
-              reps: Value(prev?.reps ?? defaultReps),
-              durationSec: Value(prev?.durationSec ?? defaultDurationSec),
+              reps: Value(timed ? null : (prev?.reps ?? defaultReps)),
+              durationSec: Value(repsTracked ? null : (prev?.durationSec ?? defaultDurationSec)),
             ));
       }
     });

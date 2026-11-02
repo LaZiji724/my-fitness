@@ -25,8 +25,8 @@ void main() {
   Program bySlug(String slug) => programs.firstWhere((p) => p.slug == slug);
 
   group('计划库数据', () {
-    test('覆盖 8 个目标分类，每类至少 5 个计划，总量不少于 60', () {
-      expect(programs.length, greaterThanOrEqualTo(60));
+    test('覆盖 9 个目标分类（含激活热身），每类至少 5 个计划，总量不少于 80', () {
+      expect(programs.length, greaterThanOrEqualTo(80));
       final cats = <String, int>{};
       for (final p in programs) {
         cats[p.category] = (cats[p.category] ?? 0) + 1;
@@ -220,9 +220,13 @@ void main() {
       expect(squat.repsMax, 8);
       expect(squat.restSec, 150);
       expect(squat.note, isNotEmpty);
-      final plank = a.exercises.last;
+      final plank = a.exercises.firstWhere((e) => byId[e.exerciseId]!.slug == 'Plank');
       expect(plank.targetDurationSec, 40);
       expect(plank.repsMin, isNull);
+      // 分区跟着计划走：开头是热身、结尾是放松
+      expect(a.exercises.first.section, 'warmup');
+      expect(a.exercises.last.section, 'cooldown');
+      expect(plank.section, 'main');
     });
 
     test('已有当前计划时，加入的新计划不抢当前；添加到日历才替换并从所选周一开始', () async {
@@ -263,8 +267,10 @@ void main() {
       expect(squat.sets.map((s) => s.kind).toList(), ['warmup', 'warmup', 'warmup', 'normal', 'normal', 'normal']);
       expect(squat.exercise.restSec, 150);
       expect(squat.exercise.note, isNotEmpty);
-      final plank = view.exercises.last;
+      final plank = view.exercises.firstWhere((b) => byId[b.exercise.exerciseId]!.slug == 'Plank');
       expect(plank.sets.every((s) => s.durationSec == 40), isTrue);
+      expect(view.exercises.first.exercise.section, 'warmup');
+      expect(view.exercises.last.exercise.section, 'cooldown');
       expect(plank.sets.length, 3);
 
       // 已有进行中的训练：不会重复创建
@@ -277,7 +283,7 @@ void main() {
       final p = bySlug('rowing-endurance');
       final r = await lib.startSession(workouts, p, p.sessionByKey('B')!);
       final view = (await workouts.loadWorkout(r.workout.id))!;
-      final row = view.exercises.first;
+      final row = view.exercises.firstWhere((b) => b.exercise.section == 'main');
       expect(row.exercise.note, contains('目标 4 公里'));
       expect(row.sets.single.durationSec, 25 * 60);
     });
@@ -316,7 +322,7 @@ void main() {
     });
   });
 
-  test('本地库从 v4 升级到 v5：旧数据保留，新列有默认值，新表可用', () async {
+  test('本地库从 v4 升级到 v6：旧数据保留，新列有默认值，新表可用', () async {
     final dir = Directory.systemTemp.createTempSync('mf_mig');
     addTearDown(() => dir.deleteSync(recursive: true));
     final file = File('${dir.path}/db.sqlite');
@@ -336,6 +342,9 @@ void main() {
     await old.customStatement('ALTER TABLE plans DROP COLUMN source_program_id');
     await old.customStatement('ALTER TABLE workouts DROP COLUMN source_program_id');
     await old.customStatement('DROP TABLE favorite_programs');
+    await old.customStatement('DROP TABLE exercise_prefs');
+    await old.customStatement('ALTER TABLE template_exercises DROP COLUMN section');
+    await old.customStatement('ALTER TABLE workout_exercises DROP COLUMN section');
     await old.customStatement('PRAGMA user_version = 4');
     await old.close();
 
@@ -350,5 +359,9 @@ void main() {
     await db.into(db.favoritePrograms).insert(
         FavoriteProgramsCompanion.insert(id: 'f', createdAt: t, updatedAt: t, userId: 'u', programId: 'x'));
     expect(await db.select(db.favoritePrograms).get(), hasLength(1));
+    expect(te.section, 'main', reason: '新增的分区列默认是正式训练');
+    await db.into(db.exercisePrefs).insert(ExercisePrefsCompanion.insert(
+        id: 'x', createdAt: t, updatedAt: t, userId: 'u', exerciseId: 'e', trackingType: 'duration'));
+    expect(await db.select(db.exercisePrefs).get(), hasLength(1));
   });
 }

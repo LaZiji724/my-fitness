@@ -43,6 +43,13 @@ class SessionDetailPage extends ConsumerWidget {
               style: AppText.label.copyWith(color: c.text2)),
           const SizedBox(height: AppSpace.s16),
           for (var i = 0; i < session.items.length; i++) ...[
+            if (session.items.any((x) => x.section != 'main') &&
+                (i == 0 || session.items[i - 1].section != session.items[i].section))
+              Padding(
+                padding: const EdgeInsets.only(top: AppSpace.s8, bottom: AppSpace.s8),
+                child: Text(WorkoutSection.fromKey(session.items[i].section).label,
+                    style: AppText.label.copyWith(color: c.text2, fontWeight: FontWeight.w700)),
+              ),
             _ChainRow(index: i + 1, item: session.items[i], exercise: byId[session.items[i].exerciseId]),
             const SizedBox(height: AppSpace.s8),
           ],

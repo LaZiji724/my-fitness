@@ -34,7 +34,8 @@ class TodayPage extends ConsumerWidget {
   Future<void> _startTemplate(BuildContext context, WidgetRef ref, String templateId, {String? planId}) async {
     await ref
         .read(planRepositoryProvider)
-        .startFromTemplate(ref.read(workoutRepositoryProvider), templateId, planId: planId);
+        .startFromTemplate(ref.read(workoutRepositoryProvider), templateId,
+            planId: planId, exercises: ref.read(exerciseByIdProvider));
     if (context.mounted) context.push('/workout');
   }
 

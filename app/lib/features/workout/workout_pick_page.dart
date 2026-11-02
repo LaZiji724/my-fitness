@@ -31,7 +31,16 @@ class _WorkoutPickPageState extends ConsumerState<WorkoutPickPage> {
         if (workout != null) {
           await ref
               .read(workoutRepositoryProvider)
-              .addExercise(workout.workout.id, exercise.id);
+              .addExercise(
+                workout.workout.id,
+                exercise.id,
+                defaultSets: exercise.defaultSets ?? 3,
+                defaultReps: exercise.defaultReps,
+                defaultDurationSec: exercise.defaultSeconds,
+                tracking: exercise.trackingType,
+                fallbackReps: exercise.defaultReps,
+                fallbackSeconds: exercise.defaultSeconds,
+              );
         }
         if (context.mounted) context.pop();
       },
