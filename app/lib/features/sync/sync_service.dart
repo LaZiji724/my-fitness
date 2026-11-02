@@ -78,6 +78,7 @@ class SyncService {
     SyncTableSpec(_db.workoutExercises, WorkoutExercise.fromJson),
     SyncTableSpec(_db.workoutSets, WorkoutSet.fromJson),
     SyncTableSpec(_db.bodyMetrics, BodyMetric.fromJson),
+    SyncTableSpec(_db.favoritePrograms, FavoriteProgram.fromJson),
   ];
 
   /// 同一时刻只跑一轮；重复调用直接复用正在进行的那一轮。

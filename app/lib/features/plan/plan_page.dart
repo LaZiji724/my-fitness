@@ -9,6 +9,7 @@ import 'package:my_fitness/features/plan/plan_providers.dart';
 import 'package:my_fitness/features/plan/plan_repository.dart';
 import 'package:my_fitness/features/plan/plan_widgets.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
+import 'package:my_fitness/features/library/library_providers.dart';
 import 'package:my_fitness/features/workout/workout_providers.dart';
 
 const _weekdays = ['一', '二', '三', '四', '五', '六', '日'];
@@ -77,6 +78,8 @@ class _PlansTab extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        const _LibraryEntry(),
+        const SizedBox(height: AppSpace.s12),
         if (active != null)
           _ActivePlanCard(plan: active, templates: templates, today: today)
         else
@@ -104,6 +107,47 @@ class _PlansTab extends ConsumerWidget {
           style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
         ),
       ],
+    );
+  }
+}
+
+/// 计划库入口：不用自己编排，直接选内置计划。
+class _LibraryEntry extends ConsumerWidget {
+  const _LibraryEntry();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final c = context.colors;
+    final count = ref.watch(programsProvider).value?.length;
+    return Material(
+      color: c.accentSoft,
+      borderRadius: AppRadius.card,
+      child: InkWell(
+        borderRadius: AppRadius.card,
+        onTap: () => context.push('/library'),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpace.cardPadding),
+          child: Row(
+            children: [
+              Icon(Icons.local_fire_department_rounded, color: c.accentText, size: 32),
+              const SizedBox(width: AppSpace.s12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('计划库', style: AppText.titleSmall.copyWith(color: c.text)),
+                    Text(
+                      count == null ? '内置训练计划，一键加入' : '$count 个内置计划 · 增肌、减脂、塑形、拉伸康复',
+                      style: AppText.label.copyWith(color: c.text2),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right_rounded, color: c.text2),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

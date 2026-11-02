@@ -12,6 +12,9 @@ import 'package:my_fitness/features/auth/register_page.dart';
 import 'package:my_fitness/features/calendar/calendar_page.dart';
 import 'package:my_fitness/features/exercises/exercise_detail_page.dart';
 import 'package:my_fitness/features/exercises/exercises_page.dart';
+import 'package:my_fitness/features/library/library_page.dart';
+import 'package:my_fitness/features/library/program_detail_page.dart';
+import 'package:my_fitness/features/library/session_detail_page.dart';
 import 'package:my_fitness/features/plan/plan_edit_page.dart';
 import 'package:my_fitness/features/plan/plan_page.dart';
 import 'package:my_fitness/features/plan/template_edit_page.dart';
@@ -74,6 +77,20 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'pick',
             builder: (_, state) => TemplatePickPage(templateId: state.pathParameters['id']!),
+          ),
+        ],
+      ),
+      GoRoute(path: '/library', builder: (_, _) => const LibraryPage()),
+      GoRoute(
+        path: '/library/:slug',
+        builder: (_, state) => ProgramDetailPage(slug: state.pathParameters['slug']!),
+        routes: [
+          GoRoute(
+            path: ':key',
+            builder: (_, state) => SessionDetailPage(
+              slug: state.pathParameters['slug']!,
+              sessionKey: state.pathParameters['key']!,
+            ),
           ),
         ],
       ),

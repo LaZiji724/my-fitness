@@ -24,6 +24,8 @@ class ExercisesPage extends ConsumerWidget {
     BodyPart.legs,
     BodyPart.glutes,
     BodyPart.core,
+    BodyPart.cardio,
+    BodyPart.other,
   ];
 
   @override

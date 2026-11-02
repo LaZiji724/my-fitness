@@ -4702,5 +4702,1511 @@
    "Air_Bike/0.webp",
    "Air_Bike/1.webp"
   ]
+ },
+ {
+  "id": "da89e675-32fd-5e1d-97f1-05a9b6ee05d9",
+  "slug": "fc_treadmill_walk",
+  "name_zh": "跑步机快走",
+  "name_en": "Treadmill Brisk Walk",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "quadriceps",
+   "calves"
+  ],
+  "secondary_muscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "treadmill",
+  "tracking_type": "duration",
+  "instructions_zh": "速度以能说话但不能唱歌为准，约 5–6.5 公里/小时；抬头挺胸，手臂自然摆动，不要抓着扶手。",
+  "image_paths": []
+ },
+ {
+  "id": "c1494c76-3a3d-5a05-a594-e3b039978db2",
+  "slug": "fc_treadmill_incline_walk",
+  "name_zh": "跑步机坡度走",
+  "name_en": "Treadmill Incline Walk",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "glutes",
+   "calves"
+  ],
+  "secondary_muscles": [
+   "quadriceps",
+   "hamstrings"
+  ],
+  "equipment": "treadmill",
+  "tracking_type": "duration",
+  "instructions_zh": "坡度调到 6–12%，速度放慢到 4–5.5 公里/小时；身体保持直立，不要扶扶手，臀腿发力蹬地。",
+  "image_paths": []
+ },
+ {
+  "id": "f6278317-759e-5f68-98e4-800c16ca0bf0",
+  "slug": "fc_treadmill_jog",
+  "name_zh": "跑步机慢跑",
+  "name_en": "Treadmill Easy Jog",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "quadriceps",
+   "calves"
+  ],
+  "secondary_muscles": [
+   "hamstrings",
+   "glutes"
+  ],
+  "equipment": "treadmill",
+  "tracking_type": "duration",
+  "instructions_zh": "轻松配速，约 7–9 公里/小时；步幅小、步频快，前脚掌或中足轻轻落地，呼吸有节奏。",
+  "image_paths": []
+ },
+ {
+  "id": "3a4ac43a-c3b2-5aa8-9e9f-e5980458dadf",
+  "slug": "fc_treadmill_interval",
+  "name_zh": "跑步机间歇跑",
+  "name_en": "Treadmill Intervals",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "quadriceps",
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes"
+  ],
+  "equipment": "treadmill",
+  "tracking_type": "duration",
+  "instructions_zh": "高强度段加速到有些吃力（约 9–12 公里/小时），恢复段降到慢走；每次变速前先看稳扶手再调。",
+  "image_paths": []
+ },
+ {
+  "id": "4817d05f-139d-533e-9b16-3aab70c702d8",
+  "slug": "fc_stair_climber",
+  "name_zh": "爬楼机",
+  "name_en": "Stair Climber",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "glutes",
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "hamstrings"
+  ],
+  "equipment": "stair climber",
+  "tracking_type": "duration",
+  "instructions_zh": "上身直立，手轻扶扶手保持平衡，不要趴在上面；每步踩实整个脚掌，用臀腿发力。",
+  "image_paths": []
+ },
+ {
+  "id": "228632a0-8a82-5399-b3f6-766c82e83534",
+  "slug": "fc_rowing_machine",
+  "name_zh": "划船机",
+  "name_en": "Rowing Machine",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "lats",
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "hamstrings",
+   "glutes",
+   "middle back",
+   "biceps"
+  ],
+  "equipment": "rower",
+  "tracking_type": "duration",
+  "instructions_zh": "顺序是腿蹬、身体后仰、手拉；回程反过来先伸手、再前倾、最后屈膝。蹬腿提供大部分力量，不要只靠手臂拉。",
+  "image_paths": []
+ },
+ {
+  "id": "4dedddb1-e898-5682-bd58-71d96ebbce1a",
+  "slug": "fc_elliptical",
+  "name_zh": "椭圆机",
+  "name_en": "Elliptical Trainer",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "quadriceps",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings",
+   "calves"
+  ],
+  "equipment": "elliptical",
+  "tracking_type": "duration",
+  "instructions_zh": "脚掌踩稳踏板，身体挺直，手臂与腿配合推拉；阻力调到能保持稳定节奏，对膝盖冲击很小。",
+  "image_paths": []
+ },
+ {
+  "id": "13d82e2f-079c-5edd-80a6-723e8620ad95",
+  "slug": "fc_stationary_bike",
+  "name_zh": "固定自行车",
+  "name_en": "Stationary Bike",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "quadriceps",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings",
+   "calves"
+  ],
+  "equipment": "bike",
+  "tracking_type": "duration",
+  "instructions_zh": "车座调到踩到最低点时膝盖微弯；背部放松，手不要抓死车把；用转速（约 70–90 转/分）和阻力控制强度。",
+  "image_paths": []
+ },
+ {
+  "id": "b45f0be8-eb4b-506e-8861-98c2617ab578",
+  "slug": "fc_jump_rope",
+  "name_zh": "跳绳",
+  "name_en": "Jump Rope",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "calves",
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "forearms"
+  ],
+  "equipment": "jump rope",
+  "tracking_type": "duration",
+  "instructions_zh": "起跳高度只需离地一两厘米，前脚掌落地，手腕转绳而不是大臂甩绳；膝盖微屈缓冲。",
+  "image_paths": []
+ },
+ {
+  "id": "61bb9432-5cdc-589d-81dd-a520327f1015",
+  "slug": "fc_outdoor_walk",
+  "name_zh": "户外快走",
+  "name_en": "Outdoor Brisk Walk",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "quadriceps",
+   "calves"
+  ],
+  "secondary_muscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "挑平整的路面，步幅比平时略大，手臂前后摆动；保持能和同伴说话的强度。",
+  "image_paths": []
+ },
+ {
+  "id": "fe47617b-0d47-5c75-9df0-b1181a27ff1c",
+  "slug": "fc_outdoor_jog",
+  "name_zh": "户外慢跑",
+  "name_en": "Outdoor Easy Run",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "quadriceps",
+   "calves"
+  ],
+  "secondary_muscles": [
+   "hamstrings",
+   "glutes"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "配速以不喘为准，步幅小、步频快；前几分钟当作热身，千万别一上来就冲。",
+  "image_paths": []
+ },
+ {
+  "id": "f31027d4-e3d3-5acf-b0ab-8bcc8a9e7470",
+  "slug": "fc_jumping_jack",
+  "name_zh": "开合跳",
+  "name_en": "Jumping Jacks",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "quadriceps",
+   "calves"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "glutes"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "双脚跳开的同时双臂在头顶上方击掌，跳回时放下；落地轻，保持核心收紧。",
+  "image_paths": []
+ },
+ {
+  "id": "504d5cee-d030-5dfe-9c95-83f263219cba",
+  "slug": "fc_high_knees",
+  "name_zh": "高抬腿跑",
+  "name_en": "High Knees",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "quadriceps",
+   "abdominals"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "原地快速交替抬膝，膝盖尽量抬到腰部高度；上身直立，前脚掌轻快着地。",
+  "image_paths": []
+ },
+ {
+  "id": "c597533d-37cd-5bdc-aaf2-d7fd28eed37b",
+  "slug": "fc_butt_kicks",
+  "name_zh": "后踢腿跑",
+  "name_en": "Butt Kicks",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "quadriceps"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "原地小跑，脚跟快速向臀部后踢；身体直立，不要前倾。",
+  "image_paths": []
+ },
+ {
+  "id": "51e57a1a-f319-584d-8aa7-f9363e8c79a0",
+  "slug": "fc_mountain_climber",
+  "name_zh": "登山者",
+  "name_en": "Mountain Climbers",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "abdominals",
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "chest"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "手撑在地面成高位平板，肩膀在手腕上方；双腿交替快速向胸口收，臀部不要翘高。",
+  "image_paths": []
+ },
+ {
+  "id": "a3e7d276-be0c-5e04-9ba3-e65b5c27c9dc",
+  "slug": "fc_burpee",
+  "name_zh": "波比跳",
+  "name_en": "Burpee",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "quadriceps",
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "abdominals",
+   "triceps"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "深蹲撑地、双脚向后跳成平板、做一个俯卧撑（新手可省略）、跳回、起身跳跃；新手可去掉跳跃和俯卧撑。",
+  "image_paths": []
+ },
+ {
+  "id": "c8de512b-0bfe-5412-b83c-627c6dfc944e",
+  "slug": "fc_squat_jump",
+  "name_zh": "深蹲跳",
+  "name_en": "Squat Jump",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "quadriceps",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "hamstrings"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "先下蹲到大腿接近水平，再向上爆发跳起；落地时膝盖微屈缓冲，膝盖对准脚尖方向。",
+  "image_paths": []
+ },
+ {
+  "id": "c28a2538-0f0b-5bcf-9eef-1835f4552510",
+  "slug": "fc_skater_hop",
+  "name_zh": "滑冰步",
+  "name_en": "Skater Hops",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "glutes",
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "abdominals"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "向侧方大步跳出，单脚落地稳住，另一脚在身后划过；身体微前倾，像滑冰一样左右交替。",
+  "image_paths": []
+ },
+ {
+  "id": "b2820bf7-bf4b-583e-95cd-d127c02a048f",
+  "slug": "fc_shadow_boxing",
+  "name_zh": "空击拳组合",
+  "name_en": "Shadow Boxing",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "shoulders",
+   "abdominals"
+  ],
+  "secondary_muscles": [
+   "triceps",
+   "quadriceps"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "双脚前后站开、膝盖微屈，出直拳时转腰转髋、拳打到位后迅速收回护住下巴；先慢后快。",
+  "image_paths": []
+ },
+ {
+  "id": "f7618600-90ee-59ec-91fb-9c63c24e2d2b",
+  "slug": "fc_jump_squat_lowimpact",
+  "name_zh": "无跳深蹲抬腿",
+  "name_en": "Squat to Knee Raise",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "quadriceps",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "abdominals"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "完成一个自重深蹲，站起时抬起一侧膝盖到腰高；左右交替，全程不跳，适合楼上练习。",
+  "image_paths": []
+ },
+ {
+  "id": "de137867-5004-5cbb-b049-a74837a98771",
+  "slug": "fc_step_jack",
+  "name_zh": "低冲击开合步",
+  "name_en": "Step Jacks",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "quadriceps",
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "glutes"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "一只脚向侧迈出的同时双臂上举，再收回；用走代替跳，对膝盖友好。",
+  "image_paths": []
+ },
+ {
+  "id": "f8fe7e6d-1c79-5616-8b52-65aca0d42d93",
+  "slug": "fc_inchworm",
+  "name_zh": "尺蠖爬行",
+  "name_en": "Inchworm Walkout",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "abdominals",
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "chest"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "站姿弯腰手撑地，双手向前爬到平板位，再把脚向手靠拢站起；膝盖尽量伸直。",
+  "image_paths": []
+ },
+ {
+  "id": "23615523-2473-5b6f-a7c9-9b690129107d",
+  "slug": "fc_knee_pushup",
+  "name_zh": "跪姿俯卧撑",
+  "name_en": "Knee Push-Up",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "triceps",
+   "shoulders"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "双膝跪地，从膝盖到头成一条直线；胸口下降到离地一拳处，再推起。适合还做不了标准俯卧撑的人。",
+  "image_paths": []
+ },
+ {
+  "id": "f49d678a-9059-5edc-bb47-0711dd364dd7",
+  "slug": "fc_pike_pushup",
+  "name_zh": "派克俯卧撑",
+  "name_en": "Pike Push-Up",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "triceps",
+   "chest"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "臀部抬高成倒 V 形，头顶朝地面方向下压再推起；主要锻炼肩部。",
+  "image_paths": []
+ },
+ {
+  "id": "0e2c5857-cd03-59fa-bda1-8b9b79a6d703",
+  "slug": "fc_reverse_lunge",
+  "name_zh": "自重后撤步弓步",
+  "name_en": "Bodyweight Reverse Lunge",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "向后撤一大步，两膝都弯到约 90 度，前脚踩稳后蹬回站直；比前跨步更护膝。",
+  "image_paths": []
+ },
+ {
+  "id": "27f5dd5e-d748-549b-8fc5-98ad5a57b21c",
+  "slug": "fc_bulgarian_split_squat",
+  "name_zh": "保加利亚分腿蹲",
+  "name_en": "Bulgarian Split Squat",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "后脚脚背放在凳子上，前脚站稳，垂直下蹲到大腿接近水平；重心落在前脚，可手持哑铃增加难度。",
+  "image_paths": []
+ },
+ {
+  "id": "030f93cf-638f-5ab8-acca-6f82c1ea3f2d",
+  "slug": "fc_wall_sit",
+  "name_zh": "靠墙静蹲",
+  "name_en": "Wall Sit",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "glutes",
+   "calves"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "背贴墙，大腿与地面平行，膝盖在脚踝正上方；坚持到设定时间，不要用手撑大腿。",
+  "image_paths": []
+ },
+ {
+  "id": "08879b00-67f3-593d-a2cf-cc5b4da3155f",
+  "slug": "fc_calf_raise_bw",
+  "name_zh": "自重提踵",
+  "name_en": "Bodyweight Calf Raise",
+  "body_part": "legs",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "双脚与髋同宽，用力踮起脚尖到最高点停一下，再慢慢放下；可扶墙保持平衡。",
+  "image_paths": []
+ },
+ {
+  "id": "2c446af4-d69b-5cc8-8ff1-42aa015e9622",
+  "slug": "fc_superman",
+  "name_zh": "超人式背伸展",
+  "name_en": "Superman",
+  "body_part": "back",
+  "primary_muscles": [
+   "lower back"
+  ],
+  "secondary_muscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "俯卧，手臂前伸，同时抬起手臂与双腿离地一点，停 2 秒后放下；动作小而稳，不要仰头。",
+  "image_paths": []
+ },
+ {
+  "id": "f10b4cfa-3c9e-50c2-9b3a-9be0d0a755fb",
+  "slug": "fc_bird_dog",
+  "name_zh": "鸟狗式",
+  "name_en": "Bird Dog",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals",
+   "lower back"
+  ],
+  "secondary_muscles": [
+   "glutes",
+   "shoulders"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "四点支撑，同时伸直一侧手臂和对侧腿，保持骨盆不晃动；停 2 秒后收回，换边。",
+  "image_paths": []
+ },
+ {
+  "id": "c0dc8464-183b-556f-8e09-2d642dd7ad6c",
+  "slug": "fc_bicycle_crunch",
+  "name_zh": "空中蹬车卷腹",
+  "name_en": "Bicycle Crunch",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [
+   "hip flexors"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "仰卧，双手轻扶头侧，一侧肘部向对侧膝盖靠拢，另一条腿伸直；下背贴地，转动靠躯干而不是拉脖子。",
+  "image_paths": []
+ },
+ {
+  "id": "a8669cbe-13de-5054-af48-5aa9033cfec9",
+  "slug": "fc_hollow_hold",
+  "name_zh": "空心撑",
+  "name_en": "Hollow Hold",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [
+   "hip flexors"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "仰卧，下背压住地面，手臂和双腿同时抬离地面，身体呈浅浅的香蕉形；腰一旦离地就收一点腿。",
+  "image_paths": []
+ },
+ {
+  "id": "4ef4c3e0-f69d-561a-bacb-7f2ab8830476",
+  "slug": "fc_plank_shoulder_tap",
+  "name_zh": "平板支撑拍肩",
+  "name_en": "Plank Shoulder Tap",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [
+   "shoulders",
+   "chest"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "高位平板，双脚略分开，交替抬手轻拍对侧肩；骨盆保持不扭动。",
+  "image_paths": []
+ },
+ {
+  "id": "5a2f40dc-100d-5c66-83ae-d6244a1e6aa1",
+  "slug": "fc_clamshell",
+  "name_zh": "蚌式开合",
+  "name_en": "Clamshell",
+  "body_part": "glutes",
+  "primary_muscles": [
+   "abductors",
+   "glutes"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "侧卧屈膝，双脚并拢，上侧膝盖向上打开再合上；骨盆保持稳定，不要向后倒。",
+  "image_paths": []
+ },
+ {
+  "id": "1d7f0ca3-3527-5d4b-8ff6-2dd2df9f4c88",
+  "slug": "fc_fire_hydrant",
+  "name_zh": "消防栓式抬腿",
+  "name_en": "Fire Hydrant",
+  "body_part": "glutes",
+  "primary_muscles": [
+   "glutes",
+   "abductors"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "四点支撑，一侧膝盖弯曲向外侧抬起到髋高，再慢慢放下；腰背保持平直。",
+  "image_paths": []
+ },
+ {
+  "id": "3e2b80a2-dfcd-5e86-8732-349e1a20ec37",
+  "slug": "fc_side_leg_raise",
+  "name_zh": "侧卧抬腿",
+  "name_en": "Side-Lying Leg Raise",
+  "body_part": "glutes",
+  "primary_muscles": [
+   "abductors",
+   "glutes"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "侧卧，下腿微屈，上腿伸直并向上抬到髋高，脚尖略朝下；动作慢，在最高点停一秒。",
+  "image_paths": []
+ },
+ {
+  "id": "95e8b423-9f8e-5916-96d1-367d28fd723f",
+  "slug": "fc_donkey_kick",
+  "name_zh": "驴踢腿",
+  "name_en": "Donkey Kick",
+  "body_part": "glutes",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "四点支撑，一侧膝盖保持弯曲，脚掌朝天花板蹬起，用臀部发力；不要靠塌腰来抬高。",
+  "image_paths": []
+ },
+ {
+  "id": "a47fbd6d-4a7e-54fb-87ae-c420de502c07",
+  "slug": "fc_glute_bridge_march",
+  "name_zh": "臀桥交替抬腿",
+  "name_en": "Glute Bridge March",
+  "body_part": "glutes",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings",
+   "abdominals"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "先做出臀桥并保持髋部抬高，再交替抬起一只脚，骨盆不要左右晃动。",
+  "image_paths": []
+ },
+ {
+  "id": "eb94e287-5fe3-555c-89a7-d121b68b78ca",
+  "slug": "fc_frog_pump",
+  "name_zh": "青蛙式臀桥",
+  "name_en": "Frog Pump",
+  "body_part": "glutes",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "adductors"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "仰卧，脚掌相对、膝盖向外打开，臀部向上顶起并夹紧；比普通臀桥更容易找到臀部发力感。",
+  "image_paths": []
+ },
+ {
+  "id": "c2bc02e9-00a9-5748-8652-c05c48cd0ef1",
+  "slug": "fc_cossack_squat",
+  "name_zh": "侧弓步蹲",
+  "name_en": "Cossack Squat",
+  "body_part": "legs",
+  "primary_muscles": [
+   "adductors",
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "glutes"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "双脚宽站，重心移向一侧并下蹲，另一条腿伸直、脚尖朝上；左右交替，提升髋关节灵活度。",
+  "image_paths": []
+ },
+ {
+  "id": "9e06f24d-281a-525e-9a46-830fcc868f12",
+  "slug": "fc_straight_leg_raise",
+  "name_zh": "仰卧直腿抬高",
+  "name_en": "Straight Leg Raise",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "abdominals"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "仰卧，一腿屈膝踩地，另一腿绷直抬到与屈膝腿大腿同高；对膝关节压力小，常用于膝盖康复期的力量热身。",
+  "image_paths": []
+ },
+ {
+  "id": "e9cd2208-1ebe-504c-b87a-5278a13e3034",
+  "slug": "fc_step_up_bw",
+  "name_zh": "自重踏台阶",
+  "name_en": "Bodyweight Step-Up",
+  "body_part": "legs",
+  "primary_muscles": [
+   "quadriceps",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "calves"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "用稳固的台阶或凳子，一脚踩上去、用这条腿的力量站起，再慢慢放下；全程不要用后脚蹬地借力。",
+  "image_paths": []
+ },
+ {
+  "id": "3b1e174f-1fdd-559c-854f-c17152af6296",
+  "slug": "fc_dead_hang",
+  "name_zh": "悬垂",
+  "name_en": "Dead Hang",
+  "body_part": "back",
+  "primary_muscles": [
+   "lats",
+   "forearms"
+  ],
+  "secondary_muscles": [
+   "shoulders"
+  ],
+  "equipment": "other",
+  "tracking_type": "duration",
+  "instructions_zh": "双手握住单杠，身体放松悬挂，肩膀略沉但不耸；可缓解久坐后的肩背紧张，握力不够就缩短时间。",
+  "image_paths": []
+ },
+ {
+  "id": "f3f1f909-fed6-536d-98fd-63b3b3b01e62",
+  "slug": "fc_wall_angel",
+  "name_zh": "靠墙天使",
+  "name_en": "Wall Angel",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders",
+   "middle back"
+  ],
+  "secondary_muscles": [
+   "traps"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "背贴墙站立，双臂贴墙做成 W，再沿墙向上滑到 Y；腰不要拱，手背尽量不离墙。",
+  "image_paths": []
+ },
+ {
+  "id": "96f384eb-057f-5328-af78-28cd6c3f6a87",
+  "slug": "fc_prone_ytw",
+  "name_zh": "俯卧 Y-T-W 上举",
+  "name_en": "Prone Y-T-W",
+  "body_part": "back",
+  "primary_muscles": [
+   "middle back",
+   "traps"
+  ],
+  "secondary_muscles": [
+   "shoulders"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "俯卧，手臂依次摆成 Y、T、W 形状抬离地面，拇指朝上；用肩胛骨发力，动作小而慢。",
+  "image_paths": []
+ },
+ {
+  "id": "26a6bb8e-50c5-5903-82a6-d0c09aa50179",
+  "slug": "fc_scapular_pushup",
+  "name_zh": "肩胛俯卧撑",
+  "name_en": "Scapular Push-Up",
+  "body_part": "chest",
+  "primary_muscles": [
+   "chest",
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "traps"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "高位平板，手臂保持伸直，只让肩胛骨前伸和后收；用来激活前锯肌，改善翼状肩。",
+  "image_paths": []
+ },
+ {
+  "id": "6e1e58ce-eea2-503f-966c-e4db4d3397b7",
+  "slug": "fc_chin_tuck",
+  "name_zh": "下巴内收",
+  "name_en": "Chin Tuck",
+  "body_part": "other",
+  "primary_muscles": [
+   "neck"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "背靠墙站直，下巴水平向后收、像要做出双下巴，停 5 秒；不要低头或抬头，用于改善头前倾。",
+  "image_paths": []
+ },
+ {
+  "id": "c4d2203e-8099-504e-b692-6dee71e7779d",
+  "slug": "fc_band_external_rotation",
+  "name_zh": "弹力带肩外旋",
+  "name_en": "Band External Rotation",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "middle back"
+  ],
+  "equipment": "bands",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "肘部夹紧身体、屈肘 90 度，向外拉开弹力带再慢慢回收；练肩袖，重量宁轻勿重。",
+  "image_paths": []
+ },
+ {
+  "id": "bc9af9c8-0537-5abd-a696-1efaf095978e",
+  "slug": "fc_side_plank_raise",
+  "name_zh": "侧平板抬髋",
+  "name_en": "Side Plank Hip Lift",
+  "body_part": "core",
+  "primary_muscles": [
+   "abdominals",
+   "obliques"
+  ],
+  "secondary_muscles": [
+   "glutes"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "侧撑姿势，臀部先放低再向上顶起；肩膀在肘部正上方，身体始终成一条直线。",
+  "image_paths": []
+ },
+ {
+  "id": "8b95307f-da70-5af6-9da5-f6633455f04c",
+  "slug": "fc_ankle_circle",
+  "name_zh": "踝关节绕环",
+  "name_en": "Ankle Circles",
+  "body_part": "other",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "坐姿或站姿，单脚离地，用脚尖画大圆；顺逆时针各做一半，范围尽量大但不要用小腿带动。",
+  "image_paths": []
+ },
+ {
+  "id": "fff2124e-767a-5e5b-a9e6-e413648719e5",
+  "slug": "fc_single_leg_balance",
+  "name_zh": "单腿站立平衡",
+  "name_en": "Single-Leg Balance",
+  "body_part": "legs",
+  "primary_muscles": [
+   "calves",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "abdominals"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "单脚站立，另一腿微抬，目视前方；站稳后可闭眼或站在软垫上增加难度。",
+  "image_paths": []
+ },
+ {
+  "id": "2bf8855c-a168-5001-a1b7-de82e31a62ed",
+  "slug": "fc_hip_hinge_drill",
+  "name_zh": "髋铰链练习",
+  "name_en": "Hip Hinge Drill",
+  "body_part": "legs",
+  "primary_muscles": [
+   "hamstrings",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "lower back"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "双手放在大腿根部，臀部向后推、背保持平直，感到腿后侧拉紧后再用臀部发力站直；是学硬拉前的基础动作。",
+  "image_paths": []
+ },
+ {
+  "id": "031fc730-46e8-55a8-9310-3452db691def",
+  "slug": "fc_tabata_mix",
+  "name_zh": "全身 Tabata 组合",
+  "name_en": "Tabata Mix",
+  "body_part": "cardio",
+  "primary_muscles": [
+   "quadriceps",
+   "abdominals"
+  ],
+  "secondary_muscles": [
+   "shoulders"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "20 秒全力、10 秒休息，在本组里循环做开合跳、深蹲、登山者和高抬腿；每个动作做满 2 轮。",
+  "image_paths": []
+ },
+ {
+  "id": "f43b21b1-3275-5849-a5fc-b15432830ca5",
+  "slug": "fc_farmer_carry",
+  "name_zh": "农夫行走",
+  "name_en": "Farmer's Carry",
+  "body_part": "other",
+  "primary_muscles": [
+   "forearms",
+   "traps"
+  ],
+  "secondary_muscles": [
+   "abdominals",
+   "glutes"
+  ],
+  "equipment": "dumbbell",
+  "tracking_type": "duration",
+  "instructions_zh": "双手各提一只哑铃，身体直立、肩膀下沉，稳步前行；用来练握力和躯干稳定。",
+  "image_paths": []
+ },
+ {
+  "id": "b3e590aa-bb49-552c-bf64-e8b3c94476f1",
+  "slug": "fc_kettlebell_swing_two",
+  "name_zh": "双手壶铃摆动",
+  "name_en": "Two-Hand Kettlebell Swing",
+  "body_part": "legs",
+  "primary_muscles": [
+   "glutes",
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "lower back",
+   "shoulders"
+  ],
+  "equipment": "kettlebells",
+  "tracking_type": "weight_reps",
+  "instructions_zh": "髋铰链把壶铃向后荡，再用髋部爆发向前顶出，手臂只是挂钩；顶点时臀部夹紧，不要用手臂提。",
+  "image_paths": []
+ },
+ {
+  "id": "b671c79a-72ac-5a8a-bc12-98fddc876e5a",
+  "slug": "fc_cat_cow",
+  "name_zh": "猫牛式",
+  "name_en": "Cat-Cow",
+  "body_part": "other",
+  "primary_muscles": [
+   "lower back",
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "四点支撑，吸气时塌腰抬头、呼气时拱背低头；动作配合呼吸，缓慢地活动整条脊柱。",
+  "image_paths": []
+ },
+ {
+  "id": "02ca4baa-2b18-5b67-918f-e48934f57eb1",
+  "slug": "fc_childs_pose",
+  "name_zh": "婴儿式",
+  "name_en": "Child's Pose",
+  "body_part": "other",
+  "primary_muscles": [
+   "lats",
+   "lower back"
+  ],
+  "secondary_muscles": [
+   "shoulders"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "跪坐，臀部坐向脚跟，双臂向前伸展贴地；深呼吸放松背部和肩膀。",
+  "image_paths": []
+ },
+ {
+  "id": "9661a258-6026-567f-98d6-0de9f39250ee",
+  "slug": "fc_hip_flexor_stretch",
+  "name_zh": "跪姿髋屈肌拉伸",
+  "name_en": "Kneeling Hip Flexor Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "quadriceps",
+   "hip flexors"
+  ],
+  "secondary_muscles": [
+   "abdominals"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "单膝跪地，另一脚在前，骨盆向前下方推，后侧大腿前侧有拉伸感；上身保持直立，不要塌腰。",
+  "image_paths": []
+ },
+ {
+  "id": "1777f023-26dd-5fb8-b51a-b6da177274fb",
+  "slug": "fc_hamstring_stretch",
+  "name_zh": "仰卧腘绳肌拉伸",
+  "name_en": "Lying Hamstring Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "calves"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "仰卧，一腿向上抬起，双手抱住大腿后侧或用毛巾套脚掌，膝盖尽量伸直，大腿后侧有拉伸感即可。",
+  "image_paths": []
+ },
+ {
+  "id": "1f2ba965-052e-520f-afd5-d8eadf7c0a22",
+  "slug": "fc_quad_stretch",
+  "name_zh": "站姿股四头肌拉伸",
+  "name_en": "Standing Quad Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "hip flexors"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "单脚站立（可扶墙），另一腿屈膝，手抓脚踝向臀部拉；膝盖并拢，骨盆不要前倾。",
+  "image_paths": []
+ },
+ {
+  "id": "c5dc5f4d-2470-5196-9eec-28c1b40867f5",
+  "slug": "fc_pigeon_stretch",
+  "name_zh": "鸽子式臀部拉伸",
+  "name_en": "Pigeon Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hip flexors"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "一腿屈膝放在身前，另一腿向后伸直，上身缓缓前倾；臀部外侧深层有拉伸感，感觉膝盖不适就改做 4 字拉伸。",
+  "image_paths": []
+ },
+ {
+  "id": "1b0d3e77-b9e0-5eee-a4b9-a087c29ccf18",
+  "slug": "fc_figure4_stretch",
+  "name_zh": "仰卧 4 字拉伸",
+  "name_en": "Figure-4 Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "abductors"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "仰卧屈膝，把一只脚踝搭在对侧膝盖上，双手抱住下方的大腿向胸口拉，臀部外侧有拉伸感。",
+  "image_paths": []
+ },
+ {
+  "id": "8380913f-7306-55e5-8002-e7972ae56f80",
+  "slug": "fc_chest_doorway_stretch",
+  "name_zh": "门框胸部拉伸",
+  "name_en": "Doorway Chest Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "前臂贴在门框上，手肘与肩同高，身体缓缓向前迈步，胸口前侧有拉伸感；肩膀不要耸。",
+  "image_paths": []
+ },
+ {
+  "id": "89beaa1c-8363-516c-89b7-38b075424f49",
+  "slug": "fc_lat_stretch",
+  "name_zh": "跪姿背阔肌拉伸",
+  "name_en": "Kneeling Lat Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [
+   "shoulders"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "跪姿，双手扶在凳面或墙面，臀部向后坐、胸口向下沉，腋下到侧腰有拉伸感。",
+  "image_paths": []
+ },
+ {
+  "id": "f03e31a1-e594-5968-8044-b27cdd26521a",
+  "slug": "fc_cross_body_shoulder_stretch",
+  "name_zh": "肩后侧交叉拉伸",
+  "name_en": "Cross-Body Shoulder Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "一臂横过胸前，另一手托住肘部向身体拉，肩膀后侧有拉伸感；肩膀不要上耸。",
+  "image_paths": []
+ },
+ {
+  "id": "88ec86aa-0bfd-5528-9b32-90b5eabae4a9",
+  "slug": "fc_triceps_overhead_stretch",
+  "name_zh": "过头三头肌拉伸",
+  "name_en": "Overhead Triceps Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [
+   "lats"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "一臂上举屈肘，手落到肩胛之间，另一手轻压肘部；保持背部直立。",
+  "image_paths": []
+ },
+ {
+  "id": "e62f3391-4336-5b31-8f25-2fc9a9487394",
+  "slug": "fc_neck_side_stretch",
+  "name_zh": "颈部侧向拉伸",
+  "name_en": "Neck Side Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "neck",
+   "traps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "头向一侧缓缓倾斜，同侧手可以轻放头侧助力，另一侧肩膀向下沉；力度轻，不要猛拉。",
+  "image_paths": []
+ },
+ {
+  "id": "c5975c1b-1e26-52ce-b9ff-b001c3e89343",
+  "slug": "fc_neck_flexion_stretch",
+  "name_zh": "颈后侧拉伸",
+  "name_en": "Neck Flexion Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "neck"
+  ],
+  "secondary_muscles": [
+   "traps"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "坐直，双手轻放在后脑勺，让头自然低向胸口；背部不要弓起，颈后有微微拉伸感即可。",
+  "image_paths": []
+ },
+ {
+  "id": "eff3e58d-c64c-5a91-9f55-65625cac9f1e",
+  "slug": "fc_calf_stretch",
+  "name_zh": "靠墙小腿拉伸",
+  "name_en": "Wall Calf Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "双手扶墙，一脚向后踩实、膝盖伸直，身体前倾，小腿后侧有拉伸感；脚跟不离地。",
+  "image_paths": []
+ },
+ {
+  "id": "a1bb22c3-0ce1-5c9e-b187-5aef7d901ce1",
+  "slug": "fc_adductor_stretch",
+  "name_zh": "蝴蝶式内收肌拉伸",
+  "name_en": "Butterfly Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "adductors"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "坐姿，脚掌相对，双手握脚，让膝盖自然向两侧下沉，背保持直立；不要用手压膝盖。",
+  "image_paths": []
+ },
+ {
+  "id": "b6d9c21d-218e-5776-889b-c6d1b2bb1683",
+  "slug": "fc_thoracic_rotation",
+  "name_zh": "跪姿胸椎旋转",
+  "name_en": "Thoracic Rotation",
+  "body_part": "other",
+  "primary_muscles": [
+   "middle back"
+  ],
+  "secondary_muscles": [
+   "shoulders"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "四点支撑，一手扶在脑后，肘部向下转向对侧手臂，再向天花板方向打开；眼睛跟着肘部。",
+  "image_paths": []
+ },
+ {
+  "id": "27a6b9a2-352d-57f1-8611-f3f02aa75af5",
+  "slug": "fc_spinal_twist",
+  "name_zh": "仰卧脊柱扭转",
+  "name_en": "Supine Spinal Twist",
+  "body_part": "other",
+  "primary_muscles": [
+   "lower back",
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "obliques"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "仰卧屈膝，双膝并拢倒向一侧，肩膀尽量贴地，头转向另一侧；呼吸放松，不要憋气。",
+  "image_paths": []
+ },
+ {
+  "id": "49e294f5-4ffe-5369-a84f-192add80eb9e",
+  "slug": "fc_cobra_stretch",
+  "name_zh": "眼镜蛇式",
+  "name_en": "Cobra Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [
+   "lower back"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "俯卧，双手放在胸侧，轻轻撑起上身，骨盆保持贴地；动作以不疼为限，腰部不适时降低高度。",
+  "image_paths": []
+ },
+ {
+  "id": "664fe440-51f0-5a4a-9eab-06792cc5ebc1",
+  "slug": "fc_forward_fold",
+  "name_zh": "站姿体前屈",
+  "name_en": "Standing Forward Fold",
+  "body_part": "other",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "lower back",
+   "calves"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "双脚与髋同宽，从髋部折叠，让上身自然垂下，膝盖可以微弯；放松头颈，不要憋气。",
+  "image_paths": []
+ },
+ {
+  "id": "b57bbffa-5661-5174-814c-fd5492cdcb7b",
+  "slug": "fc_worlds_greatest_stretch",
+  "name_zh": "全身动态拉伸（弓步转体）",
+  "name_en": "World's Greatest Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "hip flexors",
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "middle back",
+   "shoulders"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "大步向前弓步，同侧手撑地，另一臂向天花板打开转胸；换边继续，是一个动作拉开多个部位的热身动作。",
+  "image_paths": []
+ },
+ {
+  "id": "b418081f-39f6-56c7-92ca-76771aed6d4c",
+  "slug": "fc_leg_swing",
+  "name_zh": "站姿摆腿",
+  "name_en": "Leg Swings",
+  "body_part": "other",
+  "primary_muscles": [
+   "hamstrings",
+   "hip flexors"
+  ],
+  "secondary_muscles": [
+   "glutes"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "单手扶墙，另一腿前后（或左右）自然摆动，幅度由小渐大；上身保持稳定。",
+  "image_paths": []
+ },
+ {
+  "id": "eb24ce2e-ead2-5f57-b0e6-bafa6dcb3540",
+  "slug": "fc_arm_circle",
+  "name_zh": "手臂绕环",
+  "name_en": "Arm Circles",
+  "body_part": "other",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "双臂侧平举，先画小圈再逐渐加大，再反向绕；动作流畅，肩膀不要耸起。",
+  "image_paths": []
+ },
+ {
+  "id": "aba8bb50-418f-592d-8b8f-77fd6eab5b3f",
+  "slug": "fc_hip_circle",
+  "name_zh": "髋部绕环",
+  "name_en": "Hip Circles",
+  "body_part": "other",
+  "primary_muscles": [
+   "hip flexors",
+   "glutes"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "双手叉腰，双脚与肩同宽，用髋部画大圈；顺逆时针各一半，膝盖微屈。",
+  "image_paths": []
+ },
+ {
+  "id": "27f7f412-12fb-5e54-8cf5-cccaad042f54",
+  "slug": "fc_9090_hip",
+  "name_zh": "90/90 髋旋转",
+  "name_en": "90/90 Hip Switch",
+  "body_part": "other",
+  "primary_muscles": [
+   "glutes",
+   "hip flexors"
+  ],
+  "secondary_muscles": [
+   "adductors"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "坐姿，前后腿各弯成 90 度，让双膝从一侧倒向另一侧交替；背保持直立，慢慢来。",
+  "image_paths": []
+ },
+ {
+  "id": "4b25e248-b8c6-52c2-a837-6d41a577ef80",
+  "slug": "fc_ankle_dorsiflexion",
+  "name_zh": "靠墙踝背屈",
+  "name_en": "Wall Ankle Mobilization",
+  "body_part": "other",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "面向墙站成弓步，前脚脚跟踩实，让膝盖向前顶向墙面；脚跟抬起就缩短距离。",
+  "image_paths": []
+ },
+ {
+  "id": "2fd6534f-364a-58bc-be09-4ead2b01eb3f",
+  "slug": "fc_foam_roll_upper_back",
+  "name_zh": "泡沫轴上背滚动",
+  "name_en": "Foam Roll Upper Back",
+  "body_part": "other",
+  "primary_muscles": [
+   "middle back"
+  ],
+  "secondary_muscles": [
+   "traps"
+  ],
+  "equipment": "foam roll",
+  "tracking_type": "duration",
+  "instructions_zh": "泡沫轴放在肩胛下缘，双手抱头、臀部抬起，缓慢前后滚动；遇到酸痛点停留 20–30 秒，不要滚腰。",
+  "image_paths": []
+ },
+ {
+  "id": "2de5bbe3-dccc-572b-b141-44ed1a97b074",
+  "slug": "fc_foam_roll_quad",
+  "name_zh": "泡沫轴大腿前侧",
+  "name_en": "Foam Roll Quads",
+  "body_part": "other",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "foam roll",
+  "tracking_type": "duration",
+  "instructions_zh": "俯撑，泡沫轴放在大腿前侧，用前臂支撑身体缓慢滚动；酸痛点停留片刻，避开膝盖骨。",
+  "image_paths": []
+ },
+ {
+  "id": "2063ac38-cb6d-5372-af4e-4cf87915d81c",
+  "slug": "fc_foam_roll_glute",
+  "name_zh": "泡沫轴臀部",
+  "name_en": "Foam Roll Glutes",
+  "body_part": "other",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [],
+  "equipment": "foam roll",
+  "tracking_type": "duration",
+  "instructions_zh": "坐在泡沫轴上，一脚搭在对侧膝盖上，向搭腿一侧倾斜，缓慢滚动臀部外侧。",
+  "image_paths": []
+ },
+ {
+  "id": "ed56e8f6-be95-51aa-b373-acba9f735e5e",
+  "slug": "fc_foam_roll_it_band",
+  "name_zh": "泡沫轴大腿外侧",
+  "name_en": "Foam Roll Outer Thigh",
+  "body_part": "other",
+  "primary_muscles": [
+   "abductors"
+  ],
+  "secondary_muscles": [],
+  "equipment": "foam roll",
+  "tracking_type": "duration",
+  "instructions_zh": "侧卧，泡沫轴垫在大腿外侧，用前臂和另一只脚控制力度缓慢滚动；这个部位较敏感，从轻开始。",
+  "image_paths": []
+ },
+ {
+  "id": "750795f2-ce34-55dd-98de-4512001d7bd9",
+  "slug": "fc_foam_roll_calf",
+  "name_zh": "泡沫轴小腿",
+  "name_en": "Foam Roll Calves",
+  "body_part": "other",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "equipment": "foam roll",
+  "tracking_type": "duration",
+  "instructions_zh": "坐姿，泡沫轴放在小腿下方，双手撑地抬起臀部，缓慢滚动；可叠放另一条腿加压。",
+  "image_paths": []
+ },
+ {
+  "id": "636e86e1-24d8-5800-b115-d0f3a493072b",
+  "slug": "fc_foam_roll_lats",
+  "name_zh": "泡沫轴背阔肌",
+  "name_en": "Foam Roll Lats",
+  "body_part": "other",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [],
+  "equipment": "foam roll",
+  "tracking_type": "duration",
+  "instructions_zh": "侧卧，泡沫轴垫在腋下靠近背阔肌的位置，小范围缓慢滚动；手臂上举让背阔肌展开。",
+  "image_paths": []
  }
 ]

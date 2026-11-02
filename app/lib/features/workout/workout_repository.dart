@@ -76,7 +76,7 @@ class WorkoutRepository {
       .getSingleOrNull();
 
   /// 开始一次训练；若已有进行中的训练则直接返回它。
-  Future<Workout> startWorkout({String? name, String? templateId, String? planId}) async {
+  Future<Workout> startWorkout({String? name, String? templateId, String? planId, String? programId}) async {
     final existing = await activeWorkout();
     if (existing != null) return existing;
     final t = _now();
@@ -90,6 +90,7 @@ class WorkoutRepository {
       name: Value(name),
       sourceTemplateId: Value(templateId),
       planId: Value(planId),
+      sourceProgramId: Value(programId),
     );
     await _db.into(_db.workouts).insert(row);
     return (_db.select(_db.workouts)..where((w) => w.id.equals(row.id.value))).getSingle();
@@ -158,6 +159,8 @@ class WorkoutRepository {
   ///
   /// [exactSets] 为 true 时（来自模板）组数以 [defaultSets] 为准，只借用上次的重量；
   /// 没有上次记录时用 [defaultReps] 预填次数。
+  /// [warmupSets] 个热身组排在正式组前面；[defaultDurationSec] 给按时间的动作预填每组秒数；
+  /// [note] 是这个动作的要点，会显示在训练页。
   Future<String> addExercise(
     String workoutId,
     String exerciseId, {
@@ -165,6 +168,9 @@ class WorkoutRepository {
     bool exactSets = false,
     int? defaultReps,
     int? restSec,
+    int warmupSets = 0,
+    int? defaultDurationSec,
+    String? note,
   }) async {
     final t = _now();
     final count = await (_db.selectOnly(_db.workoutExercises)
@@ -185,10 +191,15 @@ class WorkoutRepository {
             exerciseId: exerciseId,
             position: count,
             restSec: Value(restSec),
+            note: Value(note),
           ));
-      final n = exactSets || last.isEmpty ? defaultSets : last.length;
+      final n = exactSets || last.isEmpty ? defaultSets + warmupSets : last.length;
       for (var i = 0; i < n; i++) {
         final prev = i < last.length ? last[i] : null;
+        // 来自计划的动作：热身组固定排在最前；其余组不继承上次的「热身」类型
+        final kind = warmupSets > 0 && exactSets
+            ? (i < warmupSets ? 'warmup' : (prev?.kind == 'warmup' ? 'normal' : prev?.kind ?? 'normal'))
+            : (prev?.kind ?? 'normal');
         await _db.into(_db.workoutSets).insert(WorkoutSetsCompanion.insert(
               id: _uuid.v4(),
               createdAt: t,
@@ -196,10 +207,10 @@ class WorkoutRepository {
               userId: _userId(),
               workoutExerciseId: weId,
               setIndex: i,
-              kind: Value(prev?.kind ?? 'normal'),
+              kind: Value(kind),
               weightKg: Value(prev?.weightKg),
               reps: Value(prev?.reps ?? defaultReps),
-              durationSec: Value(prev?.durationSec),
+              durationSec: Value(prev?.durationSec ?? defaultDurationSec),
             ));
       }
     });

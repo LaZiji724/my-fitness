@@ -108,3 +108,25 @@ export SUPABASE_SERVICE_ROLE_KEY=你的 service_role 密钥
 ```
 
 想增删动作：改 `tools/seed/curated.txt`，运行 `.venv/bin/python seed/build_seed.py` 重新构建，再上传。
+
+## 内置训练计划库
+
+「计划」页顶部的入口进入计划库：左侧是分类栏（近期上新、新手入门、进阶计划、有氧跟练、团课计划、瘦身减脂、塑形美体、增肌增重、健康改善、拉伸放松、丰满翘臀、我的收藏），
+上方可按频率 / 难度 / 场景 / 人群筛选，也能搜索。详情页有「加入计划」（课程生成为模板，并按周一开始的 7 天循环生成计划）、
+「添加到日历」（选一个日期，从那周的周一开始排进日历）和「去训练」（按已完成的节数轮到下一节，热身组、时长目标、休息时间、动作要点都会带进训练页）。
+
+- 计划内容全部是原创文字，动作映射到内置动作库；没有任何第三方的图片或文案。封面是渐变色块，「已练几节」来自你自己的训练记录。
+- 离线可用：计划随 App 打包在 `app/assets/seed/programs.json`，云端 `programs*` 表只是同一份内容的只读镜像，方便以后更新。
+- 数据来源是 `tools/programs/`（`content_*.py` 写计划，`exercises_extra.py` 补充 86 个拉伸与有氧动作）。改完内容运行：
+
+  ```bash
+  python3 tools/programs/build_programs.py
+  ```
+
+  会先校验（动作存在、记录方式匹配、每周安排与课次对应），再更新 `programs.json`、`exercises.json` 和 `supabase/seed/program_library.sql`。
+
+升级顺序（只需一次）：
+
+1. 在 Supabase 的 SQL Editor 里执行 `supabase/migrations/20261103000000_program_library.sql`（建表和新列）。
+2. 执行 `supabase/seed/program_library.sql`（补充动作 + 计划镜像，可重复执行）。
+3. 再安装新版 APK。新版本第一次同步前，云端必须已经完成第 1 步，否则同步会提示缺表。
