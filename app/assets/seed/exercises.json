@@ -18,7 +18,14 @@
   "image_paths": [
    "Barbell_Bench_Press_-_Medium_Grip/0.webp",
    "Barbell_Bench_Press_-_Medium_Grip/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "9de4411c-12db-57e7-8d0e-4191c581efa9",
@@ -39,7 +46,14 @@
   "image_paths": [
    "Wide-Grip_Barbell_Bench_Press/0.webp",
    "Wide-Grip_Barbell_Bench_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "a1d6b53b-6feb-52a3-a5d6-d2c83f39a98b",
@@ -60,7 +74,14 @@
   "image_paths": [
    "Close-Grip_Barbell_Bench_Press/0.webp",
    "Close-Grip_Barbell_Bench_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "54d9a924-55f9-55f0-8e1f-a7a4787cb448",
@@ -81,7 +102,14 @@
   "image_paths": [
    "Barbell_Incline_Bench_Press_-_Medium_Grip/0.webp",
    "Barbell_Incline_Bench_Press_-_Medium_Grip/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "8e0cccf1-c5fb-5bc5-873f-17fdb02e9511",
@@ -102,7 +130,14 @@
   "image_paths": [
    "Decline_Barbell_Bench_Press/0.webp",
    "Decline_Barbell_Bench_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "d22e6834-55c6-5512-9f38-3b4ee661d91f",
@@ -123,7 +158,14 @@
   "image_paths": [
    "Dumbbell_Bench_Press/0.webp",
    "Dumbbell_Bench_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "6d0ff0d0-bd47-5899-9a2a-beeea57af0f0",
@@ -144,7 +186,14 @@
   "image_paths": [
    "Incline_Dumbbell_Press/0.webp",
    "Incline_Dumbbell_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "28ed3b39-9a05-57b6-9868-db1015b719e5",
@@ -165,7 +214,14 @@
   "image_paths": [
    "Decline_Dumbbell_Bench_Press/0.webp",
    "Decline_Dumbbell_Bench_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "846bc2b6-0645-5c80-936f-e70f716b403c",
@@ -186,7 +242,14 @@
   "image_paths": [
    "Dumbbell_Floor_Press/0.webp",
    "Dumbbell_Floor_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "427fe537-9b31-56f3-95b2-4222d7503b63",
@@ -207,7 +270,14 @@
   "image_paths": [
    "One_Arm_Dumbbell_Bench_Press/0.webp",
    "One_Arm_Dumbbell_Bench_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "d45f2310-8721-56b1-9bd1-1834b85a0afb",
@@ -225,7 +295,14 @@
   "image_paths": [
    "Dumbbell_Flyes/0.webp",
    "Dumbbell_Flyes/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "a1fb8c12-3517-5b22-b64b-24bac7ca50eb",
@@ -245,7 +322,14 @@
   "image_paths": [
    "Incline_Dumbbell_Flyes/0.webp",
    "Incline_Dumbbell_Flyes/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "4904e6b5-f1a8-524e-b89e-417c7bcb1cd9",
@@ -263,7 +347,14 @@
   "image_paths": [
    "Decline_Dumbbell_Flyes/0.webp",
    "Decline_Dumbbell_Flyes/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "3b06f9bd-1c5a-5c32-83e7-1581562a4bea",
@@ -284,7 +375,14 @@
   "image_paths": [
    "Machine_Bench_Press/0.webp",
    "Machine_Bench_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "e9b4460e-bda0-5dd4-92e0-44be6e7539b6",
@@ -305,7 +403,14 @@
   "image_paths": [
    "Leverage_Chest_Press/0.webp",
    "Leverage_Chest_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "18c61cc0-997f-5390-a511-ca9576c2a011",
@@ -326,7 +431,14 @@
   "image_paths": [
    "Leverage_Incline_Chest_Press/0.webp",
    "Leverage_Incline_Chest_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "8d3c4cc2-a8b1-5299-a187-415672a906b6",
@@ -347,7 +459,14 @@
   "image_paths": [
    "Leverage_Decline_Chest_Press/0.webp",
    "Leverage_Decline_Chest_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "5dbd147c-5ac3-5207-8330-7140e1f7af4e",
@@ -365,7 +484,14 @@
   "image_paths": [
    "Butterfly/0.webp",
    "Butterfly/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "c22c5163-f3c2-5d13-8dce-9fab40231c12",
@@ -385,7 +511,14 @@
   "image_paths": [
    "Cable_Crossover/0.webp",
    "Cable_Crossover/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "3f686c67-35ea-5592-9fba-ad4f8409528e",
@@ -405,7 +538,14 @@
   "image_paths": [
    "Low_Cable_Crossover/0.webp",
    "Low_Cable_Crossover/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "412a2945-998c-5e1a-b7bc-d66d384ca997",
@@ -423,7 +563,14 @@
   "image_paths": [
    "Single-Arm_Cable_Crossover/0.webp",
    "Single-Arm_Cable_Crossover/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "065244e6-bef9-5f96-9cc6-7f692c37680c",
@@ -444,7 +591,14 @@
   "image_paths": [
    "Cable_Chest_Press/0.webp",
    "Cable_Chest_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "91b3d867-703a-5322-8896-64c63fb3d26d",
@@ -465,7 +619,14 @@
   "image_paths": [
    "Standing_Cable_Chest_Press/0.webp",
    "Standing_Cable_Chest_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "ee657c05-068f-519e-ab68-c63e6b7c2cb4",
@@ -486,7 +647,14 @@
   "image_paths": [
    "Incline_Cable_Chest_Press/0.webp",
    "Incline_Cable_Chest_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "2246896d-703d-58ac-b524-35efd4a60301",
@@ -504,7 +672,14 @@
   "image_paths": [
    "Flat_Bench_Cable_Flyes/0.webp",
    "Flat_Bench_Cable_Flyes/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "5f77f7d4-1669-5016-afd7-9c01da251a0c",
@@ -524,7 +699,14 @@
   "image_paths": [
    "Incline_Cable_Flye/0.webp",
    "Incline_Cable_Flye/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "92694451-0ebb-5d8a-8b93-25f77c3fc314",
@@ -545,7 +727,14 @@
   "image_paths": [
    "Smith_Machine_Bench_Press/0.webp",
    "Smith_Machine_Bench_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "b93eddf9-e4a2-5949-adfe-dfe97498a997",
@@ -566,7 +755,14 @@
   "image_paths": [
    "Smith_Machine_Incline_Bench_Press/0.webp",
    "Smith_Machine_Incline_Bench_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "ee4c7919-f9e9-5b90-a539-3625d774f3fd",
@@ -587,7 +783,14 @@
   "image_paths": [
    "Smith_Machine_Decline_Press/0.webp",
    "Smith_Machine_Decline_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "096cc1ad-f139-53e9-8a9c-b48c5b826fd6",
@@ -608,7 +811,14 @@
   "image_paths": [
    "Pushups/0.webp",
    "Pushups/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "6138a0ba-1fcd-557b-819e-3c1cfb1d16ad",
@@ -630,7 +840,14 @@
   "image_paths": [
    "Push-Up_Wide/0.webp",
    "Push-Up_Wide/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "21f87f4a-ad05-50dd-a7f9-de8295a2d360",
@@ -651,7 +868,14 @@
   "image_paths": [
    "Push-Ups_-_Close_Triceps_Position/0.webp",
    "Push-Ups_-_Close_Triceps_Position/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "3abbc122-f8aa-5141-aea3-394200db79c5",
@@ -672,7 +896,14 @@
   "image_paths": [
    "Push-Ups_With_Feet_Elevated/0.webp",
    "Push-Ups_With_Feet_Elevated/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "83404192-e5a9-5b98-8351-b41fe58cc8f2",
@@ -693,7 +924,14 @@
   "image_paths": [
    "Incline_Push-Up/0.webp",
    "Incline_Push-Up/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "b9c762af-2671-5744-a6ef-1698f306bfee",
@@ -714,7 +952,14 @@
   "image_paths": [
    "Dips_-_Chest_Version/0.webp",
    "Dips_-_Chest_Version/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "a332ef9f-da18-55b3-aa09-8b88c01a99a8",
@@ -735,7 +980,14 @@
   "image_paths": [
    "Dips_-_Triceps_Version/0.webp",
    "Dips_-_Triceps_Version/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "aebd9e13-785e-563e-945c-6f47cba4e9ab",
@@ -756,7 +1008,14 @@
   "image_paths": [
    "Dip_Machine/0.webp",
    "Dip_Machine/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "71a49a3f-f19c-59c8-86e2-9c60a1a7b062",
@@ -777,7 +1036,14 @@
   "image_paths": [
    "Bench_Dips/0.webp",
    "Bench_Dips/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "9a0f259e-7326-5449-a78d-ad53de1c59fa",
@@ -798,7 +1064,14 @@
   "image_paths": [
    "Pullups/0.webp",
    "Pullups/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "befa3b2f-2d52-5536-bbdb-0a61f42f88e0",
@@ -820,7 +1093,14 @@
   "image_paths": [
    "Chin-Up/0.webp",
    "Chin-Up/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "170ebc20-89a9-53ad-b2f2-d2edd13225c7",
@@ -842,7 +1122,14 @@
   "image_paths": [
    "V-Bar_Pullup/0.webp",
    "V-Bar_Pullup/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "24d061e9-cec2-539a-8f26-c979b139e8cd",
@@ -864,7 +1151,14 @@
   "image_paths": [
    "Wide-Grip_Lat_Pulldown/0.webp",
    "Wide-Grip_Lat_Pulldown/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "b5699115-ed15-5da5-aa36-e97f376b5f8e",
@@ -886,7 +1180,14 @@
   "image_paths": [
    "Close-Grip_Front_Lat_Pulldown/0.webp",
    "Close-Grip_Front_Lat_Pulldown/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "571fae33-976d-55eb-b94a-23c040fa43b1",
@@ -908,7 +1209,14 @@
   "image_paths": [
    "V-Bar_Pulldown/0.webp",
    "V-Bar_Pulldown/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "a6b40546-2942-58c8-85cb-b941521e163d",
@@ -930,7 +1238,14 @@
   "image_paths": [
    "Underhand_Cable_Pulldowns/0.webp",
    "Underhand_Cable_Pulldowns/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "84894526-a744-5cb7-a66a-b841d83994d6",
@@ -951,7 +1266,14 @@
   "image_paths": [
    "One_Arm_Lat_Pulldown/0.webp",
    "One_Arm_Lat_Pulldown/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "9d0dee02-054d-50e3-96a2-6db829ab4d07",
@@ -969,7 +1291,14 @@
   "image_paths": [
    "Straight-Arm_Pulldown/0.webp",
    "Straight-Arm_Pulldown/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "ae24ef97-9ea3-54db-ae77-576859123f70",
@@ -987,7 +1316,14 @@
   "image_paths": [
    "Rope_Straight-Arm_Pulldown/0.webp",
    "Rope_Straight-Arm_Pulldown/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "77e37fe1-ea24-5b67-9a81-ddff79bb8ebf",
@@ -1009,7 +1345,14 @@
   "image_paths": [
    "Seated_Cable_Rows/0.webp",
    "Seated_Cable_Rows/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "b7faa91a-6dc1-5112-ac5b-62e46591e4f4",
@@ -1031,7 +1374,14 @@
   "image_paths": [
    "Seated_One-arm_Cable_Pulley_Rows/0.webp",
    "Seated_One-arm_Cable_Pulley_Rows/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "bf4a077d-6d4e-50e3-a563-64d1e986f6d3",
@@ -1053,7 +1403,14 @@
   "image_paths": [
    "Bent_Over_Barbell_Row/0.webp",
    "Bent_Over_Barbell_Row/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "a2e8801f-4149-5588-8286-82717b57f625",
@@ -1075,7 +1432,14 @@
   "image_paths": [
    "Reverse_Grip_Bent-Over_Rows/0.webp",
    "Reverse_Grip_Bent-Over_Rows/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "459d548f-01a4-54e7-a04e-9609df191a4e",
@@ -1097,7 +1461,14 @@
   "image_paths": [
    "One-Arm_Dumbbell_Row/0.webp",
    "One-Arm_Dumbbell_Row/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "eaf2b97e-41d8-530b-bc48-52de5645614a",
@@ -1119,7 +1490,14 @@
   "image_paths": [
    "Bent_Over_Two-Dumbbell_Row/0.webp",
    "Bent_Over_Two-Dumbbell_Row/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "42491a09-c215-5123-a68a-d01a6a9cf510",
@@ -1142,7 +1520,14 @@
   "image_paths": [
    "Dumbbell_Incline_Row/0.webp",
    "Dumbbell_Incline_Row/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "69566b41-f75f-51ed-834d-0dcedba35329",
@@ -1163,7 +1548,14 @@
   "image_paths": [
    "T-Bar_Row_with_Handle/0.webp",
    "T-Bar_Row_with_Handle/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "07334899-473f-5f76-803e-5bcf16a574dd",
@@ -1184,7 +1576,14 @@
   "image_paths": [
    "Lying_T-Bar_Row/0.webp",
    "Lying_T-Bar_Row/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "3e9bb2cb-d48e-5085-9909-04e21c9d07aa",
@@ -1204,7 +1603,14 @@
   "image_paths": [
    "Leverage_High_Row/0.webp",
    "Leverage_High_Row/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "26341bda-113d-53eb-b8c5-73b492a01509",
@@ -1225,7 +1631,14 @@
   "image_paths": [
    "Leverage_Iso_Row/0.webp",
    "Leverage_Iso_Row/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "20d1e1dd-b2b7-5459-8f9a-2cea517b8b9c",
@@ -1247,7 +1660,14 @@
   "image_paths": [
    "Smith_Machine_Bent_Over_Row/0.webp",
    "Smith_Machine_Bent_Over_Row/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "854b5180-abf3-5d60-9d06-17d1f5041b34",
@@ -1270,7 +1690,14 @@
   "image_paths": [
    "Bent-Arm_Barbell_Pullover/0.webp",
    "Bent-Arm_Barbell_Pullover/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "8e144954-037a-50e3-9a79-bfc434cfcc35",
@@ -1292,7 +1719,14 @@
   "image_paths": [
    "Bent-Arm_Dumbbell_Pullover/0.webp",
    "Bent-Arm_Dumbbell_Pullover/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "b74d4026-797e-51c8-9d9f-768fbdeb01d9",
@@ -1314,7 +1748,14 @@
   "image_paths": [
    "Straight-Arm_Dumbbell_Pullover/0.webp",
    "Straight-Arm_Dumbbell_Pullover/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "8c04182f-2d28-5e4b-a1b1-5f91f1eb0cd2",
@@ -1341,7 +1782,14 @@
   "image_paths": [
    "Barbell_Deadlift/0.webp",
    "Barbell_Deadlift/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "d46bc4c7-64c9-54b8-a0de-8f6e848087d2",
@@ -1363,7 +1811,14 @@
   "image_paths": [
    "Romanian_Deadlift/0.webp",
    "Romanian_Deadlift/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "757b4dad-0e15-5560-a6e9-d8cab55813bb",
@@ -1389,7 +1844,14 @@
   "image_paths": [
    "Sumo_Deadlift/0.webp",
    "Sumo_Deadlift/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "4b0ab3e9-f9ca-5754-b0b8-2f3f7345d9e6",
@@ -1410,7 +1872,14 @@
   "image_paths": [
    "Stiff-Legged_Barbell_Deadlift/0.webp",
    "Stiff-Legged_Barbell_Deadlift/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "c3efd552-282f-55e3-8cdd-27b255d6d1ad",
@@ -1433,7 +1902,14 @@
   "image_paths": [
    "Rack_Pulls/0.webp",
    "Rack_Pulls/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "5b631081-564f-544d-8031-4ec4d718c1fd",
@@ -1455,7 +1931,14 @@
   "image_paths": [
    "Good_Morning/0.webp",
    "Good_Morning/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "1fde082e-b718-51dc-9b88-d233970c6fbb",
@@ -1476,7 +1959,14 @@
   "image_paths": [
    "Hyperextensions_Back_Extensions/0.webp",
    "Hyperextensions_Back_Extensions/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "33730286-7dea-5fcc-9396-0b42375b50b1",
@@ -1497,7 +1987,14 @@
   "image_paths": [
    "Reverse_Hyperextension/0.webp",
    "Reverse_Hyperextension/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "4ad853f7-3c45-57c7-b1ee-3a3992db1d8e",
@@ -1515,7 +2012,14 @@
   "image_paths": [
    "Barbell_Shrug/0.webp",
    "Barbell_Shrug/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "d6cb481a-0177-5cda-bb74-49b9a6fbc9b7",
@@ -1533,7 +2037,14 @@
   "image_paths": [
    "Dumbbell_Shrug/0.webp",
    "Dumbbell_Shrug/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "303829a0-3bcd-51b5-9427-29145d940c52",
@@ -1553,7 +2064,14 @@
   "image_paths": [
    "Leverage_Shrug/0.webp",
    "Leverage_Shrug/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "6d1b7a68-8712-51e4-acdd-ee115d98155d",
@@ -1571,7 +2089,14 @@
   "image_paths": [
    "Cable_Shrugs/0.webp",
    "Cable_Shrugs/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "59da090c-a519-5477-9e98-c803279bb732",
@@ -1591,7 +2116,14 @@
   "image_paths": [
    "Face_Pull/0.webp",
    "Face_Pull/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "ba421e45-d81f-593f-be8c-f9ca3a197bc5",
@@ -1612,7 +2144,14 @@
   "image_paths": [
    "Band_Pull_Apart/0.webp",
    "Band_Pull_Apart/1.webp"
-  ]
+  ],
+  "kind": "activation",
+  "region": "neck_shoulder",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 15,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "a81a7c25-6eca-540b-af22-2b594710fe16",
@@ -1633,7 +2172,14 @@
   "image_paths": [
    "Barbell_Shoulder_Press/0.webp",
    "Barbell_Shoulder_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "e9085605-21b0-5793-8678-959df40be380",
@@ -1653,7 +2199,14 @@
   "image_paths": [
    "Seated_Barbell_Military_Press/0.webp",
    "Seated_Barbell_Military_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "38cb85e2-df82-5b4c-92f8-08285b80990b",
@@ -1673,7 +2226,14 @@
   "image_paths": [
    "Standing_Military_Press/0.webp",
    "Standing_Military_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "c078f4b1-395d-5e13-9ef5-6bbade66d7ca",
@@ -1693,7 +2253,14 @@
   "image_paths": [
    "Standing_Barbell_Press_Behind_Neck/0.webp",
    "Standing_Barbell_Press_Behind_Neck/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "c814e4c9-4c29-58ea-9a1a-a1c0176bbc33",
@@ -1713,7 +2280,14 @@
   "image_paths": [
    "Dumbbell_Shoulder_Press/0.webp",
    "Dumbbell_Shoulder_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "1c39809a-2d6d-5ffe-8f78-920880f68242",
@@ -1733,7 +2307,14 @@
   "image_paths": [
    "Seated_Dumbbell_Press/0.webp",
    "Seated_Dumbbell_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "f50f79f2-e963-5f7e-8672-f7ee06b37cb9",
@@ -1753,7 +2334,14 @@
   "image_paths": [
    "Standing_Dumbbell_Press/0.webp",
    "Standing_Dumbbell_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "e0ff6b48-f9e0-5cfc-962c-b07bf3544b8f",
@@ -1773,7 +2361,14 @@
   "image_paths": [
    "Arnold_Dumbbell_Press/0.webp",
    "Arnold_Dumbbell_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "987c1cff-dabc-5f40-a415-617450347867",
@@ -1793,7 +2388,14 @@
   "image_paths": [
    "Machine_Shoulder_Military_Press/0.webp",
    "Machine_Shoulder_Military_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "d1dd1b4d-6ddd-5eb1-bade-cfcf3819e7a6",
@@ -1813,7 +2415,14 @@
   "image_paths": [
    "Leverage_Shoulder_Press/0.webp",
    "Leverage_Shoulder_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "e019b5c0-9fde-5028-8f6e-47748f0686f0",
@@ -1833,7 +2442,14 @@
   "image_paths": [
    "Smith_Machine_Overhead_Shoulder_Press/0.webp",
    "Smith_Machine_Overhead_Shoulder_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "c6b2a430-7a5c-5080-83dc-7119b45b99db",
@@ -1853,7 +2469,14 @@
   "image_paths": [
    "Cable_Shoulder_Press/0.webp",
    "Cable_Shoulder_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "bba2bf9a-153b-5fc7-aa39-731221ebaad8",
@@ -1873,7 +2496,14 @@
   "image_paths": [
    "Cuban_Press/0.webp",
    "Cuban_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "6b5def07-4611-5a86-9d5e-cbbfdd4233bd",
@@ -1891,7 +2521,14 @@
   "image_paths": [
    "Side_Lateral_Raise/0.webp",
    "Side_Lateral_Raise/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "55e489c3-08b9-573d-bdb5-1e1ac8a1997e",
@@ -1909,7 +2546,14 @@
   "image_paths": [
    "Seated_Side_Lateral_Raise/0.webp",
    "Seated_Side_Lateral_Raise/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "bbb798f9-e8ec-5b9b-b814-d83160a2e123",
@@ -1930,7 +2574,14 @@
   "image_paths": [
    "Cable_Seated_Lateral_Raise/0.webp",
    "Cable_Seated_Lateral_Raise/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "7ac4cb13-77bc-5b49-9c0b-8f65fedb5401",
@@ -1948,7 +2599,14 @@
   "image_paths": [
    "Lateral_Raise_-_With_Bands/0.webp",
    "Lateral_Raise_-_With_Bands/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "9c06de6f-4d1f-51ae-9c9f-882881afeceb",
@@ -1966,7 +2624,14 @@
   "image_paths": [
    "One-Arm_Side_Laterals/0.webp",
    "One-Arm_Side_Laterals/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "afbd0814-f365-552a-bfac-a554b49a0e17",
@@ -1984,7 +2649,14 @@
   "image_paths": [
    "Front_Dumbbell_Raise/0.webp",
    "Front_Dumbbell_Raise/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "dfea4a5c-14a0-5400-9f78-a8a991f198d0",
@@ -2002,7 +2674,14 @@
   "image_paths": [
    "Front_Two-Dumbbell_Raise/0.webp",
    "Front_Two-Dumbbell_Raise/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "a0499095-947d-51b5-8ebb-c0c0a60f157f",
@@ -2020,7 +2699,14 @@
   "image_paths": [
    "Front_Cable_Raise/0.webp",
    "Front_Cable_Raise/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "7eeac1e8-0973-52ea-8398-aa40fb226212",
@@ -2038,7 +2724,14 @@
   "image_paths": [
    "Reverse_Flyes/0.webp",
    "Reverse_Flyes/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "3a608666-1a02-51e1-8dc2-209478c46098",
@@ -2056,7 +2749,14 @@
   "image_paths": [
    "Reverse_Machine_Flyes/0.webp",
    "Reverse_Machine_Flyes/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "db023441-ea05-5984-a708-ee3cfa18ee80",
@@ -2074,7 +2774,14 @@
   "image_paths": [
    "Cable_Rear_Delt_Fly/0.webp",
    "Cable_Rear_Delt_Fly/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "2288bf6c-6f7b-53d0-abb6-2fa23ad1e167",
@@ -2092,7 +2799,14 @@
   "image_paths": [
    "Seated_Bent-Over_Rear_Delt_Raise/0.webp",
    "Seated_Bent-Over_Rear_Delt_Raise/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "e30fbbbd-c001-5039-b7b4-7ef4bece8b0d",
@@ -2110,7 +2824,14 @@
   "image_paths": [
    "Bent_Over_Dumbbell_Rear_Delt_Raise_With_Head_On_Bench/0.webp",
    "Bent_Over_Dumbbell_Rear_Delt_Raise_With_Head_On_Bench/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "29a07cd9-9cee-596b-96e4-214730f32c97",
@@ -2130,7 +2851,14 @@
   "image_paths": [
    "Upright_Barbell_Row/0.webp",
    "Upright_Barbell_Row/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "cf4246bc-401a-58a4-8452-4ac04ab1194f",
@@ -2151,7 +2879,14 @@
   "image_paths": [
    "Standing_Dumbbell_Upright_Row/0.webp",
    "Standing_Dumbbell_Upright_Row/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "89a128f7-e7f7-5039-9aba-16a1db4756cd",
@@ -2171,7 +2906,14 @@
   "image_paths": [
    "Upright_Cable_Row/0.webp",
    "Upright_Cable_Row/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "c73513eb-dfdd-5407-aa9b-11137ce2e3ad",
@@ -2189,7 +2931,14 @@
   "image_paths": [
    "External_Rotation/0.webp",
    "External_Rotation/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "7a5c3bbc-f55a-5f36-99b2-43e01174faf0",
@@ -2207,7 +2956,14 @@
   "image_paths": [
    "External_Rotation_with_Cable/0.webp",
    "External_Rotation_with_Cable/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "e0768be3-0ed7-5597-a903-a9e992cac38a",
@@ -2227,7 +2983,14 @@
   "image_paths": [
    "Barbell_Curl/0.webp",
    "Barbell_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "9e9c7904-ae67-55f4-84d4-5f0255c685cf",
@@ -2245,7 +3008,14 @@
   "image_paths": [
    "EZ-Bar_Curl/0.webp",
    "EZ-Bar_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "149ef0ca-1f47-5f13-a982-04eb8746d717",
@@ -2265,7 +3035,14 @@
   "image_paths": [
    "Close-Grip_EZ_Bar_Curl/0.webp",
    "Close-Grip_EZ_Bar_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "20f70f68-c735-585d-9166-0c3e45d099bd",
@@ -2283,7 +3060,14 @@
   "image_paths": [
    "Wide-Grip_Standing_Barbell_Curl/0.webp",
    "Wide-Grip_Standing_Barbell_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "bca2e451-e0b7-5b7f-b462-9ecf3b19b8fe",
@@ -2303,7 +3087,14 @@
   "image_paths": [
    "Dumbbell_Bicep_Curl/0.webp",
    "Dumbbell_Bicep_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "9e38546c-a5a8-52f1-bdc8-d23319140585",
@@ -2323,7 +3114,14 @@
   "image_paths": [
    "Dumbbell_Alternate_Bicep_Curl/0.webp",
    "Dumbbell_Alternate_Bicep_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "0503c6b0-0812-5529-bd60-0f376a048942",
@@ -2341,7 +3139,14 @@
   "image_paths": [
    "Seated_Dumbbell_Curl/0.webp",
    "Seated_Dumbbell_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "2b52f993-51ae-5f69-b002-f94fc22b5338",
@@ -2359,7 +3164,14 @@
   "image_paths": [
    "Hammer_Curls/0.webp",
    "Hammer_Curls/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "1aebb901-9e45-5b16-aefd-04f7f81410f6",
@@ -2379,7 +3191,14 @@
   "image_paths": [
    "Alternate_Hammer_Curl/0.webp",
    "Alternate_Hammer_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "bbaed029-f552-5959-9f96-71f035497d1f",
@@ -2399,7 +3218,14 @@
   "image_paths": [
    "Cross_Body_Hammer_Curl/0.webp",
    "Cross_Body_Hammer_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "4e1e58df-38b9-59c5-8c83-bfd49a2cff74",
@@ -2417,7 +3243,14 @@
   "image_paths": [
    "Incline_Dumbbell_Curl/0.webp",
    "Incline_Dumbbell_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "28a4ab31-d450-5133-98ba-ea9086c2992e",
@@ -2437,7 +3270,14 @@
   "image_paths": [
    "Alternate_Incline_Dumbbell_Curl/0.webp",
    "Alternate_Incline_Dumbbell_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "2671e140-cc82-54c3-821a-4992be0c5441",
@@ -2455,7 +3295,14 @@
   "image_paths": [
    "Incline_Hammer_Curls/0.webp",
    "Incline_Hammer_Curls/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "e0d972e6-70bd-561c-8ce6-b1daa7d3c2d6",
@@ -2473,7 +3320,14 @@
   "image_paths": [
    "Preacher_Curl/0.webp",
    "Preacher_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "8ad93a4c-a7c3-56bd-b249-262add527793",
@@ -2491,7 +3345,14 @@
   "image_paths": [
    "Machine_Preacher_Curls/0.webp",
    "Machine_Preacher_Curls/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "ab1b7b43-c0ea-56a5-bef6-747cfe80f66c",
@@ -2509,7 +3370,14 @@
   "image_paths": [
    "Machine_Bicep_Curl/0.webp",
    "Machine_Bicep_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "c8a384ed-6ad9-5eaf-a35f-0deb520f32ef",
@@ -2527,7 +3395,14 @@
   "image_paths": [
    "One_Arm_Dumbbell_Preacher_Curl/0.webp",
    "One_Arm_Dumbbell_Preacher_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "29c8799e-f4cb-5902-a514-6684207de4c9",
@@ -2547,7 +3422,14 @@
   "image_paths": [
    "Cable_Preacher_Curl/0.webp",
    "Cable_Preacher_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "b81df881-fbe8-5245-aed6-c9e124a0bf59",
@@ -2567,7 +3449,14 @@
   "image_paths": [
    "Concentration_Curls/0.webp",
    "Concentration_Curls/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "f3f444cf-7d47-5ff5-a14a-a24e920dd307",
@@ -2585,7 +3474,14 @@
   "image_paths": [
    "Standing_Biceps_Cable_Curl/0.webp",
    "Standing_Biceps_Cable_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "adf818a1-5680-5788-8397-a76bd6942e3b",
@@ -2603,7 +3499,14 @@
   "image_paths": [
    "High_Cable_Curls/0.webp",
    "High_Cable_Curls/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "7a6fd9d8-12d0-5723-8a0b-fc0994c3f742",
@@ -2621,7 +3524,14 @@
   "image_paths": [
    "Overhead_Cable_Curl/0.webp",
    "Overhead_Cable_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "8aae87a6-fea9-59ea-96e6-8e09985d47e3",
@@ -2639,7 +3549,14 @@
   "image_paths": [
    "Cable_Hammer_Curls_-_Rope_Attachment/0.webp",
    "Cable_Hammer_Curls_-_Rope_Attachment/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "d312554e-7489-5bb2-b641-d0e557d05844",
@@ -2657,7 +3574,14 @@
   "image_paths": [
    "Spider_Curl/0.webp",
    "Spider_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "e002fe06-7e51-5ab3-89fc-780223d8a23d",
@@ -2677,7 +3601,14 @@
   "image_paths": [
    "Zottman_Curl/0.webp",
    "Zottman_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "1e76ec0d-c68b-5e60-9310-38ac72340360",
@@ -2697,7 +3628,14 @@
   "image_paths": [
    "Drag_Curl/0.webp",
    "Drag_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "c674b9a9-73fc-5a2a-b7c6-afcb9223f172",
@@ -2717,7 +3655,14 @@
   "image_paths": [
    "Reverse_Barbell_Curl/0.webp",
    "Reverse_Barbell_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "2e270571-a5ce-560f-b752-c67e5e5ae0ea",
@@ -2737,7 +3682,14 @@
   "image_paths": [
    "Reverse_Cable_Curl/0.webp",
    "Reverse_Cable_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "fac856cb-e967-51d6-ac4e-21d25bdda387",
@@ -2755,7 +3707,14 @@
   "image_paths": [
    "Palms-Up_Barbell_Wrist_Curl_Over_A_Bench/0.webp",
    "Palms-Up_Barbell_Wrist_Curl_Over_A_Bench/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "5665f19c-042b-5983-a3d5-4a002bce80cd",
@@ -2773,7 +3732,14 @@
   "image_paths": [
    "Palms-Down_Wrist_Curl_Over_A_Bench/0.webp",
    "Palms-Down_Wrist_Curl_Over_A_Bench/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "85970ea3-1874-5711-b76b-dfb19fa323df",
@@ -2791,7 +3757,14 @@
   "image_paths": [
    "Triceps_Pushdown/0.webp",
    "Triceps_Pushdown/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "cd500811-ff83-52de-bdce-2b04227db5db",
@@ -2809,7 +3782,14 @@
   "image_paths": [
    "Triceps_Pushdown_-_Rope_Attachment/0.webp",
    "Triceps_Pushdown_-_Rope_Attachment/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "ed0a7c3e-ddc5-5870-adff-a7e32bd2c822",
@@ -2827,7 +3807,14 @@
   "image_paths": [
    "Triceps_Pushdown_-_V-Bar_Attachment/0.webp",
    "Triceps_Pushdown_-_V-Bar_Attachment/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "8f305a5c-6723-5303-b94b-81f6e933b3ee",
@@ -2845,7 +3832,14 @@
   "image_paths": [
    "Reverse_Grip_Triceps_Pushdown/0.webp",
    "Reverse_Grip_Triceps_Pushdown/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "e0951889-69d8-5fbe-ab2c-da42b238b5f2",
@@ -2863,7 +3857,14 @@
   "image_paths": [
    "Cable_One_Arm_Tricep_Extension/0.webp",
    "Cable_One_Arm_Tricep_Extension/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "210fc59b-d3c3-59f3-9ea5-35ce884f3ddc",
@@ -2881,7 +3882,14 @@
   "image_paths": [
    "Cable_Rope_Overhead_Triceps_Extension/0.webp",
    "Cable_Rope_Overhead_Triceps_Extension/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "7c548dab-7bdc-59f7-9c7f-d1810118e8b4",
@@ -2899,7 +3907,14 @@
   "image_paths": [
    "Kneeling_Cable_Triceps_Extension/0.webp",
    "Kneeling_Cable_Triceps_Extension/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "27f51c8f-3700-52cd-9ec8-cc930decfd40",
@@ -2917,7 +3932,14 @@
   "image_paths": [
    "Low_Cable_Triceps_Extension/0.webp",
    "Low_Cable_Triceps_Extension/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "10dc4b7a-3db3-51b3-8761-5863e18984aa",
@@ -2937,7 +3959,14 @@
   "image_paths": [
    "EZ-Bar_Skullcrusher/0.webp",
    "EZ-Bar_Skullcrusher/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "5046aec6-9a92-503e-9a84-d2c7f3f6872e",
@@ -2955,7 +3984,14 @@
   "image_paths": [
    "Lying_Triceps_Press/0.webp",
    "Lying_Triceps_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "9854411e-a309-5dc0-ae15-301bc5c7d7e7",
@@ -2976,7 +4012,14 @@
   "image_paths": [
    "Lying_Dumbbell_Tricep_Extension/0.webp",
    "Lying_Dumbbell_Tricep_Extension/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "fc69a669-24f2-52fb-9eb3-824d20908953",
@@ -2994,7 +4037,14 @@
   "image_paths": [
    "Decline_EZ_Bar_Triceps_Extension/0.webp",
    "Decline_EZ_Bar_Triceps_Extension/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "fc3bb294-5add-58e2-a65e-a1b2ba2314a1",
@@ -3012,7 +4062,14 @@
   "image_paths": [
    "Standing_Dumbbell_Triceps_Extension/0.webp",
    "Standing_Dumbbell_Triceps_Extension/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "42052fe0-04b2-5429-bd29-10ec312d2506",
@@ -3030,7 +4087,14 @@
   "image_paths": [
    "Seated_Triceps_Press/0.webp",
    "Seated_Triceps_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "7a1307c9-5d96-5c6c-8a02-719380e627c9",
@@ -3048,7 +4112,14 @@
   "image_paths": [
    "Dumbbell_One-Arm_Triceps_Extension/0.webp",
    "Dumbbell_One-Arm_Triceps_Extension/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "dd7ed25c-4f6e-5331-a080-51c4cf601586",
@@ -3066,7 +4137,14 @@
   "image_paths": [
    "Tricep_Dumbbell_Kickback/0.webp",
    "Tricep_Dumbbell_Kickback/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "a0535d01-7eae-58ec-a022-6dd547d41b9b",
@@ -3084,7 +4162,14 @@
   "image_paths": [
    "Machine_Triceps_Extension/0.webp",
    "Machine_Triceps_Extension/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "8e538d34-01f8-523f-80aa-cbda1415b8e2",
@@ -3105,7 +4190,14 @@
   "image_paths": [
    "Smith_Machine_Close-Grip_Bench_Press/0.webp",
    "Smith_Machine_Close-Grip_Bench_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "1871de9a-d81c-52a9-a285-43d7b929a9f0",
@@ -3126,7 +4218,14 @@
   "image_paths": [
    "JM_Press/0.webp",
    "JM_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "d53866f5-066a-5fd3-b4d0-435a789942ae",
@@ -3149,7 +4248,14 @@
   "image_paths": [
    "Barbell_Squat/0.webp",
    "Barbell_Squat/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "53670a10-5221-5c10-a468-de1103f0440a",
@@ -3172,7 +4278,14 @@
   "image_paths": [
    "Barbell_Full_Squat/0.webp",
    "Barbell_Full_Squat/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "0cdc73d7-269d-56cd-8081-515193daa22a",
@@ -3194,7 +4307,14 @@
   "image_paths": [
    "Front_Barbell_Squat/0.webp",
    "Front_Barbell_Squat/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "487e5e52-4cdc-5dca-b744-9544ad6670eb",
@@ -3217,7 +4337,14 @@
   "image_paths": [
    "Wide_Stance_Barbell_Squat/0.webp",
    "Wide_Stance_Barbell_Squat/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "6e58cd14-3a52-50b9-8555-97544d586c91",
@@ -3241,7 +4368,14 @@
   "image_paths": [
    "Box_Squat/0.webp",
    "Box_Squat/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "e25f6ae1-98ed-5231-8836-fd6ad64d1ac3",
@@ -3264,7 +4398,14 @@
   "image_paths": [
    "Smith_Machine_Squat/0.webp",
    "Smith_Machine_Squat/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "20f55b15-ea92-593f-a1bb-a06e145b3fe2",
@@ -3287,7 +4428,14 @@
   "image_paths": [
    "Goblet_Squat/0.webp",
    "Goblet_Squat/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "f98e7f96-e145-5efe-b0b5-1ac32fb427c6",
@@ -3310,7 +4458,14 @@
   "image_paths": [
    "Dumbbell_Squat/0.webp",
    "Dumbbell_Squat/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "658f5522-4425-534a-ab99-c61db85bb141",
@@ -3331,7 +4486,14 @@
   "image_paths": [
    "Bodyweight_Squat/0.webp",
    "Bodyweight_Squat/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "5f405aee-52a6-5336-8878-e2d8be7c25a2",
@@ -3353,7 +4515,14 @@
   "image_paths": [
    "Hack_Squat/0.webp",
    "Hack_Squat/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "7128d1b9-8e89-591c-a0bc-47f4e148e7ed",
@@ -3375,7 +4544,14 @@
   "image_paths": [
    "Barbell_Hack_Squat/0.webp",
    "Barbell_Hack_Squat/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "296e466f-1274-5d2a-b21f-46b7f4a4a903",
@@ -3398,7 +4574,14 @@
   "image_paths": [
    "Plie_Dumbbell_Squat/0.webp",
    "Plie_Dumbbell_Squat/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "6f1f6657-8904-50ad-9ef1-c9bd813b626b",
@@ -3420,7 +4603,14 @@
   "image_paths": [
    "Zercher_Squats/0.webp",
    "Zercher_Squats/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "1a6f3550-1c61-5341-8b08-1c8f0cdc4655",
@@ -3442,7 +4632,14 @@
   "image_paths": [
    "Weighted_Sissy_Squat/0.webp",
    "Weighted_Sissy_Squat/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "a270bb0f-6079-5853-a562-18d0ab360cb6",
@@ -3464,7 +4661,14 @@
   "image_paths": [
    "One_Leg_Barbell_Squat/0.webp",
    "One_Leg_Barbell_Squat/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "f584e903-444a-5744-a523-39d5117a9141",
@@ -3486,7 +4690,14 @@
   "image_paths": [
    "Lying_Machine_Squat/0.webp",
    "Lying_Machine_Squat/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "c51a78b0-4092-544e-93e9-a5be5742cb13",
@@ -3508,7 +4719,14 @@
   "image_paths": [
    "Leg_Press/0.webp",
    "Leg_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "bec87cb9-54c8-5346-a254-e51a2baaf993",
@@ -3530,7 +4748,14 @@
   "image_paths": [
    "Narrow_Stance_Leg_Press/0.webp",
    "Narrow_Stance_Leg_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "98e870ac-6c0c-5546-81e4-bf05ac4976c7",
@@ -3548,7 +4773,14 @@
   "image_paths": [
    "Leg_Extensions/0.webp",
    "Leg_Extensions/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "c0921f3b-fc66-55d8-b652-62a9ff021a5e",
@@ -3566,7 +4798,14 @@
   "image_paths": [
    "Single-Leg_Leg_Extension/0.webp",
    "Single-Leg_Leg_Extension/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "98fc9f29-b1d7-557f-a1b1-a94a7a5e7d4e",
@@ -3584,7 +4823,14 @@
   "image_paths": [
    "Lying_Leg_Curls/0.webp",
    "Lying_Leg_Curls/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "1b94d5b2-7324-5a87-8170-cf80e8a03a53",
@@ -3602,7 +4848,14 @@
   "image_paths": [
    "Seated_Leg_Curl/0.webp",
    "Seated_Leg_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "54209919-3bc3-5497-8e03-c83fe9bf00c4",
@@ -3620,7 +4873,14 @@
   "image_paths": [
    "Standing_Leg_Curl/0.webp",
    "Standing_Leg_Curl/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "305fa316-c76d-5529-a67e-f689e547ade7",
@@ -3642,7 +4902,14 @@
   "image_paths": [
    "Barbell_Lunge/0.webp",
    "Barbell_Lunge/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "388d8cce-f583-55f2-b275-145dad01628d",
@@ -3664,7 +4931,14 @@
   "image_paths": [
    "Barbell_Walking_Lunge/0.webp",
    "Barbell_Walking_Lunge/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "c1e0cd91-bbfa-57c4-b938-ccd2d7701e72",
@@ -3686,7 +4960,14 @@
   "image_paths": [
    "Dumbbell_Lunges/0.webp",
    "Dumbbell_Lunges/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "5ab87551-3df4-54cc-91ca-6f62601ae902",
@@ -3708,7 +4989,14 @@
   "image_paths": [
    "Dumbbell_Rear_Lunge/0.webp",
    "Dumbbell_Rear_Lunge/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "7d3ac285-9fc3-5ecb-9810-2496d9b28ec8",
@@ -3729,7 +5017,14 @@
   "image_paths": [
    "Split_Squat_with_Dumbbells/0.webp",
    "Split_Squat_with_Dumbbells/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "e46ee075-1c6a-5061-b5d7-9a422e88c63c",
@@ -3751,7 +5046,14 @@
   "image_paths": [
    "Smith_Single-Leg_Split_Squat/0.webp",
    "Smith_Single-Leg_Split_Squat/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "cf81b0c7-1829-5a7f-bf43-50a60534ce5d",
@@ -3774,7 +5076,14 @@
   "image_paths": [
    "Barbell_Step_Ups/0.webp",
    "Barbell_Step_Ups/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "097c074b-fe85-57ee-8fd5-8a22a74a6949",
@@ -3796,7 +5105,14 @@
   "image_paths": [
    "Dumbbell_Step_Ups/0.webp",
    "Dumbbell_Step_Ups/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "887a4224-1f9f-5f5b-a20c-a3041016da13",
@@ -3817,7 +5133,14 @@
   "image_paths": [
    "Stiff-Legged_Dumbbell_Deadlift/0.webp",
    "Stiff-Legged_Dumbbell_Deadlift/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "982e612f-4576-54a0-93f0-8863e8bf1ecf",
@@ -3838,7 +5161,14 @@
   "image_paths": [
    "Smith_Machine_Stiff-Legged_Deadlift/0.webp",
    "Smith_Machine_Stiff-Legged_Deadlift/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "f3799982-c435-57e6-938b-6244b12921dd",
@@ -3859,7 +5189,14 @@
   "image_paths": [
    "Kettlebell_One-Legged_Deadlift/0.webp",
    "Kettlebell_One-Legged_Deadlift/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "fd43a42e-fd6c-5527-93d7-c88ee61ea0af",
@@ -3879,7 +5216,14 @@
   "image_paths": [
    "Thigh_Abductor/0.webp",
    "Thigh_Abductor/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "7f615468-f50b-5abe-b2ff-4f85222301a1",
@@ -3900,7 +5244,14 @@
   "image_paths": [
    "Thigh_Adductor/0.webp",
    "Thigh_Adductor/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "11553e24-40bc-550c-9aef-d3597a4370a0",
@@ -3921,7 +5272,14 @@
   "image_paths": [
    "Glute_Ham_Raise/0.webp",
    "Glute_Ham_Raise/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "4747f93b-dea8-5e8d-94e2-6a3275ba2e4b",
@@ -3939,7 +5297,14 @@
   "image_paths": [
    "Standing_Calf_Raises/0.webp",
    "Standing_Calf_Raises/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "d4be86b4-228f-5ec1-ab7e-21647af74aa3",
@@ -3957,7 +5322,14 @@
   "image_paths": [
    "Seated_Calf_Raise/0.webp",
    "Seated_Calf_Raise/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "85f87826-59da-5a66-a7d0-efdb303a71cc",
@@ -3975,7 +5347,14 @@
   "image_paths": [
    "Standing_Dumbbell_Calf_Raise/0.webp",
    "Standing_Dumbbell_Calf_Raise/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "cfc3cb66-15ce-51b7-9b57-86988d5c0f98",
@@ -3993,7 +5372,14 @@
   "image_paths": [
    "Standing_Barbell_Calf_Raise/0.webp",
    "Standing_Barbell_Calf_Raise/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "08780e46-5184-58bf-9b3d-a1c8a5e1d9d6",
@@ -4011,7 +5397,14 @@
   "image_paths": [
    "Calf_Press_On_The_Leg_Press_Machine/0.webp",
    "Calf_Press_On_The_Leg_Press_Machine/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "c99e95cc-557a-55fa-a44a-057484299ce6",
@@ -4029,7 +5422,14 @@
   "image_paths": [
    "Calf_Press/0.webp",
    "Calf_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "dd75b711-2b9a-54bd-a327-bf8fdca87b09",
@@ -4047,7 +5447,14 @@
   "image_paths": [
    "Smith_Machine_Calf_Raise/0.webp",
    "Smith_Machine_Calf_Raise/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "53eea985-b179-501f-aab6-8a7ba152a56a",
@@ -4065,7 +5472,14 @@
   "image_paths": [
    "Dumbbell_Seated_One-Leg_Calf_Raise/0.webp",
    "Dumbbell_Seated_One-Leg_Calf_Raise/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "16734ab6-1ca6-51ed-a3e8-22b675e54fed",
@@ -4083,7 +5497,14 @@
   "image_paths": [
    "Monster_Walk/0.webp",
    "Monster_Walk/1.webp"
-  ]
+  ],
+  "kind": "activation",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "98635b84-9801-5834-b5b5-ee6d54270bc9",
@@ -4104,7 +5525,14 @@
   "image_paths": [
    "Barbell_Hip_Thrust/0.webp",
    "Barbell_Hip_Thrust/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "573a0b8c-d268-56f8-8c3a-0a34f12c2328",
@@ -4125,7 +5553,14 @@
   "image_paths": [
    "Barbell_Glute_Bridge/0.webp",
    "Barbell_Glute_Bridge/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "12235757-22aa-5d8f-b8b3-efd452402ee2",
@@ -4145,7 +5580,14 @@
   "image_paths": [
    "Single_Leg_Glute_Bridge/0.webp",
    "Single_Leg_Glute_Bridge/1.webp"
-  ]
+  ],
+  "kind": "activation",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "cfa1ca83-1513-5eee-b9a5-bcbf3e85dfdc",
@@ -4165,7 +5607,14 @@
   "image_paths": [
    "Butt_Lift_Bridge/0.webp",
    "Butt_Lift_Bridge/1.webp"
-  ]
+  ],
+  "kind": "activation",
+  "region": "hip_glute",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 15,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "2eea44aa-63da-5bf3-954c-6b33792a5c93",
@@ -4185,7 +5634,14 @@
   "image_paths": [
    "Glute_Kickback/0.webp",
    "Glute_Kickback/1.webp"
-  ]
+  ],
+  "kind": "activation",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 12,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "ed80d145-6407-5247-827a-7f32a9bf1647",
@@ -4205,7 +5661,14 @@
   "image_paths": [
    "One-Legged_Cable_Kickback/0.webp",
    "One-Legged_Cable_Kickback/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "8fbb2c34-a389-563a-b853-5c9e7e8cf9ef",
@@ -4226,7 +5689,14 @@
   "image_paths": [
    "Pull_Through/0.webp",
    "Pull_Through/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "7480069b-a846-5d36-ad7d-0c5d696d2c24",
@@ -4249,7 +5719,14 @@
   "image_paths": [
    "One-Arm_Kettlebell_Swings/0.webp",
    "One-Arm_Kettlebell_Swings/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "6cae54fc-8a8c-5e01-9ed6-b361cfc6a549",
@@ -4267,7 +5744,14 @@
   "image_paths": [
    "Crunches/0.webp",
    "Crunches/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "d0ed0817-04d7-5df3-91f2-6c3946d35407",
@@ -4285,7 +5769,14 @@
   "image_paths": [
    "Decline_Crunch/0.webp",
    "Decline_Crunch/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "4756d276-66b6-5ebb-b602-08177f3dff44",
@@ -4303,7 +5794,14 @@
   "image_paths": [
    "Cable_Crunch/0.webp",
    "Cable_Crunch/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "20624760-4d92-5baa-a772-dceb790a21d0",
@@ -4321,7 +5819,14 @@
   "image_paths": [
    "Cable_Seated_Crunch/0.webp",
    "Cable_Seated_Crunch/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "a91dd6b8-a32d-5fbe-b163-2cbe0cfc7c20",
@@ -4339,7 +5844,14 @@
   "image_paths": [
    "Ab_Crunch_Machine/0.webp",
    "Ab_Crunch_Machine/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "86213782-ce0a-5cd5-aa91-03fe8b76e873",
@@ -4357,7 +5869,14 @@
   "image_paths": [
    "Reverse_Crunch/0.webp",
    "Reverse_Crunch/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "78d9d2a6-b067-58fe-b38f-9bd8aa402223",
@@ -4375,7 +5894,14 @@
   "image_paths": [
    "Oblique_Crunches/0.webp",
    "Oblique_Crunches/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "33912a12-1535-5f04-8a2c-9ffeabd7ffa3",
@@ -4395,7 +5921,14 @@
   "image_paths": [
    "Russian_Twist/0.webp",
    "Russian_Twist/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "db391c5c-c0a5-5129-8eb9-653a912941dd",
@@ -4413,7 +5946,14 @@
   "image_paths": [
    "Cable_Russian_Twists/0.webp",
    "Cable_Russian_Twists/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "24f2a5f9-6f0a-5519-8345-619fbf1d3624",
@@ -4431,7 +5971,14 @@
   "image_paths": [
    "Sit-Up/0.webp",
    "Sit-Up/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "d6510718-c583-5ad2-b4dd-88071e1ee2cd",
@@ -4449,7 +5996,14 @@
   "image_paths": [
    "Jackknife_Sit-Up/0.webp",
    "Jackknife_Sit-Up/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "06ae2322-12e0-5ccd-8586-12b7bee78928",
@@ -4467,7 +6021,14 @@
   "image_paths": [
    "Hanging_Leg_Raise/0.webp",
    "Hanging_Leg_Raise/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "81514d50-a83f-5534-aab3-8110d622d9e3",
@@ -4485,7 +6046,14 @@
   "image_paths": [
    "Flat_Bench_Lying_Leg_Raise/0.webp",
    "Flat_Bench_Lying_Leg_Raise/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "7ca16973-887d-5ed9-a66d-2409a1a7317d",
@@ -4500,12 +6068,19 @@
    "hamstrings"
   ],
   "equipment": "body only",
-  "tracking_type": "bodyweight_reps",
+  "tracking_type": "duration",
   "instructions_zh": null,
   "image_paths": [
    "Flutter_Kicks/0.webp",
    "Flutter_Kicks/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "1a88d43e-8023-55e5-bbdb-e00522ceab27",
@@ -4523,7 +6098,14 @@
   "image_paths": [
    "Dead_Bug/0.webp",
    "Dead_Bug/1.webp"
-  ]
+  ],
+  "kind": "activation",
+  "region": "back_core",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 8,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "b8907aad-b6db-5e27-b030-84084de8108e",
@@ -4541,7 +6123,14 @@
   "image_paths": [
    "Plank/0.webp",
    "Plank/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "61a39939-be2b-5a73-be71-3cd8c716cc7c",
@@ -4561,7 +6150,14 @@
   "image_paths": [
    "Side_Bridge/0.webp",
    "Side_Bridge/1.webp"
-  ]
+  ],
+  "kind": "activation",
+  "region": "back_core",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 20,
+  "image_ratio": 1.0
  },
  {
   "id": "cb351ae1-6db2-518b-a422-af530b16821e",
@@ -4582,7 +6178,14 @@
   "image_paths": [
    "Barbell_Ab_Rollout/0.webp",
    "Barbell_Ab_Rollout/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "9cdb3395-f406-50d1-9cef-c0dd0496936f",
@@ -4603,7 +6206,14 @@
   "image_paths": [
    "Barbell_Ab_Rollout_-_On_Knees/0.webp",
    "Barbell_Ab_Rollout_-_On_Knees/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "b579cd43-d0f3-51d8-ae7e-72b8359ae129",
@@ -4625,7 +6235,14 @@
   "image_paths": [
    "Pallof_Press/0.webp",
    "Pallof_Press/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "c2888cbf-aa2d-5746-9403-e6503c45751a",
@@ -4645,7 +6262,14 @@
   "image_paths": [
    "Standing_Cable_Wood_Chop/0.webp",
    "Standing_Cable_Wood_Chop/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "10b23f44-3eac-5661-ad7a-3a93c0b713cd",
@@ -4665,7 +6289,14 @@
   "image_paths": [
    "Barbell_Side_Bend/0.webp",
    "Barbell_Side_Bend/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "09950fe5-3929-5d80-92e6-bc6c6554b669",
@@ -4683,7 +6314,14 @@
   "image_paths": [
    "Dumbbell_Side_Bend/0.webp",
    "Dumbbell_Side_Bend/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "96bf66ce-382c-56d9-8b18-00f8338fd74f",
@@ -4701,7 +6339,14 @@
   "image_paths": [
    "Air_Bike/0.webp",
    "Air_Bike/1.webp"
-  ]
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.0
  },
  {
   "id": "da89e675-32fd-5e1d-97f1-05a9b6ee05d9",
@@ -4720,7 +6365,17 @@
   "equipment": "treadmill",
   "tracking_type": "duration",
   "instructions_zh": "速度以能说话但不能唱歌为准，约 5–6.5 公里/小时；抬头挺胸，手臂自然摆动，不要抓着扶手。",
-  "image_paths": []
+  "image_paths": [
+   "fc_treadmill_walk/0.webp",
+   "fc_treadmill_walk/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "c1494c76-3a3d-5a05-a594-e3b039978db2",
@@ -4739,7 +6394,17 @@
   "equipment": "treadmill",
   "tracking_type": "duration",
   "instructions_zh": "坡度调到 6–12%，速度放慢到 4–5.5 公里/小时；身体保持直立，不要扶扶手，臀腿发力蹬地。",
-  "image_paths": []
+  "image_paths": [
+   "fc_treadmill_incline_walk/0.webp",
+   "fc_treadmill_incline_walk/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "f6278317-759e-5f68-98e4-800c16ca0bf0",
@@ -4758,7 +6423,17 @@
   "equipment": "treadmill",
   "tracking_type": "duration",
   "instructions_zh": "轻松配速，约 7–9 公里/小时；步幅小、步频快，前脚掌或中足轻轻落地，呼吸有节奏。",
-  "image_paths": []
+  "image_paths": [
+   "fc_treadmill_jog/0.webp",
+   "fc_treadmill_jog/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "3a4ac43a-c3b2-5aa8-9e9f-e5980458dadf",
@@ -4777,7 +6452,17 @@
   "equipment": "treadmill",
   "tracking_type": "duration",
   "instructions_zh": "高强度段加速到有些吃力（约 9–12 公里/小时），恢复段降到慢走；每次变速前先看稳扶手再调。",
-  "image_paths": []
+  "image_paths": [
+   "fc_treadmill_interval/0.webp",
+   "fc_treadmill_interval/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "4817d05f-139d-533e-9b16-3aab70c702d8",
@@ -4796,7 +6481,17 @@
   "equipment": "stair climber",
   "tracking_type": "duration",
   "instructions_zh": "上身直立，手轻扶扶手保持平衡，不要趴在上面；每步踩实整个脚掌，用臀腿发力。",
-  "image_paths": []
+  "image_paths": [
+   "fc_stair_climber/0.webp",
+   "fc_stair_climber/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "228632a0-8a82-5399-b3f6-766c82e83534",
@@ -4817,7 +6512,17 @@
   "equipment": "rower",
   "tracking_type": "duration",
   "instructions_zh": "顺序是腿蹬、身体后仰、手拉；回程反过来先伸手、再前倾、最后屈膝。蹬腿提供大部分力量，不要只靠手臂拉。",
-  "image_paths": []
+  "image_paths": [
+   "fc_rowing_machine/0.webp",
+   "fc_rowing_machine/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "4dedddb1-e898-5682-bd58-71d96ebbce1a",
@@ -4836,7 +6541,17 @@
   "equipment": "elliptical",
   "tracking_type": "duration",
   "instructions_zh": "脚掌踩稳踏板，身体挺直，手臂与腿配合推拉；阻力调到能保持稳定节奏，对膝盖冲击很小。",
-  "image_paths": []
+  "image_paths": [
+   "fc_elliptical/0.webp",
+   "fc_elliptical/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "13d82e2f-079c-5edd-80a6-723e8620ad95",
@@ -4855,7 +6570,17 @@
   "equipment": "bike",
   "tracking_type": "duration",
   "instructions_zh": "车座调到踩到最低点时膝盖微弯；背部放松，手不要抓死车把；用转速（约 70–90 转/分）和阻力控制强度。",
-  "image_paths": []
+  "image_paths": [
+   "fc_stationary_bike/0.webp",
+   "fc_stationary_bike/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "b45f0be8-eb4b-506e-8861-98c2617ab578",
@@ -4874,7 +6599,17 @@
   "equipment": "jump rope",
   "tracking_type": "duration",
   "instructions_zh": "起跳高度只需离地一两厘米，前脚掌落地，手腕转绳而不是大臂甩绳；膝盖微屈缓冲。",
-  "image_paths": []
+  "image_paths": [
+   "fc_jump_rope/0.webp",
+   "fc_jump_rope/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "61bb9432-5cdc-589d-81dd-a520327f1015",
@@ -4893,7 +6628,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "挑平整的路面，步幅比平时略大，手臂前后摆动；保持能和同伴说话的强度。",
-  "image_paths": []
+  "image_paths": [
+   "fc_outdoor_walk/0.webp",
+   "fc_outdoor_walk/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "fe47617b-0d47-5c75-9df0-b1181a27ff1c",
@@ -4912,7 +6657,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "配速以不喘为准，步幅小、步频快；前几分钟当作热身，千万别一上来就冲。",
-  "image_paths": []
+  "image_paths": [
+   "fc_outdoor_jog/0.webp",
+   "fc_outdoor_jog/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "f31027d4-e3d3-5acf-b0ab-8bcc8a9e7470",
@@ -4931,7 +6686,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "双脚跳开的同时双臂在头顶上方击掌，跳回时放下；落地轻，保持核心收紧。",
-  "image_paths": []
+  "image_paths": [
+   "fc_jumping_jack/0.webp",
+   "fc_jumping_jack/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "504d5cee-d030-5dfe-9c95-83f263219cba",
@@ -4950,7 +6715,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "原地快速交替抬膝，膝盖尽量抬到腰部高度；上身直立，前脚掌轻快着地。",
-  "image_paths": []
+  "image_paths": [
+   "fc_high_knees/0.webp",
+   "fc_high_knees/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "c597533d-37cd-5bdc-aaf2-d7fd28eed37b",
@@ -4968,7 +6743,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "原地小跑，脚跟快速向臀部后踢；身体直立，不要前倾。",
-  "image_paths": []
+  "image_paths": [
+   "fc_butt_kicks/0.webp",
+   "fc_butt_kicks/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "51e57a1a-f319-584d-8aa7-f9363e8c79a0",
@@ -4987,7 +6772,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "手撑在地面成高位平板，肩膀在手腕上方；双腿交替快速向胸口收，臀部不要翘高。",
-  "image_paths": []
+  "image_paths": [
+   "fc_mountain_climber/0.webp",
+   "fc_mountain_climber/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "a3e7d276-be0c-5e04-9ba3-e65b5c27c9dc",
@@ -5007,7 +6802,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "深蹲撑地、双脚向后跳成平板、做一个俯卧撑（新手可省略）、跳回、起身跳跃；新手可去掉跳跃和俯卧撑。",
-  "image_paths": []
+  "image_paths": [
+   "fc_burpee/0.webp",
+   "fc_burpee/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "c8de512b-0bfe-5412-b83c-627c6dfc944e",
@@ -5026,7 +6831,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "先下蹲到大腿接近水平，再向上爆发跳起；落地时膝盖微屈缓冲，膝盖对准脚尖方向。",
-  "image_paths": []
+  "image_paths": [
+   "fc_squat_jump/0.webp",
+   "fc_squat_jump/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "c28a2538-0f0b-5bcf-9eef-1835f4552510",
@@ -5045,7 +6860,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "向侧方大步跳出，单脚落地稳住，另一脚在身后划过；身体微前倾，像滑冰一样左右交替。",
-  "image_paths": []
+  "image_paths": [
+   "fc_skater_hop/0.webp",
+   "fc_skater_hop/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "b2820bf7-bf4b-583e-95cd-d127c02a048f",
@@ -5064,7 +6889,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "双脚前后站开、膝盖微屈，出直拳时转腰转髋、拳打到位后迅速收回护住下巴；先慢后快。",
-  "image_paths": []
+  "image_paths": [
+   "fc_shadow_boxing/0.webp",
+   "fc_shadow_boxing/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "f7618600-90ee-59ec-91fb-9c63c24e2d2b",
@@ -5082,7 +6917,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "完成一个自重深蹲，站起时抬起一侧膝盖到腰高；左右交替，全程不跳，适合楼上练习。",
-  "image_paths": []
+  "image_paths": [
+   "fc_jump_squat_lowimpact/0.webp",
+   "fc_jump_squat_lowimpact/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "de137867-5004-5cbb-b049-a74837a98771",
@@ -5100,7 +6945,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "一只脚向侧迈出的同时双臂上举，再收回；用走代替跳，对膝盖友好。",
-  "image_paths": []
+  "image_paths": [
+   "fc_step_jack/0.webp",
+   "fc_step_jack/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "f8fe7e6d-1c79-5616-8b52-65aca0d42d93",
@@ -5119,7 +6974,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "站姿弯腰手撑地，双手向前爬到平板位，再把脚向手靠拢站起；膝盖尽量伸直。",
-  "image_paths": []
+  "image_paths": [
+   "fc_inchworm/0.webp",
+   "fc_inchworm/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "full",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 8,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "23615523-2473-5b6f-a7c9-9b690129107d",
@@ -5137,7 +7002,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "双膝跪地，从膝盖到头成一条直线；胸口下降到离地一拳处，再推起。适合还做不了标准俯卧撑的人。",
-  "image_paths": []
+  "image_paths": [
+   "fc_knee_pushup/0.webp",
+   "fc_knee_pushup/1.webp"
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "f49d678a-9059-5edc-bb47-0711dd364dd7",
@@ -5155,7 +7030,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "臀部抬高成倒 V 形，头顶朝地面方向下压再推起；主要锻炼肩部。",
-  "image_paths": []
+  "image_paths": [
+   "fc_pike_pushup/0.webp",
+   "fc_pike_pushup/1.webp"
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "0e2c5857-cd03-59fa-bda1-8b9b79a6d703",
@@ -5173,7 +7058,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "向后撤一大步，两膝都弯到约 90 度，前脚踩稳后蹬回站直；比前跨步更护膝。",
-  "image_paths": []
+  "image_paths": [
+   "fc_reverse_lunge/0.webp",
+   "fc_reverse_lunge/1.webp"
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": true,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "27f5dd5e-d748-549b-8fc5-98ad5a57b21c",
@@ -5191,7 +7086,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "后脚脚背放在凳子上，前脚站稳，垂直下蹲到大腿接近水平；重心落在前脚，可手持哑铃增加难度。",
-  "image_paths": []
+  "image_paths": [
+   "fc_bulgarian_split_squat/0.webp",
+   "fc_bulgarian_split_squat/1.webp"
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": true,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "030f93cf-638f-5ab8-acca-6f82c1ea3f2d",
@@ -5209,7 +7114,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "背贴墙，大腿与地面平行，膝盖在脚踝正上方；坚持到设定时间，不要用手撑大腿。",
-  "image_paths": []
+  "image_paths": [
+   "fc_wall_sit/0.webp",
+   "fc_wall_sit/1.webp"
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "08879b00-67f3-593d-a2cf-cc5b4da3155f",
@@ -5224,7 +7139,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "双脚与髋同宽，用力踮起脚尖到最高点停一下，再慢慢放下；可扶墙保持平衡。",
-  "image_paths": []
+  "image_paths": [
+   "fc_calf_raise_bw/0.webp",
+   "fc_calf_raise_bw/1.webp"
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "2c446af4-d69b-5cc8-8ff1-42aa015e9622",
@@ -5242,7 +7167,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "俯卧，手臂前伸，同时抬起手臂与双腿离地一点，停 2 秒后放下；动作小而稳，不要仰头。",
-  "image_paths": []
+  "image_paths": [
+   "fc_superman/0.webp",
+   "fc_superman/1.webp"
+  ],
+  "kind": "activation",
+  "region": "back_core",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "f10b4cfa-3c9e-50c2-9b3a-9be0d0a755fb",
@@ -5261,7 +7196,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "四点支撑，同时伸直一侧手臂和对侧腿，保持骨盆不晃动；停 2 秒后收回，换边。",
-  "image_paths": []
+  "image_paths": [
+   "fc_bird_dog/0.webp",
+   "fc_bird_dog/1.webp"
+  ],
+  "kind": "activation",
+  "region": "back_core",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 8,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "c0dc8464-183b-556f-8e09-2d642dd7ad6c",
@@ -5278,7 +7223,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "仰卧，双手轻扶头侧，一侧肘部向对侧膝盖靠拢，另一条腿伸直；下背贴地，转动靠躯干而不是拉脖子。",
-  "image_paths": []
+  "image_paths": [
+   "fc_bicycle_crunch/0.webp",
+   "fc_bicycle_crunch/1.webp"
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "a8669cbe-13de-5054-af48-5aa9033cfec9",
@@ -5295,7 +7250,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "仰卧，下背压住地面，手臂和双腿同时抬离地面，身体呈浅浅的香蕉形；腰一旦离地就收一点腿。",
-  "image_paths": []
+  "image_paths": [
+   "fc_hollow_hold/0.webp",
+   "fc_hollow_hold/1.webp"
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "4ef4c3e0-f69d-561a-bacb-7f2ab8830476",
@@ -5313,7 +7278,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "高位平板，双脚略分开，交替抬手轻拍对侧肩；骨盆保持不扭动。",
-  "image_paths": []
+  "image_paths": [
+   "fc_plank_shoulder_tap/0.webp",
+   "fc_plank_shoulder_tap/1.webp"
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "5a2f40dc-100d-5c66-83ae-d6244a1e6aa1",
@@ -5329,7 +7304,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "侧卧屈膝，双脚并拢，上侧膝盖向上打开再合上；骨盆保持稳定，不要向后倒。",
-  "image_paths": []
+  "image_paths": [
+   "fc_clamshell/0.webp",
+   "fc_clamshell/1.webp"
+  ],
+  "kind": "activation",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 15,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "1d7f0ca3-3527-5d4b-8ff6-2dd2df9f4c88",
@@ -5345,7 +7330,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "四点支撑，一侧膝盖弯曲向外侧抬起到髋高，再慢慢放下；腰背保持平直。",
-  "image_paths": []
+  "image_paths": [
+   "fc_fire_hydrant/0.webp",
+   "fc_fire_hydrant/1.webp"
+  ],
+  "kind": "activation",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 12,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "3e2b80a2-dfcd-5e86-8732-349e1a20ec37",
@@ -5361,7 +7356,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "侧卧，下腿微屈，上腿伸直并向上抬到髋高，脚尖略朝下；动作慢，在最高点停一秒。",
-  "image_paths": []
+  "image_paths": [
+   "fc_side_leg_raise/0.webp",
+   "fc_side_leg_raise/1.webp"
+  ],
+  "kind": "activation",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "95e8b423-9f8e-5916-96d1-367d28fd723f",
@@ -5378,7 +7383,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "四点支撑，一侧膝盖保持弯曲，脚掌朝天花板蹬起，用臀部发力；不要靠塌腰来抬高。",
-  "image_paths": []
+  "image_paths": [
+   "fc_donkey_kick/0.webp",
+   "fc_donkey_kick/1.webp"
+  ],
+  "kind": "activation",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 12,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "a47fbd6d-4a7e-54fb-87ae-c420de502c07",
@@ -5396,7 +7411,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "先做出臀桥并保持髋部抬高，再交替抬起一只脚，骨盆不要左右晃动。",
-  "image_paths": []
+  "image_paths": [
+   "fc_glute_bridge_march/0.webp",
+   "fc_glute_bridge_march/1.webp"
+  ],
+  "kind": "activation",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 8,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "eb94e287-5fe3-555c-89a7-d121b68b78ca",
@@ -5413,7 +7438,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "仰卧，脚掌相对、膝盖向外打开，臀部向上顶起并夹紧；比普通臀桥更容易找到臀部发力感。",
-  "image_paths": []
+  "image_paths": [
+   "fc_frog_pump/0.webp",
+   "fc_frog_pump/1.webp"
+  ],
+  "kind": "activation",
+  "region": "hip_glute",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 20,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "c2bc02e9-00a9-5748-8652-c05c48cd0ef1",
@@ -5431,7 +7466,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "双脚宽站，重心移向一侧并下蹲，另一条腿伸直、脚尖朝上；左右交替，提升髋关节灵活度。",
-  "image_paths": []
+  "image_paths": [
+   "fc_cossack_squat/0.webp",
+   "fc_cossack_squat/1.webp"
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": true,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "9e06f24d-281a-525e-9a46-830fcc868f12",
@@ -5448,7 +7493,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "仰卧，一腿屈膝踩地，另一腿绷直抬到与屈膝腿大腿同高；对膝关节压力小，常用于膝盖康复期的力量热身。",
-  "image_paths": []
+  "image_paths": [
+   "fc_straight_leg_raise/0.webp",
+   "fc_straight_leg_raise/1.webp"
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": true,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "e9cd2208-1ebe-504c-b87a-5278a13e3034",
@@ -5466,7 +7521,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "用稳固的台阶或凳子，一脚踩上去、用这条腿的力量站起，再慢慢放下；全程不要用后脚蹬地借力。",
-  "image_paths": []
+  "image_paths": [
+   "fc_step_up_bw/0.webp",
+   "fc_step_up_bw/1.webp"
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": true,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "3b1e174f-1fdd-559c-854f-c17152af6296",
@@ -5484,7 +7549,17 @@
   "equipment": "other",
   "tracking_type": "duration",
   "instructions_zh": "双手握住单杠，身体放松悬挂，肩膀略沉但不耸；可缓解久坐后的肩背紧张，握力不够就缩短时间。",
-  "image_paths": []
+  "image_paths": [
+   "fc_dead_hang/0.webp",
+   "fc_dead_hang/1.webp"
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "f3f1f909-fed6-536d-98fd-63b3b3b01e62",
@@ -5502,7 +7577,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "背贴墙站立，双臂贴墙做成 W，再沿墙向上滑到 Y；腰不要拱，手背尽量不离墙。",
-  "image_paths": []
+  "image_paths": [
+   "fc_wall_angel/0.webp",
+   "fc_wall_angel/1.webp"
+  ],
+  "kind": "activation",
+  "region": "neck_shoulder",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "96f384eb-057f-5328-af78-28cd6c3f6a87",
@@ -5520,7 +7605,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "俯卧，手臂依次摆成 Y、T、W 形状抬离地面，拇指朝上；用肩胛骨发力，动作小而慢。",
-  "image_paths": []
+  "image_paths": [
+   "fc_prone_ytw/0.webp",
+   "fc_prone_ytw/1.webp"
+  ],
+  "kind": "activation",
+  "region": "neck_shoulder",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 6,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "26a6bb8e-50c5-5903-82a6-d0c09aa50179",
@@ -5538,7 +7633,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "高位平板，手臂保持伸直，只让肩胛骨前伸和后收；用来激活前锯肌，改善翼状肩。",
-  "image_paths": []
+  "image_paths": [
+   "fc_scapular_pushup/0.webp",
+   "fc_scapular_pushup/1.webp"
+  ],
+  "kind": "activation",
+  "region": "neck_shoulder",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 12,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "6e1e58ce-eea2-503f-966c-e4db4d3397b7",
@@ -5553,7 +7658,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "背靠墙站直，下巴水平向后收、像要做出双下巴，停 5 秒；不要低头或抬头，用于改善头前倾。",
-  "image_paths": []
+  "image_paths": [
+   "fc_chin_tuck/0.webp",
+   "fc_chin_tuck/1.webp"
+  ],
+  "kind": "activation",
+  "region": "neck_shoulder",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 8,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "c4d2203e-8099-504e-b692-6dee71e7779d",
@@ -5570,7 +7685,17 @@
   "equipment": "bands",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "肘部夹紧身体、屈肘 90 度，向外拉开弹力带再慢慢回收；练肩袖，重量宁轻勿重。",
-  "image_paths": []
+  "image_paths": [
+   "fc_band_external_rotation/0.webp",
+   "fc_band_external_rotation/1.webp"
+  ],
+  "kind": "activation",
+  "region": "neck_shoulder",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 15,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "bc9af9c8-0537-5abd-a696-1efaf095978e",
@@ -5588,7 +7713,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "侧撑姿势，臀部先放低再向上顶起；肩膀在肘部正上方，身体始终成一条直线。",
-  "image_paths": []
+  "image_paths": [
+   "fc_side_plank_raise/0.webp",
+   "fc_side_plank_raise/1.webp"
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": true,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "8b95307f-da70-5af6-9da5-f6633455f04c",
@@ -5603,7 +7738,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "坐姿或站姿，单脚离地，用脚尖画大圆；顺逆时针各做一半，范围尽量大但不要用小腿带动。",
-  "image_paths": []
+  "image_paths": [
+   "fc_ankle_circle/0.webp",
+   "fc_ankle_circle/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "leg",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "fff2124e-767a-5e5b-a9e6-e413648719e5",
@@ -5621,7 +7766,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "单脚站立，另一腿微抬，目视前方；站稳后可闭眼或站在软垫上增加难度。",
-  "image_paths": []
+  "image_paths": [
+   "fc_single_leg_balance/0.webp",
+   "fc_single_leg_balance/1.webp"
+  ],
+  "kind": "activation",
+  "region": "leg",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "2bf8855c-a168-5001-a1b7-de82e31a62ed",
@@ -5639,7 +7794,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "双手放在大腿根部，臀部向后推、背保持平直，感到腿后侧拉紧后再用臀部发力站直；是学硬拉前的基础动作。",
-  "image_paths": []
+  "image_paths": [
+   "fc_hip_hinge_drill/0.webp",
+   "fc_hip_hinge_drill/1.webp"
+  ],
+  "kind": "activation",
+  "region": "hip_glute",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "031fc730-46e8-55a8-9310-3452db691def",
@@ -5657,7 +7822,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "20 秒全力、10 秒休息，在本组里循环做开合跳、深蹲、登山者和高抬腿；每个动作做满 2 轮。",
-  "image_paths": []
+  "image_paths": [
+   "fc_tabata_mix/0.webp",
+   "fc_tabata_mix/1.webp"
+  ],
+  "kind": "cardio",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "f43b21b1-3275-5849-a5fc-b15432830ca5",
@@ -5676,7 +7851,17 @@
   "equipment": "dumbbell",
   "tracking_type": "duration",
   "instructions_zh": "双手各提一只哑铃，身体直立、肩膀下沉，稳步前行；用来练握力和躯干稳定。",
-  "image_paths": []
+  "image_paths": [
+   "fc_farmer_carry/0.webp",
+   "fc_farmer_carry/1.webp"
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "b3e590aa-bb49-552c-bf64-e8b3c94476f1",
@@ -5695,7 +7880,17 @@
   "equipment": "kettlebells",
   "tracking_type": "weight_reps",
   "instructions_zh": "髋铰链把壶铃向后荡，再用髋部爆发向前顶出，手臂只是挂钩；顶点时臀部夹紧，不要用手臂提。",
-  "image_paths": []
+  "image_paths": [
+   "fc_kettlebell_swing_two/0.webp",
+   "fc_kettlebell_swing_two/1.webp"
+  ],
+  "kind": "strength",
+  "region": null,
+  "per_side": false,
+  "default_sets": null,
+  "default_reps": null,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "b671c79a-72ac-5a8a-bc12-98fddc876e5a",
@@ -5711,7 +7906,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "四点支撑，吸气时塌腰抬头、呼气时拱背低头；动作配合呼吸，缓慢地活动整条脊柱。",
-  "image_paths": []
+  "image_paths": [
+   "fc_cat_cow/0.webp",
+   "fc_cat_cow/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "back_core",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "02ca4baa-2b18-5b67-918f-e48934f57eb1",
@@ -5729,7 +7934,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "跪坐，臀部坐向脚跟，双臂向前伸展贴地；深呼吸放松背部和肩膀。",
-  "image_paths": []
+  "image_paths": [
+   "fc_childs_pose/0.webp",
+   "fc_childs_pose/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "back_core",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 40,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "9661a258-6026-567f-98d6-0de9f39250ee",
@@ -5747,7 +7962,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "单膝跪地，另一脚在前，骨盆向前下方推，后侧大腿前侧有拉伸感；上身保持直立，不要塌腰。",
-  "image_paths": []
+  "image_paths": [
+   "fc_hip_flexor_stretch/0.webp",
+   "fc_hip_flexor_stretch/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "1777f023-26dd-5fb8-b51a-b6da177274fb",
@@ -5764,7 +7989,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "仰卧，一腿向上抬起，双手抱住大腿后侧或用毛巾套脚掌，膝盖尽量伸直，大腿后侧有拉伸感即可。",
-  "image_paths": []
+  "image_paths": [
+   "fc_hamstring_stretch/0.webp",
+   "fc_hamstring_stretch/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "leg",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "1f2ba965-052e-520f-afd5-d8eadf7c0a22",
@@ -5781,7 +8016,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "单脚站立（可扶墙），另一腿屈膝，手抓脚踝向臀部拉；膝盖并拢，骨盆不要前倾。",
-  "image_paths": []
+  "image_paths": [
+   "fc_quad_stretch/0.webp",
+   "fc_quad_stretch/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "leg",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "c5dc5f4d-2470-5196-9eec-28c1b40867f5",
@@ -5798,7 +8043,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "一腿屈膝放在身前，另一腿向后伸直，上身缓缓前倾；臀部外侧深层有拉伸感，感觉膝盖不适就改做 4 字拉伸。",
-  "image_paths": []
+  "image_paths": [
+   "fc_pigeon_stretch/0.webp",
+   "fc_pigeon_stretch/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "1b0d3e77-b9e0-5eee-a4b9-a087c29ccf18",
@@ -5815,7 +8070,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "仰卧屈膝，把一只脚踝搭在对侧膝盖上，双手抱住下方的大腿向胸口拉，臀部外侧有拉伸感。",
-  "image_paths": []
+  "image_paths": [
+   "fc_figure4_stretch/0.webp",
+   "fc_figure4_stretch/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "8380913f-7306-55e5-8002-e7972ae56f80",
@@ -5832,7 +8097,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "前臂贴在门框上，手肘与肩同高，身体缓缓向前迈步，胸口前侧有拉伸感；肩膀不要耸。",
-  "image_paths": []
+  "image_paths": [
+   "fc_chest_doorway_stretch/0.webp",
+   "fc_chest_doorway_stretch/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "chest_arm",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "89beaa1c-8363-516c-89b7-38b075424f49",
@@ -5849,7 +8124,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "跪姿，双手扶在凳面或墙面，臀部向后坐、胸口向下沉，腋下到侧腰有拉伸感。",
-  "image_paths": []
+  "image_paths": [
+   "fc_lat_stretch/0.webp",
+   "fc_lat_stretch/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "back_core",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "f03e31a1-e594-5968-8044-b27cdd26521a",
@@ -5864,7 +8149,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "一臂横过胸前，另一手托住肘部向身体拉，肩膀后侧有拉伸感；肩膀不要上耸。",
-  "image_paths": []
+  "image_paths": [
+   "fc_cross_body_shoulder_stretch/0.webp",
+   "fc_cross_body_shoulder_stretch/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "neck_shoulder",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "88ec86aa-0bfd-5528-9b32-90b5eabae4a9",
@@ -5881,7 +8176,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "一臂上举屈肘，手落到肩胛之间，另一手轻压肘部；保持背部直立。",
-  "image_paths": []
+  "image_paths": [
+   "fc_triceps_overhead_stretch/0.webp",
+   "fc_triceps_overhead_stretch/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "chest_arm",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "e62f3391-4336-5b31-8f25-2fc9a9487394",
@@ -5897,7 +8202,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "头向一侧缓缓倾斜，同侧手可以轻放头侧助力，另一侧肩膀向下沉；力度轻，不要猛拉。",
-  "image_paths": []
+  "image_paths": [
+   "fc_neck_side_stretch/0.webp",
+   "fc_neck_side_stretch/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "neck_shoulder",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "c5975c1b-1e26-52ce-b9ff-b001c3e89343",
@@ -5914,7 +8229,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "坐直，双手轻放在后脑勺，让头自然低向胸口；背部不要弓起，颈后有微微拉伸感即可。",
-  "image_paths": []
+  "image_paths": [
+   "fc_neck_flexion_stretch/0.webp",
+   "fc_neck_flexion_stretch/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "neck_shoulder",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "eff3e58d-c64c-5a91-9f55-65625cac9f1e",
@@ -5929,7 +8254,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "双手扶墙，一脚向后踩实、膝盖伸直，身体前倾，小腿后侧有拉伸感；脚跟不离地。",
-  "image_paths": []
+  "image_paths": [
+   "fc_calf_stretch/0.webp",
+   "fc_calf_stretch/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "leg",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "a1bb22c3-0ce1-5c9e-b187-5aef7d901ce1",
@@ -5944,7 +8279,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "坐姿，脚掌相对，双手握脚，让膝盖自然向两侧下沉，背保持直立；不要用手压膝盖。",
-  "image_paths": []
+  "image_paths": [
+   "fc_adductor_stretch/0.webp",
+   "fc_adductor_stretch/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "hip_glute",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "b6d9c21d-218e-5776-889b-c6d1b2bb1683",
@@ -5961,7 +8306,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "四点支撑，一手扶在脑后，肘部向下转向对侧手臂，再向天花板方向打开；眼睛跟着肘部。",
-  "image_paths": []
+  "image_paths": [
+   "fc_thoracic_rotation/0.webp",
+   "fc_thoracic_rotation/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "back_core",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 8,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "27a6b9a2-352d-57f1-8611-f3f02aa75af5",
@@ -5979,7 +8334,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "仰卧屈膝，双膝并拢倒向一侧，肩膀尽量贴地，头转向另一侧；呼吸放松，不要憋气。",
-  "image_paths": []
+  "image_paths": [
+   "fc_spinal_twist/0.webp",
+   "fc_spinal_twist/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "back_core",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "49e294f5-4ffe-5369-a84f-192add80eb9e",
@@ -5996,7 +8361,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "俯卧，双手放在胸侧，轻轻撑起上身，骨盆保持贴地；动作以不疼为限，腰部不适时降低高度。",
-  "image_paths": []
+  "image_paths": [
+   "fc_cobra_stretch/0.webp",
+   "fc_cobra_stretch/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "back_core",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "664fe440-51f0-5a4a-9eab-06792cc5ebc1",
@@ -6014,7 +8389,17 @@
   "equipment": "body only",
   "tracking_type": "duration",
   "instructions_zh": "双脚与髋同宽，从髋部折叠，让上身自然垂下，膝盖可以微弯；放松头颈，不要憋气。",
-  "image_paths": []
+  "image_paths": [
+   "fc_forward_fold/0.webp",
+   "fc_forward_fold/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "leg",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "b57bbffa-5661-5174-814c-fd5492cdcb7b",
@@ -6033,7 +8418,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "大步向前弓步，同侧手撑地，另一臂向天花板打开转胸；换边继续，是一个动作拉开多个部位的热身动作。",
-  "image_paths": []
+  "image_paths": [
+   "fc_worlds_greatest_stretch/0.webp",
+   "fc_worlds_greatest_stretch/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "full",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 5,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "b418081f-39f6-56c7-92ca-76771aed6d4c",
@@ -6051,7 +8446,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "单手扶墙，另一腿前后（或左右）自然摆动，幅度由小渐大；上身保持稳定。",
-  "image_paths": []
+  "image_paths": [
+   "fc_leg_swing/0.webp",
+   "fc_leg_swing/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "leg",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "eb24ce2e-ead2-5f57-b0e6-bafa6dcb3540",
@@ -6066,7 +8471,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "双臂侧平举，先画小圈再逐渐加大，再反向绕；动作流畅，肩膀不要耸起。",
-  "image_paths": []
+  "image_paths": [
+   "fc_arm_circle/0.webp",
+   "fc_arm_circle/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "neck_shoulder",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "aba8bb50-418f-592d-8b8f-77fd6eab5b3f",
@@ -6082,7 +8497,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "双手叉腰，双脚与肩同宽，用髋部画大圈；顺逆时针各一半，膝盖微屈。",
-  "image_paths": []
+  "image_paths": [
+   "fc_hip_circle/0.webp",
+   "fc_hip_circle/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 8,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "27f7f412-12fb-5e54-8cf5-cccaad042f54",
@@ -6100,7 +8525,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "坐姿，前后腿各弯成 90 度，让双膝从一侧倒向另一侧交替；背保持直立，慢慢来。",
-  "image_paths": []
+  "image_paths": [
+   "fc_9090_hip/0.webp",
+   "fc_9090_hip/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 8,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "4b25e248-b8c6-52c2-a837-6d41a577ef80",
@@ -6115,7 +8550,17 @@
   "equipment": "body only",
   "tracking_type": "bodyweight_reps",
   "instructions_zh": "面向墙站成弓步，前脚脚跟踩实，让膝盖向前顶向墙面；脚跟抬起就缩短距离。",
-  "image_paths": []
+  "image_paths": [
+   "fc_ankle_dorsiflexion/0.webp",
+   "fc_ankle_dorsiflexion/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "leg",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "2fd6534f-364a-58bc-be09-4ead2b01eb3f",
@@ -6132,7 +8577,17 @@
   "equipment": "foam roll",
   "tracking_type": "duration",
   "instructions_zh": "泡沫轴放在肩胛下缘，双手抱头、臀部抬起，缓慢前后滚动；遇到酸痛点停留 20–30 秒，不要滚腰。",
-  "image_paths": []
+  "image_paths": [
+   "fc_foam_roll_upper_back/0.webp",
+   "fc_foam_roll_upper_back/1.webp"
+  ],
+  "kind": "foam",
+  "region": "back_core",
+  "per_side": false,
+  "default_sets": 1,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "2de5bbe3-dccc-572b-b141-44ed1a97b074",
@@ -6147,7 +8602,17 @@
   "equipment": "foam roll",
   "tracking_type": "duration",
   "instructions_zh": "俯撑，泡沫轴放在大腿前侧，用前臂支撑身体缓慢滚动；酸痛点停留片刻，避开膝盖骨。",
-  "image_paths": []
+  "image_paths": [
+   "fc_foam_roll_quad/0.webp",
+   "fc_foam_roll_quad/1.webp"
+  ],
+  "kind": "foam",
+  "region": "leg",
+  "per_side": true,
+  "default_sets": 1,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "2063ac38-cb6d-5372-af4e-4cf87915d81c",
@@ -6162,7 +8627,17 @@
   "equipment": "foam roll",
   "tracking_type": "duration",
   "instructions_zh": "坐在泡沫轴上，一脚搭在对侧膝盖上，向搭腿一侧倾斜，缓慢滚动臀部外侧。",
-  "image_paths": []
+  "image_paths": [
+   "fc_foam_roll_glute/0.webp",
+   "fc_foam_roll_glute/1.webp"
+  ],
+  "kind": "foam",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 1,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "ed56e8f6-be95-51aa-b373-acba9f735e5e",
@@ -6177,7 +8652,17 @@
   "equipment": "foam roll",
   "tracking_type": "duration",
   "instructions_zh": "侧卧，泡沫轴垫在大腿外侧，用前臂和另一只脚控制力度缓慢滚动；这个部位较敏感，从轻开始。",
-  "image_paths": []
+  "image_paths": [
+   "fc_foam_roll_it_band/0.webp",
+   "fc_foam_roll_it_band/1.webp"
+  ],
+  "kind": "foam",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 1,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "750795f2-ce34-55dd-98de-4512001d7bd9",
@@ -6192,7 +8677,17 @@
   "equipment": "foam roll",
   "tracking_type": "duration",
   "instructions_zh": "坐姿，泡沫轴放在小腿下方，双手撑地抬起臀部，缓慢滚动；可叠放另一条腿加压。",
-  "image_paths": []
+  "image_paths": [
+   "fc_foam_roll_calf/0.webp",
+   "fc_foam_roll_calf/1.webp"
+  ],
+  "kind": "foam",
+  "region": "leg",
+  "per_side": true,
+  "default_sets": 1,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  },
  {
   "id": "636e86e1-24d8-5800-b115-d0f3a493072b",
@@ -6207,6 +8702,1209 @@
   "equipment": "foam roll",
   "tracking_type": "duration",
   "instructions_zh": "侧卧，泡沫轴垫在腋下靠近背阔肌的位置，小范围缓慢滚动；手臂上举让背阔肌展开。",
-  "image_paths": []
+  "image_paths": [
+   "fc_foam_roll_lats/0.webp",
+   "fc_foam_roll_lats/1.webp"
+  ],
+  "kind": "foam",
+  "region": "back_core",
+  "per_side": true,
+  "default_sets": 1,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "d303ab53-0b89-5ebf-8544-40ca19a9963c",
+  "slug": "wu_band_hip_lift",
+  "name_zh": "弹力带臀桥",
+  "name_en": "Hip Lift with Band",
+  "body_part": "glutes",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "hamstrings"
+  ],
+  "equipment": "bands",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "弹力带绕在膝上方，顶髋时膝盖向外撑住带子",
+  "image_paths": [
+   "wu_band_hip_lift/0.webp",
+   "wu_band_hip_lift/1.webp"
+  ],
+  "kind": "activation",
+  "region": "hip_glute",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 15,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "8187c168-3879-5ae9-b07c-5192c9c8a604",
+  "slug": "wu_band_hip_extension",
+  "name_zh": "弹力带髋后伸",
+  "name_en": "Hip Extension with Bands",
+  "body_part": "glutes",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings"
+  ],
+  "equipment": "bands",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "站姿脚踝套带向后踢，用臀部发力，腰不要代偿",
+  "image_paths": [
+   "wu_band_hip_extension/0.webp",
+   "wu_band_hip_extension/1.webp"
+  ],
+  "kind": "activation",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 12,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "d138de54-6130-5e4d-b53f-dd8e9f017de1",
+  "slug": "wu_band_hip_adduction",
+  "name_zh": "弹力带髋内收",
+  "name_en": "Band Hip Adductions",
+  "body_part": "legs",
+  "primary_muscles": [
+   "adductors"
+  ],
+  "secondary_muscles": [],
+  "equipment": "bands",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "站姿脚踝套带向内夹，慢进慢出",
+  "image_paths": [
+   "wu_band_hip_adduction/0.webp",
+   "wu_band_hip_adduction/1.webp"
+  ],
+  "kind": "activation",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 12,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "9353c560-f38d-5970-a098-6c191d3f9636",
+  "slug": "wu_pelvic_tilt_bridge",
+  "name_zh": "骨盆后倾卷臀",
+  "name_en": "Pelvic Tilt Into Bridge",
+  "body_part": "core",
+  "primary_muscles": [
+   "lower back"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "从尾椎开始一节一节卷起，再一节一节放下",
+  "image_paths": [
+   "wu_pelvic_tilt_bridge/0.webp",
+   "wu_pelvic_tilt_bridge/1.webp"
+  ],
+  "kind": "activation",
+  "region": "back_core",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "53afd511-7c9b-5a1c-aadf-5bca363cfe46",
+  "slug": "wu_band_internal_rotation",
+  "name_zh": "弹力带肩内旋",
+  "name_en": "Internal Rotation with Band",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [],
+  "equipment": "bands",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "肘夹紧身体，向腹部方向拉，动作慢",
+  "image_paths": [
+   "wu_band_internal_rotation/0.webp",
+   "wu_band_internal_rotation/1.webp"
+  ],
+  "kind": "activation",
+  "region": "neck_shoulder",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 15,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "d2d2008b-58ed-57dd-95c8-f377ba376510",
+  "slug": "wu_band_back_fly",
+  "name_zh": "弹力带反向飞鸟",
+  "name_en": "Back Flyes - With Bands",
+  "body_part": "shoulders",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "middle back",
+   "triceps"
+  ],
+  "equipment": "bands",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "手臂微屈向两侧拉开，肩胛后收",
+  "image_paths": [
+   "wu_band_back_fly/0.webp",
+   "wu_band_back_fly/1.webp"
+  ],
+  "kind": "activation",
+  "region": "neck_shoulder",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 15,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "bb44377a-9b02-5e0e-8004-08ba267aa327",
+  "slug": "wu_scapular_pullup",
+  "name_zh": "肩胛下沉引体",
+  "name_en": "Scapular Pull-Up",
+  "body_part": "back",
+  "primary_muscles": [
+   "traps"
+  ],
+  "secondary_muscles": [
+   "lats",
+   "middle back"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "悬挂，手臂伸直，只靠肩胛下沉把身体提起一点",
+  "image_paths": [
+   "wu_scapular_pullup/0.webp",
+   "wu_scapular_pullup/1.webp"
+  ],
+  "kind": "activation",
+  "region": "back_core",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "a0815eb0-7ab7-5f0a-b0f7-52fdd7defec4",
+  "slug": "wu_wall_knee_drive",
+  "name_zh": "靠墙顶膝",
+  "name_en": "Wall Knee Drive",
+  "body_part": "legs",
+  "primary_muscles": [
+   "abdominals",
+   "quadriceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "手扶墙，单膝向上顶到髋高，停 2 秒",
+  "image_paths": [
+   "wu_wall_knee_drive/0.webp",
+   "wu_wall_knee_drive/1.webp"
+  ],
+  "kind": "activation",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "a14787e2-4326-5f4d-90e9-c2a48e0e41c1",
+  "slug": "wu_tibialis_raise",
+  "name_zh": "靠墙勾脚尖",
+  "name_en": "Tibialis Raise",
+  "body_part": "legs",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "背靠墙、脚后跟前伸，勾起脚尖再放下",
+  "image_paths": [
+   "wu_tibialis_raise/0.webp",
+   "wu_tibialis_raise/1.webp"
+  ],
+  "kind": "activation",
+  "region": "leg",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 20,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "975afd64-01fc-503f-b234-5a44c19e270d",
+  "slug": "wu_shoulder_circles",
+  "name_zh": "肩部绕环",
+  "name_en": "Shoulder Circles",
+  "body_part": "other",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "traps"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "肩膀向上、向后、向下画大圈",
+  "image_paths": [
+   "wu_shoulder_circles/0.webp",
+   "wu_shoulder_circles/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "neck_shoulder",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "75f206a5-7e68-5925-a3c5-381b91f713fc",
+  "slug": "wu_elbow_circles",
+  "name_zh": "肘部绕环",
+  "name_en": "Elbow Circles",
+  "body_part": "other",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "traps"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "指尖搭肩，用肘画圈",
+  "image_paths": [
+   "wu_elbow_circles/0.webp",
+   "wu_elbow_circles/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "neck_shoulder",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "7e7056b5-e6f6-51a0-8682-64bb20863af4",
+  "slug": "wu_dynamic_chest",
+  "name_zh": "动态扩胸",
+  "name_en": "Dynamic Chest Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "middle back"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "手臂胸前交叉再向后打开，节奏流畅",
+  "image_paths": [
+   "wu_dynamic_chest/0.webp",
+   "wu_dynamic_chest/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "chest_arm",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 12,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "4d62bf77-1d2d-5f5a-93fa-f9845538cdaa",
+  "slug": "wu_dynamic_back",
+  "name_zh": "动态背部拉伸",
+  "name_en": "Dynamic Back Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "lats"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "手臂摆动带动躯干轻转，不要用力甩",
+  "image_paths": [
+   "wu_dynamic_back/0.webp",
+   "wu_dynamic_back/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "back_core",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "a8e6c8fc-7d57-56c5-9d2f-f8fdad83d250",
+  "slug": "wu_prone_hip_circles",
+  "name_zh": "四点髋绕环",
+  "name_en": "Hip Circles (prone)",
+  "body_part": "other",
+  "primary_muscles": [
+   "abductors"
+  ],
+  "secondary_muscles": [
+   "adductors"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "四点支撑，一膝抬起画大圈，腰背平直",
+  "image_paths": [
+   "wu_prone_hip_circles/0.webp",
+   "wu_prone_hip_circles/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 8,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "5d03b5ac-745a-55ad-8e3b-66b2e8f555c2",
+  "slug": "wu_side_leg_swing",
+  "name_zh": "侧向摆腿",
+  "name_en": "Side Leg Raises",
+  "body_part": "other",
+  "primary_muscles": [
+   "adductors"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "扶稳后腿左右摆动，上身稳定",
+  "image_paths": [
+   "wu_side_leg_swing/0.webp",
+   "wu_side_leg_swing/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "5648dc6f-defb-518e-94cb-bf8bccb08f1a",
+  "slug": "wu_rear_leg_raise",
+  "name_zh": "四点后踢摆腿",
+  "name_en": "Rear Leg Raises",
+  "body_part": "other",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "四点支撑，一腿向后蹬出再收回",
+  "image_paths": [
+   "wu_rear_leg_raise/0.webp",
+   "wu_rear_leg_raise/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "a5225392-3ef0-54a7-ab52-69b5c21ed0ed",
+  "slug": "wu_groiners",
+  "name_zh": "深蹲撑地开髋",
+  "name_en": "Groiners",
+  "body_part": "other",
+  "primary_muscles": [
+   "adductors"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "从平板位把一脚迈到手外侧，髋下沉再换",
+  "image_paths": [
+   "wu_groiners/0.webp",
+   "wu_groiners/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 6,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "580c1f73-13a7-5fef-a528-92d0c72360de",
+  "slug": "wu_sit_squats",
+  "name_zh": "坐姿深蹲活动",
+  "name_en": "Sit Squats",
+  "body_part": "other",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "abductors",
+   "glutes",
+   "hamstrings"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "慢慢下蹲到最低点停 2 秒，脚跟不离地",
+  "image_paths": [
+   "wu_sit_squats/0.webp",
+   "wu_sit_squats/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "leg",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "ed90f3c6-c5de-52bc-92f1-cd10ce7743a5",
+  "slug": "wu_split_squats",
+  "name_zh": "分腿蹲活动",
+  "name_en": "Split Squats",
+  "body_part": "other",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "calves",
+   "glutes",
+   "quadriceps"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "前后站开，垂直下沉，不要向前冲膝",
+  "image_paths": [
+   "wu_split_squats/0.webp",
+   "wu_split_squats/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "leg",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 8,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "402408c6-ebde-5eae-af83-13e1ddda2490",
+  "slug": "wu_knee_circles",
+  "name_zh": "膝关节绕环",
+  "name_en": "Knee Circles",
+  "body_part": "other",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [
+   "hamstrings",
+   "quadriceps"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "双脚并拢、手扶膝，缓慢画小圈",
+  "image_paths": [
+   "wu_knee_circles/0.webp",
+   "wu_knee_circles/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "leg",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 8,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "aabd8343-34a4-5948-aea1-07c80c1cf514",
+  "slug": "wu_wrist_circles",
+  "name_zh": "手腕绕环",
+  "name_en": "Wrist Circles",
+  "body_part": "other",
+  "primary_muscles": [
+   "forearms"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "双手交扣或单独画圈，范围由小渐大",
+  "image_paths": [
+   "wu_wrist_circles/0.webp",
+   "wu_wrist_circles/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "chest_arm",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "7de58a43-0bf8-59bc-aa34-3fd788c3599b",
+  "slug": "wu_torso_rotation",
+  "name_zh": "站姿躯干转体",
+  "name_en": "Torso Rotation",
+  "body_part": "other",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "exercise ball",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "骨盆朝前，只转胸腔，手持轻球或徒手",
+  "image_paths": [
+   "wu_torso_rotation/0.webp",
+   "wu_torso_rotation/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "back_core",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 10,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "aec06697-0c2e-5ede-b76c-7476aad26d3f",
+  "slug": "wu_windmills",
+  "name_zh": "仰卧风车转体",
+  "name_en": "Windmills",
+  "body_part": "other",
+  "primary_muscles": [
+   "abductors"
+  ],
+  "secondary_muscles": [
+   "glutes",
+   "hamstrings",
+   "lower back"
+  ],
+  "equipment": "body only",
+  "tracking_type": "bodyweight_reps",
+  "instructions_zh": "仰卧手臂打开，一腿摆向对侧，肩不离地",
+  "image_paths": [
+   "wu_windmills/0.webp",
+   "wu_windmills/1.webp"
+  ],
+  "kind": "dynamic",
+  "region": "back_core",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": 8,
+  "default_seconds": null,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "0ce4ebf9-a8f3-577d-a00c-2cb36817d62f",
+  "slug": "wu_overhead_reach",
+  "name_zh": "站姿上举伸展",
+  "name_en": "Upward Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "chest",
+   "lats"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "双手交扣向上推，身体向上延伸",
+  "image_paths": [
+   "wu_overhead_reach/0.webp",
+   "wu_overhead_reach/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "neck_shoulder",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "ed5d49d5-fe37-5346-bdd9-29f0d80b76ac",
+  "slug": "wu_stick_shoulder",
+  "name_zh": "木棍绕肩拉伸",
+  "name_en": "Round The World Shoulder Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "biceps",
+   "chest"
+  ],
+  "equipment": "other",
+  "tracking_type": "duration",
+  "instructions_zh": "双手握棍从前向后绕过头顶，握距宽一点",
+  "image_paths": [
+   "wu_stick_shoulder/0.webp",
+   "wu_stick_shoulder/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "neck_shoulder",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "8a98c8d3-32e7-54ab-86aa-e0f57073b42e",
+  "slug": "wu_chest_stick",
+  "name_zh": "木棍胸肩拉伸",
+  "name_en": "Chest And Front Of Shoulder Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "chest"
+  ],
+  "secondary_muscles": [
+   "shoulders"
+  ],
+  "equipment": "other",
+  "tracking_type": "duration",
+  "instructions_zh": "握棍向前上方推，胸口打开，肩不耸",
+  "image_paths": [
+   "wu_chest_stick/0.webp",
+   "wu_chest_stick/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "chest_arm",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "d0edb6bb-94ff-5295-96ad-c4572f76346c",
+  "slug": "wu_triceps_side",
+  "name_zh": "三头肌侧拉伸",
+  "name_en": "Tricep Side Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "triceps"
+  ],
+  "secondary_muscles": [
+   "shoulders"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "手放脑后，另一手拉肘并向侧倾",
+  "image_paths": [
+   "wu_triceps_side/0.webp",
+   "wu_triceps_side/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "chest_arm",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "ab1d45c7-b4b2-5e91-9887-10c8e632af6e",
+  "slug": "wu_forearm_kneel",
+  "name_zh": "跪姿前臂拉伸",
+  "name_en": "Kneeling Forearm Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "forearms"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "手掌朝后撑地，臀部向后坐，慢慢加大牵拉",
+  "image_paths": [
+   "wu_forearm_kneel/0.webp",
+   "wu_forearm_kneel/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "chest_arm",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "06b7ab2f-d2bd-5bc2-9a00-8faa8ac01af8",
+  "slug": "wu_wrist_pull",
+  "name_zh": "侧向拉腕",
+  "name_en": "Side Wrist Pull",
+  "body_part": "other",
+  "primary_muscles": [
+   "shoulders"
+  ],
+  "secondary_muscles": [
+   "forearms",
+   "lats"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "一手拉另一手手背，使手腕向内侧屈",
+  "image_paths": [
+   "wu_wrist_pull/0.webp",
+   "wu_wrist_pull/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "chest_arm",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 20,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "3ac4f813-b7fa-512e-b497-f43def5936bf",
+  "slug": "wu_hug_knees",
+  "name_zh": "仰卧抱膝",
+  "name_en": "Hug Knees To Chest",
+  "body_part": "other",
+  "primary_muscles": [
+   "lower back"
+  ],
+  "secondary_muscles": [
+   "glutes"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "双手抱膝向胸口靠，背贴地放松",
+  "image_paths": [
+   "wu_hug_knees/0.webp",
+   "wu_hug_knees/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "back_core",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "fbd8398c-829a-5f73-aec5-162c76a94552",
+  "slug": "wu_spinal_twist_chair",
+  "name_zh": "坐姿脊柱扭转",
+  "name_en": "Spinal Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "middle back"
+  ],
+  "secondary_muscles": [
+   "lats",
+   "lower back",
+   "neck",
+   "traps"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "坐直，一手扶对侧膝盖，缓慢转向后方",
+  "image_paths": [
+   "wu_spinal_twist_chair/0.webp",
+   "wu_spinal_twist_chair/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "back_core",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "7eb0d1e7-974d-5113-8db3-874552fa3621",
+  "slug": "wu_seated_side_bend",
+  "name_zh": "坐姿侧屈拉伸",
+  "name_en": "Seated Overhead Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "一臂上举侧倾，盘腿坐稳，骨盆不翘",
+  "image_paths": [
+   "wu_seated_side_bend/0.webp",
+   "wu_seated_side_bend/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "back_core",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "2f2da6f4-b622-59dd-91a6-330235a48676",
+  "slug": "wu_standing_side_bend",
+  "name_zh": "站姿侧弯拉伸",
+  "name_en": "Standing Lateral Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "abdominals"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "一手上举向侧弯，髋不外顶",
+  "image_paths": [
+   "wu_standing_side_bend/0.webp",
+   "wu_standing_side_bend/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "back_core",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "61c0be3e-3f4b-5565-93ab-880f6e50e443",
+  "slug": "wu_dancers_twist",
+  "name_zh": "坐姿髋外旋转体",
+  "name_en": "Dancer's Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "lower back"
+  ],
+  "secondary_muscles": [
+   "abductors",
+   "glutes"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "坐姿一腿屈曲，上身向另一侧转，背保持直立",
+  "image_paths": [
+   "wu_dancers_twist/0.webp",
+   "wu_dancers_twist/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "344bbb6d-18ff-54fb-ac4c-1c5d2f01f50f",
+  "slug": "wu_stand_hip_flexor",
+  "name_zh": "站姿髋屈肌拉伸",
+  "name_en": "Standing Hip Flexors",
+  "body_part": "other",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "弓步站姿，后腿伸直，臀夹紧向前推髋",
+  "image_paths": [
+   "wu_stand_hip_flexor/0.webp",
+   "wu_stand_hip_flexor/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "720336a2-54d1-5932-aee4-6f2de8671711",
+  "slug": "wu_knee_to_chest",
+  "name_zh": "单膝抱胸",
+  "name_en": "One Knee To Chest",
+  "body_part": "other",
+  "primary_muscles": [
+   "glutes"
+  ],
+  "secondary_muscles": [
+   "hamstrings",
+   "lower back"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "仰卧，一膝抱向胸口，另一腿放平",
+  "image_paths": [
+   "wu_knee_to_chest/0.webp",
+   "wu_knee_to_chest/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "0149b589-56d9-513d-bcdf-009cbaec7e37",
+  "slug": "wu_straddle",
+  "name_zh": "坐姿宽距前屈",
+  "name_en": "The Straddle",
+  "body_part": "other",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "adductors",
+   "calves"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "双腿分开坐，上身从髋部向前折叠",
+  "image_paths": [
+   "wu_straddle/0.webp",
+   "wu_straddle/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "hip_glute",
+  "per_side": false,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "66c0b55c-4758-558b-8ec1-b54b3c7bfbfd",
+  "slug": "wu_band_it_glute",
+  "name_zh": "弹力带髂胫束臀部拉伸",
+  "name_en": "IT Band and Glute Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "abductors"
+  ],
+  "secondary_muscles": [],
+  "equipment": "other",
+  "tracking_type": "duration",
+  "instructions_zh": "仰卧，用带子把腿拉向对侧，肩不离地",
+  "image_paths": [
+   "wu_band_it_glute/0.webp",
+   "wu_band_it_glute/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "hip_glute",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "bcc82469-8306-5c03-a631-c6b33e21e7fc",
+  "slug": "wu_seated_hamstring",
+  "name_zh": "坐姿腘绳肌拉伸",
+  "name_en": "Seated Floor Hamstring Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [
+   "calves"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "一腿伸直一腿屈，上身从髋部向脚尖方向折",
+  "image_paths": [
+   "wu_seated_hamstring/0.webp",
+   "wu_seated_hamstring/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "leg",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "259b2f9e-5f01-5a85-aba7-e7990a33781f",
+  "slug": "wu_quad_all_fours",
+  "name_zh": "四点跪股四头肌拉伸",
+  "name_en": "All Fours Quad Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "quadriceps"
+  ],
+  "secondary_muscles": [
+   "quadriceps"
+  ],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "四点支撑，手抓脚踝向臀拉，腰不塌",
+  "image_paths": [
+   "wu_quad_all_fours/0.webp",
+   "wu_quad_all_fours/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "leg",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "2a9b6834-727a-5fc8-9b2f-808973dea3d9",
+  "slug": "wu_soleus_wall",
+  "name_zh": "比目鱼肌与跟腱拉伸",
+  "name_en": "Standing Soleus And Achilles Stretch",
+  "body_part": "other",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "equipment": "body only",
+  "tracking_type": "duration",
+  "instructions_zh": "后腿膝盖微屈，脚跟踩实，身体前倾",
+  "image_paths": [
+   "wu_soleus_wall/0.webp",
+   "wu_soleus_wall/1.webp"
+  ],
+  "kind": "stretch",
+  "region": "leg",
+  "per_side": true,
+  "default_sets": 2,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "18272502-0b9a-5c1e-9ee4-45b41bbdd471",
+  "slug": "wu_foam_hamstring",
+  "name_zh": "泡沫轴大腿后侧",
+  "name_en": "Hamstring-SMR",
+  "body_part": "other",
+  "primary_muscles": [
+   "hamstrings"
+  ],
+  "secondary_muscles": [],
+  "equipment": "foam roll",
+  "tracking_type": "duration",
+  "instructions_zh": "坐姿轴放大腿后侧，手撑地抬臀滚动",
+  "image_paths": [
+   "wu_foam_hamstring/0.webp",
+   "wu_foam_hamstring/1.webp"
+  ],
+  "kind": "foam",
+  "region": "leg",
+  "per_side": false,
+  "default_sets": 1,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "b3e9dd77-76cb-57b8-b54f-d6e63a9211de",
+  "slug": "wu_foam_adductor",
+  "name_zh": "泡沫轴内收肌",
+  "name_en": "Adductor",
+  "body_part": "other",
+  "primary_muscles": [
+   "adductors"
+  ],
+  "secondary_muscles": [],
+  "equipment": "foam roll",
+  "tracking_type": "duration",
+  "instructions_zh": "俯卧一腿侧抬放在轴上，缓慢滚动",
+  "image_paths": [
+   "wu_foam_adductor/0.webp",
+   "wu_foam_adductor/1.webp"
+  ],
+  "kind": "foam",
+  "region": "hip_glute",
+  "per_side": false,
+  "default_sets": 1,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "7b9eb189-3708-5618-b39e-53b7ff70b6c2",
+  "slug": "wu_foam_shin",
+  "name_zh": "泡沫轴小腿前侧",
+  "name_en": "Anterior Tibialis-SMR",
+  "body_part": "other",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "equipment": "other",
+  "tracking_type": "duration",
+  "instructions_zh": "四点支撑，把小腿前侧压在轴上缓慢滚动",
+  "image_paths": [
+   "wu_foam_shin/0.webp",
+   "wu_foam_shin/1.webp"
+  ],
+  "kind": "foam",
+  "region": "leg",
+  "per_side": false,
+  "default_sets": 1,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
+ },
+ {
+  "id": "815aecda-3b33-5b6b-93a7-27f8c0708e15",
+  "slug": "wu_foam_foot",
+  "name_zh": "足底按压放松",
+  "name_en": "Foot-SMR",
+  "body_part": "other",
+  "primary_muscles": [
+   "calves"
+  ],
+  "secondary_muscles": [],
+  "equipment": "other",
+  "tracking_type": "duration",
+  "instructions_zh": "坐在椅上，脚踩小球或轴前后滚动",
+  "image_paths": [
+   "wu_foam_foot/0.webp",
+   "wu_foam_foot/1.webp"
+  ],
+  "kind": "foam",
+  "region": "leg",
+  "per_side": false,
+  "default_sets": 1,
+  "default_reps": null,
+  "default_seconds": 30,
+  "image_ratio": 1.3333333333333333
  }
 ]

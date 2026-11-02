@@ -22,3 +22,5 @@ app/android/key.properties
 *.keystore
 app/android/local.properties
 *.iml
+tools/warmup/cache/
+tools/warmup/__pycache__/

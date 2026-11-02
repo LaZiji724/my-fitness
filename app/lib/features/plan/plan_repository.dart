@@ -5,8 +5,26 @@ import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:my_fitness/core/db/app_database.dart';
+import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/plan/plan_math.dart';
 import 'package:my_fitness/features/workout/workout_repository.dart';
+
+/// 分区顺序：热身 → 正式训练 → 放松；同一分区内保持原顺序。
+const kSectionOrder = ['warmup', 'main', 'cooldown'];
+
+List<T> sortedBySection<T>(Iterable<T> items, String Function(T) section, int Function(T) position) {
+  int rank(String s) {
+    final i = kSectionOrder.indexOf(s);
+    return i < 0 ? 1 : i;
+  }
+
+  final list = items.toList();
+  list.sort((a, b) {
+    final r = rank(section(a)).compareTo(rank(section(b)));
+    return r != 0 ? r : position(a).compareTo(position(b));
+  });
+  return list;
+}
 
 class TemplateView {
   const TemplateView(this.template, this.exercises);
@@ -102,8 +120,12 @@ class PlanRepository {
     });
   }
 
-  Future<void> addTemplateExercise(String templateId, String exerciseId) async {
+  /// 往模板里加一个动作。传入 [exercise] 时按它当前的记录方式和建议量预填：
+  /// 按时间的写每组秒数，按次数的写次数范围。
+  Future<void> addTemplateExercise(String templateId, String exerciseId, {Exercise? exercise}) async {
     final t = _now();
+    final timed = exercise?.isTimed ?? false;
+    final reps = exercise?.defaultReps;
     final existing = await (_db.select(_db.templateExercises)
           ..where((e) => e.templateId.equals(templateId) & e.deletedAt.isNull()))
         .get();
@@ -115,8 +137,10 @@ class PlanRepository {
           templateId: templateId,
           exerciseId: exerciseId,
           position: existing.length,
-          repsMin: const Value(8),
-          repsMax: const Value(12),
+          targetSets: Value(exercise?.defaultSets ?? 3),
+          repsMin: timed ? const Value(null) : Value(reps ?? 8),
+          repsMax: timed ? const Value(null) : Value(reps ?? 12),
+          targetDurationSec: timed ? Value(exercise?.defaultSeconds ?? 30) : const Value(null),
         ));
     await _touchTemplate(templateId, t);
   }
@@ -129,17 +153,21 @@ class PlanRepository {
     int? restSec,
     int? warmupSets,
     int? targetDurationSec,
+    bool clearDuration = false,
+    String? section,
   }) async {
     final t = _now();
     await (_db.update(_db.templateExercises)..where((e) => e.id.equals(id))).write(
       TemplateExercisesCompanion(
+        section: section == null ? const Value.absent() : Value(section),
         targetSets: targetSets == null ? const Value.absent() : Value(targetSets.clamp(1, 50)),
         repsMin: repsMin == null ? const Value.absent() : Value(repsMin.clamp(1, 999)),
         repsMax: repsMax == null ? const Value.absent() : Value(repsMax.clamp(1, 999)),
         restSec: restSec == null ? const Value.absent() : Value(restSec.clamp(0, 3600)),
         warmupSets: warmupSets == null ? const Value.absent() : Value(warmupSets.clamp(0, 10)),
-        targetDurationSec:
-            targetDurationSec == null ? const Value.absent() : Value(targetDurationSec.clamp(1, 36000)),
+        targetDurationSec: clearDuration
+            ? const Value(null)
+            : (targetDurationSec == null ? const Value.absent() : Value(targetDurationSec.clamp(1, 36000))),
         updatedAt: Value(t),
         dirty: const Value(true),
       ),
@@ -177,6 +205,7 @@ class PlanRepository {
             repsMin: Value(reps.isEmpty ? null : reps.first),
             repsMax: Value(reps.isEmpty ? null : reps.last),
             restSec: Value(b.exercise.restSec),
+            section: Value(b.exercise.section),
           ));
     }
     return id;
@@ -187,6 +216,7 @@ class PlanRepository {
     WorkoutRepository workouts,
     String templateId, {
     String? planId,
+    Map<String, Exercise>? exercises,
   }) async {
     final tv = await getTemplate(templateId);
     if (tv == null) throw StateError('模板不存在');
@@ -198,10 +228,15 @@ class PlanRepository {
     }
     final w = await workouts.startWorkout(
         name: tv.template.name, templateId: templateId, planId: planId, programId: programId);
-    for (final e in tv.exercises) {
+    for (final e in sortedBySection(tv.exercises, (e) => e.section, (e) => e.position)) {
+      final ex = exercises?[e.exerciseId];
       await workouts.addExercise(
         w.id,
         e.exerciseId,
+        tracking: ex?.trackingType,
+        fallbackReps: ex?.defaultReps,
+        fallbackSeconds: ex?.defaultSeconds,
+        section: e.section,
         defaultSets: e.targetSets,
         exactSets: true,
         defaultReps: e.repsMin,

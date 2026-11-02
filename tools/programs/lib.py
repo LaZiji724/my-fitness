@@ -14,9 +14,9 @@ import uuid
 from dataclasses import dataclass, field
 
 LEVELS = {"初阶": 1, "中阶": 2, "高阶": 3}
-CATEGORIES = ["新手入门", "进阶计划", "有氧跟练", "团课计划", "瘦身减脂", "塑形美体", "增肌增重", "健康改善", "拉伸放松", "丰满翘臀"]
+CATEGORIES = ["新手入门", "进阶计划", "有氧跟练", "团课计划", "瘦身减脂", "塑形美体", "增肌增重", "健康改善", "激活热身", "拉伸放松", "丰满翘臀"]
 # 「新手入门」「进阶计划」不单独存：初阶=新手入门，中/高阶=进阶计划，由 App 推导。
-GOAL_CATEGORIES = ["有氧跟练", "团课计划", "瘦身减脂", "塑形美体", "增肌增重", "健康改善", "拉伸放松", "丰满翘臀"]
+GOAL_CATEGORIES = ["有氧跟练", "团课计划", "瘦身减脂", "塑形美体", "增肌增重", "健康改善", "激活热身", "拉伸放松", "丰满翘臀"]
 SCENES = ["健身房", "居家", "户外"]
 AUDIENCES = ["新手", "久坐上班族", "女性", "男性", "有基础者", "中老年"]
 
@@ -46,6 +46,7 @@ class Item:
     warmup_sets: int = 0
     distance_m: int | None = None
     note: str | None = None
+    section: str = "main"  # warmup 热身 | main 正式训练 | cooldown 放松
 
 
 def parse_items(text: str) -> list[Item]:

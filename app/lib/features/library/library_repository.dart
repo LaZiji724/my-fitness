@@ -7,6 +7,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:uuid/uuid.dart';
 
 import 'package:my_fitness/core/db/app_database.dart';
+import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/library/program.dart';
 import 'package:my_fitness/features/plan/plan_math.dart';
 import 'package:my_fitness/features/plan/plan_repository.dart';
@@ -172,6 +173,7 @@ class ProgramLibraryRepository {
                 note: Value(itemNote(it)),
                 warmupSets: Value(it.warmupSets),
                 targetDurationSec: Value(it.durationSec),
+                section: Value(it.section),
               ));
         }
       }
@@ -221,15 +223,21 @@ class ProgramLibraryRepository {
   Future<({Workout workout, bool created})> startSession(
     WorkoutRepository workouts,
     Program program,
-    ProgramSession session,
-  ) async {
+    ProgramSession session, {
+    Map<String, Exercise>? exercises,
+  }) async {
     final existing = await workouts.activeWorkout();
     if (existing != null) return (workout: existing, created: false);
     final w = await workouts.startWorkout(name: '${program.name}·${session.name}', programId: program.id);
     for (final it in session.items) {
+      final ex = exercises?[it.exerciseId];
       await workouts.addExercise(
         w.id,
         it.exerciseId,
+        tracking: ex?.trackingType,
+        fallbackReps: ex?.defaultReps,
+        fallbackSeconds: ex?.defaultSeconds,
+        section: it.section,
         defaultSets: it.sets,
         exactSets: true,
         defaultReps: it.repsMin,

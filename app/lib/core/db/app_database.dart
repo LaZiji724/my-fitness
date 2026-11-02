@@ -39,6 +39,9 @@ class WorkoutExercises extends Table with SyncColumns {
   IntColumn get position => integer()();
   TextColumn get note => text().nullable()();
   IntColumn get restSec => integer().nullable()();
+
+  /// warmup 热身 / main 正式训练 / cooldown 放松
+  TextColumn get section => text().withDefault(const Constant('main'))();
 }
 
 class WorkoutSets extends Table with SyncColumns {
@@ -79,6 +82,9 @@ class TemplateExercises extends Table with SyncColumns {
 
   /// 按时间的动作（有氧、拉伸、平板支撑）每组的目标秒数；按次数的动作为空
   IntColumn get targetDurationSec => integer().nullable()();
+
+  /// warmup 热身 / main 正式训练 / cooldown 放松
+  TextColumn get section => text().withDefault(const Constant('main'))();
 }
 
 /// 计划：N 天一个循环，每天绑定一个模板或休息。
@@ -120,6 +126,16 @@ class FavoritePrograms extends Table with SyncColumns {
   TextColumn get programId => text()();
 }
 
+/// 每个动作的计量偏好：同一个动作可以选「按次数」或「按时间」。
+/// id 由「用户 + 动作」确定，多台设备设置同一个动作不会冲突。
+class ExercisePrefs extends Table with SyncColumns {
+  TextColumn get userId => text()();
+  TextColumn get exerciseId => text()();
+
+  /// weight_reps / bodyweight_reps / duration / distance_duration
+  TextColumn get trackingType => text()();
+}
+
 /// 同步游标等本机私有的键值，不上传。
 class SyncStates extends Table {
   TextColumn get key => text()();
@@ -139,6 +155,7 @@ class SyncStates extends Table {
   PlanDays,
   BodyMetrics,
   FavoritePrograms,
+  ExercisePrefs,
   SyncStates,
 ])
 class AppDatabase extends _$AppDatabase {
@@ -148,7 +165,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -182,6 +199,11 @@ class AppDatabase extends _$AppDatabase {
             await m.addColumn(plans, plans.sourceProgramId);
             await m.addColumn(workouts, workouts.sourceProgramId);
             await m.createTable(favoritePrograms);
+          }
+          if (from < 6) {
+            await m.addColumn(templateExercises, templateExercises.section);
+            await m.addColumn(workoutExercises, workoutExercises.section);
+            await m.createTable(exercisePrefs);
           }
         },
       );

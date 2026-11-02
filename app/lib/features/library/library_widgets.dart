@@ -12,6 +12,7 @@ IconData categoryIcon(String? category) => switch (category) {
       '增肌增重' => Icons.fitness_center_rounded,
       '健康改善' => Icons.health_and_safety_rounded,
       '拉伸放松' => Icons.self_improvement_rounded,
+      '激活热身' => Icons.bolt_rounded,
       '丰满翘臀' => Icons.sports_gymnastics_rounded,
       _ => Icons.bolt_rounded,
     };
@@ -25,10 +26,11 @@ Color categoryTint(AppColors c, String category) => switch (category) {
       '增肌增重' => c.partBack,
       '健康改善' => c.success,
       '拉伸放松' => c.info,
+      '激活热身' => c.partShoulders,
       _ => c.accent,
     };
 
-/// 「铁与火」风格的计划封面：深色底 + 分类色辉光 + 大号图标，不使用任何照片。
+/// 「铁与火」风格的计划封面：健身房照片（暖黑白处理）+ 深色渐变 + 大号图标；没有照片时退回到分类色渐变。
 class ProgramCover extends StatelessWidget {
   const ProgramCover({
     super.key,
@@ -63,6 +65,27 @@ class ProgramCover extends StatelessWidget {
                   end: Alignment.bottomRight,
                   colors: [Color.lerp(c.hero, tint, 0.34)!, c.hero, Color.lerp(c.hero2, tint, 0.10)!],
                   stops: const [0, 0.62, 1],
+                ),
+              ),
+            ),
+            Image.asset(
+              'assets/programs/${program.slug}.webp',
+              fit: BoxFit.cover,
+              cacheWidth: 720,
+              gaplessPlayback: true,
+              excludeFromSemantics: true,
+              errorBuilder: (_, _, _) => const SizedBox.shrink(),
+            ),
+            // 压暗照片，保证封面上的白字清晰
+            DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color.lerp(c.hero, tint, 0.20)!.withValues(alpha: 0.45),
+                    c.hero.withValues(alpha: 0.86),
+                  ],
                 ),
               ),
             ),

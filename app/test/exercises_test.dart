@@ -27,8 +27,8 @@ void main() {
   final all = loadSeed();
 
   group('动作库数据', () {
-    test('235 个精选动作 + 86 个原创补充动作，id/slug/中文名唯一', () {
-      expect(all.length, 321);
+    test('235 个精选动作 + 86 个计划库补充 + 45 个激活/拉伸新增，id/slug/中文名唯一', () {
+      expect(all.length, 366);
       expect(all.map((e) => e.id).toSet().length, all.length);
       expect(all.map((e) => e.slug).toSet().length, all.length);
       expect(all.map((e) => e.nameZh).toSet().length, all.length);
@@ -37,25 +37,56 @@ void main() {
       }
     });
 
-    test('精选动作每个都有两张图；原创补充动作（fc_）没有图，但都有动作要点', () {
-      final curated = all.where((e) => !e.slug.startsWith('fc_')).toList();
-      final extra = all.where((e) => e.slug.startsWith('fc_')).toList();
-      expect(curated.length, 235);
-      expect(extra.length, 86);
-      for (final e in curated) {
+    test('每个动作都有起止两张图，文件都在；补充动作都有动作要点', () {
+      for (final e in all) {
         expect(e.imageCount, 2, reason: e.slug);
         for (var i = 0; i < e.imageCount; i++) {
           expect(File(e.imageAsset(i)).existsSync(), isTrue, reason: e.imageAsset(i));
         }
+        if (e.slug.startsWith('fc_') || e.slug.startsWith('wu_')) {
+          expect(e.instructionsZh?.trim(), isNotEmpty, reason: e.slug);
+        }
       }
-      for (final e in extra) {
-        expect(e.imageCount, 0, reason: e.slug);
-        expect(e.instructionsZh?.trim(), isNotEmpty, reason: e.slug);
+    });
+
+    test('图片比例：原有 235 个是 1:1，新增 / 补图的是 4:3', () {
+      for (final e in all) {
+        final old = !e.slug.startsWith('fc_') && !e.slug.startsWith('wu_');
+        expect(e.imageRatio, old ? 1.0 : closeTo(4 / 3, 0.001), reason: e.slug);
+      }
+    });
+
+    test('类型与区域：激活 / 拉伸类都有区域，有默认量；每个动作的默认记录方式合理', () {
+      final warm = all.where((e) => e.kind != ExerciseKind.strength && e.kind != ExerciseKind.cardio).toList();
+      expect(warm.length, greaterThan(90));
+      for (final e in warm) {
+        expect(e.region, isNotNull, reason: e.nameZh);
+        expect(e.defaultSets, isNotNull, reason: e.nameZh);
+      }
+      // 拉伸与泡沫轴默认按时间，且有默认秒数
+      for (final e in all.where((e) => e.kind.isStretchTab)) {
+        expect(e.defaultTrackingType, TrackingType.duration, reason: e.nameZh);
+        expect(e.defaultSeconds, greaterThan(0), reason: e.nameZh);
+      }
+      // 静态保持类默认按时间
+      for (final name in ['平板支撑', '侧平板支撑', '靠墙静蹲', '空心撑', '悬垂', '交替打腿']) {
+        final hit = all.where((e) => e.nameZh == name);
+        expect(hit, isNotEmpty, reason: name);
+        for (final e in hit) {
+          expect(e.defaultTrackingType, TrackingType.duration, reason: e.nameZh);
+        }
+      }
+      // 每个动作都能在次数和时间之间切换（距离类除外），切换后记录方式变化而默认值不变
+      for (final e in all.where((e) => e.canSwitchTracking)) {
+        final timed = e.withTracking(TrackingType.duration);
+        expect(timed.isTimed, isTrue);
+        expect(timed.defaultTrackingType, e.defaultTrackingType);
+        expect(e.withTracking(e.repsVariant).isTimed, isFalse);
       }
     });
 
     test('部位与器械分组都能归类', () {
-      for (final e in all.where((e) => !e.slug.startsWith('fc_'))) {
+      for (final e in all.where((e) => !e.slug.startsWith('fc_') && !e.slug.startsWith('wu_'))) {
         expect(e.bodyPart, isNot(BodyPart.other), reason: e.nameZh);
       }
       expect(EquipmentGroup.of('e-z curl bar'), EquipmentGroup.barbell);

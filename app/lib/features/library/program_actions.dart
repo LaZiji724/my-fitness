@@ -25,7 +25,7 @@ Future<void> startProgramSession(
     if (goOn && context.mounted) context.go('/workout');
     return;
   }
-  await ref.read(libraryRepositoryProvider).startSession(workouts, program, session);
+  await ref.read(libraryRepositoryProvider).startSession(workouts, program, session, exercises: ref.read(exerciseByIdProvider));
   if (context.mounted) context.go('/workout');
 }
 

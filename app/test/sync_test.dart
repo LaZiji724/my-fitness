@@ -2,6 +2,8 @@ import 'package:drift/drift.dart' hide isNotNull, isNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:my_fitness/core/db/app_database.dart';
+import 'package:my_fitness/features/exercises/exercise.dart';
+import 'package:my_fitness/features/exercises/exercise_prefs.dart';
 import 'package:my_fitness/features/library/library_repository.dart';
 import 'package:my_fitness/features/plan/plan_repository.dart';
 import 'package:my_fitness/features/stats/body_repository.dart';
@@ -319,5 +321,35 @@ void main() {
     await syncA.syncNow();
     await syncB.syncNow();
     expect((await dbB.select(dbB.favoritePrograms).get()).single.deletedAt, isNotNull);
+  });
+
+  test('次数 / 时间偏好与热身 / 放松分区会同步到另一台设备', () async {
+    final prefsA = ExercisePrefsRepository(dbA, userId: () => 'u1', now: () => clock);
+    final plank = Exercise(
+      id: '22222222-2222-4222-8222-222222222222', slug: 'Plank', nameZh: '平板支撑', nameEn: null, bodyPart: BodyPart.core,
+      primaryMuscles: const [], secondaryMuscles: const [], equipment: 'body only', trackingType: TrackingType.duration,
+      instructionsZh: null, imageCount: 2,
+    );
+    await prefsA.setTracking(plank, TrackingType.bodyweightReps);
+    final t = await plansA.createTemplate('带分区');
+    await plansA.addTemplateExercise(t, plank.id);
+    final te = (await plansA.getTemplate(t))!.exercises.single.id;
+    await plansA.updateTemplateExercise(te, section: 'cooldown');
+
+    await syncA.syncNow();
+    expect(remote.tables['exercise_prefs']!.values.single['tracking_type'], 'bodyweight_reps');
+    expect(remote.tables['template_exercises']!.values.single['section'], 'cooldown');
+    await syncB.syncNow();
+    final prefsB = ExercisePrefsRepository(dbB, userId: () => 'u1', now: () => clock);
+    expect((await prefsB.watchAll().first)[plank.id], TrackingType.bodyweightReps);
+    expect((await dbB.select(dbB.templateExercises).get()).single.section, 'cooldown');
+
+    // 改回默认：偏好软删除，另一台设备同步后恢复默认
+    clock = clock.add(const Duration(hours: 1));
+    remote.serverNow = DateTime.utc(2026, 11, 2, 10, 30);
+    await prefsA.setTracking(plank, TrackingType.duration);
+    await syncA.syncNow();
+    await syncB.syncNow();
+    expect(await prefsB.watchAll().first, isEmpty);
   });
 }

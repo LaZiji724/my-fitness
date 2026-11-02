@@ -71,6 +71,7 @@ flutter:
   assets:
     - assets/avatars/
     - assets/exercises/
+    - assets/programs/
     - assets/seed/
 
   fonts:

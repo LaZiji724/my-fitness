@@ -25,7 +25,6 @@ class ExercisesPage extends ConsumerWidget {
     BodyPart.glutes,
     BodyPart.core,
     BodyPart.cardio,
-    BodyPart.other,
   ];
 
   @override
@@ -80,9 +79,19 @@ class ExercisesPage extends ConsumerWidget {
                             for (final p in _parts)
                               _CategoryButton(
                                 label: p.label,
-                                selected: !filter.isSearching && p == filter.bodyPart,
+                                selected: !filter.isSearching && filter.tab == ExerciseTab.part && p == filter.bodyPart,
                                 onTap: () => ref.read(exerciseFilterProvider.notifier).setBodyPart(p),
                               ),
+                            _CategoryButton(
+                              label: '激活',
+                              selected: !filter.isSearching && filter.tab == ExerciseTab.activation,
+                              onTap: () => ref.read(exerciseFilterProvider.notifier).setTab(ExerciseTab.activation),
+                            ),
+                            _CategoryButton(
+                              label: '拉伸',
+                              selected: !filter.isSearching && filter.tab == ExerciseTab.stretch,
+                              onTap: () => ref.read(exerciseFilterProvider.notifier).setTab(ExerciseTab.stretch),
+                            ),
                           ],
                         ),
                       ),
@@ -192,7 +201,18 @@ class _Results extends ConsumerWidget {
       for (final g in EquipmentGroup.values)
         if (g == EquipmentGroup.all || (counts[g] ?? 0) > 0) g,
     ];
-    final title = filter.isSearching ? '搜索结果' : filter.bodyPart.label;
+    final warm = filter.isWarmupTab;
+    final regions = warm ? regionCounts(all, filter) : const <ExerciseRegion, int>{};
+    final kinds = filter.tab == ExerciseTab.activation
+        ? const [ExerciseKind.activation, ExerciseKind.dynamicWarmup]
+        : const [ExerciseKind.stretch, ExerciseKind.foam];
+    final title = filter.isSearching
+        ? '搜索结果'
+        : switch (filter.tab) {
+            ExerciseTab.part => filter.bodyPart.label,
+            ExerciseTab.activation => '激活热身',
+            ExerciseTab.stretch => '拉伸放松',
+          };
 
     return CustomScrollView(
       slivers: [
@@ -200,18 +220,56 @@ class _Results extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Wrap(
-                spacing: 6,
-                runSpacing: 6,
-                children: [
-                  for (final g in groups)
+              if (warm) ...[
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: [
                     _EquipmentChip(
-                      label: g.label,
-                      selected: g == filter.equipment,
-                      onTap: () => ref.read(exerciseFilterProvider.notifier).setEquipment(g),
+                      label: '全部',
+                      selected: filter.kind == null,
+                      onTap: () => ref.read(exerciseFilterProvider.notifier).setKind(null),
                     ),
-                ],
-              ),
+                    for (final k in kinds)
+                      _EquipmentChip(
+                        label: k.label,
+                        selected: filter.kind == k,
+                        onTap: () => ref.read(exerciseFilterProvider.notifier).setKind(k),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: [
+                    _EquipmentChip(
+                      label: '全部部位',
+                      selected: filter.region == null,
+                      onTap: () => ref.read(exerciseFilterProvider.notifier).setRegion(null),
+                    ),
+                    for (final r in ExerciseRegion.values)
+                      if ((regions[r] ?? 0) > 0)
+                        _EquipmentChip(
+                          label: r.label,
+                          selected: filter.region == r,
+                          onTap: () => ref.read(exerciseFilterProvider.notifier).setRegion(r),
+                        ),
+                  ],
+                ),
+              ] else
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: [
+                    for (final g in groups)
+                      _EquipmentChip(
+                        label: g.label,
+                        selected: g == filter.equipment,
+                        onTap: () => ref.read(exerciseFilterProvider.notifier).setEquipment(g),
+                      ),
+                  ],
+                ),
               const SizedBox(height: AppSpace.s12),
               Text('$title · ${counts[EquipmentGroup.all] ?? 0} 个动作',
                   style: AppText.caption.copyWith(color: c.text3)),
@@ -239,11 +297,12 @@ class _Results extends ConsumerWidget {
           )
         else
           SliverGrid.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: 14,
               crossAxisSpacing: 10,
-              childAspectRatio: 0.74,
+              // 激活 / 拉伸的图是 4:3，格子更矮
+              childAspectRatio: warm ? 0.76 : 0.74,
             ),
             itemCount: items.length,
             itemBuilder: (context, i) => _ExerciseTile(exercise: items[i], onPick: onPick),
@@ -318,10 +377,17 @@ class _ExerciseTile extends StatelessWidget {
             style: AppText.label.copyWith(color: c.text, fontWeight: FontWeight.w600, fontSize: 14, height: 1.3),
           ),
           const SizedBox(height: 2),
-          Text(exercise.equipmentGroup.label,
+          Text(_subtitle(exercise),
               style: AppText.caption.copyWith(color: c.text3, fontSize: 12)),
         ],
       ),
     );
   }
+}
+
+/// 动作卡片的小字：力量动作显示器械；激活 / 拉伸显示类型与区域，按时间的再带上默认秒数。
+String _subtitle(Exercise e) {
+  if (e.kind == ExerciseKind.strength || e.kind == ExerciseKind.cardio) return e.equipmentGroup.label;
+  final parts = <String>[e.kind.label, if (e.region != null) e.region!.label];
+  return parts.join(' · ');
 }

@@ -17,14 +17,35 @@ HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
 sys.path.insert(0, str(HERE))
 
-from lib import (AUDIENCES, EQUIP_ZH, EXERCISE_NS, GOAL_CATEGORIES, ITEM_NS, LEVELS, PROGRAM_NS, SCENES,  # noqa: E402
+from lib import (parse_items, AUDIENCES, EQUIP_ZH, EXERCISE_NS, GOAL_CATEGORIES, ITEM_NS, LEVELS, PROGRAM_NS, SCENES,  # noqa: E402
                  SESSION_NS, session_minutes)
 from exercises_extra import EXTRA  # noqa: E402
-import content_cardio, content_fat_shape, content_muscle, content_health, content_glute  # noqa: E402
+import content_cardio, content_fat_shape, content_muscle, content_health, content_glute, content_activation  # noqa: E402
+
+sys.path.insert(0, str(HERE.parent / "warmup"))
+import catalog  # noqa: E402
 
 SEED = ROOT / "app" / "assets" / "seed"
 BASE_EXERCISES = SEED / "exercises.json"
 BASE_COUNT = 235  # 随包基础动作数；之后的都是本脚本追加的原创动作
+
+
+# 没有「热身 / 放松」区的课次，按课次主要练的部位补一段徒手的默认热身与放松（不需要任何器械）
+DEFAULT_WARMUP = {
+    "lower": "站姿摆腿@1x10 r0 #前后各摆动，幅度由小渐大；髋部绕环@1x10 r0 #每个方向各一圈；臀桥@1x12 r0 #顶点夹臀停 1 秒",
+    "push": "手臂绕环@1x12 r0 #由小到大；肩部绕环@1x10 r0；肩胛俯卧撑@1x10 r0 #手臂伸直，只动肩胛",
+    "pull": "猫牛式@1x10 r0 #配合呼吸；手臂绕环@1x12 r0 #由小到大；靠墙天使@1x10 r0 #背贴墙，手臂沿墙滑动",
+    "core": "猫牛式@1x10 r0 #配合呼吸；死虫式@1x8 r0 #每侧各 8；鸟狗式@1x8 r0 #每侧各 8",
+    "full": "手臂绕环@1x12 r0 #由小到大；髋部绕环@1x10 r0 #每个方向各一圈；尺蠖爬行@1x6 r0",
+}
+DEFAULT_COOLDOWN = {
+    "lower": "站姿股四头肌拉伸@1x30s r0 #每侧各一次；仰卧腘绳肌拉伸@1x30s r0 #每侧各一次；仰卧 4 字拉伸@1x30s r0 #每侧各一次",
+    "push": "门框胸部拉伸@1x30s r0 #每侧各一次；肩后侧交叉拉伸@1x30s r0 #每侧各一次；过头三头肌拉伸@1x30s r0 #每侧各一次",
+    "pull": "跪姿背阔肌拉伸@1x30s r0 #每侧各一次；婴儿式@1x40s r0；肩后侧交叉拉伸@1x30s r0 #每侧各一次",
+    "core": "眼镜蛇式@1x30s r0；婴儿式@1x40s r0；仰卧脊柱扭转@1x30s r0 #每侧各一次",
+    "full": "婴儿式@1x40s r0；站姿体前屈@1x30s r0 #膝盖微屈；门框胸部拉伸@1x30s r0 #每侧各一次",
+}
+NO_SECTION_CATEGORIES = {"激活热身", "拉伸放松"}
 
 
 def load_exercises() -> list[dict]:
@@ -37,7 +58,60 @@ def load_exercises() -> list[dict]:
             "body_part": body, "primary_muscles": prim, "secondary_muscles": sec, "equipment": equip,
             "tracking_type": tracking, "instructions_zh": instr, "image_paths": [],
         })
-    return base + extra
+    return catalog.finalize(base, extra)
+
+
+def classify(items, by_name):
+    """给一个课次的条目分区：开头的热身类 → warmup，结尾的拉伸类 → cooldown，其余 → main。"""
+    n = len(items)
+
+    def is_warm(it):
+        ex = by_name.get(it.name)
+        # 有氧器械的「热身」条目：备注以「热身」开头（力量动作备注里的「热身组」不算）
+        cardio_warm = ex is not None and ex["kind"] == "cardio" and bool(it.note and it.note.startswith("热身"))
+        return cardio_warm or (ex is not None and ex["kind"] in ("dynamic", "activation"))
+
+    def is_cool(it):
+        ex = by_name.get(it.name)
+        cardio_cool = ex is not None and ex["kind"] == "cardio" and bool(it.note and it.note.startswith("放松"))
+        return cardio_cool or (ex is not None and ex["kind"] in ("stretch", "foam"))
+
+    a = 0
+    while a < n - 1 and is_warm(items[a]):
+        a += 1
+    b = n
+    while b > a + 1 and is_cool(items[b - 1]):
+        b -= 1
+    for i, it in enumerate(items):
+        it.section = "warmup" if i < a else ("cooldown" if i >= b else "main")
+
+
+def profile(items, by_name) -> str:
+    cnt = {"lower": 0, "push": 0, "pull": 0, "core": 0, "cardio": 0}
+    for it in items:
+        if it.section != "main":
+            continue
+        ex = by_name[it.name]
+        bp = ex["body_part"]
+        if bp in ("legs", "glutes"):
+            cnt["lower"] += 1
+        elif bp in ("chest", "shoulders"):
+            cnt["push"] += 1
+        elif bp in ("back",):
+            cnt["pull"] += 1
+        elif bp == "arms":
+            cnt["push" if "triceps" in ex["primary_muscles"] else "pull"] += 1
+        elif bp == "core":
+            cnt["core"] += 1
+        elif bp == "cardio":
+            cnt["cardio"] += 1
+    total = sum(cnt.values())
+    if total == 0:
+        return "full"
+    top = max(cnt, key=cnt.get)
+    if cnt[top] / total < 0.6:
+        return "full"
+    return "lower" if top == "cardio" else top
 
 
 def build() -> tuple[list[dict], list[dict]]:
@@ -45,7 +119,7 @@ def build() -> tuple[list[dict], list[dict]]:
     by_name = {e["name_zh"]: e for e in exercises}
     assert len(by_name) == len(exercises), "动作中文名有重复"
     plans = (content_cardio.PLANS + content_fat_shape.PLANS + content_muscle.PLANS
-             + content_health.PLANS + content_glute.PLANS)
+             + content_health.PLANS + content_glute.PLANS + content_activation.PLANS)
     errors: list[str] = []
     programs: list[dict] = []
     slugs: set[str] = set()
@@ -81,6 +155,22 @@ def build() -> tuple[list[dict], list[dict]]:
         sessions_out = []
         for sp, s in enumerate(p.sessions):
             items_out = []
+            if p.category in NO_SECTION_CATEGORIES:
+                for it in s.items:
+                    it.section = "main"
+            else:
+                classify(s.items, by_name)
+                prof = profile(s.items, by_name)
+                if not any(it.section == "warmup" for it in s.items):
+                    extra_warm = parse_items(DEFAULT_WARMUP[prof])
+                    for it in extra_warm:
+                        it.section = "warmup"
+                    s.items = extra_warm + s.items
+                if not any(it.section == "cooldown" for it in s.items):
+                    extra_cool = parse_items(DEFAULT_COOLDOWN[prof])
+                    for it in extra_cool:
+                        it.section = "cooldown"
+                    s.items = s.items + extra_cool
             for ip, it in enumerate(s.items):
                 ex = by_name.get(it.name)
                 if ex is None:
@@ -102,7 +192,7 @@ def build() -> tuple[list[dict], list[dict]]:
                     "warmup_sets": it.warmup_sets, "sets": it.sets,
                     "reps_min": it.reps_min, "reps_max": it.reps_max,
                     "duration_sec": it.duration_sec, "distance_m": it.distance_m,
-                    "rest_sec": it.rest_sec, "note": it.note,
+                    "rest_sec": it.rest_sec, "note": it.note, "section": it.section,
                 })
             sessions_out.append({
                 "id": str(uuid.uuid5(SESSION_NS, f"{p.slug}/{s.key}")), "key": s.key, "name": s.name,
@@ -141,20 +231,32 @@ def sql_str(v) -> str:
 def write_sql(exercises: list[dict], programs: list[dict], out: pathlib.Path) -> None:
     L: list[str] = [
         "-- 我的健身 · 内置计划库种子（由 tools/programs/build_programs.py 生成，可重复执行）",
-        "-- 先执行 supabase/migrations/20261103000000_program_library.sql，再在 SQL Editor 里执行本文件。",
+        "-- 先执行 supabase/migrations/20261103000000_program_library.sql 与 20261104000000_warmup_stretch.sql，再在 SQL Editor 里执行本文件。",
         "begin;",
     ]
+    # 原有 235 个基础动作：只补类型 / 区域 / 默认计量（图片和文字都不动）
+    for e in exercises[:BASE_COUNT]:
+        if e["kind"] == "strength" and e["slug"] not in catalog.BASE_TRACKING_FIX:
+            continue
+        L.append("update public.exercises set kind = {k}, region = {r}, tracking_type = {t} where slug = {s};".format(
+            k=sql_str(e["kind"]), r=sql_str(e["region"]), t=sql_str(e["tracking_type"]), s=sql_str(e["slug"])))
     for e in exercises[BASE_COUNT:]:
         L.append(
             "insert into public.exercises (id, owner_id, slug, name_zh, name_en, body_part, primary_muscles, "
-            "secondary_muscles, equipment, tracking_type, instructions_zh, image_paths) values ("
+            "secondary_muscles, equipment, tracking_type, instructions_zh, image_paths, kind, region, per_side, "
+            "default_sets, default_reps, default_seconds) values ("
             f"{sql_str(e['id'])}, null, {sql_str(e['slug'])}, {sql_str(e['name_zh'])}, {sql_str(e['name_en'])}, "
             f"{sql_str(e['body_part'])}, {sql_str(e['primary_muscles'])}, {sql_str(e['secondary_muscles'])}, "
-            f"{sql_str(e['equipment'])}, {sql_str(e['tracking_type'])}, {sql_str(e['instructions_zh'])}, '{{}}'::text[]) "
+            f"{sql_str(e['equipment'])}, {sql_str(e['tracking_type'])}, {sql_str(e['instructions_zh'])}, "
+            f"{sql_str(e['image_paths'])}, {sql_str(e['kind'])}, {sql_str(e['region'])}, {sql_str(e['per_side'])}, "
+            f"{sql_str(e['default_sets'])}, {sql_str(e['default_reps'])}, {sql_str(e['default_seconds'])}) "
             "on conflict (slug) do update set name_zh = excluded.name_zh, name_en = excluded.name_en, "
             "body_part = excluded.body_part, primary_muscles = excluded.primary_muscles, "
             "secondary_muscles = excluded.secondary_muscles, equipment = excluded.equipment, "
-            "tracking_type = excluded.tracking_type, instructions_zh = excluded.instructions_zh;")
+            "tracking_type = excluded.tracking_type, instructions_zh = excluded.instructions_zh, "
+            "image_paths = excluded.image_paths, kind = excluded.kind, region = excluded.region, "
+            "per_side = excluded.per_side, default_sets = excluded.default_sets, "
+            "default_reps = excluded.default_reps, default_seconds = excluded.default_seconds;")
     # 计划整体重建：先删后插（子表级联删除），保证改内容后重复执行结果一致
     ids = ",".join(sql_str(p["id"]) for p in programs)
     L.append(f"delete from public.programs where id in ({ids});")
@@ -177,9 +279,9 @@ def write_sql(exercises: list[dict], programs: list[dict], out: pathlib.Path) ->
                 rows.append(
                     f"({sql_str(it['id'])}, {sql_str(s['id'])}, {sql_str(it['exercise_id'])}, {it['position']}, "
                     f"{it['warmup_sets']}, {it['sets']}, {sql_str(it['reps_min'])}, {sql_str(it['reps_max'])}, "
-                    f"{sql_str(it['duration_sec'])}, {sql_str(it['distance_m'])}, {it['rest_sec']}, {sql_str(it['note'])})")
+                    f"{sql_str(it['duration_sec'])}, {sql_str(it['distance_m'])}, {it['rest_sec']}, {sql_str(it['note'])}, {sql_str(it['section'])})")
             L.append("insert into public.program_session_items (id, session_id, exercise_id, position, warmup_sets, "
-                     "sets, reps_min, reps_max, duration_sec, distance_m, rest_sec, note) values\n  "
+                     "sets, reps_min, reps_max, duration_sec, distance_m, rest_sec, note, section) values\n  "
                      + ",\n  ".join(rows) + ";")
     L.append("commit;")
     out.parent.mkdir(parents=True, exist_ok=True)

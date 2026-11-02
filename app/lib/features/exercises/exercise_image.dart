@@ -24,7 +24,7 @@ class ExerciseImage extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
       child: AspectRatio(
-        aspectRatio: 1,
+        aspectRatio: exercise.imageRatio,
         child: Image.asset(
           exercise.imageAsset(index),
           fit: BoxFit.cover,

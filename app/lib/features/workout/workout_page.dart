@@ -9,6 +9,7 @@ import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_image.dart';
+import 'package:my_fitness/features/exercises/exercise_prefs.dart';
 import 'package:my_fitness/features/workout/number_pad_sheet.dart';
 import 'package:my_fitness/features/workout/workout_math.dart';
 import 'package:my_fitness/features/workout/workout_providers.dart';
@@ -106,6 +107,7 @@ class _WorkoutBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final c = context.colors;
     final byId = ref.watch(exerciseByIdProvider);
+    final hasSections = view.exercises.any((b) => b.exercise.section != 'main');
     final totalSets = view.exercises.fold<int>(0, (n, b) => n + b.sets.length);
     final doneSets = view.exercises.fold<int>(0, (n, b) => n + b.sets.where((s) => s.completed).length);
 
@@ -120,7 +122,9 @@ class _WorkoutBody extends ConsumerWidget {
               const SizedBox(height: AppSpace.s8),
               _ProgressRow(done: doneSets, total: totalSets),
               const SizedBox(height: AppSpace.s12),
-              for (final block in view.exercises) ...[
+              for (final (i, block) in view.exercises.indexed) ...[
+                if (hasSections && (i == 0 || view.exercises[i - 1].exercise.section != block.exercise.section))
+                  _SectionLabel(WorkoutSection.fromKey(block.exercise.section)),
                 _ExerciseCard(
                   key: ValueKey(block.exercise.id),
                   workoutId: view.workout.id,
@@ -325,10 +329,33 @@ class _ExerciseCard extends ConsumerWidget {
                 PopupMenuButton<String>(
                   tooltip: '动作选项',
                   icon: Icon(Icons.more_horiz_rounded, color: c.text2),
-                  onSelected: (v) {
-                    if (v == 'remove') repo.removeExercise(block.exercise.id);
+                  onSelected: (v) async {
+                    if (v == 'remove') {
+                      repo.removeExercise(block.exercise.id);
+                    } else if (v == 'time' || v == 'reps') {
+                      final ex = exercise;
+                      if (ex == null) return;
+                      final timed = v == 'time';
+                      await ref
+                          .read(exercisePrefsRepositoryProvider)
+                          .setTracking(ex, timed ? TrackingType.duration : ex.repsVariant);
+                      await repo.retargetSets(block.exercise.id,
+                          timed: timed, seconds: ex.defaultSeconds, reps: ex.defaultReps);
+                    } else if (v.startsWith('section:')) {
+                      repo.setSection(block.exercise.id, v.substring(8));
+                    }
                   },
-                  itemBuilder: (_) => const [PopupMenuItem(value: 'remove', child: Text('删除这个动作'))],
+                  itemBuilder: (_) => [
+                    if (exercise?.canSwitchTracking ?? false)
+                      PopupMenuItem(
+                        value: exercise!.isTimed ? 'reps' : 'time',
+                        child: Text(exercise!.isTimed ? '改为按次数记录' : '改为按时间记录'),
+                      ),
+                    for (final sec in WorkoutSection.values)
+                      if (sec.key != block.exercise.section)
+                        PopupMenuItem(value: 'section:${sec.key}', child: Text('移到「${sec.label}」')),
+                    const PopupMenuItem(value: 'remove', child: Text('删除这个动作')),
+                  ],
                 ),
               ],
             ),
@@ -849,6 +876,21 @@ class _RestRow extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// 训练页的分区小标题：热身、正式训练、放松。
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel(this.section);
+  final WorkoutSection section;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpace.s8),
+      child: Text(section.label, style: AppText.label.copyWith(color: c.text2, fontWeight: FontWeight.w700)),
     );
   }
 }

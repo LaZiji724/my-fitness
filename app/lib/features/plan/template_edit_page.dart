@@ -9,6 +9,8 @@ import 'package:my_fitness/features/exercises/exercise_image.dart';
 import 'package:my_fitness/features/exercises/exercise_repository.dart';
 import 'package:my_fitness/features/exercises/exercises_page.dart';
 import 'package:my_fitness/features/plan/plan_providers.dart';
+import 'package:my_fitness/features/plan/plan_repository.dart' show sortedBySection;
+import 'package:my_fitness/features/exercises/exercise_prefs.dart';
 import 'package:my_fitness/features/plan/plan_widgets.dart';
 import 'package:my_fitness/features/workout/workout_providers.dart';
 
@@ -91,7 +93,10 @@ class TemplateEditPage extends ConsumerWidget {
         children: [
           if (view.exercises.isEmpty)
             const EmptyCard(title: '还没有动作', hint: '点下面的「添加动作」从动作库里选'),
-          for (final e in view.exercises) ...[
+          for (final (i, e) in sortedBySection(view.exercises, (e) => e.section, (e) => e.position).indexed) ...[
+            if (view.exercises.any((x) => x.section != 'main') &&
+                (i == 0 || sortedBySection(view.exercises, (x) => x.section, (x) => x.position)[i - 1].section != e.section))
+              _SectionLabel(WorkoutSection.fromKey(e.section)),
             _ExerciseRow(entry: e, exercise: byId[e.exerciseId]),
             const SizedBox(height: AppSpace.s8),
           ],
@@ -112,7 +117,8 @@ class TemplateEditPage extends ConsumerWidget {
             onPressed: view.exercises.isEmpty
                 ? null
                 : () async {
-                    await repo.startFromTemplate(ref.read(workoutRepositoryProvider), templateId);
+                    await repo.startFromTemplate(ref.read(workoutRepositoryProvider), templateId,
+                        exercises: byId);
                     if (context.mounted) context.go('/workout');
                   },
             child: const Text('用这个模板开始训练'),
@@ -143,6 +149,7 @@ class _ExerciseRow extends ConsumerWidget {
             entry: entry,
             name: exercise?.nameZh ?? '动作',
             timed: exercise?.trackingType == TrackingType.duration,
+            exercise: exercise,
           ),
         ),
         child: Padding(
@@ -180,7 +187,8 @@ class _ExerciseRow extends ConsumerWidget {
 }
 
 class _ConfigSheet extends ConsumerStatefulWidget {
-  const _ConfigSheet({required this.entry, required this.name, this.timed = false});
+  const _ConfigSheet({required this.entry, required this.name, this.timed = false, this.exercise});
+  final Exercise? exercise;
   final TemplateExercise entry;
   final String name;
 
@@ -199,7 +207,28 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
   late int warmup = widget.entry.warmupSets;
   late int duration = widget.entry.targetDurationSec ?? 30;
 
-  bool get _timed => widget.timed || widget.entry.targetDurationSec != null;
+  late bool _timed = widget.timed || widget.entry.targetDurationSec != null;
+  late String section = widget.entry.section;
+
+  /// 切换「按次数 / 按时间」：记到账号偏好里，并把这个模板动作的目标换成对应的量。
+  Future<void> _setTimed(bool timed) async {
+    final ex = widget.exercise;
+    final repo = ref.read(planRepositoryProvider);
+    setState(() => _timed = timed);
+    if (ex != null) {
+      await ref.read(exercisePrefsRepositoryProvider).setTracking(ex, timed ? TrackingType.duration : ex.repsVariant);
+    }
+    if (timed) {
+      setState(() => duration = widget.entry.targetDurationSec ?? ex?.defaultSeconds ?? 30);
+      await repo.updateTemplateExercise(widget.entry.id, targetDurationSec: duration);
+    } else {
+      setState(() {
+        repsMin = ex?.defaultReps ?? repsMin;
+        repsMax = ex?.defaultReps ?? repsMax;
+      });
+      await repo.updateTemplateExercise(widget.entry.id, clearDuration: true, repsMin: repsMin, repsMax: repsMax);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -213,6 +242,36 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(widget.name, style: AppText.titleMedium.copyWith(color: c.text)),
+            const SizedBox(height: AppSpace.s8),
+            if (widget.exercise?.canSwitchTracking ?? false) ...[
+              SizedBox(
+                width: double.infinity,
+                child: SegmentedButton<bool>(
+                  showSelectedIcon: false,
+                  segments: const [
+                    ButtonSegment(value: false, label: Text('按次数')),
+                    ButtonSegment(value: true, label: Text('按时间')),
+                  ],
+                  selected: {_timed},
+                  onSelectionChanged: (v) => _setTimed(v.first),
+                ),
+              ),
+              const SizedBox(height: AppSpace.s8),
+            ],
+            SizedBox(
+              width: double.infinity,
+              child: SegmentedButton<String>(
+                showSelectedIcon: false,
+                segments: [
+                  for (final sec in WorkoutSection.values) ButtonSegment(value: sec.key, label: Text(sec.label)),
+                ],
+                selected: {section},
+                onSelectionChanged: (v) {
+                  setState(() => section = v.first);
+                  repo.updateTemplateExercise(widget.entry.id, section: v.first);
+                },
+              ),
+            ),
             const SizedBox(height: AppSpace.s8),
             StepperField(
               label: '组数',
@@ -323,9 +382,24 @@ class _TemplatePickPageState extends ConsumerState<TemplatePickPage> {
   Widget build(BuildContext context) {
     return ExercisesPage(
       onPick: (exercise) async {
-        await ref.read(planRepositoryProvider).addTemplateExercise(widget.templateId, exercise.id);
+        await ref.read(planRepositoryProvider).addTemplateExercise(widget.templateId, exercise.id, exercise: exercise);
         if (context.mounted) context.pop();
       },
+    );
+  }
+}
+
+/// 模板 / 训练里的分区小标题：热身、正式训练、放松。
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel(this.section);
+  final WorkoutSection section;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpace.s8, bottom: AppSpace.s8),
+      child: Text(section.label, style: AppText.label.copyWith(color: c.text2, fontWeight: FontWeight.w700)),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_image.dart';
+import 'package:my_fitness/features/exercises/exercise_prefs.dart';
 import 'package:my_fitness/features/exercises/exercise_repository.dart';
 
 /// 动作详情：起止两张图、基本信息、目标肌群、要领。
@@ -34,12 +35,12 @@ class ExerciseDetailPage extends ConsumerWidget {
   }
 }
 
-class _Body extends StatelessWidget {
+class _Body extends ConsumerWidget {
   const _Body({required this.exercise});
   final Exercise exercise;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final c = context.colors;
     final e = exercise;
     return ListView(
@@ -68,11 +69,21 @@ class _Body extends StatelessWidget {
           spacing: AppSpace.s8,
           runSpacing: AppSpace.s8,
           children: [
+            if (e.kind != ExerciseKind.strength) _Tag(e.kind.label),
+            if (e.region != null) _Tag(e.region!.label),
             _Tag(e.bodyPart.label),
             _Tag(e.equipmentGroup.label),
-            _Tag(e.trackingType.label),
+            if (e.perSide) const _Tag('左右各做'),
           ],
         ),
+        if (e.canSwitchTracking) ...[
+          const SizedBox(height: AppSpace.s16),
+          _TrackingSwitch(exercise: e),
+        ],
+        if (_dose(e) != null) ...[
+          const SizedBox(height: AppSpace.s16),
+          _Section(title: '建议量', child: Text(_dose(e)!, style: AppText.body.copyWith(color: c.text))),
+        ],
         const SizedBox(height: AppSpace.s24),
         _Section(
           title: '主要肌群',
@@ -141,6 +152,61 @@ class _Section extends StatelessWidget {
             child,
           ],
         ),
+      ),
+    );
+  }
+}
+
+
+/// 建议量文案：「2 组 × 30 秒（每侧）」。没有建议量时返回 null。
+String? _dose(Exercise e) {
+  final sets = e.defaultSets;
+  final amount = e.isTimed
+      ? (e.defaultSeconds == null ? null : '${e.defaultSeconds} 秒')
+      : (e.defaultReps == null ? null : '${e.defaultReps} 次');
+  if (sets == null && amount == null) return null;
+  final parts = [
+    if (sets != null) '$sets 组',
+    ?amount,
+  ];
+  return parts.join(' × ') + (e.perSide ? '（每侧）' : '');
+}
+
+/// 「按次数 / 按时间」切换：每个动作都能选，选择会记在账号里并同步到其他设备。
+class _TrackingSwitch extends ConsumerWidget {
+  const _TrackingSwitch({required this.exercise});
+  final Exercise exercise;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final c = context.colors;
+    final timed = exercise.isTimed;
+    return _Section(
+      title: '记录方式',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: SegmentedButton<bool>(
+              showSelectedIcon: false,
+              segments: const [
+                ButtonSegment(value: false, label: Text('按次数')),
+                ButtonSegment(value: true, label: Text('按时间')),
+              ],
+              selected: {timed},
+              onSelectionChanged: (v) {
+                final next = v.first ? TrackingType.duration : exercise.repsVariant;
+                ref.read(exercisePrefsRepositoryProvider).setTracking(exercise, next);
+              },
+            ),
+          ),
+          const SizedBox(height: AppSpace.s8),
+          Text(
+            timed ? '训练时每组记录坚持的秒数' : '训练时每组记录完成的次数',
+            style: AppText.caption.copyWith(color: c.text3),
+          ),
+        ],
       ),
     );
   }
