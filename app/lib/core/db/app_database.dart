@@ -27,6 +27,9 @@ class Workouts extends Table with SyncColumns {
   TextColumn get note => text().nullable()();
   TextColumn get sourceTemplateId => text().nullable()();
   TextColumn get planId => text().nullable()();
+
+  /// 来自计划库的哪个内置计划（用来统计「已练几节」）；自己新建的训练为空
+  TextColumn get sourceProgramId => text().nullable()();
 }
 
 class WorkoutExercises extends Table with SyncColumns {
@@ -70,6 +73,12 @@ class TemplateExercises extends Table with SyncColumns {
   IntColumn get repsMax => integer().nullable()();
   IntColumn get restSec => integer().nullable()();
   TextColumn get note => text().nullable()();
+
+  /// 正式组之前的热身组数
+  IntColumn get warmupSets => integer().withDefault(const Constant(0))();
+
+  /// 按时间的动作（有氧、拉伸、平板支撑）每组的目标秒数；按次数的动作为空
+  IntColumn get targetDurationSec => integer().nullable()();
 }
 
 /// 计划：N 天一个循环，每天绑定一个模板或休息。
@@ -81,6 +90,9 @@ class Plans extends Table with SyncColumns {
   /// 第 1 天对应的本地日期 yyyy-MM-dd
   TextColumn get startDate => text()();
   BoolColumn get isActive => boolean().withDefault(const Constant(false))();
+
+  /// 来自计划库的哪个内置计划；自己新建的计划为空
+  TextColumn get sourceProgramId => text().nullable()();
 }
 
 class PlanDays extends Table with SyncColumns {
@@ -102,6 +114,12 @@ class BodyMetrics extends Table with SyncColumns {
   RealColumn get weightKg => real().nullable()();
 }
 
+/// 收藏的内置计划。id 由「用户 + 计划」确定，多设备收藏同一计划不会冲突。
+class FavoritePrograms extends Table with SyncColumns {
+  TextColumn get userId => text()();
+  TextColumn get programId => text()();
+}
+
 /// 同步游标等本机私有的键值，不上传。
 class SyncStates extends Table {
   TextColumn get key => text()();
@@ -120,6 +138,7 @@ class SyncStates extends Table {
   Plans,
   PlanDays,
   BodyMetrics,
+  FavoritePrograms,
   SyncStates,
 ])
 class AppDatabase extends _$AppDatabase {
@@ -129,7 +148,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -156,6 +175,13 @@ class AppDatabase extends _$AppDatabase {
           }
           if (from < 4) {
             await m.createTable(syncStates);
+          }
+          if (from < 5) {
+            await m.addColumn(templateExercises, templateExercises.warmupSets);
+            await m.addColumn(templateExercises, templateExercises.targetDurationSec);
+            await m.addColumn(plans, plans.sourceProgramId);
+            await m.addColumn(workouts, workouts.sourceProgramId);
+            await m.createTable(favoritePrograms);
           }
         },
       );

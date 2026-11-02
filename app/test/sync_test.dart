@@ -2,6 +2,7 @@ import 'package:drift/drift.dart' hide isNotNull, isNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:my_fitness/core/db/app_database.dart';
+import 'package:my_fitness/features/library/library_repository.dart';
 import 'package:my_fitness/features/plan/plan_repository.dart';
 import 'package:my_fitness/features/stats/body_repository.dart';
 import 'package:my_fitness/features/sync/sync_remote.dart';
@@ -285,5 +286,38 @@ void main() {
       await expectLater(syncB.importAll({'format': 'my-fitness-backup', 'version': 99, 'tables': {}}), throwsFormatException);
       await expectLater(syncB.importAll({'format': 'my-fitness-backup', 'version': 1}), throwsFormatException);
     });
+  });
+
+  test('计划库：收藏、来源计划、热身组和时长目标都能同步到另一台设备', () async {
+    final lib = ProgramLibraryRepository(dbA, userId: () => 'u1', now: () => clock);
+    const programId = '11111111-1111-4111-8111-111111111111';
+    await lib.setFavorite(programId, true);
+    final planId = await plansA.createPlan('库计划', 7, sourceProgramId: programId);
+    final t = await plansA.createTemplate('库计划·A');
+    await plansA.addTemplateExercise(t, exId);
+    final te = (await plansA.getTemplate(t))!.exercises.single.id;
+    await plansA.updateTemplateExercise(te, warmupSets: 2, targetDurationSec: 45);
+    await plansA.setPlanDay(planId, 0, t);
+
+    expect(remote.tables['favorite_programs'], isNull);
+    await syncA.syncNow();
+    expect(remote.tables['favorite_programs']!.values.single['program_id'], programId);
+    await syncB.syncNow();
+
+    final favB = await dbB.select(dbB.favoritePrograms).get();
+    expect(favB.single.programId, programId);
+    final planB = (await dbB.select(dbB.plans).get()).single;
+    expect(planB.sourceProgramId, programId);
+    final teB = (await dbB.select(dbB.templateExercises).get()).single;
+    expect(teB.warmupSets, 2);
+    expect(teB.targetDurationSec, 45);
+
+    // 取消收藏同样同步
+    clock = clock.add(const Duration(hours: 1));
+    remote.serverNow = DateTime.utc(2026, 11, 2, 10, 30);
+    await lib.setFavorite(programId, false);
+    await syncA.syncNow();
+    await syncB.syncNow();
+    expect((await dbB.select(dbB.favoritePrograms).get()).single.deletedAt, isNotNull);
   });
 }

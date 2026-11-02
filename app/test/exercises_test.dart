@@ -27,21 +27,35 @@ void main() {
   final all = loadSeed();
 
   group('动作库数据', () {
-    test('235 个精选动作，id/slug 唯一，且每个都有中文名和图片', () {
-      expect(all.length, 235);
+    test('235 个精选动作 + 86 个原创补充动作，id/slug/中文名唯一', () {
+      expect(all.length, 321);
       expect(all.map((e) => e.id).toSet().length, all.length);
       expect(all.map((e) => e.slug).toSet().length, all.length);
+      expect(all.map((e) => e.nameZh).toSet().length, all.length);
       for (final e in all) {
         expect(e.nameZh.trim(), isNotEmpty);
+      }
+    });
+
+    test('精选动作每个都有两张图；原创补充动作（fc_）没有图，但都有动作要点', () {
+      final curated = all.where((e) => !e.slug.startsWith('fc_')).toList();
+      final extra = all.where((e) => e.slug.startsWith('fc_')).toList();
+      expect(curated.length, 235);
+      expect(extra.length, 86);
+      for (final e in curated) {
         expect(e.imageCount, 2, reason: e.slug);
         for (var i = 0; i < e.imageCount; i++) {
           expect(File(e.imageAsset(i)).existsSync(), isTrue, reason: e.imageAsset(i));
         }
       }
+      for (final e in extra) {
+        expect(e.imageCount, 0, reason: e.slug);
+        expect(e.instructionsZh?.trim(), isNotEmpty, reason: e.slug);
+      }
     });
 
     test('部位与器械分组都能归类', () {
-      for (final e in all) {
+      for (final e in all.where((e) => !e.slug.startsWith('fc_'))) {
         expect(e.bodyPart, isNot(BodyPart.other), reason: e.nameZh);
       }
       expect(EquipmentGroup.of('e-z curl bar'), EquipmentGroup.barbell);

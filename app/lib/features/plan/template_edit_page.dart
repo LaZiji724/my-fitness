@@ -15,10 +15,19 @@ import 'package:my_fitness/features/workout/workout_providers.dart';
 const kTemplateDefaultRest = 90;
 
 String describeTemplateExercise(TemplateExercise e) {
-  final reps = e.repsMin == null
-      ? ''
-      : (e.repsMax == null || e.repsMax == e.repsMin ? ' · ${e.repsMin} 次' : ' · ${e.repsMin}–${e.repsMax} 次');
-  return '${e.targetSets} 组$reps · 休息 ${e.restSec ?? kTemplateDefaultRest} 秒';
+  final String target;
+  if (e.targetDurationSec != null) {
+    final s = e.targetDurationSec!;
+    target = ' · ${s >= 60 && s % 60 == 0 ? '${s ~/ 60} 分钟' : '$s 秒'}';
+  } else if (e.repsMin == null) {
+    target = '';
+  } else if (e.repsMax == null || e.repsMax == e.repsMin) {
+    target = ' · ${e.repsMin} 次';
+  } else {
+    target = ' · ${e.repsMin}–${e.repsMax} 次';
+  }
+  final warm = e.warmupSets > 0 ? ' · 热身 ${e.warmupSets} 组' : '';
+  return '${e.targetSets} 组$target$warm · 休息 ${e.restSec ?? kTemplateDefaultRest} 秒';
 }
 
 /// 编辑模板：改名、调整每个动作的组数/次数/休息，直接用它开始训练。
@@ -130,7 +139,11 @@ class _ExerciseRow extends ConsumerWidget {
         onTap: () => showModalBottomSheet<void>(
           context: context,
           isScrollControlled: true,
-          builder: (_) => _ConfigSheet(entry: entry, name: exercise?.nameZh ?? '动作'),
+          builder: (_) => _ConfigSheet(
+            entry: entry,
+            name: exercise?.nameZh ?? '动作',
+            timed: exercise?.trackingType == TrackingType.duration,
+          ),
         ),
         child: Padding(
           padding: const EdgeInsets.all(AppSpace.s12),
@@ -167,9 +180,12 @@ class _ExerciseRow extends ConsumerWidget {
 }
 
 class _ConfigSheet extends ConsumerStatefulWidget {
-  const _ConfigSheet({required this.entry, required this.name});
+  const _ConfigSheet({required this.entry, required this.name, this.timed = false});
   final TemplateExercise entry;
   final String name;
+
+  /// 按时间记录的动作（有氧、拉伸、平板支撑）：配置每组时长，而不是次数。
+  final bool timed;
 
   @override
   ConsumerState<_ConfigSheet> createState() => _ConfigSheetState();
@@ -180,6 +196,10 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
   late int repsMin = widget.entry.repsMin ?? 8;
   late int repsMax = widget.entry.repsMax ?? 12;
   late int rest = widget.entry.restSec ?? kTemplateDefaultRest;
+  late int warmup = widget.entry.warmupSets;
+  late int duration = widget.entry.targetDurationSec ?? 30;
+
+  bool get _timed => widget.timed || widget.entry.targetDurationSec != null;
 
   @override
   Widget build(BuildContext context) {
@@ -204,6 +224,7 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
                 repo.updateTemplateExercise(widget.entry.id, targetSets: v);
               },
             ),
+            if (!_timed) ...[
             StepperField(
               label: '次数下限',
               value: repsMin,
@@ -230,6 +251,31 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
                 repo.updateTemplateExercise(widget.entry.id, repsMin: repsMin, repsMax: v);
               },
             ),
+            ] else
+              StepperField(
+                label: '每组时长',
+                value: duration,
+                min: 5,
+                max: 3600,
+                step: duration >= 120 ? 60 : 5,
+                unit: ' 秒',
+                onChanged: (v) {
+                  setState(() => duration = v);
+                  repo.updateTemplateExercise(widget.entry.id, targetDurationSec: v);
+                },
+              ),
+            if (!_timed)
+              StepperField(
+                label: '热身组',
+                value: warmup,
+                min: 0,
+                max: 10,
+                unit: ' 组',
+                onChanged: (v) {
+                  setState(() => warmup = v);
+                  repo.updateTemplateExercise(widget.entry.id, warmupSets: v);
+                },
+              ),
             StepperField(
               label: '组间休息',
               value: rest,

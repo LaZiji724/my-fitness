@@ -143,6 +143,17 @@ class $WorkoutsTable extends Workouts with TableInfo<$WorkoutsTable, Workout> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _sourceProgramIdMeta = const VerificationMeta(
+    'sourceProgramId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceProgramId = GeneratedColumn<String>(
+    'source_program_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -158,6 +169,7 @@ class $WorkoutsTable extends Workouts with TableInfo<$WorkoutsTable, Workout> {
     note,
     sourceTemplateId,
     planId,
+    sourceProgramId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -261,6 +273,15 @@ class $WorkoutsTable extends Workouts with TableInfo<$WorkoutsTable, Workout> {
         planId.isAcceptableOrUnknown(data['plan_id']!, _planIdMeta),
       );
     }
+    if (data.containsKey('source_program_id')) {
+      context.handle(
+        _sourceProgramIdMeta,
+        sourceProgramId.isAcceptableOrUnknown(
+          data['source_program_id']!,
+          _sourceProgramIdMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -322,6 +343,10 @@ class $WorkoutsTable extends Workouts with TableInfo<$WorkoutsTable, Workout> {
         DriftSqlType.string,
         data['${effectivePrefix}plan_id'],
       ),
+      sourceProgramId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_program_id'],
+      ),
     );
   }
 
@@ -347,6 +372,9 @@ class Workout extends DataClass implements Insertable<Workout> {
   final String? note;
   final String? sourceTemplateId;
   final String? planId;
+
+  /// 来自计划库的哪个内置计划（用来统计「已练几节」）；自己新建的训练为空
+  final String? sourceProgramId;
   const Workout({
     required this.id,
     required this.createdAt,
@@ -361,6 +389,7 @@ class Workout extends DataClass implements Insertable<Workout> {
     this.note,
     this.sourceTemplateId,
     this.planId,
+    this.sourceProgramId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -390,6 +419,9 @@ class Workout extends DataClass implements Insertable<Workout> {
     if (!nullToAbsent || planId != null) {
       map['plan_id'] = Variable<String>(planId);
     }
+    if (!nullToAbsent || sourceProgramId != null) {
+      map['source_program_id'] = Variable<String>(sourceProgramId);
+    }
     return map;
   }
 
@@ -416,6 +448,9 @@ class Workout extends DataClass implements Insertable<Workout> {
       planId: planId == null && nullToAbsent
           ? const Value.absent()
           : Value(planId),
+      sourceProgramId: sourceProgramId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sourceProgramId),
     );
   }
 
@@ -438,6 +473,7 @@ class Workout extends DataClass implements Insertable<Workout> {
       note: serializer.fromJson<String?>(json['note']),
       sourceTemplateId: serializer.fromJson<String?>(json['sourceTemplateId']),
       planId: serializer.fromJson<String?>(json['planId']),
+      sourceProgramId: serializer.fromJson<String?>(json['sourceProgramId']),
     );
   }
   @override
@@ -457,6 +493,7 @@ class Workout extends DataClass implements Insertable<Workout> {
       'note': serializer.toJson<String?>(note),
       'sourceTemplateId': serializer.toJson<String?>(sourceTemplateId),
       'planId': serializer.toJson<String?>(planId),
+      'sourceProgramId': serializer.toJson<String?>(sourceProgramId),
     };
   }
 
@@ -474,6 +511,7 @@ class Workout extends DataClass implements Insertable<Workout> {
     Value<String?> note = const Value.absent(),
     Value<String?> sourceTemplateId = const Value.absent(),
     Value<String?> planId = const Value.absent(),
+    Value<String?> sourceProgramId = const Value.absent(),
   }) => Workout(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -490,6 +528,9 @@ class Workout extends DataClass implements Insertable<Workout> {
         ? sourceTemplateId.value
         : this.sourceTemplateId,
     planId: planId.present ? planId.value : this.planId,
+    sourceProgramId: sourceProgramId.present
+        ? sourceProgramId.value
+        : this.sourceProgramId,
   );
   Workout copyWithCompanion(WorkoutsCompanion data) {
     return Workout(
@@ -508,6 +549,9 @@ class Workout extends DataClass implements Insertable<Workout> {
           ? data.sourceTemplateId.value
           : this.sourceTemplateId,
       planId: data.planId.present ? data.planId.value : this.planId,
+      sourceProgramId: data.sourceProgramId.present
+          ? data.sourceProgramId.value
+          : this.sourceProgramId,
     );
   }
 
@@ -526,7 +570,8 @@ class Workout extends DataClass implements Insertable<Workout> {
           ..write('localDate: $localDate, ')
           ..write('note: $note, ')
           ..write('sourceTemplateId: $sourceTemplateId, ')
-          ..write('planId: $planId')
+          ..write('planId: $planId, ')
+          ..write('sourceProgramId: $sourceProgramId')
           ..write(')'))
         .toString();
   }
@@ -546,6 +591,7 @@ class Workout extends DataClass implements Insertable<Workout> {
     note,
     sourceTemplateId,
     planId,
+    sourceProgramId,
   );
   @override
   bool operator ==(Object other) =>
@@ -563,7 +609,8 @@ class Workout extends DataClass implements Insertable<Workout> {
           other.localDate == this.localDate &&
           other.note == this.note &&
           other.sourceTemplateId == this.sourceTemplateId &&
-          other.planId == this.planId);
+          other.planId == this.planId &&
+          other.sourceProgramId == this.sourceProgramId);
 }
 
 class WorkoutsCompanion extends UpdateCompanion<Workout> {
@@ -580,6 +627,7 @@ class WorkoutsCompanion extends UpdateCompanion<Workout> {
   final Value<String?> note;
   final Value<String?> sourceTemplateId;
   final Value<String?> planId;
+  final Value<String?> sourceProgramId;
   final Value<int> rowid;
   const WorkoutsCompanion({
     this.id = const Value.absent(),
@@ -595,6 +643,7 @@ class WorkoutsCompanion extends UpdateCompanion<Workout> {
     this.note = const Value.absent(),
     this.sourceTemplateId = const Value.absent(),
     this.planId = const Value.absent(),
+    this.sourceProgramId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   WorkoutsCompanion.insert({
@@ -611,6 +660,7 @@ class WorkoutsCompanion extends UpdateCompanion<Workout> {
     this.note = const Value.absent(),
     this.sourceTemplateId = const Value.absent(),
     this.planId = const Value.absent(),
+    this.sourceProgramId = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        createdAt = Value(createdAt),
@@ -632,6 +682,7 @@ class WorkoutsCompanion extends UpdateCompanion<Workout> {
     Expression<String>? note,
     Expression<String>? sourceTemplateId,
     Expression<String>? planId,
+    Expression<String>? sourceProgramId,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -648,6 +699,7 @@ class WorkoutsCompanion extends UpdateCompanion<Workout> {
       if (note != null) 'note': note,
       if (sourceTemplateId != null) 'source_template_id': sourceTemplateId,
       if (planId != null) 'plan_id': planId,
+      if (sourceProgramId != null) 'source_program_id': sourceProgramId,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -666,6 +718,7 @@ class WorkoutsCompanion extends UpdateCompanion<Workout> {
     Value<String?>? note,
     Value<String?>? sourceTemplateId,
     Value<String?>? planId,
+    Value<String?>? sourceProgramId,
     Value<int>? rowid,
   }) {
     return WorkoutsCompanion(
@@ -682,6 +735,7 @@ class WorkoutsCompanion extends UpdateCompanion<Workout> {
       note: note ?? this.note,
       sourceTemplateId: sourceTemplateId ?? this.sourceTemplateId,
       planId: planId ?? this.planId,
+      sourceProgramId: sourceProgramId ?? this.sourceProgramId,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -728,6 +782,9 @@ class WorkoutsCompanion extends UpdateCompanion<Workout> {
     if (planId.present) {
       map['plan_id'] = Variable<String>(planId.value);
     }
+    if (sourceProgramId.present) {
+      map['source_program_id'] = Variable<String>(sourceProgramId.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -750,6 +807,7 @@ class WorkoutsCompanion extends UpdateCompanion<Workout> {
           ..write('note: $note, ')
           ..write('sourceTemplateId: $sourceTemplateId, ')
           ..write('planId: $planId, ')
+          ..write('sourceProgramId: $sourceProgramId, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2976,6 +3034,29 @@ class $TemplateExercisesTable extends TemplateExercises
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _warmupSetsMeta = const VerificationMeta(
+    'warmupSets',
+  );
+  @override
+  late final GeneratedColumn<int> warmupSets = GeneratedColumn<int>(
+    'warmup_sets',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _targetDurationSecMeta = const VerificationMeta(
+    'targetDurationSec',
+  );
+  @override
+  late final GeneratedColumn<int> targetDurationSec = GeneratedColumn<int>(
+    'target_duration_sec',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -2992,6 +3073,8 @@ class $TemplateExercisesTable extends TemplateExercises
     repsMax,
     restSec,
     note,
+    warmupSets,
+    targetDurationSec,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3100,6 +3183,21 @@ class $TemplateExercisesTable extends TemplateExercises
         note.isAcceptableOrUnknown(data['note']!, _noteMeta),
       );
     }
+    if (data.containsKey('warmup_sets')) {
+      context.handle(
+        _warmupSetsMeta,
+        warmupSets.isAcceptableOrUnknown(data['warmup_sets']!, _warmupSetsMeta),
+      );
+    }
+    if (data.containsKey('target_duration_sec')) {
+      context.handle(
+        _targetDurationSecMeta,
+        targetDurationSec.isAcceptableOrUnknown(
+          data['target_duration_sec']!,
+          _targetDurationSecMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -3165,6 +3263,14 @@ class $TemplateExercisesTable extends TemplateExercises
         DriftSqlType.string,
         data['${effectivePrefix}note'],
       ),
+      warmupSets: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}warmup_sets'],
+      )!,
+      targetDurationSec: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}target_duration_sec'],
+      ),
     );
   }
 
@@ -3190,6 +3296,12 @@ class TemplateExercise extends DataClass
   final int? repsMax;
   final int? restSec;
   final String? note;
+
+  /// 正式组之前的热身组数
+  final int warmupSets;
+
+  /// 按时间的动作（有氧、拉伸、平板支撑）每组的目标秒数；按次数的动作为空
+  final int? targetDurationSec;
   const TemplateExercise({
     required this.id,
     required this.createdAt,
@@ -3205,6 +3317,8 @@ class TemplateExercise extends DataClass
     this.repsMax,
     this.restSec,
     this.note,
+    required this.warmupSets,
+    this.targetDurationSec,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3233,6 +3347,10 @@ class TemplateExercise extends DataClass
     if (!nullToAbsent || note != null) {
       map['note'] = Variable<String>(note);
     }
+    map['warmup_sets'] = Variable<int>(warmupSets);
+    if (!nullToAbsent || targetDurationSec != null) {
+      map['target_duration_sec'] = Variable<int>(targetDurationSec);
+    }
     return map;
   }
 
@@ -3260,6 +3378,10 @@ class TemplateExercise extends DataClass
           ? const Value.absent()
           : Value(restSec),
       note: note == null && nullToAbsent ? const Value.absent() : Value(note),
+      warmupSets: Value(warmupSets),
+      targetDurationSec: targetDurationSec == null && nullToAbsent
+          ? const Value.absent()
+          : Value(targetDurationSec),
     );
   }
 
@@ -3283,6 +3405,8 @@ class TemplateExercise extends DataClass
       repsMax: serializer.fromJson<int?>(json['repsMax']),
       restSec: serializer.fromJson<int?>(json['restSec']),
       note: serializer.fromJson<String?>(json['note']),
+      warmupSets: serializer.fromJson<int>(json['warmupSets']),
+      targetDurationSec: serializer.fromJson<int?>(json['targetDurationSec']),
     );
   }
   @override
@@ -3303,6 +3427,8 @@ class TemplateExercise extends DataClass
       'repsMax': serializer.toJson<int?>(repsMax),
       'restSec': serializer.toJson<int?>(restSec),
       'note': serializer.toJson<String?>(note),
+      'warmupSets': serializer.toJson<int>(warmupSets),
+      'targetDurationSec': serializer.toJson<int?>(targetDurationSec),
     };
   }
 
@@ -3321,6 +3447,8 @@ class TemplateExercise extends DataClass
     Value<int?> repsMax = const Value.absent(),
     Value<int?> restSec = const Value.absent(),
     Value<String?> note = const Value.absent(),
+    int? warmupSets,
+    Value<int?> targetDurationSec = const Value.absent(),
   }) => TemplateExercise(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -3336,6 +3464,10 @@ class TemplateExercise extends DataClass
     repsMax: repsMax.present ? repsMax.value : this.repsMax,
     restSec: restSec.present ? restSec.value : this.restSec,
     note: note.present ? note.value : this.note,
+    warmupSets: warmupSets ?? this.warmupSets,
+    targetDurationSec: targetDurationSec.present
+        ? targetDurationSec.value
+        : this.targetDurationSec,
   );
   TemplateExercise copyWithCompanion(TemplateExercisesCompanion data) {
     return TemplateExercise(
@@ -3359,6 +3491,12 @@ class TemplateExercise extends DataClass
       repsMax: data.repsMax.present ? data.repsMax.value : this.repsMax,
       restSec: data.restSec.present ? data.restSec.value : this.restSec,
       note: data.note.present ? data.note.value : this.note,
+      warmupSets: data.warmupSets.present
+          ? data.warmupSets.value
+          : this.warmupSets,
+      targetDurationSec: data.targetDurationSec.present
+          ? data.targetDurationSec.value
+          : this.targetDurationSec,
     );
   }
 
@@ -3378,7 +3516,9 @@ class TemplateExercise extends DataClass
           ..write('repsMin: $repsMin, ')
           ..write('repsMax: $repsMax, ')
           ..write('restSec: $restSec, ')
-          ..write('note: $note')
+          ..write('note: $note, ')
+          ..write('warmupSets: $warmupSets, ')
+          ..write('targetDurationSec: $targetDurationSec')
           ..write(')'))
         .toString();
   }
@@ -3399,6 +3539,8 @@ class TemplateExercise extends DataClass
     repsMax,
     restSec,
     note,
+    warmupSets,
+    targetDurationSec,
   );
   @override
   bool operator ==(Object other) =>
@@ -3417,7 +3559,9 @@ class TemplateExercise extends DataClass
           other.repsMin == this.repsMin &&
           other.repsMax == this.repsMax &&
           other.restSec == this.restSec &&
-          other.note == this.note);
+          other.note == this.note &&
+          other.warmupSets == this.warmupSets &&
+          other.targetDurationSec == this.targetDurationSec);
 }
 
 class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
@@ -3435,6 +3579,8 @@ class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
   final Value<int?> repsMax;
   final Value<int?> restSec;
   final Value<String?> note;
+  final Value<int> warmupSets;
+  final Value<int?> targetDurationSec;
   final Value<int> rowid;
   const TemplateExercisesCompanion({
     this.id = const Value.absent(),
@@ -3451,6 +3597,8 @@ class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
     this.repsMax = const Value.absent(),
     this.restSec = const Value.absent(),
     this.note = const Value.absent(),
+    this.warmupSets = const Value.absent(),
+    this.targetDurationSec = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   TemplateExercisesCompanion.insert({
@@ -3468,6 +3616,8 @@ class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
     this.repsMax = const Value.absent(),
     this.restSec = const Value.absent(),
     this.note = const Value.absent(),
+    this.warmupSets = const Value.absent(),
+    this.targetDurationSec = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        createdAt = Value(createdAt),
@@ -3491,6 +3641,8 @@ class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
     Expression<int>? repsMax,
     Expression<int>? restSec,
     Expression<String>? note,
+    Expression<int>? warmupSets,
+    Expression<int>? targetDurationSec,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -3508,6 +3660,8 @@ class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
       if (repsMax != null) 'reps_max': repsMax,
       if (restSec != null) 'rest_sec': restSec,
       if (note != null) 'note': note,
+      if (warmupSets != null) 'warmup_sets': warmupSets,
+      if (targetDurationSec != null) 'target_duration_sec': targetDurationSec,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -3527,6 +3681,8 @@ class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
     Value<int?>? repsMax,
     Value<int?>? restSec,
     Value<String?>? note,
+    Value<int>? warmupSets,
+    Value<int?>? targetDurationSec,
     Value<int>? rowid,
   }) {
     return TemplateExercisesCompanion(
@@ -3544,6 +3700,8 @@ class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
       repsMax: repsMax ?? this.repsMax,
       restSec: restSec ?? this.restSec,
       note: note ?? this.note,
+      warmupSets: warmupSets ?? this.warmupSets,
+      targetDurationSec: targetDurationSec ?? this.targetDurationSec,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -3593,6 +3751,12 @@ class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
     if (note.present) {
       map['note'] = Variable<String>(note.value);
     }
+    if (warmupSets.present) {
+      map['warmup_sets'] = Variable<int>(warmupSets.value);
+    }
+    if (targetDurationSec.present) {
+      map['target_duration_sec'] = Variable<int>(targetDurationSec.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -3616,6 +3780,8 @@ class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
           ..write('repsMax: $repsMax, ')
           ..write('restSec: $restSec, ')
           ..write('note: $note, ')
+          ..write('warmupSets: $warmupSets, ')
+          ..write('targetDurationSec: $targetDurationSec, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -3737,6 +3903,17 @@ class $PlansTable extends Plans with TableInfo<$PlansTable, Plan> {
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _sourceProgramIdMeta = const VerificationMeta(
+    'sourceProgramId',
+  );
+  @override
+  late final GeneratedColumn<String> sourceProgramId = GeneratedColumn<String>(
+    'source_program_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -3749,6 +3926,7 @@ class $PlansTable extends Plans with TableInfo<$PlansTable, Plan> {
     cycleDays,
     startDate,
     isActive,
+    sourceProgramId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3833,6 +4011,15 @@ class $PlansTable extends Plans with TableInfo<$PlansTable, Plan> {
         isActive.isAcceptableOrUnknown(data['is_active']!, _isActiveMeta),
       );
     }
+    if (data.containsKey('source_program_id')) {
+      context.handle(
+        _sourceProgramIdMeta,
+        sourceProgramId.isAcceptableOrUnknown(
+          data['source_program_id']!,
+          _sourceProgramIdMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -3882,6 +4069,10 @@ class $PlansTable extends Plans with TableInfo<$PlansTable, Plan> {
         DriftSqlType.bool,
         data['${effectivePrefix}is_active'],
       )!,
+      sourceProgramId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_program_id'],
+      ),
     );
   }
 
@@ -3904,6 +4095,9 @@ class Plan extends DataClass implements Insertable<Plan> {
   /// 第 1 天对应的本地日期 yyyy-MM-dd
   final String startDate;
   final bool isActive;
+
+  /// 来自计划库的哪个内置计划；自己新建的计划为空
+  final String? sourceProgramId;
   const Plan({
     required this.id,
     required this.createdAt,
@@ -3915,6 +4109,7 @@ class Plan extends DataClass implements Insertable<Plan> {
     required this.cycleDays,
     required this.startDate,
     required this.isActive,
+    this.sourceProgramId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3931,6 +4126,9 @@ class Plan extends DataClass implements Insertable<Plan> {
     map['cycle_days'] = Variable<int>(cycleDays);
     map['start_date'] = Variable<String>(startDate);
     map['is_active'] = Variable<bool>(isActive);
+    if (!nullToAbsent || sourceProgramId != null) {
+      map['source_program_id'] = Variable<String>(sourceProgramId);
+    }
     return map;
   }
 
@@ -3948,6 +4146,9 @@ class Plan extends DataClass implements Insertable<Plan> {
       cycleDays: Value(cycleDays),
       startDate: Value(startDate),
       isActive: Value(isActive),
+      sourceProgramId: sourceProgramId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sourceProgramId),
     );
   }
 
@@ -3967,6 +4168,7 @@ class Plan extends DataClass implements Insertable<Plan> {
       cycleDays: serializer.fromJson<int>(json['cycleDays']),
       startDate: serializer.fromJson<String>(json['startDate']),
       isActive: serializer.fromJson<bool>(json['isActive']),
+      sourceProgramId: serializer.fromJson<String?>(json['sourceProgramId']),
     );
   }
   @override
@@ -3983,6 +4185,7 @@ class Plan extends DataClass implements Insertable<Plan> {
       'cycleDays': serializer.toJson<int>(cycleDays),
       'startDate': serializer.toJson<String>(startDate),
       'isActive': serializer.toJson<bool>(isActive),
+      'sourceProgramId': serializer.toJson<String?>(sourceProgramId),
     };
   }
 
@@ -3997,6 +4200,7 @@ class Plan extends DataClass implements Insertable<Plan> {
     int? cycleDays,
     String? startDate,
     bool? isActive,
+    Value<String?> sourceProgramId = const Value.absent(),
   }) => Plan(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -4008,6 +4212,9 @@ class Plan extends DataClass implements Insertable<Plan> {
     cycleDays: cycleDays ?? this.cycleDays,
     startDate: startDate ?? this.startDate,
     isActive: isActive ?? this.isActive,
+    sourceProgramId: sourceProgramId.present
+        ? sourceProgramId.value
+        : this.sourceProgramId,
   );
   Plan copyWithCompanion(PlansCompanion data) {
     return Plan(
@@ -4021,6 +4228,9 @@ class Plan extends DataClass implements Insertable<Plan> {
       cycleDays: data.cycleDays.present ? data.cycleDays.value : this.cycleDays,
       startDate: data.startDate.present ? data.startDate.value : this.startDate,
       isActive: data.isActive.present ? data.isActive.value : this.isActive,
+      sourceProgramId: data.sourceProgramId.present
+          ? data.sourceProgramId.value
+          : this.sourceProgramId,
     );
   }
 
@@ -4036,7 +4246,8 @@ class Plan extends DataClass implements Insertable<Plan> {
           ..write('name: $name, ')
           ..write('cycleDays: $cycleDays, ')
           ..write('startDate: $startDate, ')
-          ..write('isActive: $isActive')
+          ..write('isActive: $isActive, ')
+          ..write('sourceProgramId: $sourceProgramId')
           ..write(')'))
         .toString();
   }
@@ -4053,6 +4264,7 @@ class Plan extends DataClass implements Insertable<Plan> {
     cycleDays,
     startDate,
     isActive,
+    sourceProgramId,
   );
   @override
   bool operator ==(Object other) =>
@@ -4067,7 +4279,8 @@ class Plan extends DataClass implements Insertable<Plan> {
           other.name == this.name &&
           other.cycleDays == this.cycleDays &&
           other.startDate == this.startDate &&
-          other.isActive == this.isActive);
+          other.isActive == this.isActive &&
+          other.sourceProgramId == this.sourceProgramId);
 }
 
 class PlansCompanion extends UpdateCompanion<Plan> {
@@ -4081,6 +4294,7 @@ class PlansCompanion extends UpdateCompanion<Plan> {
   final Value<int> cycleDays;
   final Value<String> startDate;
   final Value<bool> isActive;
+  final Value<String?> sourceProgramId;
   final Value<int> rowid;
   const PlansCompanion({
     this.id = const Value.absent(),
@@ -4093,6 +4307,7 @@ class PlansCompanion extends UpdateCompanion<Plan> {
     this.cycleDays = const Value.absent(),
     this.startDate = const Value.absent(),
     this.isActive = const Value.absent(),
+    this.sourceProgramId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   PlansCompanion.insert({
@@ -4106,6 +4321,7 @@ class PlansCompanion extends UpdateCompanion<Plan> {
     required int cycleDays,
     required String startDate,
     this.isActive = const Value.absent(),
+    this.sourceProgramId = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        createdAt = Value(createdAt),
@@ -4125,6 +4341,7 @@ class PlansCompanion extends UpdateCompanion<Plan> {
     Expression<int>? cycleDays,
     Expression<String>? startDate,
     Expression<bool>? isActive,
+    Expression<String>? sourceProgramId,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -4138,6 +4355,7 @@ class PlansCompanion extends UpdateCompanion<Plan> {
       if (cycleDays != null) 'cycle_days': cycleDays,
       if (startDate != null) 'start_date': startDate,
       if (isActive != null) 'is_active': isActive,
+      if (sourceProgramId != null) 'source_program_id': sourceProgramId,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -4153,6 +4371,7 @@ class PlansCompanion extends UpdateCompanion<Plan> {
     Value<int>? cycleDays,
     Value<String>? startDate,
     Value<bool>? isActive,
+    Value<String?>? sourceProgramId,
     Value<int>? rowid,
   }) {
     return PlansCompanion(
@@ -4166,6 +4385,7 @@ class PlansCompanion extends UpdateCompanion<Plan> {
       cycleDays: cycleDays ?? this.cycleDays,
       startDate: startDate ?? this.startDate,
       isActive: isActive ?? this.isActive,
+      sourceProgramId: sourceProgramId ?? this.sourceProgramId,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -4203,6 +4423,9 @@ class PlansCompanion extends UpdateCompanion<Plan> {
     if (isActive.present) {
       map['is_active'] = Variable<bool>(isActive.value);
     }
+    if (sourceProgramId.present) {
+      map['source_program_id'] = Variable<String>(sourceProgramId.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -4222,6 +4445,7 @@ class PlansCompanion extends UpdateCompanion<Plan> {
           ..write('cycleDays: $cycleDays, ')
           ..write('startDate: $startDate, ')
           ..write('isActive: $isActive, ')
+          ..write('sourceProgramId: $sourceProgramId, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -5346,6 +5570,468 @@ class BodyMetricsCompanion extends UpdateCompanion<BodyMetric> {
   }
 }
 
+class $FavoriteProgramsTable extends FavoritePrograms
+    with TableInfo<$FavoriteProgramsTable, FavoriteProgram> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FavoriteProgramsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _deletedAtMeta = const VerificationMeta(
+    'deletedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> deletedAt = GeneratedColumn<DateTime>(
+    'deleted_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dirtyMeta = const VerificationMeta('dirty');
+  @override
+  late final GeneratedColumn<bool> dirty = GeneratedColumn<bool>(
+    'dirty',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("dirty" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _programIdMeta = const VerificationMeta(
+    'programId',
+  );
+  @override
+  late final GeneratedColumn<String> programId = GeneratedColumn<String>(
+    'program_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    createdAt,
+    updatedAt,
+    deletedAt,
+    dirty,
+    userId,
+    programId,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'favorite_programs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<FavoriteProgram> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('deleted_at')) {
+      context.handle(
+        _deletedAtMeta,
+        deletedAt.isAcceptableOrUnknown(data['deleted_at']!, _deletedAtMeta),
+      );
+    }
+    if (data.containsKey('dirty')) {
+      context.handle(
+        _dirtyMeta,
+        dirty.isAcceptableOrUnknown(data['dirty']!, _dirtyMeta),
+      );
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('program_id')) {
+      context.handle(
+        _programIdMeta,
+        programId.isAcceptableOrUnknown(data['program_id']!, _programIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_programIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  FavoriteProgram map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return FavoriteProgram(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      deletedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}deleted_at'],
+      ),
+      dirty: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}dirty'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      programId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}program_id'],
+      )!,
+    );
+  }
+
+  @override
+  $FavoriteProgramsTable createAlias(String alias) {
+    return $FavoriteProgramsTable(attachedDatabase, alias);
+  }
+}
+
+class FavoriteProgram extends DataClass implements Insertable<FavoriteProgram> {
+  final String id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? deletedAt;
+  final bool dirty;
+  final String userId;
+  final String programId;
+  const FavoriteProgram({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    this.deletedAt,
+    required this.dirty,
+    required this.userId,
+    required this.programId,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    if (!nullToAbsent || deletedAt != null) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt);
+    }
+    map['dirty'] = Variable<bool>(dirty);
+    map['user_id'] = Variable<String>(userId);
+    map['program_id'] = Variable<String>(programId);
+    return map;
+  }
+
+  FavoriteProgramsCompanion toCompanion(bool nullToAbsent) {
+    return FavoriteProgramsCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      deletedAt: deletedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(deletedAt),
+      dirty: Value(dirty),
+      userId: Value(userId),
+      programId: Value(programId),
+    );
+  }
+
+  factory FavoriteProgram.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return FavoriteProgram(
+      id: serializer.fromJson<String>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
+      dirty: serializer.fromJson<bool>(json['dirty']),
+      userId: serializer.fromJson<String>(json['userId']),
+      programId: serializer.fromJson<String>(json['programId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'deletedAt': serializer.toJson<DateTime?>(deletedAt),
+      'dirty': serializer.toJson<bool>(dirty),
+      'userId': serializer.toJson<String>(userId),
+      'programId': serializer.toJson<String>(programId),
+    };
+  }
+
+  FavoriteProgram copyWith({
+    String? id,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    Value<DateTime?> deletedAt = const Value.absent(),
+    bool? dirty,
+    String? userId,
+    String? programId,
+  }) => FavoriteProgram(
+    id: id ?? this.id,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    deletedAt: deletedAt.present ? deletedAt.value : this.deletedAt,
+    dirty: dirty ?? this.dirty,
+    userId: userId ?? this.userId,
+    programId: programId ?? this.programId,
+  );
+  FavoriteProgram copyWithCompanion(FavoriteProgramsCompanion data) {
+    return FavoriteProgram(
+      id: data.id.present ? data.id.value : this.id,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deletedAt: data.deletedAt.present ? data.deletedAt.value : this.deletedAt,
+      dirty: data.dirty.present ? data.dirty.value : this.dirty,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      programId: data.programId.present ? data.programId.value : this.programId,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FavoriteProgram(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('dirty: $dirty, ')
+          ..write('userId: $userId, ')
+          ..write('programId: $programId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    createdAt,
+    updatedAt,
+    deletedAt,
+    dirty,
+    userId,
+    programId,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is FavoriteProgram &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.deletedAt == this.deletedAt &&
+          other.dirty == this.dirty &&
+          other.userId == this.userId &&
+          other.programId == this.programId);
+}
+
+class FavoriteProgramsCompanion extends UpdateCompanion<FavoriteProgram> {
+  final Value<String> id;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<DateTime?> deletedAt;
+  final Value<bool> dirty;
+  final Value<String> userId;
+  final Value<String> programId;
+  final Value<int> rowid;
+  const FavoriteProgramsCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deletedAt = const Value.absent(),
+    this.dirty = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.programId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  FavoriteProgramsCompanion.insert({
+    required String id,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.deletedAt = const Value.absent(),
+    this.dirty = const Value.absent(),
+    required String userId,
+    required String programId,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt),
+       userId = Value(userId),
+       programId = Value(programId);
+  static Insertable<FavoriteProgram> custom({
+    Expression<String>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<DateTime>? deletedAt,
+    Expression<bool>? dirty,
+    Expression<String>? userId,
+    Expression<String>? programId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deletedAt != null) 'deleted_at': deletedAt,
+      if (dirty != null) 'dirty': dirty,
+      if (userId != null) 'user_id': userId,
+      if (programId != null) 'program_id': programId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  FavoriteProgramsCompanion copyWith({
+    Value<String>? id,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<DateTime?>? deletedAt,
+    Value<bool>? dirty,
+    Value<String>? userId,
+    Value<String>? programId,
+    Value<int>? rowid,
+  }) {
+    return FavoriteProgramsCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+      dirty: dirty ?? this.dirty,
+      userId: userId ?? this.userId,
+      programId: programId ?? this.programId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (deletedAt.present) {
+      map['deleted_at'] = Variable<DateTime>(deletedAt.value);
+    }
+    if (dirty.present) {
+      map['dirty'] = Variable<bool>(dirty.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (programId.present) {
+      map['program_id'] = Variable<String>(programId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FavoriteProgramsCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deletedAt: $deletedAt, ')
+          ..write('dirty: $dirty, ')
+          ..write('userId: $userId, ')
+          ..write('programId: $programId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $SyncStatesTable extends SyncStates
     with TableInfo<$SyncStatesTable, SyncState> {
   @override
@@ -5568,6 +6254,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $PlansTable plans = $PlansTable(this);
   late final $PlanDaysTable planDays = $PlanDaysTable(this);
   late final $BodyMetricsTable bodyMetrics = $BodyMetricsTable(this);
+  late final $FavoriteProgramsTable favoritePrograms = $FavoriteProgramsTable(
+    this,
+  );
   late final $SyncStatesTable syncStates = $SyncStatesTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -5582,6 +6271,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     plans,
     planDays,
     bodyMetrics,
+    favoritePrograms,
     syncStates,
   ];
 }
@@ -5600,6 +6290,7 @@ typedef $$WorkoutsTableCreateCompanionBuilder = WorkoutsCompanion Function({
   Value<String?> note,
   Value<String?> sourceTemplateId,
   Value<String?> planId,
+  Value<String?> sourceProgramId,
   Value<int> rowid,
 });
 typedef $$WorkoutsTableUpdateCompanionBuilder = WorkoutsCompanion Function({
@@ -5616,6 +6307,7 @@ typedef $$WorkoutsTableUpdateCompanionBuilder = WorkoutsCompanion Function({
   Value<String?> note,
   Value<String?> sourceTemplateId,
   Value<String?> planId,
+  Value<String?> sourceProgramId,
   Value<int> rowid,
 });
 
@@ -5690,6 +6382,11 @@ class $$WorkoutsTableFilterComposer
 
   ColumnFilters<String> get planId => $composableBuilder(
     column: $table.planId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceProgramId => $composableBuilder(
+    column: $table.sourceProgramId,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -5767,6 +6464,11 @@ class $$WorkoutsTableOrderingComposer
     column: $table.planId,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get sourceProgramId => $composableBuilder(
+    column: $table.sourceProgramId,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$WorkoutsTableAnnotationComposer
@@ -5818,6 +6520,11 @@ class $$WorkoutsTableAnnotationComposer
 
   GeneratedColumn<String> get planId =>
       $composableBuilder(column: $table.planId, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceProgramId => $composableBuilder(
+    column: $table.sourceProgramId,
+    builder: (column) => column,
+  );
 }
 
 class $$WorkoutsTableTableManager
@@ -5861,6 +6568,7 @@ class $$WorkoutsTableTableManager
                 Value<String?> note = const Value.absent(),
                 Value<String?> sourceTemplateId = const Value.absent(),
                 Value<String?> planId = const Value.absent(),
+                Value<String?> sourceProgramId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => WorkoutsCompanion(
                 id: id,
@@ -5876,6 +6584,7 @@ class $$WorkoutsTableTableManager
                 note: note,
                 sourceTemplateId: sourceTemplateId,
                 planId: planId,
+                sourceProgramId: sourceProgramId,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -5893,6 +6602,7 @@ class $$WorkoutsTableTableManager
                 Value<String?> note = const Value.absent(),
                 Value<String?> sourceTemplateId = const Value.absent(),
                 Value<String?> planId = const Value.absent(),
+                Value<String?> sourceProgramId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => WorkoutsCompanion.insert(
                 id: id,
@@ -5908,6 +6618,7 @@ class $$WorkoutsTableTableManager
                 note: note,
                 sourceTemplateId: sourceTemplateId,
                 planId: planId,
+                sourceProgramId: sourceProgramId,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -6970,6 +7681,8 @@ typedef $$TemplateExercisesTableCreateCompanionBuilder =
       Value<int?> repsMax,
       Value<int?> restSec,
       Value<String?> note,
+      Value<int> warmupSets,
+      Value<int?> targetDurationSec,
       Value<int> rowid,
     });
 typedef $$TemplateExercisesTableUpdateCompanionBuilder =
@@ -6988,6 +7701,8 @@ typedef $$TemplateExercisesTableUpdateCompanionBuilder =
       Value<int?> repsMax,
       Value<int?> restSec,
       Value<String?> note,
+      Value<int> warmupSets,
+      Value<int?> targetDurationSec,
       Value<int> rowid,
     });
 
@@ -7067,6 +7782,16 @@ class $$TemplateExercisesTableFilterComposer
 
   ColumnFilters<String> get note => $composableBuilder(
     column: $table.note,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get warmupSets => $composableBuilder(
+    column: $table.warmupSets,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get targetDurationSec => $composableBuilder(
+    column: $table.targetDurationSec,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -7149,6 +7874,16 @@ class $$TemplateExercisesTableOrderingComposer
     column: $table.note,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get warmupSets => $composableBuilder(
+    column: $table.warmupSets,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get targetDurationSec => $composableBuilder(
+    column: $table.targetDurationSec,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$TemplateExercisesTableAnnotationComposer
@@ -7207,6 +7942,16 @@ class $$TemplateExercisesTableAnnotationComposer
 
   GeneratedColumn<String> get note =>
       $composableBuilder(column: $table.note, builder: (column) => column);
+
+  GeneratedColumn<int> get warmupSets => $composableBuilder(
+    column: $table.warmupSets,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get targetDurationSec => $composableBuilder(
+    column: $table.targetDurationSec,
+    builder: (column) => column,
+  );
 }
 
 class $$TemplateExercisesTableTableManager
@@ -7263,6 +8008,8 @@ class $$TemplateExercisesTableTableManager
                 Value<int?> repsMax = const Value.absent(),
                 Value<int?> restSec = const Value.absent(),
                 Value<String?> note = const Value.absent(),
+                Value<int> warmupSets = const Value.absent(),
+                Value<int?> targetDurationSec = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TemplateExercisesCompanion(
                 id: id,
@@ -7279,6 +8026,8 @@ class $$TemplateExercisesTableTableManager
                 repsMax: repsMax,
                 restSec: restSec,
                 note: note,
+                warmupSets: warmupSets,
+                targetDurationSec: targetDurationSec,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -7297,6 +8046,8 @@ class $$TemplateExercisesTableTableManager
                 Value<int?> repsMax = const Value.absent(),
                 Value<int?> restSec = const Value.absent(),
                 Value<String?> note = const Value.absent(),
+                Value<int> warmupSets = const Value.absent(),
+                Value<int?> targetDurationSec = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TemplateExercisesCompanion.insert(
                 id: id,
@@ -7313,6 +8064,8 @@ class $$TemplateExercisesTableTableManager
                 repsMax: repsMax,
                 restSec: restSec,
                 note: note,
+                warmupSets: warmupSets,
+                targetDurationSec: targetDurationSec,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -7364,6 +8117,7 @@ typedef $$PlansTableCreateCompanionBuilder = PlansCompanion Function({
   required int cycleDays,
   required String startDate,
   Value<bool> isActive,
+  Value<String?> sourceProgramId,
   Value<int> rowid,
 });
 typedef $$PlansTableUpdateCompanionBuilder = PlansCompanion Function({
@@ -7377,6 +8131,7 @@ typedef $$PlansTableUpdateCompanionBuilder = PlansCompanion Function({
   Value<int> cycleDays,
   Value<String> startDate,
   Value<bool> isActive,
+  Value<String?> sourceProgramId,
   Value<int> rowid,
 });
 
@@ -7435,6 +8190,11 @@ class $$PlansTableFilterComposer extends Composer<_$AppDatabase, $PlansTable> {
 
   ColumnFilters<bool> get isActive => $composableBuilder(
     column: $table.isActive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceProgramId => $composableBuilder(
+    column: $table.sourceProgramId,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -7497,6 +8257,11 @@ class $$PlansTableOrderingComposer
     column: $table.isActive,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get sourceProgramId => $composableBuilder(
+    column: $table.sourceProgramId,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$PlansTableAnnotationComposer
@@ -7537,6 +8302,11 @@ class $$PlansTableAnnotationComposer
 
   GeneratedColumn<bool> get isActive =>
       $composableBuilder(column: $table.isActive, builder: (column) => column);
+
+  GeneratedColumn<String> get sourceProgramId => $composableBuilder(
+    column: $table.sourceProgramId,
+    builder: (column) => column,
+  );
 }
 
 class $$PlansTableTableManager
@@ -7577,6 +8347,7 @@ class $$PlansTableTableManager
                 Value<int> cycleDays = const Value.absent(),
                 Value<String> startDate = const Value.absent(),
                 Value<bool> isActive = const Value.absent(),
+                Value<String?> sourceProgramId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PlansCompanion(
                 id: id,
@@ -7589,6 +8360,7 @@ class $$PlansTableTableManager
                 cycleDays: cycleDays,
                 startDate: startDate,
                 isActive: isActive,
+                sourceProgramId: sourceProgramId,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -7603,6 +8375,7 @@ class $$PlansTableTableManager
                 required int cycleDays,
                 required String startDate,
                 Value<bool> isActive = const Value.absent(),
+                Value<String?> sourceProgramId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => PlansCompanion.insert(
                 id: id,
@@ -7615,6 +8388,7 @@ class $$PlansTableTableManager
                 cycleDays: cycleDays,
                 startDate: startDate,
                 isActive: isActive,
+                sourceProgramId: sourceProgramId,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -8212,6 +8986,259 @@ typedef $$BodyMetricsTableProcessedTableManager =
       BodyMetric,
       PrefetchHooks Function()
     >;
+typedef $$FavoriteProgramsTableCreateCompanionBuilder =
+    FavoriteProgramsCompanion Function({
+      required String id,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<DateTime?> deletedAt,
+      Value<bool> dirty,
+      required String userId,
+      required String programId,
+      Value<int> rowid,
+    });
+typedef $$FavoriteProgramsTableUpdateCompanionBuilder =
+    FavoriteProgramsCompanion Function({
+      Value<String> id,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<DateTime?> deletedAt,
+      Value<bool> dirty,
+      Value<String> userId,
+      Value<String> programId,
+      Value<int> rowid,
+    });
+
+class $$FavoriteProgramsTableFilterComposer
+    extends Composer<_$AppDatabase, $FavoriteProgramsTable> {
+  $$FavoriteProgramsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get dirty => $composableBuilder(
+    column: $table.dirty,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get programId => $composableBuilder(
+    column: $table.programId,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$FavoriteProgramsTableOrderingComposer
+    extends Composer<_$AppDatabase, $FavoriteProgramsTable> {
+  $$FavoriteProgramsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get deletedAt => $composableBuilder(
+    column: $table.deletedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get dirty => $composableBuilder(
+    column: $table.dirty,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get programId => $composableBuilder(
+    column: $table.programId,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$FavoriteProgramsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $FavoriteProgramsTable> {
+  $$FavoriteProgramsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get deletedAt =>
+      $composableBuilder(column: $table.deletedAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get dirty =>
+      $composableBuilder(column: $table.dirty, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get programId =>
+      $composableBuilder(column: $table.programId, builder: (column) => column);
+}
+
+class $$FavoriteProgramsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $FavoriteProgramsTable,
+          FavoriteProgram,
+          $$FavoriteProgramsTableFilterComposer,
+          $$FavoriteProgramsTableOrderingComposer,
+          $$FavoriteProgramsTableAnnotationComposer,
+          $$FavoriteProgramsTableCreateCompanionBuilder,
+          $$FavoriteProgramsTableUpdateCompanionBuilder,
+          (
+            FavoriteProgram,
+            BaseReferences<
+              _$AppDatabase,
+              $FavoriteProgramsTable,
+              FavoriteProgram
+            >,
+          ),
+          FavoriteProgram,
+          PrefetchHooks Function()
+        > {
+  $$FavoriteProgramsTableTableManager(
+    _$AppDatabase db,
+    $FavoriteProgramsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$FavoriteProgramsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$FavoriteProgramsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$FavoriteProgramsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<bool> dirty = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> programId = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => FavoriteProgramsCompanion(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                dirty: dirty,
+                userId: userId,
+                programId: programId,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<DateTime?> deletedAt = const Value.absent(),
+                Value<bool> dirty = const Value.absent(),
+                required String userId,
+                required String programId,
+                Value<int> rowid = const Value.absent(),
+              }) => FavoriteProgramsCompanion.insert(
+                id: id,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deletedAt: deletedAt,
+                dirty: dirty,
+                userId: userId,
+                programId: programId,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$FavoriteProgramsTable, FavoriteProgram>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $FavoriteProgramsTable,
+                    FavoriteProgram
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$FavoriteProgramsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $FavoriteProgramsTable,
+      FavoriteProgram,
+      $$FavoriteProgramsTableFilterComposer,
+      $$FavoriteProgramsTableOrderingComposer,
+      $$FavoriteProgramsTableAnnotationComposer,
+      $$FavoriteProgramsTableCreateCompanionBuilder,
+      $$FavoriteProgramsTableUpdateCompanionBuilder,
+      (
+        FavoriteProgram,
+        BaseReferences<_$AppDatabase, $FavoriteProgramsTable, FavoriteProgram>,
+      ),
+      FavoriteProgram,
+      PrefetchHooks Function()
+    >;
 typedef $$SyncStatesTableCreateCompanionBuilder = SyncStatesCompanion Function({
   required String key,
   required String value,
@@ -8374,6 +9401,8 @@ class $AppDatabaseManager {
       $$PlanDaysTableTableManager(_db, _db.planDays);
   $$BodyMetricsTableTableManager get bodyMetrics =>
       $$BodyMetricsTableTableManager(_db, _db.bodyMetrics);
+  $$FavoriteProgramsTableTableManager get favoritePrograms =>
+      $$FavoriteProgramsTableTableManager(_db, _db.favoritePrograms);
   $$SyncStatesTableTableManager get syncStates =>
       $$SyncStatesTableTableManager(_db, _db.syncStates);
 }

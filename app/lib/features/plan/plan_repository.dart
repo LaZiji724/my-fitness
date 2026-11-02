@@ -5,6 +5,7 @@ import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:my_fitness/core/db/app_database.dart';
+import 'package:my_fitness/features/plan/plan_math.dart';
 import 'package:my_fitness/features/workout/workout_repository.dart';
 
 class TemplateView {
@@ -126,6 +127,8 @@ class PlanRepository {
     int? repsMin,
     int? repsMax,
     int? restSec,
+    int? warmupSets,
+    int? targetDurationSec,
   }) async {
     final t = _now();
     await (_db.update(_db.templateExercises)..where((e) => e.id.equals(id))).write(
@@ -134,6 +137,9 @@ class PlanRepository {
         repsMin: repsMin == null ? const Value.absent() : Value(repsMin.clamp(1, 999)),
         repsMax: repsMax == null ? const Value.absent() : Value(repsMax.clamp(1, 999)),
         restSec: restSec == null ? const Value.absent() : Value(restSec.clamp(0, 3600)),
+        warmupSets: warmupSets == null ? const Value.absent() : Value(warmupSets.clamp(0, 10)),
+        targetDurationSec:
+            targetDurationSec == null ? const Value.absent() : Value(targetDurationSec.clamp(1, 36000)),
         updatedAt: Value(t),
         dirty: const Value(true),
       ),
@@ -186,7 +192,12 @@ class PlanRepository {
     if (tv == null) throw StateError('模板不存在');
     final existing = await workouts.activeWorkout();
     if (existing != null) return existing;
-    final w = await workouts.startWorkout(name: tv.template.name, templateId: templateId, planId: planId);
+    String? programId;
+    if (planId != null) {
+      programId = (await (_db.select(_db.plans)..where((p) => p.id.equals(planId))).getSingleOrNull())?.sourceProgramId;
+    }
+    final w = await workouts.startWorkout(
+        name: tv.template.name, templateId: templateId, planId: planId, programId: programId);
     for (final e in tv.exercises) {
       await workouts.addExercise(
         w.id,
@@ -195,6 +206,9 @@ class PlanRepository {
         exactSets: true,
         defaultReps: e.repsMin,
         restSec: e.restSec,
+        warmupSets: e.warmupSets,
+        defaultDurationSec: e.targetDurationSec,
+        note: e.note,
       );
     }
     return w;
@@ -228,7 +242,7 @@ class PlanRepository {
   Future<PlanView?> getPlan(String id) async =>
       (await _loadPlans()).where((p) => p.plan.id == id).firstOrNull;
 
-  Future<String> createPlan(String name, int cycleDays, {DateTime? startDate}) async {
+  Future<String> createPlan(String name, int cycleDays, {DateTime? startDate, String? sourceProgramId}) async {
     final t = _now();
     final id = _uuid.v4();
     final hasActive = (await _loadPlans()).any((p) => p.plan.isActive);
@@ -241,6 +255,7 @@ class PlanRepository {
           cycleDays: cycleDays.clamp(1, 28),
           startDate: WorkoutRepository.dateKey(startDate ?? t),
           isActive: Value(!hasActive),
+          sourceProgramId: Value(sourceProgramId),
         ));
     return id;
   }
@@ -293,14 +308,18 @@ class PlanRepository {
   }
 
   /// 设为当前计划，并从今天开始作为第 1 天。同一时刻只有一个当前计划。
+  ///
+  /// 来自计划库的计划是「周一到周日」的固定周安排，所以起点对齐到所在周的周一，保证每节课落在设定的星期几。
   Future<void> activatePlan(String id, {DateTime? startFrom}) async {
     final t = _now();
+    final plan = await (_db.select(_db.plans)..where((p) => p.id.equals(id))).getSingleOrNull();
+    final start = plan?.sourceProgramId != null ? mondayOf(startFrom ?? t) : (startFrom ?? t);
     await _db.transaction(() async {
       await (_db.update(_db.plans)..where((p) => p.isActive.equals(true) & p.deletedAt.isNull()))
           .write(PlansCompanion(isActive: const Value(false), updatedAt: Value(t), dirty: const Value(true)));
       await (_db.update(_db.plans)..where((p) => p.id.equals(id))).write(PlansCompanion(
         isActive: const Value(true),
-        startDate: Value(WorkoutRepository.dateKey(startFrom ?? t)),
+        startDate: Value(WorkoutRepository.dateKey(start)),
         updatedAt: Value(t),
         dirty: const Value(true),
       ));

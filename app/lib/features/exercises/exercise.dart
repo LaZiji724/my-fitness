@@ -8,7 +8,7 @@ enum BodyPart {
   glutes('glutes', '臀'),
   core('core', '腹'),
   cardio('cardio', '有氧'),
-  other('other', '其他');
+  other('other', '拉伸');
 
   const BodyPart(this.key, this.label);
   final String key;
@@ -43,7 +43,7 @@ enum EquipmentGroup {
   machine('machine', '器械'),
   cable('cable', '绳索'),
   bodyweight('bodyweight', '自重'),
-  other('other', '其他');
+  other('other', '拉伸');
 
   const EquipmentGroup(this.key, this.label);
   final String key;
@@ -86,6 +86,8 @@ const Map<String, String> kMuscleZh = {
   'glutes': '臀大肌',
   'abdominals': '腹肌',
   'neck': '颈部',
+  'hip flexors': '髋屈肌',
+  'obliques': '腹斜肌',
 };
 
 String muscleZh(String key) => kMuscleZh[key] ?? key;

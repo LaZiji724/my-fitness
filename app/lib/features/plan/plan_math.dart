@@ -20,3 +20,9 @@ int planDayIndex({required String startDate, required int cycleDays, required Da
 }
 
 DateTime dateOnly(DateTime d) => _dateOnly(d);
+
+/// [d] 所在那一周的周一（周一到周日算一周）。
+DateTime mondayOf(DateTime d) {
+  final day = _dateOnly(d);
+  return DateTime(day.year, day.month, day.day - (day.weekday - DateTime.monday));
+}

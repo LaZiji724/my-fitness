@@ -341,6 +341,10 @@ class _ExerciseCard extends ConsumerWidget {
                 _InfoChip('休息 $restSec 秒'),
               ],
             ),
+            if (block.exercise.note != null && block.exercise.note!.trim().isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text('要点：${block.exercise.note}', style: AppText.label.copyWith(color: c.text2)),
+            ],
             const SizedBox(height: 10),
             _SetsHeader(tracking: tracking),
             const SizedBox(height: 4),
