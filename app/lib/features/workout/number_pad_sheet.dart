@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 
 /// 单手输入重量/次数用的数字键盘（底部弹层）。
 /// 返回输入的数值；点遮罩关闭返回 null。
@@ -148,25 +149,30 @@ class _NumberPadState extends State<_NumberPad> {
               childAspectRatio: 2.3,
               children: [
                 for (final k in keys)
-                  Material(
-                    color: c.sunken,
-                    borderRadius: BorderRadius.circular(14),
-                    child: InkWell(
+                  PressScale(
+                    scale: PressScale.chipScale,
+                    child: Material(
+                      color: c.sunken,
                       borderRadius: BorderRadius.circular(14),
-                      onTap: () => _key(k),
-                      child: Center(
-                        child: k == '⌫'
-                            ? Icon(Icons.backspace_outlined, color: c.text)
-                            : Text(k, style: AppText.numMedium.copyWith(color: c.text)),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(14),
+                        onTap: () => _key(k),
+                        child: Center(
+                          child: k == '⌫'
+                              ? Icon(Icons.backspace_outlined, color: c.text)
+                              : Text(k, style: AppText.numMedium.copyWith(color: c.text)),
+                        ),
                       ),
                     ),
                   ),
               ],
             ),
             const SizedBox(height: AppSpace.s12),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, _value),
-              child: const Text('确定'),
+            PressScale(
+              child: FilledButton(
+                onPressed: () => Navigator.pop(context, _value),
+                child: const Text('确定'),
+              ),
             ),
           ],
         ),
@@ -185,16 +191,19 @@ class _StepButton extends StatelessWidget {
     final c = context.colors;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2),
-      child: Material(
-        color: c.sunken,
-        borderRadius: BorderRadius.circular(12),
-        child: InkWell(
+      child: PressScale(
+        scale: PressScale.chipScale,
+        child: Material(
+          color: c.sunken,
           borderRadius: BorderRadius.circular(12),
-          onTap: onTap,
-          child: SizedBox(
-            width: 52,
-            height: 44,
-            child: Center(child: Text(label, style: AppText.numSmall.copyWith(color: c.text))),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(12),
+            onTap: onTap,
+            child: SizedBox(
+              width: 52,
+              height: 44,
+              child: Center(child: Text(label, style: AppText.numSmall.copyWith(color: c.text))),
+            ),
           ),
         ),
       ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/library/library_providers.dart';
 import 'package:my_fitness/features/library/library_widgets.dart';
 import 'package:my_fitness/features/library/program.dart';
@@ -41,10 +42,13 @@ class ProgramDetailPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
-            tooltip: isFav ? '取消收藏' : '收藏',
-            icon: Icon(isFav ? Icons.star_rounded : Icons.star_border_rounded, color: isFav ? c.accent : null),
-            onPressed: () => ref.read(libraryRepositoryProvider).setFavorite(program.id, !isFav),
+          PressScale(
+            scale: PressScale.smallScale,
+            child: IconButton(
+              tooltip: isFav ? '取消收藏' : '收藏',
+              icon: Icon(isFav ? Icons.star_rounded : Icons.star_border_rounded, color: isFav ? c.accent : null),
+              onPressed: () => ref.read(libraryRepositoryProvider).setFavorite(program.id, !isFav),
+            ),
           ),
         ],
       ),
@@ -111,10 +115,12 @@ class ProgramDetailPage extends ConsumerWidget {
                 ),
                 const SizedBox(width: AppSpace.s8),
                 Expanded(
-                  child: FilledButton(
-                    style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
-                    onPressed: () => startNextSession(context, ref, program),
-                    child: const Text('去训练'),
+                  child: PressScale(
+                    child: FilledButton(
+                      style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
+                      onPressed: () => startNextSession(context, ref, program),
+                      child: const Text('去训练'),
+                    ),
                   ),
                 ),
               ],
@@ -138,23 +144,26 @@ class _BarAction extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     final color = highlighted ? c.accentText : c.text;
-    return Semantics(
-      button: true,
-      label: label,
-      excludeSemantics: true,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: AppRadius.button,
-        child: SizedBox(
-          width: 68,
-          height: AppSize.buttonLarge,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 22, color: color),
-              const SizedBox(height: 2),
-              Text(label, style: AppText.caption.copyWith(color: color, fontWeight: FontWeight.w600)),
-            ],
+    return PressScale(
+      scale: PressScale.chipScale,
+      child: Semantics(
+        button: true,
+        label: label,
+        excludeSemantics: true,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: AppRadius.button,
+          child: SizedBox(
+            width: 68,
+            height: AppSize.buttonLarge,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, size: 22, color: color),
+                const SizedBox(height: 2),
+                Text(label, style: AppText.caption.copyWith(color: color, fontWeight: FontWeight.w600)),
+              ],
+            ),
           ),
         ),
       ),
@@ -252,43 +261,48 @@ class _SessionRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final c = context.colors;
-    return Material(
-      color: c.surface,
-      borderRadius: AppRadius.card,
-      child: InkWell(
+    return PressScale(
+      scale: PressScale.cardScale,
+      child: Material(
+        color: c.surface,
         borderRadius: AppRadius.card,
-        onTap: () => context.push('/library/${program.slug}/${session.key}'),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(AppSpace.s12, AppSpace.s12, AppSpace.s8, AppSpace.s12),
-          child: Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(color: c.accentSoft, borderRadius: BorderRadius.circular(AppRadius.sm)),
-                child: Text(session.key, style: AppText.numMedium.copyWith(color: c.accentText)),
-              ),
-              const SizedBox(width: AppSpace.s12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(session.name, style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 2),
-                    Text('${session.items.length} 个动作 · ${session.totalSets} 组',
-                        maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.label.copyWith(color: c.text2)),
-                    Text(['约 ${session.minutes} 分钟', if (session.focus.isNotEmpty) session.focus].join(' · '),
-                        maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption.copyWith(color: c.text3)),
-                  ],
+        child: InkWell(
+          borderRadius: AppRadius.card,
+          onTap: () => context.push('/library/${program.slug}/${session.key}'),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(AppSpace.s12, AppSpace.s12, AppSpace.s8, AppSpace.s12),
+            child: Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(color: c.accentSoft, borderRadius: BorderRadius.circular(AppRadius.sm)),
+                  child: Text(session.key, style: AppText.numMedium.copyWith(color: c.accentText)),
                 ),
-              ),
-              FilledButton.tonal(
-                style: FilledButton.styleFrom(minimumSize: const Size(0, 36), padding: const EdgeInsets.symmetric(horizontal: 14)),
-                onPressed: () => startProgramSession(context, ref, program, session),
-                child: const Text('练这节'),
-              ),
-            ],
+                const SizedBox(width: AppSpace.s12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(session.name, style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
+                      const SizedBox(height: 2),
+                      Text('${session.items.length} 个动作 · ${session.totalSets} 组',
+                          maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.label.copyWith(color: c.text2)),
+                      Text(['约 ${session.minutes} 分钟', if (session.focus.isNotEmpty) session.focus].join(' · '),
+                          maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.caption.copyWith(color: c.text3)),
+                    ],
+                  ),
+                ),
+                PressScale(
+                  child: FilledButton.tonal(
+                    style: FilledButton.styleFrom(minimumSize: const Size(0, 36), padding: const EdgeInsets.symmetric(horizontal: 14)),
+                    onPressed: () => startProgramSession(context, ref, program, session),
+                    child: const Text('练这节'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

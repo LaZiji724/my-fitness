@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/calendar/calendar_math.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/plan/part_colors.dart';
@@ -78,13 +79,13 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
                 children: [
                   Text('日历', style: AppText.titleLarge.copyWith(color: c.text)),
                   const Spacer(),
-                  TextButton(onPressed: _today, child: const Text('回到今天')),
+                  PressScale(child: TextButton(onPressed: _today, child: const Text('回到今天'))),
                 ],
               ),
             ),
             Row(
               children: [
-                IconButton(tooltip: '上个月', onPressed: () => _shift(-1), icon: const Icon(Icons.chevron_left_rounded)),
+                PressScale(scale: PressScale.smallScale, child: IconButton(tooltip: '上个月', onPressed: () => _shift(-1), icon: const Icon(Icons.chevron_left_rounded))),
                 Expanded(
                   child: Column(
                     children: [
@@ -94,7 +95,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
                     ],
                   ),
                 ),
-                IconButton(tooltip: '下个月', onPressed: () => _shift(1), icon: const Icon(Icons.chevron_right_rounded)),
+                PressScale(scale: PressScale.smallScale, child: IconButton(tooltip: '下个月', onPressed: () => _shift(1), icon: const Icon(Icons.chevron_right_rounded))),
               ],
             ),
             const SizedBox(height: AppSpace.s8),
@@ -210,59 +211,62 @@ class _Grid extends StatelessWidget {
                       final isToday = dateKeyOf(d) == dateKeyOf(today);
                       final dots = dotsFor(d);
                       final planned = plannedFor(d);
-                      return Semantics(
-                        button: true,
-                        excludeSemantics: true,
-                        selected: isSel,
-                        label: '${d.month}月${d.day}日${dots.isNotEmpty ? '，有训练' : ''}',
-                        child: GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: () => onPick(d),
-                          child: Container(
-                            height: 50,
-                            margin: const EdgeInsets.symmetric(horizontal: 1),
-                            decoration: BoxDecoration(
-                              color: isSel ? c.accentSoft : Colors.transparent,
-                              borderRadius: BorderRadius.circular(14),
-                              border: isToday && !isSel ? Border.all(color: c.accent, width: 1.5) : null,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '${d.day}',
-                                  style: AppText.numSmall.copyWith(
-                                    fontSize: 18,
-                                    color: isSel ? c.accentText : c.text,
-                                    fontWeight: isToday || isSel ? FontWeight.w700 : FontWeight.w500,
+                      return PressScale(
+                        scale: PressScale.chipScale,
+                        child: Semantics(
+                          button: true,
+                          excludeSemantics: true,
+                          selected: isSel,
+                          label: '${d.month}月${d.day}日${dots.isNotEmpty ? '，有训练' : ''}',
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () => onPick(d),
+                            child: Container(
+                              height: 50,
+                              margin: const EdgeInsets.symmetric(horizontal: 1),
+                              decoration: BoxDecoration(
+                                color: isSel ? c.accentSoft : Colors.transparent,
+                                borderRadius: BorderRadius.circular(14),
+                                border: isToday && !isSel ? Border.all(color: c.accent, width: 1.5) : null,
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '${d.day}',
+                                    style: AppText.numSmall.copyWith(
+                                      fontSize: 18,
+                                      color: isSel ? c.accentText : c.text,
+                                      fontWeight: isToday || isSel ? FontWeight.w700 : FontWeight.w500,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(height: 4),
-                                SizedBox(
-                                  height: 6,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      for (final col in dots)
-                                        Container(
-                                          width: 6,
-                                          height: 6,
-                                          margin: const EdgeInsets.symmetric(horizontal: 1.5),
-                                          decoration: BoxDecoration(color: col, shape: BoxShape.circle),
-                                        ),
-                                      if (dots.isEmpty && planned)
-                                        Container(
-                                          width: 6,
-                                          height: 6,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(color: c.text3, width: 1.2),
+                                  const SizedBox(height: 4),
+                                  SizedBox(
+                                    height: 6,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        for (final col in dots)
+                                          Container(
+                                            width: 6,
+                                            height: 6,
+                                            margin: const EdgeInsets.symmetric(horizontal: 1.5),
+                                            decoration: BoxDecoration(color: col, shape: BoxShape.circle),
                                           ),
-                                        ),
-                                    ],
+                                        if (dots.isEmpty && planned)
+                                          Container(
+                                            width: 6,
+                                            height: 6,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(color: c.text3, width: 1.2),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),

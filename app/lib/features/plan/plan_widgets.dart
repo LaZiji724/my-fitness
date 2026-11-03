@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 
 /// 弹出一个输入名称的对话框，取消返回 null。
 Future<String?> promptName(
@@ -48,8 +49,8 @@ class _NameDialogState extends State<_NameDialog> {
         onSubmitted: (v) => Navigator.pop(context, v),
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: const Text('取消')),
-        TextButton(onPressed: () => Navigator.pop(context, _controller.text), child: Text(widget.confirm)),
+        PressScale(child: TextButton(onPressed: () => Navigator.pop(context), child: const Text('取消'))),
+        PressScale(child: TextButton(onPressed: () => Navigator.pop(context, _controller.text), child: Text(widget.confirm))),
       ],
     );
   }
@@ -97,10 +98,12 @@ class _NewPlanDialogState extends State<_NewPlanDialog> {
         ],
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: const Text('取消')),
-        TextButton(
-          onPressed: () => Navigator.pop(context, (name: _controller.text, days: _days)),
-          child: const Text('创建'),
+        PressScale(child: TextButton(onPressed: () => Navigator.pop(context), child: const Text('取消'))),
+        PressScale(
+          child: TextButton(
+            onPressed: () => Navigator.pop(context, (name: _controller.text, days: _days)),
+            child: const Text('创建'),
+          ),
         ),
       ],
     );
@@ -119,12 +122,14 @@ Future<bool> confirmDialog(
       title: Text(title),
       content: Text(message),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('取消')),
-        TextButton(
-          onPressed: () => Navigator.pop(ctx, true),
-          // 删除类操作用警示红，避免和普通确认混淆
-          style: confirm.contains('删除') ? TextButton.styleFrom(foregroundColor: ctx.colors.danger) : null,
-          child: Text(confirm),
+        PressScale(child: TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('取消'))),
+        PressScale(
+          child: TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            // 删除类操作用警示红，避免和普通确认混淆
+            style: confirm.contains('删除') ? TextButton.styleFrom(foregroundColor: ctx.colors.danger) : null,
+            child: Text(confirm),
+          ),
         ),
       ],
     ),
@@ -157,23 +162,26 @@ class StepperField extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
 
-    Widget button(IconData icon, String tip, VoidCallback? onTap) => Semantics(
-          button: true,
-          label: tip,
-          child: Material(
-            color: c.sunken,
-            shape: const CircleBorder(),
-            child: InkWell(
-              customBorder: const CircleBorder(),
-              onTap: onTap,
-              child: SizedBox(
-                width: 44,
-                height: 44,
-                child: Icon(icon, color: onTap == null ? c.text3 : c.text),
+    Widget button(IconData icon, String tip, VoidCallback? onTap) => PressScale(
+      scale: PressScale.smallScale,
+      child: Semantics(
+            button: true,
+            label: tip,
+            child: Material(
+              color: c.sunken,
+              shape: const CircleBorder(),
+              child: InkWell(
+                customBorder: const CircleBorder(),
+                onTap: onTap,
+                child: SizedBox(
+                  width: 44,
+                  height: 44,
+                  child: Icon(icon, color: onTap == null ? c.text3 : c.text),
+                ),
               ),
             ),
           ),
-        );
+    );
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpace.s8),
@@ -213,25 +221,28 @@ class SegmentTabs extends StatelessWidget {
           children: [
             for (var i = 0; i < labels.length; i++)
               Expanded(
-                child: Semantics(
-                  button: true,
-                  selected: i == index,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => onChanged(i),
-                    child: AnimatedContainer(
-                      duration: AppMotion.fast,
-                      height: AppSize.segmented - 8,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: i == index ? c.raised : Colors.transparent,
-                        borderRadius: BorderRadius.circular(AppRadius.md - 3),
-                      ),
-                      child: Text(
-                        labels[i],
-                        style: AppText.body.copyWith(
-                          color: i == index ? c.text : c.text2,
-                          fontWeight: i == index ? FontWeight.w700 : FontWeight.w500,
+                child: PressScale(
+                  scale: PressScale.chipScale,
+                  child: Semantics(
+                    button: true,
+                    selected: i == index,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => onChanged(i),
+                      child: AnimatedContainer(
+                        duration: AppMotion.fast,
+                        height: AppSize.segmented - 8,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: i == index ? c.raised : Colors.transparent,
+                          borderRadius: BorderRadius.circular(AppRadius.md - 3),
+                        ),
+                        child: Text(
+                          labels[i],
+                          style: AppText.body.copyWith(
+                            color: i == index ? c.text : c.text2,
+                            fontWeight: i == index ? FontWeight.w700 : FontWeight.w500,
+                          ),
                         ),
                       ),
                     ),

@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_fitness/app/app_shell.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 
 void main() {
   Widget host(ThemeData theme) {
@@ -43,6 +44,26 @@ void main() {
       expect(find.text('页面-stats'), findsOneWidget);
     });
   }
+
+  testWidgets('底部分栏按下时有缩放动效，松手恢复', (tester) async {
+    await tester.pumpWidget(host(AppTheme.light()));
+    await tester.pumpAndSettle();
+
+    double scaleOf(String label) => tester
+        .widget<AnimatedScale>(find
+            .ancestor(of: find.text(label), matching: find.byType(AnimatedScale))
+            .first)
+        .scale;
+
+    final g = await tester.startGesture(tester.getCenter(find.text('日历')));
+    await tester.pump();
+    expect(scaleOf('日历'), PressScale.chipScale);
+    expect(scaleOf('计划'), 1); // 别的分栏不动
+    await g.up();
+    await tester.pumpAndSettle();
+    expect(scaleOf('日历'), 1);
+    expect(find.text('页面-calendar'), findsOneWidget);
+  });
 
   test('主题令牌：浅色与深色都能取到颜色扩展', () {
     expect(AppTheme.light().extension<AppColors>(), isNotNull);

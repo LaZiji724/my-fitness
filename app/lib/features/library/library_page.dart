@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/library/library_providers.dart';
 import 'package:my_fitness/features/library/library_widgets.dart';
 import 'package:my_fitness/features/library/program.dart';
@@ -45,16 +46,19 @@ class _LibraryPageState extends ConsumerState<LibraryPage> {
               )
             : const Text('计划库'),
         actions: [
-          IconButton(
-            tooltip: _searching ? '关闭搜索' : '搜索',
-            icon: Icon(_searching ? Icons.close_rounded : Icons.search_rounded),
-            onPressed: () {
-              setState(() => _searching = !_searching);
-              if (!_searching) {
-                _search.clear();
-                notifier.setQuery('');
-              }
-            },
+          PressScale(
+            scale: PressScale.smallScale,
+            child: IconButton(
+              tooltip: _searching ? '关闭搜索' : '搜索',
+              icon: Icon(_searching ? Icons.close_rounded : Icons.search_rounded),
+              onPressed: () {
+                setState(() => _searching = !_searching);
+                if (!_searching) {
+                  _search.clear();
+                  notifier.setQuery('');
+                }
+              },
+            ),
           ),
         ],
       ),
@@ -137,7 +141,7 @@ class _FilterBar extends ConsumerWidget {
                 onSelected: n.setAudience),
           ),
           if (filter.hasAdvancedFilter)
-            TextButton(onPressed: n.clearAdvanced, child: const Text('清除筛选')),
+            PressScale(child: TextButton(onPressed: n.clearAdvanced, child: const Text('清除筛选'))),
         ],
       ),
     );
@@ -208,27 +212,30 @@ class _FilterChip extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: Center(
-        child: Semantics(
-          button: true,
-          selected: active,
-          child: Material(
-            color: active ? c.accentSoft : c.surface,
-            shape: StadiumBorder(side: BorderSide(color: active ? c.accent : c.line)),
-            child: InkWell(
-              customBorder: const StadiumBorder(),
-              onTap: onTap,
-              child: SizedBox(
-                height: AppSize.chip,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 14, right: 8),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(label,
-                          style: AppText.label.copyWith(
-                              color: active ? c.accentText : c.text, fontWeight: active ? FontWeight.w700 : FontWeight.w500)),
-                      Icon(Icons.keyboard_arrow_down_rounded, size: 18, color: active ? c.accentText : c.text3),
-                    ],
+        child: PressScale(
+          scale: PressScale.chipScale,
+          child: Semantics(
+            button: true,
+            selected: active,
+            child: Material(
+              color: active ? c.accentSoft : c.surface,
+              shape: StadiumBorder(side: BorderSide(color: active ? c.accent : c.line)),
+              child: InkWell(
+                customBorder: const StadiumBorder(),
+                onTap: onTap,
+                child: SizedBox(
+                  height: AppSize.chip,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 14, right: 8),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(label,
+                            style: AppText.label.copyWith(
+                                color: active ? c.accentText : c.text, fontWeight: active ? FontWeight.w700 : FontWeight.w500)),
+                        Icon(Icons.keyboard_arrow_down_rounded, size: 18, color: active ? c.accentText : c.text3),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -249,24 +256,27 @@ class _OptionChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    return Semantics(
-      button: true,
-      selected: selected,
-      child: Material(
-        color: selected ? c.text : c.sunken,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        child: InkWell(
+    return PressScale(
+      scale: PressScale.chipScale,
+      child: Semantics(
+        button: true,
+        selected: selected,
+        child: Material(
+          color: selected ? c.text : c.sunken,
           borderRadius: BorderRadius.circular(AppRadius.md),
-          onTap: onTap,
-          child: SizedBox(
-            height: AppSize.chip + 4,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Center(
-                widthFactor: 1,
-                child: Text(label,
-                    style: AppText.body.copyWith(
-                        color: selected ? c.bg : c.text, fontWeight: selected ? FontWeight.w700 : FontWeight.w500)),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(AppRadius.md),
+            onTap: onTap,
+            child: SizedBox(
+              height: AppSize.chip + 4,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Center(
+                  widthFactor: 1,
+                  child: Text(label,
+                      style: AppText.body.copyWith(
+                          color: selected ? c.bg : c.text, fontWeight: selected ? FontWeight.w700 : FontWeight.w500)),
+                ),
               ),
             ),
           ),
@@ -293,39 +303,42 @@ class _CategoryRail extends ConsumerWidget {
           for (final cat in LibraryCategory.values)
             Padding(
               padding: const EdgeInsets.only(bottom: 2),
-              child: Semantics(
-                button: true,
-                selected: cat == selected,
-                child: Material(
-                  color: cat == selected ? c.surface : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                  child: InkWell(
+              child: PressScale(
+                scale: PressScale.chipScale,
+                child: Semantics(
+                  button: true,
+                  selected: cat == selected,
+                  child: Material(
+                    color: cat == selected ? c.surface : Colors.transparent,
                     borderRadius: BorderRadius.circular(12),
-                    onTap: () => ref.read(libraryFilterProvider.notifier).setCategory(cat),
-                    child: SizedBox(
-                      height: 48,
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 3,
-                            height: 20,
-                            margin: const EdgeInsets.only(left: 2, right: 6),
-                            decoration: BoxDecoration(
-                              color: cat == selected ? c.accent : Colors.transparent,
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              cat.label,
-                              style: AppText.label.copyWith(
-                                color: cat == selected ? c.text : c.text2,
-                                fontSize: 14,
-                                fontWeight: cat == selected ? FontWeight.w700 : FontWeight.w500,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(12),
+                      onTap: () => ref.read(libraryFilterProvider.notifier).setCategory(cat),
+                      child: SizedBox(
+                        height: 48,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 3,
+                              height: 20,
+                              margin: const EdgeInsets.only(left: 2, right: 6),
+                              decoration: BoxDecoration(
+                                color: cat == selected ? c.accent : Colors.transparent,
+                                borderRadius: BorderRadius.circular(2),
                               ),
                             ),
-                          ),
-                        ],
+                            Expanded(
+                              child: Text(
+                                cat.label,
+                                style: AppText.label.copyWith(
+                                  color: cat == selected ? c.text : c.text2,
+                                  fontSize: 14,
+                                  fontWeight: cat == selected ? FontWeight.w700 : FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

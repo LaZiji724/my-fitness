@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/avatar_view.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/auth/auth_providers.dart';
 import 'package:my_fitness/features/sync/backup_actions.dart';
 import 'package:my_fitness/features/sync/sync_chip.dart';
@@ -19,11 +20,13 @@ class ProfilePage extends ConsumerWidget {
         title: const Text('退出登录？'),
         content: const Text('退出后需要重新输入用户名和密码。'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('取消')),
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            style: TextButton.styleFrom(foregroundColor: context.colors.danger),
-            child: const Text('退出'),
+          PressScale(child: TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('取消'))),
+          PressScale(
+            child: TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              style: TextButton.styleFrom(foregroundColor: context.colors.danger),
+              child: const Text('退出'),
+            ),
           ),
         ],
       ),
@@ -60,11 +63,13 @@ class ProfilePage extends ConsumerWidget {
           content: const Text('可能是网络不好。现在退出的话，这些改动会先留在这台手机上，'
               '用同一个账号重新登录后会自动同步；换成别的账号则看不到它们。'),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('先不退出')),
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              style: TextButton.styleFrom(foregroundColor: context.colors.danger),
-              child: const Text('仍要退出'),
+            PressScale(child: TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('先不退出'))),
+            PressScale(
+              child: TextButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                style: TextButton.styleFrom(foregroundColor: context.colors.danger),
+                child: const Text('仍要退出'),
+              ),
             ),
           ],
         ),
@@ -111,10 +116,12 @@ class ProfilePage extends ConsumerWidget {
           ),
           const _SyncSection(),
           const SizedBox(height: AppSpace.s24),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(foregroundColor: c.danger, backgroundColor: c.surface),
-            onPressed: () => _confirmSignOut(context, ref),
-            child: const Text('退出登录'),
+          PressScale(
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(foregroundColor: c.danger, backgroundColor: c.surface),
+              onPressed: () => _confirmSignOut(context, ref),
+              child: const Text('退出登录'),
+            ),
           ),
           const SizedBox(height: AppSpace.s12),
           Center(child: Text('我的健身 · 数据保存在本机，并自动同步到你的账号', style: AppText.caption.copyWith(color: c.text3))),
@@ -137,19 +144,22 @@ class _SyncSection extends ConsumerWidget {
       SyncPhase.error => s.error ?? '同步失败，稍后会重试',
       _ => s.lastSync == null ? '还没有同步过' : '上次同步：${formatAgo(s.lastSync!, DateTime.now())}${s.pending ? '，还有改动待上传' : ''}',
     };
-    Widget row(IconData icon, String title, String? sub, VoidCallback? onTap, {Widget? trailing}) => ListTile(
-          leading: Container(
-            width: 36,
-            height: 36,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(color: c.sunken, borderRadius: BorderRadius.circular(AppRadius.sm)),
-            child: Icon(icon, size: 20, color: c.text2),
+    Widget row(IconData icon, String title, String? sub, VoidCallback? onTap, {Widget? trailing}) => PressScale(
+      scale: PressScale.cardScale,
+      child: ListTile(
+            leading: Container(
+              width: 36,
+              height: 36,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(color: c.sunken, borderRadius: BorderRadius.circular(AppRadius.sm)),
+              child: Icon(icon, size: 20, color: c.text2),
+            ),
+            title: Text(title, style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
+            subtitle: sub == null ? null : Text(sub, style: AppText.label.copyWith(color: s.phase == SyncPhase.error && title == '云同步' ? c.danger : c.text2)),
+            trailing: trailing ?? Icon(Icons.chevron_right_rounded, color: c.text3),
+            onTap: onTap,
           ),
-          title: Text(title, style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
-          subtitle: sub == null ? null : Text(sub, style: AppText.label.copyWith(color: s.phase == SyncPhase.error && title == '云同步' ? c.danger : c.text2)),
-          trailing: trailing ?? Icon(Icons.chevron_right_rounded, color: c.text3),
-          onTap: onTap,
-        );
+    );
     // 用 Material 而不是 DecoratedBox 做卡片底，点按时的水波纹才看得见
     return Material(
       color: c.surface,

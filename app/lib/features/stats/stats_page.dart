@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/plan/plan_providers.dart';
 import 'package:my_fitness/features/stats/muscle_figure.dart';
@@ -61,7 +62,7 @@ class StatsPage extends ConsumerWidget {
               height: 44,
               child: Row(
                 children: [
-                  IconButton(tooltip: '上一段', onPressed: () => notifier.shift(-1), icon: const Icon(Icons.chevron_left_rounded)),
+                  PressScale(scale: PressScale.smallScale, child: IconButton(tooltip: '上一段', onPressed: () => notifier.shift(-1), icon: const Icon(Icons.chevron_left_rounded))),
                   Expanded(
                     child: GestureDetector(
                       onTap: () => notifier.reset(today),
@@ -71,10 +72,13 @@ class StatsPage extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  IconButton(
-                    tooltip: '下一段',
-                    onPressed: canGoNext ? () => notifier.shift(1) : null,
-                    icon: const Icon(Icons.chevron_right_rounded),
+                  PressScale(
+                    scale: PressScale.smallScale,
+                    child: IconButton(
+                      tooltip: '下一段',
+                      onPressed: canGoNext ? () => notifier.shift(1) : null,
+                      icon: const Icon(Icons.chevron_right_rounded),
+                    ),
                   ),
                 ],
               ),
@@ -179,27 +183,30 @@ class _RangeTabs extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             for (final r in StatRange.values)
-              Semantics(
-                button: true,
-                selected: r == value,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => onChanged(r),
-                  child: AnimatedContainer(
-                    duration: AppMotion.fast,
-                    width: 52,
-                    height: 32,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: r == value ? c.raised : Colors.transparent,
-                      borderRadius: BorderRadius.circular(9),
+              PressScale(
+                scale: PressScale.chipScale,
+                child: Semantics(
+                  button: true,
+                  selected: r == value,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => onChanged(r),
+                    child: AnimatedContainer(
+                      duration: AppMotion.fast,
+                      width: 52,
+                      height: 32,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: r == value ? c.raised : Colors.transparent,
+                        borderRadius: BorderRadius.circular(9),
+                      ),
+                      child: Text(r.label,
+                          style: AppText.label.copyWith(
+                            fontSize: 14,
+                            color: r == value ? c.text : c.text2,
+                            fontWeight: r == value ? FontWeight.w700 : FontWeight.w500,
+                          )),
                     ),
-                    child: Text(r.label,
-                        style: AppText.label.copyWith(
-                          fontSize: 14,
-                          color: r == value ? c.text : c.text2,
-                          fontWeight: r == value ? FontWeight.w700 : FontWeight.w500,
-                        )),
                   ),
                 ),
               ),
@@ -389,11 +396,14 @@ class _TrendCard extends ConsumerWidget {
             spacing: 6,
             children: [
               for (final m in TrendMetric.values)
-                ChoiceChip(
-                  label: Text(m.label),
-                  selected: m == metric,
-                  showCheckmark: false,
-                  onSelected: (_) => ref.read(trendMetricProvider.notifier).set(m),
+                PressScale(
+                  scale: PressScale.chipScale,
+                  child: ChoiceChip(
+                    label: Text(m.label),
+                    selected: m == metric,
+                    showCheckmark: false,
+                    onSelected: (_) => ref.read(trendMetricProvider.notifier).set(m),
+                  ),
                 ),
             ],
           ),
@@ -661,10 +671,12 @@ class _BodyWeightCard extends ConsumerWidget {
                   ],
                 ),
               ),
-              FilledButton.tonal(
-                onPressed: record,
-                style: FilledButton.styleFrom(minimumSize: const Size(0, 36)),
-                child: const Text('记录体重'),
+              PressScale(
+                child: FilledButton.tonal(
+                  onPressed: record,
+                  style: FilledButton.styleFrom(minimumSize: const Size(0, 36)),
+                  child: const Text('记录体重'),
+                ),
               ),
             ],
           ),

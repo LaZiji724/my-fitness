@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/auth/auth_providers.dart';
 import 'package:my_fitness/features/auth/auth_service.dart';
 import 'package:my_fitness/features/auth/validators.dart';
@@ -84,12 +85,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   onFieldSubmitted: (_) => _submit(),
                   decoration: InputDecoration(
                     labelText: '密码',
-                    suffixIcon: IconButton(
-                      tooltip: _obscure ? '显示密码' : '隐藏密码',
-                      icon: Icon(_obscure
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined),
-                      onPressed: () => setState(() => _obscure = !_obscure),
+                    suffixIcon: PressScale(
+                      scale: PressScale.smallScale,
+                      child: IconButton(
+                        tooltip: _obscure ? '显示密码' : '隐藏密码',
+                        icon: Icon(_obscure
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined),
+                        onPressed: () => setState(() => _obscure = !_obscure),
+                      ),
                     ),
                   ),
                   validator: AuthValidators.loginPassword,
@@ -99,23 +103,27 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   Text(_error!, style: AppText.label.copyWith(color: c.danger)),
                 ],
                 const SizedBox(height: AppSpace.s24),
-                FilledButton(
-                  onPressed: _busy ? null : _submit,
-                  child: _busy
-                      ? const SizedBox.square(
-                          dimension: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2.5),
-                        )
-                      : const Text('登录'),
+                PressScale(
+                  child: FilledButton(
+                    onPressed: _busy ? null : _submit,
+                    child: _busy
+                        ? const SizedBox.square(
+                            dimension: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2.5),
+                          )
+                        : const Text('登录'),
+                  ),
                 ),
                 const SizedBox(height: AppSpace.s16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('还没有账号？', style: AppText.body.copyWith(color: c.text2)),
-                    TextButton(
-                      onPressed: _busy ? null : () => context.go('/register'),
-                      child: const Text('注册一个'),
+                    PressScale(
+                      child: TextButton(
+                        onPressed: _busy ? null : () => context.go('/register'),
+                        child: const Text('注册一个'),
+                      ),
                     ),
                   ],
                 ),
