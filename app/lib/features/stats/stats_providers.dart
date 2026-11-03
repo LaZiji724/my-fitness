@@ -2,15 +2,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/core/db/database_provider.dart';
-import 'package:my_fitness/core/supabase/supabase_providers.dart';
+import 'package:my_fitness/features/auth/auth_providers.dart';
 import 'package:my_fitness/features/stats/body_repository.dart';
 import 'package:my_fitness/features/stats/stats_math.dart';
 
 final bodyRepositoryProvider = Provider<BodyRepository>((ref) {
-  final client = ref.watch(supabaseClientProvider);
+  final uid = ref.watch(currentUserIdProvider);
   return BodyRepository(
     ref.watch(appDatabaseProvider),
-    userId: () => client.auth.currentUser?.id ?? 'local',
+    userId: () => uid,
   );
 });
 

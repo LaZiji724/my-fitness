@@ -352,4 +352,134 @@ void main() {
     await syncB.syncNow();
     expect(await prefsB.watchAll().first, isEmpty);
   });
+
+  group('账号隔离', () {
+    // 同一部手机（同一个本机数据库）先后登录两个账号
+    late AppDatabase phone;
+    late SyncService asU1;
+    late SyncService asU2;
+    late WorkoutRepository w1;
+    late WorkoutRepository w2;
+    late PlanRepository p1;
+    late PlanRepository p2;
+
+    setUp(() {
+      phone = AppDatabase.forTesting(NativeDatabase.memory());
+      asU1 = SyncService(phone, remote, userId: () => 'u1');
+      asU2 = SyncService(phone, remote, userId: () => 'u2');
+      w1 = WorkoutRepository(phone, userId: () => 'u1', now: () => clock);
+      w2 = WorkoutRepository(phone, userId: () => 'u2', now: () => clock);
+      p1 = PlanRepository(phone, userId: () => 'u1', now: () => clock);
+      p2 = PlanRepository(phone, userId: () => 'u2', now: () => clock);
+    });
+    tearDown(() => phone.close());
+
+    test('换账号后拉取游标不串：新账号较旧的云端数据也能完整拉下来', () async {
+      // u2 在云端有一个很早以前建的模板
+      final other = AppDatabase.forTesting(NativeDatabase.memory());
+      addTearDown(other.close);
+      clock = DateTime.utc(2026, 10, 1, 9);
+      final t2 = await PlanRepository(other, userId: () => 'u2', now: () => clock).createTemplate('u2 的拉力日');
+      await SyncService(other, remote, userId: () => 'u2').syncNow();
+
+      // 手机上 u1 后来才建了东西并同步 → u1 的游标比 u2 的数据新
+      clock = DateTime.utc(2026, 11, 2, 9);
+      await p1.createTemplate('u1 的推日');
+      await asU1.syncNow();
+
+      // 换 u2 登录：必须拉到自己的旧模板
+      final report = await asU2.syncNow();
+      expect(report.pulled, 1);
+      expect((await p2.getTemplate(t2))?.template.name, 'u2 的拉力日');
+      expect((await p2.watchTemplates().first).map((t) => t.template.name), ['u2 的拉力日']);
+    });
+
+    test('每个账号各自的日程、计划、模板互不可见', () async {
+      final t1 = await p1.createTemplate('u1 模板');
+      final plan1 = await p1.createPlan('u1 计划', 7);
+      await p1.activatePlan(plan1);
+      await p2.createTemplate('u2 模板');
+      final plan2 = await p2.createPlan('u2 计划', 7);
+      await p2.activatePlan(plan2);
+      await finishedWorkout(w1);
+
+      expect((await p1.watchTemplates().first).map((t) => t.template.name), ['u1 模板']);
+      expect((await p2.watchTemplates().first).map((t) => t.template.name), ['u2 模板']);
+      expect((await p1.watchPlans().first).map((p) => p.plan.name), ['u1 计划']);
+      expect((await p2.watchPlans().first).map((p) => p.plan.name), ['u2 计划']);
+      expect(await w1.watchCompleted().first, hasLength(1));
+      expect(await w2.watchCompleted().first, isEmpty);
+
+      // u2 设为当前计划，不会把 u1 的当前计划取消
+      expect((await p1.watchPlans().first).single.plan.isActive, isTrue);
+      expect((await p2.watchPlans().first).single.plan.isActive, isTrue);
+      expect(t1, isNotEmpty);
+    });
+
+    test('只推送当前账号自己的改动，别的账号没推上去的改动留在原地', () async {
+      await p1.createTemplate('u1 离线时建的模板');
+      await p2.createTemplate('u2 的模板');
+      expect(await asU1.hasDirty(), isTrue);
+      expect(await asU2.hasDirty(), isTrue);
+
+      final report = await asU2.syncNow();
+      expect(report.pushed, 1);
+      expect(remote.tables['templates']!.values.map((r) => r['user_id']), ['u2']);
+      expect(await asU2.hasDirty(), isFalse);
+      expect(await asU1.hasDirty(), isTrue); // u1 的仍待同步，没被丢也没被错推
+
+      await asU1.syncNow();
+      expect(remote.tables['templates']!.values.map((r) => r['user_id']).toSet(), {'u1', 'u2'});
+    });
+
+    test('备份只导出当前账号的数据', () async {
+      await p1.createTemplate('u1 模板');
+      await p2.createTemplate('u2 模板');
+      final out = await asU1.exportAll();
+      final names = (out['tables'] as Map)['templates'] as List;
+      expect(names.map((r) => (r as Map)['name']), ['u1 模板']);
+    });
+
+    test('旧版本不分账号的游标会被丢弃，之后按账号重新拉取', () async {
+      await phone.customStatement("INSERT INTO sync_states (key, value) VALUES ('cursor:templates', '2099-01-01T00:00:00Z|zzz')");
+      await phone.customStatement("INSERT INTO sync_states (key, value) VALUES ('last_sync', '2099-01-01T00:00:00Z')");
+      await asU1.syncNow();
+      final keys = (await phone.customSelect('SELECT key FROM sync_states').get()).map((r) => r.read<String>('key')).toSet();
+      expect(keys, isNot(contains('cursor:templates')));
+      expect(keys, isNot(contains('last_sync')));
+      expect(keys, contains('last_sync:u1'));
+    });
+
+    test('退出前同步成功后清掉本账号本机数据，别的账号的数据不动，再登录能从云端拉回', () async {
+      await finishedWorkout(w1);
+      await p1.createTemplate('u1 模板');
+      await p2.createTemplate('u2 还没同步的模板');
+
+      expect(await asU1.flushBeforeSignOut(), isTrue);
+      await asU1.clearLocalData();
+
+      expect(await phone.select(phone.workouts).get(), isEmpty);
+      expect((await phone.select(phone.templates).get()).map((t) => t.userId), ['u2']); // u2 的原样保留
+      expect(await asU1.lastSyncAt(), isNull);
+      expect(await asU2.hasDirty(), isTrue);
+
+      // u1 再次登录：云端数据完整回来
+      final report = await asU1.syncNow();
+      expect(report.pulled, 6 + 1);
+      expect(await w1.watchCompleted().first, hasLength(1));
+      expect((await p1.watchTemplates().first).map((t) => t.template.name), ['u1 模板']);
+    });
+
+    test('退出前没能同步（没网）时返回 false，本机数据保留不丢', () async {
+      await p1.createTemplate('u1 模板');
+      remote.failNextUpsert = true;
+      expect(await asU1.flushBeforeSignOut(), isFalse);
+      expect(await asU1.hasDirty(), isTrue);
+      expect(await phone.select(phone.templates).get(), hasLength(1));
+
+      // 网络恢复后，同一账号重新登录会把它推上去
+      await asU1.syncNow();
+      expect(remote.tables['templates']!.values, hasLength(1));
+    });
+  });
 }

@@ -13,10 +13,11 @@ import 'package:my_fitness/features/sync/sync_service.dart';
 
 final syncServiceProvider = Provider<SyncService>((ref) {
   final client = ref.watch(supabaseClientProvider);
+  final uid = ref.watch(currentUserIdProvider);
   return SyncService(
     ref.watch(appDatabaseProvider),
     SupabaseSyncRemote(client),
-    userId: () => client.auth.currentUser?.id ?? 'local',
+    userId: () => uid,
   );
 });
 

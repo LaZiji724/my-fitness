@@ -59,6 +59,10 @@ class SyncReport {
 
 /// 本地优先的双向同步：先按游标拉取云端更新，再推送本地改动。
 /// 冲突规则：同一行两边都改过时，修改时间较晚的一边获胜（云端的修改时间是它收到的时间）。
+///
+/// 本机数据库是按账号隔离的：每一行都带 user_id，拉取游标、上次同步时间也各记各的，
+/// 推送只推当前账号自己的改动。换账号登录后，新账号从云端完整拉取自己的数据，
+/// 不会看到、也不会上传上一个账号的内容。
 class SyncService {
   SyncService(this._db, this._remote, {required String Function() userId, this.pageSize = 500})
       : _userId = userId;
@@ -68,6 +72,9 @@ class SyncService {
   final String Function() _userId;
   final int pageSize;
   Future<SyncReport>? _running;
+
+  String get _lastSyncKey => 'last_sync:${_userId()}';
+  String _cursorKey(SyncTableSpec t) => 'cursor:${_userId()}:${t.name}';
 
   late final List<SyncTableSpec> tables = [
     SyncTableSpec(_db.templates, Template.fromJson),
@@ -87,6 +94,7 @@ class SyncService {
 
   Future<SyncReport> _run() async {
     var pushed = 0, pulled = 0;
+    await _dropLegacyState();
     // 先拉后推：拉取时本地「更晚的未推送改动」会被保留，较旧的会被云端覆盖；
     // 如果先推，会把另一台设备较新的改动直接盖掉。
     for (final t in tables) {
@@ -96,17 +104,23 @@ class SyncService {
       pushed += await _push(t);
     }
     await _db.customStatement(
-      "INSERT OR REPLACE INTO sync_states (key, value) VALUES ('last_sync', ?)",
-      [DateTime.now().toUtc().toIso8601String()],
+      'INSERT OR REPLACE INTO sync_states (key, value) VALUES (?, ?)',
+      [_lastSyncKey, DateTime.now().toUtc().toIso8601String()],
     );
     return SyncReport(pushed: pushed, pulled: pulled);
   }
 
-  /// 是否还有没推送的本地改动。
+  /// 旧版本不分账号的游标（`cursor:表名`、`last_sync`）：不知道属于谁，直接丢弃，
+  /// 换成按账号记录的新游标（代价只是第一次多拉一遍自己的数据）。
+  Future<void> _dropLegacyState() => _db.customStatement(
+      "DELETE FROM sync_states WHERE key = 'last_sync' OR (key LIKE 'cursor:%' AND key NOT LIKE 'cursor:%:%')");
+
+  /// 当前账号是否还有没推送的本地改动。
   Future<bool> hasDirty() async {
     for (final t in tables) {
       final r = await _db
-          .customSelect('SELECT 1 AS x FROM ${t.name} WHERE dirty = 1 LIMIT 1', readsFrom: {t.table})
+          .customSelect('SELECT 1 AS x FROM ${t.name} WHERE dirty = 1 AND user_id = ? LIMIT 1',
+              variables: [Variable<String>(_userId())], readsFrom: {t.table})
           .get();
       if (r.isNotEmpty) return true;
     }
@@ -114,7 +128,8 @@ class SyncService {
   }
 
   Future<DateTime?> lastSyncAt() async {
-    final r = await _db.customSelect("SELECT value FROM sync_states WHERE key = 'last_sync'").get();
+    final r = await _db.customSelect('SELECT value FROM sync_states WHERE key = ?',
+        variables: [Variable<String>(_lastSyncKey)]).get();
     return r.isEmpty ? null : DateTime.tryParse(r.first.read<String>('value'))?.toLocal();
   }
 
@@ -124,7 +139,9 @@ class SyncService {
     var total = 0;
     while (true) {
       final rows = await _db
-          .customSelect('SELECT * FROM ${t.name} WHERE dirty = 1 ORDER BY updated_at, id LIMIT $pageSize',
+          .customSelect(
+              'SELECT * FROM ${t.name} WHERE dirty = 1 AND user_id = ? ORDER BY updated_at, id LIMIT $pageSize',
+              variables: [Variable<String>(_userId())],
               readsFrom: {t.table})
           .get();
       if (rows.isEmpty) return total;
@@ -154,7 +171,7 @@ class SyncService {
   // ------------------------------------------------------------------ 拉取
 
   Future<int> _pull(SyncTableSpec t) async {
-    final key = 'cursor:${t.name}';
+    final key = _cursorKey(t);
     final saved = await _db.customSelect('SELECT value FROM sync_states WHERE key = ?', variables: [Variable<String>(key)]).get();
     var cursor = SyncCursor.decode(saved.isEmpty ? null : saved.first.read<String>('value'));
     var total = 0;
@@ -197,6 +214,34 @@ class SyncService {
     await _db.into(t.table).insertOnConflictUpdate(data as Insertable<DataClass>);
   }
 
+  // ------------------------------------------------------------------ 退出登录
+
+  /// 退出登录前先把当前账号的改动推到云端。返回 true 表示已全部同步（可以放心清掉本机副本）。
+  Future<bool> flushBeforeSignOut({Duration timeout = const Duration(seconds: 12)}) async {
+    try {
+      await syncNow().timeout(timeout);
+    } catch (_) {
+      // 没网等原因：下面按「还有没有待推送改动」判断
+    }
+    return !await hasDirty();
+  }
+
+  /// 清掉当前账号在本机的全部数据与同步记录（云端不受影响，再次登录会重新拉回来）。
+  /// 只动当前账号的行：别的账号留在本机、还没推上去的改动不会被误删。
+  Future<void> clearLocalData() async {
+    final uid = _userId();
+    await _db.transaction(() async {
+      for (final t in tables) {
+        await _db.customUpdate('DELETE FROM ${t.name} WHERE user_id = ?',
+            variables: [Variable<String>(uid)], updates: {t.table}, updateKind: UpdateKind.delete);
+      }
+      await _db.customStatement(
+        'DELETE FROM sync_states WHERE key = ? OR key LIKE ?',
+        [_lastSyncKey, 'cursor:$uid:%'],
+      );
+    });
+  }
+
   // ------------------------------------------------------------------ 备份
 
   static const backupFormat = 'my-fitness-backup';
@@ -207,8 +252,8 @@ class SyncService {
     final out = <String, List<Map<String, dynamic>>>{};
     for (final t in tables) {
       final rows = await _db
-          .customSelect('SELECT * FROM ${t.name} WHERE deleted_at IS NULL ORDER BY created_at, id',
-              readsFrom: {t.table})
+          .customSelect('SELECT * FROM ${t.name} WHERE deleted_at IS NULL AND user_id = ? ORDER BY created_at, id',
+              variables: [Variable<String>(_userId())], readsFrom: {t.table})
           .get();
       out[t.name] = [
         for (final r in rows)

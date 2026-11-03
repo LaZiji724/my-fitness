@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:my_fitness/core/db/database_provider.dart';
-import 'package:my_fitness/core/supabase/supabase_providers.dart';
+import 'package:my_fitness/features/auth/auth_providers.dart';
 import 'package:my_fitness/features/library/library_repository.dart';
 import 'package:my_fitness/features/library/program.dart';
 
@@ -16,10 +16,10 @@ final programBySlugProvider = Provider.family<Program?, String>((ref, slug) {
 });
 
 final libraryRepositoryProvider = Provider<ProgramLibraryRepository>((ref) {
-  final client = ref.watch(supabaseClientProvider);
+  final uid = ref.watch(currentUserIdProvider);
   return ProgramLibraryRepository(
     ref.watch(appDatabaseProvider),
-    userId: () => client.auth.currentUser?.id ?? 'local',
+    userId: () => uid,
   );
 });
 

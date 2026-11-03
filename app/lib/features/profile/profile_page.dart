@@ -28,7 +28,51 @@ class ProfilePage extends ConsumerWidget {
         ],
       ),
     );
-    if (ok == true) await ref.read(authServiceProvider).signOut();
+    if (ok != true || !context.mounted) return;
+
+    // 先把这个账号的改动推到云端，再退出并清掉本机副本，
+    // 这样换账号登录后本机只有新账号自己的数据（云端的数据不受影响）。
+    final service = ref.read(syncServiceProvider);
+    final auth = ref.read(authServiceProvider);
+    final navigator = Navigator.of(context, rootNavigator: true);
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const PopScope(
+        canPop: false,
+        child: AlertDialog(
+          content: Row(children: [
+            SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.4)),
+            SizedBox(width: 16),
+            Text('正在同步数据…'),
+          ]),
+        ),
+      ),
+    );
+    final synced = await service.flushBeforeSignOut();
+    navigator.pop();
+    if (!synced) {
+      if (!context.mounted) return;
+      final force = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('有改动还没同步'),
+          content: const Text('可能是网络不好。现在退出的话，这些改动会先留在这台手机上，'
+              '用同一个账号重新登录后会自动同步；换成别的账号则看不到它们。'),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('先不退出')),
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              style: TextButton.styleFrom(foregroundColor: context.colors.danger),
+              child: const Text('仍要退出'),
+            ),
+          ],
+        ),
+      );
+      if (force != true) return;
+    }
+    await auth.signOut();
+    if (synced) await service.clearLocalData();
   }
 
   @override
