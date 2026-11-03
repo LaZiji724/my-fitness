@@ -12,6 +12,20 @@ final authStateProvider = StreamProvider<AuthState>(
   (ref) => ref.watch(supabaseClientProvider).auth.onAuthStateChange,
 );
 
+/// 没登录时本地数据使用的占位用户 id（正常使用中登录前进不了主界面，这里只是兜底）。
+const kLocalUserId = 'local';
+
+/// 当前登录用户的 id。
+///
+/// 所有「按用户存取本地数据」的仓库都必须依赖它，而不是在回调里临时读 currentUser：
+/// 换账号时它的值一变，依赖它的仓库与数据流就会整体重建，界面立刻改看新账号的数据，
+/// 不会继续显示上一个账号缓存下来的查询结果。
+/// （令牌自动续期也会触发登录事件，但 id 不变，不会引起重建。）
+final currentUserIdProvider = Provider<String>((ref) {
+  ref.watch(authStateProvider);
+  return ref.watch(supabaseClientProvider).auth.currentUser?.id ?? kLocalUserId;
+});
+
 /// 当前登录用户的展示信息（来自注册时写入的 user metadata，离线也可用）。
 class ProfileSummary {
   const ProfileSummary({

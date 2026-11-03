@@ -350,7 +350,8 @@ class PlanRepository {
     final plan = await (_db.select(_db.plans)..where((p) => p.id.equals(id))).getSingleOrNull();
     final start = plan?.sourceProgramId != null ? mondayOf(startFrom ?? t) : (startFrom ?? t);
     await _db.transaction(() async {
-      await (_db.update(_db.plans)..where((p) => p.isActive.equals(true) & p.deletedAt.isNull()))
+      await (_db.update(_db.plans)
+            ..where((p) => p.isActive.equals(true) & p.deletedAt.isNull() & p.userId.equals(_userId())))
           .write(PlansCompanion(isActive: const Value(false), updatedAt: Value(t), dirty: const Value(true)));
       await (_db.update(_db.plans)..where((p) => p.id.equals(id))).write(PlansCompanion(
         isActive: const Value(true),

@@ -7,7 +7,7 @@ import 'package:uuid/uuid.dart';
 
 import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/core/db/database_provider.dart';
-import 'package:my_fitness/core/supabase/supabase_providers.dart';
+import 'package:my_fitness/features/auth/auth_providers.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 
 /// 每个动作的「按次数 / 按时间」偏好。只存和默认不一样的那些；改回默认就软删除这一行。
@@ -67,10 +67,10 @@ class ExercisePrefsRepository {
 }
 
 final exercisePrefsRepositoryProvider = Provider<ExercisePrefsRepository>((ref) {
-  final client = ref.watch(supabaseClientProvider);
+  final uid = ref.watch(currentUserIdProvider);
   return ExercisePrefsRepository(
     ref.watch(appDatabaseProvider),
-    userId: () => client.auth.currentUser?.id ?? 'local',
+    userId: () => uid,
   );
 });
 

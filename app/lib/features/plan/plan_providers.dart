@@ -1,17 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:my_fitness/core/db/database_provider.dart';
-import 'package:my_fitness/core/supabase/supabase_providers.dart';
+import 'package:my_fitness/features/auth/auth_providers.dart';
 import 'package:my_fitness/features/plan/plan_math.dart';
 import 'package:my_fitness/features/plan/plan_repository.dart';
 import 'package:my_fitness/features/workout/workout_providers.dart';
 import 'package:my_fitness/features/workout/workout_repository.dart';
 
 final planRepositoryProvider = Provider<PlanRepository>((ref) {
-  final client = ref.watch(supabaseClientProvider);
+  final uid = ref.watch(currentUserIdProvider);
   return PlanRepository(
     ref.watch(appDatabaseProvider),
-    userId: () => client.auth.currentUser?.id ?? 'local',
+    userId: () => uid,
   );
 });
 

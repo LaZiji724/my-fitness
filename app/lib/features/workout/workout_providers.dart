@@ -2,17 +2,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/core/db/database_provider.dart';
-import 'package:my_fitness/core/supabase/supabase_providers.dart';
+import 'package:my_fitness/features/auth/auth_providers.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_repository.dart';
 import 'package:my_fitness/features/workout/workout_math.dart';
 import 'package:my_fitness/features/workout/workout_repository.dart';
 
 final workoutRepositoryProvider = Provider<WorkoutRepository>((ref) {
-  final client = ref.watch(supabaseClientProvider);
+  final uid = ref.watch(currentUserIdProvider);
   return WorkoutRepository(
     ref.watch(appDatabaseProvider),
-    userId: () => client.auth.currentUser?.id ?? 'local',
+    userId: () => uid,
   );
 });
 
