@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_image.dart';
 import 'package:my_fitness/features/exercises/exercise_prefs.dart';
@@ -9,10 +10,15 @@ import 'package:my_fitness/features/exercises/exercise_repository.dart';
 
 /// 动作详情：起止两张图、基本信息、目标肌群、要领。
 /// 历史记录与进步曲线在训练记录（M3）和数据（M5）完成后接入。
+///
+/// 传入 [onAdd] 时（给模板挑动作）图片下方多一个「添加动作」按钮，点了才真正加入。
 class ExerciseDetailPage extends ConsumerWidget {
-  const ExerciseDetailPage({super.key, required this.slug});
+  const ExerciseDetailPage({super.key, required this.slug, this.onAdd});
 
   final String slug;
+
+  /// 点「添加动作」时调用；为空则不显示按钮。
+  final Future<void> Function(Exercise exercise)? onAdd;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,7 +34,7 @@ class ExerciseDetailPage extends ConsumerWidget {
           if (matches.isEmpty) {
             return Center(child: Text('找不到这个动作', style: AppText.body.copyWith(color: c.text2)));
           }
-          return _Body(exercise: matches.first);
+          return _Body(exercise: matches.first, onAdd: onAdd);
         },
       ),
     );
@@ -36,8 +42,9 @@ class ExerciseDetailPage extends ConsumerWidget {
 }
 
 class _Body extends ConsumerWidget {
-  const _Body({required this.exercise});
+  const _Body({required this.exercise, this.onAdd});
   final Exercise exercise;
+  final Future<void> Function(Exercise exercise)? onAdd;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,6 +65,17 @@ class _Body extends ConsumerWidget {
               ],
             ),
           ),
+        if (onAdd != null) ...[
+          const SizedBox(height: AppSpace.s16),
+          PressScale(
+            child: FilledButton.icon(
+              onPressed: () => onAdd!(e),
+              icon: const Icon(Icons.add_rounded),
+              label: const Text('添加动作'),
+              style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
+            ),
+          ),
+        ],
         const SizedBox(height: AppSpace.s16),
         Text(e.nameZh, style: AppText.titleLarge.copyWith(color: c.text)),
         if (e.nameEn != null) ...[

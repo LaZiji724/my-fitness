@@ -192,7 +192,7 @@ class _CategoryButton extends StatelessWidget {
   }
 }
 
-class _Results extends ConsumerWidget {
+class _Results extends ConsumerStatefulWidget {
   const _Results({required this.all, required this.filter, this.onPick});
 
   final List<Exercise> all;
@@ -200,8 +200,28 @@ class _Results extends ConsumerWidget {
   final ValueChanged<Exercise>? onPick;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_Results> createState() => _ResultsState();
+}
+
+class _ResultsState extends ConsumerState<_Results> {
+  final _scroll = ScrollController();
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final c = context.colors;
+    final all = widget.all;
+    final filter = widget.filter;
+    final onPick = widget.onPick;
+    // 点左侧部位、顶部筛选或搜索后，右侧动作列表回到顶部。
+    ref.listen<ExerciseFilter>(exerciseFilterProvider, (prev, next) {
+      if (prev != null && _scroll.hasClients && _scroll.offset != 0) _scroll.jumpTo(0);
+    });
     final items = filterExercises(all, filter);
     final counts = equipmentCounts(all, filter);
     final groups = [
@@ -221,12 +241,13 @@ class _Results extends ConsumerWidget {
             ExerciseTab.stretch => '拉伸放松',
           };
 
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+    // 筛选条和数量固定在上方，只有下面的动作网格滑动。
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
               if (warm) ...[
                 Wrap(
                   spacing: 6,
@@ -282,8 +303,11 @@ class _Results extends ConsumerWidget {
                   style: AppText.caption.copyWith(color: c.text3)),
               const SizedBox(height: AppSpace.s12),
             ],
-          ),
         ),
+        Expanded(
+          child: CustomScrollView(
+            controller: _scroll,
+            slivers: [
         if (items.isEmpty)
           SliverToBoxAdapter(
             child: DecoratedBox(
@@ -315,6 +339,9 @@ class _Results extends ConsumerWidget {
             itemBuilder: (context, i) => _ExerciseTile(exercise: items[i], onPick: onPick),
           ),
         const SliverToBoxAdapter(child: SizedBox(height: AppSpace.s24)),
+            ],
+          ),
+        ),
       ],
     );
   }
