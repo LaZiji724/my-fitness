@@ -6,6 +6,7 @@ import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
+import 'package:my_fitness/features/exercises/exercise_detail_page.dart';
 import 'package:my_fitness/features/exercises/exercise_image.dart';
 import 'package:my_fitness/features/exercises/exercise_repository.dart';
 import 'package:my_fitness/features/exercises/exercises_page.dart';
@@ -34,12 +35,29 @@ String describeTemplateExercise(TemplateExercise e) {
 }
 
 /// 编辑模板：改名、调整每个动作的组数/次数/休息，直接用它开始训练。
-class TemplateEditPage extends ConsumerWidget {
+class TemplateEditPage extends ConsumerStatefulWidget {
   const TemplateEditPage({super.key, required this.templateId});
   final String templateId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TemplateEditPage> createState() => _TemplateEditPageState();
+}
+
+class _TemplateEditPageState extends ConsumerState<TemplateEditPage> {
+  String get templateId => widget.templateId;
+
+  @override
+  void initState() {
+    super.initState();
+    // 每次进入模板编辑都从默认的部位 / 器械开始；
+    // 编辑期间连续「添加动作」则一直停在上次选的部位和标签（选动作页自己不重置）。
+    Future.microtask(() {
+      if (mounted) ref.read(exerciseFilterProvider.notifier).reset();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final c = context.colors;
     final repo = ref.watch(planRepositoryProvider);
     final async = ref.watch(templatesProvider);
@@ -376,29 +394,38 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
 }
 
 /// 给模板挑动作：复用动作库页面，选中后加入模板并返回。
-class TemplatePickPage extends ConsumerStatefulWidget {
+///
+/// 点动作不会直接加入，而是先打开动作详情（和动作库一样），在详情里点「添加动作」才加入。
+/// 筛选（部位、器械）保存在 [exerciseFilterProvider] 里，加完回到模板再点「添加动作」仍停在原处；
+/// 退出模板编辑页后下次进入由 [TemplateEditPage] 重置。
+class TemplatePickPage extends ConsumerWidget {
   const TemplatePickPage({super.key, required this.templateId});
   final String templateId;
 
   @override
-  ConsumerState<TemplatePickPage> createState() => _TemplatePickPageState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ExercisesPage(
+      onPick: (exercise) => context.push('/template/$templateId/pick/${exercise.slug}'),
+    );
+  }
 }
 
-class _TemplatePickPageState extends ConsumerState<TemplatePickPage> {
-  @override
-  void initState() {
-    super.initState();
-    Future.microtask(() {
-      if (mounted) ref.read(exerciseFilterProvider.notifier).reset();
-    });
-  }
+/// 给模板挑动作时看到的动作详情：图片下方有「添加动作」，点了加入模板，并一路返回到模板页。
+class TemplatePickDetailPage extends ConsumerWidget {
+  const TemplatePickDetailPage({super.key, required this.templateId, required this.slug});
+  final String templateId;
+  final String slug;
 
   @override
-  Widget build(BuildContext context) {
-    return ExercisesPage(
-      onPick: (exercise) async {
-        await ref.read(planRepositoryProvider).addTemplateExercise(widget.templateId, exercise.id, exercise: exercise);
-        if (context.mounted) context.pop();
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ExerciseDetailPage(
+      slug: slug,
+      onAdd: (exercise) async {
+        await ref.read(planRepositoryProvider).addTemplateExercise(templateId, exercise.id, exercise: exercise);
+        if (!context.mounted) return;
+        final router = GoRouter.of(context);
+        router.pop(); // 详情页
+        router.pop(); // 选动作页
       },
     );
   }

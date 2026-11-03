@@ -67,6 +67,11 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
     final selectedWorkouts = byDay[dateKeyOf(_selected)] ?? const <WorkoutView>[];
     final selectedPlan = planEntryFor(_selected, plans, templates);
 
+    // 标签文字和颜色都来自当前计划里每天安排的模板：改模板名、换每天的安排，日历立刻跟着变。
+    final tags = planTags(plans, templates, byId);
+    final tagByName = {for (final t in tags) t.name: partColor(c, t.part)};
+    final tagById = {for (final t in tags) t.id: partColor(c, t.part)};
+
     return Scaffold(
       body: SafeArea(
         bottom: false,
@@ -115,16 +120,26 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
                 final ws = byDay[dateKeyOf(d)];
                 if (ws == null) return const [];
                 final colors = <Color>[];
-                for (final p in partsOf(ws)) {
-                  final col = partColor(c, p);
+                void add(Color col) {
                   if (!colors.contains(col)) colors.add(col);
+                }
+                for (final w in ws) {
+                  final tagColor = tagByName[w.workout.name];
+                  if (tagColor != null) {
+                    add(tagColor);
+                  } else {
+                    for (final p in partsOf([w])) {
+                      add(partColor(c, p));
+                    }
+                  }
                 }
                 return colors.take(3).toList();
               },
               plannedFor: (d) {
-                if (d.isBefore(today) || byDay.containsKey(dateKeyOf(d))) return false;
+                if (d.isBefore(today) || byDay.containsKey(dateKeyOf(d))) return null;
                 final e = planEntryFor(d, plans, templates);
-                return e != null && !e.isRest;
+                if (e == null || e.isRest) return null;
+                return tagById[e.template!.template.id] ?? c.text3;
               },
             ),
             const SizedBox(height: AppSpace.s12),
@@ -133,20 +148,26 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
               spacing: 14,
               runSpacing: 6,
               children: [
-                for (final p in const [
-                  BodyPart.chest,
-                  BodyPart.back,
-                  BodyPart.legs,
-                  BodyPart.shoulders,
-                  BodyPart.arms,
-                  BodyPart.core,
-                ])
+                // 有当前计划：图例就是计划里每天练的模板名；没有计划：按部位。
+                for (final (label, color) in tags.isNotEmpty
+                    ? [for (final t in tags) (t.name, partColor(c, t.part))]
+                    : [
+                        for (final p in const [
+                          BodyPart.chest,
+                          BodyPart.back,
+                          BodyPart.legs,
+                          BodyPart.shoulders,
+                          BodyPart.arms,
+                          BodyPart.core,
+                        ])
+                          (partGroupLabel(p), partColor(c, p)),
+                      ])
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(width: 8, height: 8, decoration: BoxDecoration(color: partColor(c, p), shape: BoxShape.circle)),
+                      Container(width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
                       const SizedBox(width: 5),
-                      Text(partGroupLabel(p), style: AppText.label.copyWith(color: c.text2)),
+                      Text(label, style: AppText.label.copyWith(color: c.text2)),
                     ],
                   ),
               ],
@@ -189,7 +210,8 @@ class _Grid extends StatelessWidget {
   final DateTime selected;
   final ValueChanged<DateTime> onPick;
   final List<Color> Function(DateTime) dotsFor;
-  final bool Function(DateTime) plannedFor;
+  /// 计划里这天要练但还没练：返回标签色（画成空心圈）；不用练返回 null。
+  final Color? Function(DateTime) plannedFor;
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +232,7 @@ class _Grid extends StatelessWidget {
                       final isSel = dateKeyOf(d) == dateKeyOf(selected);
                       final isToday = dateKeyOf(d) == dateKeyOf(today);
                       final dots = dotsFor(d);
-                      final planned = plannedFor(d);
+                      final plannedColor = plannedFor(d);
                       return PressScale(
                         scale: PressScale.chipScale,
                         child: Semantics(
@@ -253,13 +275,13 @@ class _Grid extends StatelessWidget {
                                             margin: const EdgeInsets.symmetric(horizontal: 1.5),
                                             decoration: BoxDecoration(color: col, shape: BoxShape.circle),
                                           ),
-                                        if (dots.isEmpty && planned)
+                                        if (dots.isEmpty && plannedColor != null)
                                           Container(
                                             width: 6,
                                             height: 6,
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
-                                              border: Border.all(color: c.text3, width: 1.2),
+                                              border: Border.all(color: plannedColor, width: 1.2),
                                             ),
                                           ),
                                       ],

@@ -50,6 +50,29 @@ String? authRedirect({required bool loggedIn, required String location}) {
   return null;
 }
 
+/// 模板编辑、给模板选动作、选动作时看到的动作详情（带「添加动作」）。
+final List<RouteBase> templateRoutes = [
+  GoRoute(
+    path: '/template/:id',
+    builder: (_, state) => TemplateEditPage(templateId: state.pathParameters['id']!),
+    routes: [
+      GoRoute(
+        path: 'pick',
+        builder: (_, state) => TemplatePickPage(templateId: state.pathParameters['id']!),
+        routes: [
+          GoRoute(
+            path: ':slug',
+            builder: (_, state) => TemplatePickDetailPage(
+              templateId: state.pathParameters['id']!,
+              slug: state.pathParameters['slug']!,
+            ),
+          ),
+        ],
+      ),
+    ],
+  ),
+];
+
 final routerProvider = Provider<GoRouter>((ref) {
   final client = ref.watch(supabaseClientProvider);
   final refresh = _AuthRefresh(client.auth.onAuthStateChange);
@@ -70,16 +93,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/exercise/:slug',
         builder: (_, state) => ExerciseDetailPage(slug: state.pathParameters['slug']!),
       ),
-      GoRoute(
-        path: '/template/:id',
-        builder: (_, state) => TemplateEditPage(templateId: state.pathParameters['id']!),
-        routes: [
-          GoRoute(
-            path: 'pick',
-            builder: (_, state) => TemplatePickPage(templateId: state.pathParameters['id']!),
-          ),
-        ],
-      ),
+      ...templateRoutes,
       GoRoute(path: '/library', builder: (_, _) => const LibraryPage()),
       GoRoute(
         path: '/library/:slug',

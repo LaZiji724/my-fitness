@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
+import 'package:my_fitness/core/widgets/swipe_to_delete.dart';
 import 'package:my_fitness/features/plan/plan_math.dart';
 import 'package:my_fitness/features/plan/plan_providers.dart';
 import 'package:my_fitness/features/plan/plan_repository.dart';
@@ -322,7 +323,11 @@ class _TemplatesTab extends ConsumerWidget {
         if (templates.isEmpty)
           const EmptyCard(title: '还没有模板', hint: '模板是一次训练的动作清单，开始训练时一键带入'),
         for (final t in templates) ...[
-          _TemplateCard(view: t, byId: byId),
+          SwipeToDelete(
+            key: ValueKey(t.template.id),
+            onDelete: () => ref.read(planRepositoryProvider).deleteTemplate(t.template.id),
+            child: _TemplateCard(view: t, byId: byId),
+          ),
           const SizedBox(height: AppSpace.s8),
         ],
         const SizedBox(height: AppSpace.s8),
