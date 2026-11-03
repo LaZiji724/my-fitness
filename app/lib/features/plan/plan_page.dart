@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/plan/plan_math.dart';
 import 'package:my_fitness/features/plan/plan_providers.dart';
 import 'package:my_fitness/features/plan/plan_repository.dart';
@@ -100,11 +101,13 @@ class _PlansTab extends ConsumerWidget {
         if (plans.isNotEmpty && others.isEmpty)
           Text('其他计划会出现在这里', style: AppText.label.copyWith(color: c.text3)),
         const SizedBox(height: AppSpace.s8),
-        OutlinedButton.icon(
-          onPressed: () => _create(context, ref),
-          icon: const Icon(Icons.add_rounded),
-          label: const Text('新建计划'),
-          style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
+        PressScale(
+          child: OutlinedButton.icon(
+            onPressed: () => _create(context, ref),
+            icon: const Icon(Icons.add_rounded),
+            label: const Text('新建计划'),
+            style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
+          ),
         ),
       ],
     );
@@ -119,32 +122,35 @@ class _LibraryEntry extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final c = context.colors;
     final count = ref.watch(programsProvider).value?.length;
-    return Material(
-      color: c.accentSoft,
-      borderRadius: AppRadius.card,
-      child: InkWell(
+    return PressScale(
+      scale: PressScale.cardScale,
+      child: Material(
+        color: c.accentSoft,
         borderRadius: AppRadius.card,
-        onTap: () => context.push('/library'),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpace.cardPadding),
-          child: Row(
-            children: [
-              Icon(Icons.local_fire_department_rounded, color: c.accentText, size: 32),
-              const SizedBox(width: AppSpace.s12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('计划库', style: AppText.titleSmall.copyWith(color: c.text)),
-                    Text(
-                      count == null ? '内置训练计划，一键加入' : '$count 个内置计划 · 增肌、减脂、塑形、拉伸康复',
-                      style: AppText.label.copyWith(color: c.text2),
-                    ),
-                  ],
+        child: InkWell(
+          borderRadius: AppRadius.card,
+          onTap: () => context.push('/library'),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpace.cardPadding),
+            child: Row(
+              children: [
+                Icon(Icons.local_fire_department_rounded, color: c.accentText, size: 32),
+                const SizedBox(width: AppSpace.s12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('计划库', style: AppText.titleSmall.copyWith(color: c.text)),
+                      Text(
+                        count == null ? '内置训练计划，一键加入' : '$count 个内置计划 · 增肌、减脂、塑形、拉伸康复',
+                        style: AppText.label.copyWith(color: c.text2),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Icon(Icons.chevron_right_rounded, color: c.text2),
-            ],
+                Icon(Icons.chevron_right_rounded, color: c.text2),
+              ],
+            ),
           ),
         ),
       ),
@@ -172,39 +178,42 @@ class _ActivePlanCard extends ConsumerWidget {
     final todayName = _nameOf(plan.dayAt(idx));
     final rest = plan.dayAt(idx)?.templateId == null;
 
-    return GestureDetector(
-      onTap: () => context.push('/plan/${plan.plan.id}'),
-      child: DecoratedBox(
-        decoration: BoxDecoration(color: c.hero, borderRadius: AppRadius.card),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpace.cardPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text('当前计划', style: AppText.label.copyWith(color: c.onHero2)),
-                  const Spacer(),
-                  Text('编辑', style: AppText.label.copyWith(color: c.accentText)),
-                ],
-              ),
-              const SizedBox(height: AppSpace.s4),
-              Text(plan.plan.name, style: AppText.titleMedium.copyWith(color: c.onHero)),
-              Text('${plan.plan.cycleDays} 天一循环 · 今天是第 ${idx + 1} 天',
-                  style: AppText.label.copyWith(color: c.onHero2)),
-              const SizedBox(height: AppSpace.s16),
-              Text(rest ? '今天休息' : '今天练 $todayName',
-                  style: AppText.titleSmall.copyWith(color: c.onHero)),
-              const SizedBox(height: AppSpace.s12),
-              Text('未来 7 天', style: AppText.caption.copyWith(color: c.onHero2)),
-              const SizedBox(height: AppSpace.s8),
-              Row(
-                children: [
-                  for (var i = 0; i < 7; i++)
-                    Expanded(child: _DayChip(date: today.add(Duration(days: i)), isToday: i == 0, name: _dayName(i, idx))),
-                ],
-              ),
-            ],
+    return PressScale(
+      scale: PressScale.cardScale,
+      child: GestureDetector(
+        onTap: () => context.push('/plan/${plan.plan.id}'),
+        child: DecoratedBox(
+          decoration: BoxDecoration(color: c.hero, borderRadius: AppRadius.card),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpace.cardPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text('当前计划', style: AppText.label.copyWith(color: c.onHero2)),
+                    const Spacer(),
+                    Text('编辑', style: AppText.label.copyWith(color: c.accentText)),
+                  ],
+                ),
+                const SizedBox(height: AppSpace.s4),
+                Text(plan.plan.name, style: AppText.titleMedium.copyWith(color: c.onHero)),
+                Text('${plan.plan.cycleDays} 天一循环 · 今天是第 ${idx + 1} 天',
+                    style: AppText.label.copyWith(color: c.onHero2)),
+                const SizedBox(height: AppSpace.s16),
+                Text(rest ? '今天休息' : '今天练 $todayName',
+                    style: AppText.titleSmall.copyWith(color: c.onHero)),
+                const SizedBox(height: AppSpace.s12),
+                Text('未来 7 天', style: AppText.caption.copyWith(color: c.onHero2)),
+                const SizedBox(height: AppSpace.s8),
+                Row(
+                  children: [
+                    for (var i = 0; i < 7; i++)
+                      Expanded(child: _DayChip(date: today.add(Duration(days: i)), isToday: i == 0, name: _dayName(i, idx))),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -259,32 +268,37 @@ class _PlanRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final c = context.colors;
     final used = plan.days.where((d) => d?.templateId != null).length;
-    return Material(
-      color: c.surface,
-      borderRadius: AppRadius.card,
-      child: InkWell(
+    return PressScale(
+      scale: PressScale.cardScale,
+      child: Material(
+        color: c.surface,
         borderRadius: AppRadius.card,
-        onTap: () => context.push('/plan/${plan.plan.id}'),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpace.cardPadding),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(plan.plan.name, style: AppText.titleSmall.copyWith(color: c.text)),
-                    Text('${plan.plan.cycleDays} 天一循环 · 训练 $used 天',
-                        style: AppText.label.copyWith(color: c.text2)),
-                  ],
+        child: InkWell(
+          borderRadius: AppRadius.card,
+          onTap: () => context.push('/plan/${plan.plan.id}'),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpace.cardPadding),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(plan.plan.name, style: AppText.titleSmall.copyWith(color: c.text)),
+                      Text('${plan.plan.cycleDays} 天一循环 · 训练 $used 天',
+                          style: AppText.label.copyWith(color: c.text2)),
+                    ],
+                  ),
                 ),
-              ),
-              FilledButton.tonal(
-                onPressed: () => ref.read(planRepositoryProvider).activatePlan(plan.plan.id),
-                style: FilledButton.styleFrom(minimumSize: const Size(0, 36)),
-                child: const Text('设为当前'),
-              ),
-            ],
+                PressScale(
+                  child: FilledButton.tonal(
+                    onPressed: () => ref.read(planRepositoryProvider).activatePlan(plan.plan.id),
+                    style: FilledButton.styleFrom(minimumSize: const Size(0, 36)),
+                    child: const Text('设为当前'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -312,16 +326,18 @@ class _TemplatesTab extends ConsumerWidget {
           const SizedBox(height: AppSpace.s8),
         ],
         const SizedBox(height: AppSpace.s8),
-        OutlinedButton.icon(
-          onPressed: () async {
-            final name = await promptName(context, title: '新建模板', hint: '模板名称，如 推日', confirm: '创建');
-            if (name == null || !context.mounted) return;
-            final id = await ref.read(planRepositoryProvider).createTemplate(name);
-            if (context.mounted) context.push('/template/$id');
-          },
-          icon: const Icon(Icons.add_rounded),
-          label: const Text('新建模板'),
-          style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
+        PressScale(
+          child: OutlinedButton.icon(
+            onPressed: () async {
+              final name = await promptName(context, title: '新建模板', hint: '模板名称，如 推日', confirm: '创建');
+              if (name == null || !context.mounted) return;
+              final id = await ref.read(planRepositoryProvider).createTemplate(name);
+              if (context.mounted) context.push('/template/$id');
+            },
+            icon: const Icon(Icons.add_rounded),
+            label: const Text('新建模板'),
+            style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
+          ),
         ),
       ],
     );
@@ -338,35 +354,38 @@ class _TemplateCard extends StatelessWidget {
     final c = context.colors;
     final sets = view.exercises.fold<int>(0, (n, e) => n + e.targetSets);
     final names = view.exercises.map((e) => byId[e.exerciseId]?.nameZh).whereType<String>().take(4).join('、');
-    return Material(
-      color: c.surface,
-      borderRadius: AppRadius.card,
-      child: InkWell(
+    return PressScale(
+      scale: PressScale.cardScale,
+      child: Material(
+        color: c.surface,
         borderRadius: AppRadius.card,
-        onTap: () => context.push('/template/${view.template.id}'),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpace.cardPadding),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(view.template.name, style: AppText.titleSmall.copyWith(color: c.text)),
-                    const SizedBox(height: 2),
-                    Text('${view.exercises.length} 个动作 · $sets 组',
-                        style: AppText.label.copyWith(color: c.text2)),
-                    if (names.isNotEmpty) ...[
-                      const SizedBox(height: AppSpace.s8),
-                      Text(names,
-                          maxLines: 2, overflow: TextOverflow.ellipsis, style: AppText.label.copyWith(color: c.text3)),
+        child: InkWell(
+          borderRadius: AppRadius.card,
+          onTap: () => context.push('/template/${view.template.id}'),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpace.cardPadding),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(view.template.name, style: AppText.titleSmall.copyWith(color: c.text)),
+                      const SizedBox(height: 2),
+                      Text('${view.exercises.length} 个动作 · $sets 组',
+                          style: AppText.label.copyWith(color: c.text2)),
+                      if (names.isNotEmpty) ...[
+                        const SizedBox(height: AppSpace.s8),
+                        Text(names,
+                            maxLines: 2, overflow: TextOverflow.ellipsis, style: AppText.label.copyWith(color: c.text3)),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: AppSpace.s8),
-              Icon(Icons.chevron_right_rounded, color: c.text3),
-            ],
+                const SizedBox(width: AppSpace.s8),
+                Icon(Icons.chevron_right_rounded, color: c.text3),
+              ],
+            ),
           ),
         ),
       ),

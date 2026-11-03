@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/plan/plan_providers.dart';
 import 'package:my_fitness/features/plan/plan_widgets.dart';
 import 'package:my_fitness/features/workout/workout_math.dart';
@@ -142,10 +143,12 @@ class WorkoutSummaryPage extends ConsumerWidget {
                 const Spacer(),
               _SaveTemplateButton(workoutId: summary.workoutId),
               const SizedBox(height: AppSpace.s12),
-              FilledButton(
-                style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
-                onPressed: () => context.go('/today'),
-                child: const Text('完成'),
+              PressScale(
+                child: FilledButton(
+                  style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
+                  onPressed: () => context.go('/today'),
+                  child: const Text('完成'),
+                ),
               ),
             ],
           ),
@@ -183,11 +186,13 @@ class _SaveTemplateButtonState extends ConsumerState<_SaveTemplateButton> {
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton.icon(
-      onPressed: _saved ? null : _save,
-      icon: Icon(_saved ? Icons.check_rounded : Icons.bookmark_add_outlined),
-      label: Text(_saved ? '已存为模板' : '存为模板'),
-      style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
+    return PressScale(
+      child: OutlinedButton.icon(
+        onPressed: _saved ? null : _save,
+        icon: Icon(_saved ? Icons.check_rounded : Icons.bookmark_add_outlined),
+        label: Text(_saved ? '已存为模板' : '存为模板'),
+        style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
+      ),
     );
   }
 }

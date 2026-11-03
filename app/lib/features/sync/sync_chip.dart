@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/sync/sync_providers.dart';
 
 /// 「刚刚 / 5 分钟前 / 今天 18:30 / 10月28日」这类相对时间。
@@ -29,22 +30,25 @@ class SyncChip extends ConsumerWidget {
       SyncPhase.idle when s.pending => ('待同步', c.text2, Icons.cloud_upload_outlined),
       SyncPhase.idle => (s.lastSync == null ? '未同步' : '已同步', c.success, Icons.cloud_done_outlined),
     };
-    return Semantics(
-      button: true,
-      label: '同步状态：$text，点击立即同步',
-      child: GestureDetector(
-        onTap: () => ref.read(syncControllerProvider.notifier).requestSync(),
-        child: Container(
-          height: 28,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          decoration: BoxDecoration(color: c.sunken, borderRadius: BorderRadius.circular(14)),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(icon, size: 15, color: color),
-              const SizedBox(width: 4),
-              Text(text, style: AppText.caption.copyWith(color: color, fontWeight: FontWeight.w600)),
-            ],
+    return PressScale(
+      scale: PressScale.chipScale,
+      child: Semantics(
+        button: true,
+        label: '同步状态：$text，点击立即同步',
+        child: GestureDetector(
+          onTap: () => ref.read(syncControllerProvider.notifier).requestSync(),
+          child: Container(
+            height: 28,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(color: c.sunken, borderRadius: BorderRadius.circular(14)),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, size: 15, color: color),
+                const SizedBox(width: 4),
+                Text(text, style: AppText.caption.copyWith(color: color, fontWeight: FontWeight.w600)),
+              ],
+            ),
           ),
         ),
       ),

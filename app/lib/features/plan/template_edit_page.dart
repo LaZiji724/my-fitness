@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_image.dart';
 import 'package:my_fitness/features/exercises/exercise_repository.dart';
@@ -73,18 +74,20 @@ class TemplateEditPage extends ConsumerWidget {
           ),
         ),
         actions: [
-          PopupMenuButton<String>(
-            tooltip: '更多',
-            onSelected: (v) async {
-              if (v == 'delete') {
-                final ok = await confirmDialog(context,
-                    title: '删除模板', message: '删除「${view.template.name}」？计划里用到它的天会变成休息日。', confirm: '删除');
-                if (!ok) return;
-                await repo.deleteTemplate(templateId);
-                if (context.mounted) context.pop();
-              }
-            },
-            itemBuilder: (_) => const [PopupMenuItem(value: 'delete', child: Text('删除模板'))],
+          PressScale(
+            child: PopupMenuButton<String>(
+              tooltip: '更多',
+              onSelected: (v) async {
+                if (v == 'delete') {
+                  final ok = await confirmDialog(context,
+                      title: '删除模板', message: '删除「${view.template.name}」？计划里用到它的天会变成休息日。', confirm: '删除');
+                  if (!ok) return;
+                  await repo.deleteTemplate(templateId);
+                  if (context.mounted) context.pop();
+                }
+              },
+              itemBuilder: (_) => const [PopupMenuItem(value: 'delete', child: Text('删除模板'))],
+            ),
           ),
         ],
       ),
@@ -101,27 +104,31 @@ class TemplateEditPage extends ConsumerWidget {
             const SizedBox(height: AppSpace.s8),
           ],
           const SizedBox(height: AppSpace.s8),
-          OutlinedButton.icon(
-            onPressed: () => context.push('/template/$templateId/pick'),
-            icon: const Icon(Icons.add_rounded),
-            label: const Text('添加动作'),
-            style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
+          PressScale(
+            child: OutlinedButton.icon(
+              onPressed: () => context.push('/template/$templateId/pick'),
+              icon: const Icon(Icons.add_rounded),
+              label: const Text('添加动作'),
+              style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
+            ),
           ),
         ],
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, AppSpace.s12),
-          child: FilledButton(
-            style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
-            onPressed: view.exercises.isEmpty
-                ? null
-                : () async {
-                    await repo.startFromTemplate(ref.read(workoutRepositoryProvider), templateId,
-                        exercises: byId);
-                    if (context.mounted) context.go('/workout');
-                  },
-            child: const Text('用这个模板开始训练'),
+          child: PressScale(
+            child: FilledButton(
+              style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
+              onPressed: view.exercises.isEmpty
+                  ? null
+                  : () async {
+                      await repo.startFromTemplate(ref.read(workoutRepositoryProvider), templateId,
+                          exercises: byId);
+                      if (context.mounted) context.go('/workout');
+                    },
+              child: const Text('用这个模板开始训练'),
+            ),
           ),
         ),
       ),
@@ -137,48 +144,54 @@ class _ExerciseRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final c = context.colors;
-    return Material(
-      color: c.surface,
-      borderRadius: AppRadius.card,
-      child: InkWell(
+    return PressScale(
+      scale: PressScale.cardScale,
+      child: Material(
+        color: c.surface,
         borderRadius: AppRadius.card,
-        onTap: () => showModalBottomSheet<void>(
-          context: context,
-          isScrollControlled: true,
-          builder: (_) => _ConfigSheet(
-            entry: entry,
-            name: exercise?.nameZh ?? '动作',
-            timed: exercise?.trackingType == TrackingType.duration,
-            exercise: exercise,
+        child: InkWell(
+          borderRadius: AppRadius.card,
+          onTap: () => showModalBottomSheet<void>(
+            context: context,
+            isScrollControlled: true,
+            builder: (_) => _ConfigSheet(
+              entry: entry,
+              name: exercise?.nameZh ?? '动作',
+              timed: exercise?.trackingType == TrackingType.duration,
+              exercise: exercise,
+            ),
           ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpace.s12),
-          child: Row(
-            children: [
-              SizedBox(
-                width: AppSize.exerciseThumb,
-                child: exercise == null
-                    ? const SizedBox.shrink()
-                    : ExerciseImage(exercise: exercise!, cacheWidth: 160, radius: AppRadius.md - 4),
-              ),
-              const SizedBox(width: AppSpace.s12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(exercise?.nameZh ?? '未知动作',
-                        style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
-                    Text(describeTemplateExercise(entry), style: AppText.label.copyWith(color: c.text2)),
-                  ],
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpace.s12),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: AppSize.exerciseThumb,
+                  child: exercise == null
+                      ? const SizedBox.shrink()
+                      : ExerciseImage(exercise: exercise!, cacheWidth: 160, radius: AppRadius.md - 4),
                 ),
-              ),
-              IconButton(
-                tooltip: '移除动作',
-                onPressed: () => ref.read(planRepositoryProvider).removeTemplateExercise(entry.id),
-                icon: Icon(Icons.close_rounded, color: c.text3),
-              ),
-            ],
+                const SizedBox(width: AppSpace.s12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(exercise?.nameZh ?? '未知动作',
+                          style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
+                      Text(describeTemplateExercise(entry), style: AppText.label.copyWith(color: c.text2)),
+                    ],
+                  ),
+                ),
+                PressScale(
+                  scale: PressScale.smallScale,
+                  child: IconButton(
+                    tooltip: '移除动作',
+                    onPressed: () => ref.read(planRepositoryProvider).removeTemplateExercise(entry.id),
+                    icon: Icon(Icons.close_rounded, color: c.text3),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -348,10 +361,12 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
               },
             ),
             const SizedBox(height: AppSpace.s12),
-            FilledButton(
-              style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
-              onPressed: () => Navigator.pop(context),
-              child: const Text('完成'),
+            PressScale(
+              child: FilledButton(
+                style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
+                onPressed: () => Navigator.pop(context),
+                child: const Text('完成'),
+              ),
             ),
           ],
         ),

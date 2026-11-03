@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/library/program.dart';
 
 /// 分类图标。
@@ -152,60 +153,63 @@ class ProgramCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    return Semantics(
-      button: true,
-      label: '${program.name}，${programMetaLine(program)}',
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: AppRadius.card,
-          onTap: onTap,
-          child: ProgramCover(
-            program: program,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(AppSpace.s16, AppSpace.s12, AppSpace.s16, AppSpace.s12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      if (program.isNew) ...[const CoverTag('新上线', filled: true), const SizedBox(width: 6)],
-                      if (program.featured) ...[const CoverTag('推荐'), const SizedBox(width: 6)],
-                      if (joined) const CoverTag('已加入'),
-                      const Spacer(),
-                      if (favorite) Icon(Icons.star_rounded, size: 20, color: c.accent),
-                    ],
-                  ),
-                  const Spacer(),
-                  Text(
-                    program.name,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppText.titleMedium.copyWith(color: c.onHero, fontSize: 19),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    program.subtitle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppText.label.copyWith(color: c.onHero2),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          programMetaLine(program),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppText.caption.copyWith(color: c.onHero2, fontSize: 12),
+    return PressScale(
+      scale: PressScale.cardScale,
+      child: Semantics(
+        button: true,
+        label: '${program.name}，${programMetaLine(program)}',
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: AppRadius.card,
+            onTap: onTap,
+            child: ProgramCover(
+              program: program,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(AppSpace.s16, AppSpace.s12, AppSpace.s16, AppSpace.s12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        if (program.isNew) ...[const CoverTag('新上线', filled: true), const SizedBox(width: 6)],
+                        if (program.featured) ...[const CoverTag('推荐'), const SizedBox(width: 6)],
+                        if (joined) const CoverTag('已加入'),
+                        const Spacer(),
+                        if (favorite) Icon(Icons.star_rounded, size: 20, color: c.accent),
+                      ],
+                    ),
+                    const Spacer(),
+                    Text(
+                      program.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppText.titleMedium.copyWith(color: c.onHero, fontSize: 19),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      program.subtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppText.label.copyWith(color: c.onHero2),
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            programMetaLine(program),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppText.caption.copyWith(color: c.onHero2, fontSize: 12),
+                          ),
                         ),
-                      ),
-                      if (completed > 0)
-                        Text('已练 $completed 节', style: AppText.caption.copyWith(color: c.accentText, fontSize: 12)),
-                    ],
-                  ),
-                ],
+                        if (completed > 0)
+                          Text('已练 $completed 节', style: AppText.caption.copyWith(color: c.accentText, fontSize: 12)),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

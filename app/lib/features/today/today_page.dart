@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/avatar_view.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/auth/auth_providers.dart';
 import 'package:my_fitness/features/calendar/calendar_math.dart';
 import 'package:my_fitness/features/plan/plan_providers.dart';
@@ -60,12 +61,15 @@ class TodayPage extends ConsumerWidget {
                   child: Text('还没有模板，去「计划 → 模板」新建一个', style: AppText.body.copyWith(color: c.text2)),
                 ),
               for (final t in templates)
-                ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(t.template.name, style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
-                  subtitle: Text('${t.exercises.length} 个动作', style: AppText.label.copyWith(color: c.text2)),
-                  enabled: t.exercises.isNotEmpty,
-                  onTap: () => Navigator.pop(ctx, t.template.id),
+                PressScale(
+                  scale: PressScale.cardScale,
+                  child: ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(t.template.name, style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
+                    subtitle: Text('${t.exercises.length} 个动作', style: AppText.label.copyWith(color: c.text2)),
+                    enabled: t.exercises.isNotEmpty,
+                    onTap: () => Navigator.pop(ctx, t.template.id),
+                  ),
                 ),
             ],
           ),
@@ -137,15 +141,18 @@ class TodayPage extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Semantics(
-                  button: true,
-                  label: '我的',
-                  child: GestureDetector(
-                    onTap: () => context.push('/me'),
-                    child: AvatarView(
-                      kind: profile?.avatarKind ?? 'preset',
-                      avatarRef: profile?.avatarRef ?? 'avatar_01',
-                      size: 44,
+                PressScale(
+                  scale: PressScale.chipScale,
+                  child: Semantics(
+                    button: true,
+                    label: '我的',
+                    child: GestureDetector(
+                      onTap: () => context.push('/me'),
+                      child: AvatarView(
+                        kind: profile?.avatarKind ?? 'preset',
+                        avatarRef: profile?.avatarRef ?? 'avatar_01',
+                        size: 44,
+                      ),
                     ),
                   ),
                 ),
@@ -199,10 +206,12 @@ class TodayPage extends ConsumerWidget {
                           style: AppText.label.copyWith(color: c.onHero)),
                     ],
                     const SizedBox(height: AppSpace.s16),
-                    FilledButton(
-                      style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
-                      onPressed: onStart,
-                      child: Text(buttonText),
+                    PressScale(
+                      child: FilledButton(
+                        style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
+                        onPressed: onStart,
+                        child: Text(buttonText),
+                      ),
                     ),
                   ],
                 ),
@@ -214,17 +223,21 @@ class TodayPage extends ConsumerWidget {
                 children: [
                   if (tpl != null || entry != null) ...[
                     Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => _startBlank(context, ref),
-                        child: const Text('空白训练'),
+                      child: PressScale(
+                        child: OutlinedButton(
+                          onPressed: () => _startBlank(context, ref),
+                          child: const Text('空白训练'),
+                        ),
                       ),
                     ),
                     const SizedBox(width: AppSpace.s12),
                   ],
                   Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => _pickTemplate(context, ref),
-                      child: const Text('从模板开始'),
+                    child: PressScale(
+                      child: OutlinedButton(
+                        onPressed: () => _pickTemplate(context, ref),
+                        child: const Text('从模板开始'),
+                      ),
                     ),
                   ),
                 ],
@@ -270,7 +283,7 @@ class TodayPage extends ConsumerWidget {
               children: [
                 Text('最近训练', style: AppText.titleSmall.copyWith(color: c.text)),
                 const Spacer(),
-                TextButton(onPressed: () => context.go('/calendar'), child: const Text('全部记录')),
+                PressScale(child: TextButton(onPressed: () => context.go('/calendar'), child: const Text('全部记录'))),
               ],
             ),
             if (completed.isEmpty)

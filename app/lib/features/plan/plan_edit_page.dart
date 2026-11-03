@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/plan/plan_providers.dart';
 import 'package:my_fitness/features/plan/plan_repository.dart';
 import 'package:my_fitness/features/plan/plan_widgets.dart';
@@ -101,18 +102,20 @@ class PlanEditPage extends ConsumerWidget {
           ),
         ),
         actions: [
-          PopupMenuButton<String>(
-            tooltip: '更多',
-            onSelected: (v) async {
-              if (v == 'delete') {
-                final ok = await confirmDialog(context,
-                    title: '删除计划', message: '删除「${plan.plan.name}」？已完成的训练记录不受影响。', confirm: '删除');
-                if (!ok) return;
-                await repo.deletePlan(planId);
-                if (context.mounted) context.pop();
-              }
-            },
-            itemBuilder: (_) => const [PopupMenuItem(value: 'delete', child: Text('删除计划'))],
+          PressScale(
+            child: PopupMenuButton<String>(
+              tooltip: '更多',
+              onSelected: (v) async {
+                if (v == 'delete') {
+                  final ok = await confirmDialog(context,
+                      title: '删除计划', message: '删除「${plan.plan.name}」？已完成的训练记录不受影响。', confirm: '删除');
+                  if (!ok) return;
+                  await repo.deletePlan(planId);
+                  if (context.mounted) context.pop();
+                }
+              },
+              itemBuilder: (_) => const [PopupMenuItem(value: 'delete', child: Text('删除计划'))],
+            ),
           ),
         ],
       ),
@@ -137,30 +140,33 @@ class PlanEditPage extends ConsumerWidget {
           Text('每天练什么', style: AppText.titleSmall.copyWith(color: c.text)),
           const SizedBox(height: AppSpace.s8),
           for (var i = 0; i < plan.plan.cycleDays; i++) ...[
-            Material(
-              color: c.surface,
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              child: InkWell(
+            PressScale(
+              scale: PressScale.cardScale,
+              child: Material(
+                color: c.surface,
                 borderRadius: BorderRadius.circular(AppRadius.md),
-                onTap: () => _pickTemplate(context, ref, plan, i),
-                child: SizedBox(
-                  height: 56,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpace.cardPadding),
-                    child: Row(
-                      children: [
-                        SizedBox(width: 64, child: Text('第 ${i + 1} 天', style: AppText.label.copyWith(color: c.text3))),
-                        Expanded(
-                          child: Text(
-                            nameOf(i),
-                            style: AppText.body.copyWith(
-                              color: plan.dayAt(i)?.templateId == null ? c.text3 : c.text,
-                              fontWeight: FontWeight.w600,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(AppRadius.md),
+                  onTap: () => _pickTemplate(context, ref, plan, i),
+                  child: SizedBox(
+                    height: 56,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: AppSpace.cardPadding),
+                      child: Row(
+                        children: [
+                          SizedBox(width: 64, child: Text('第 ${i + 1} 天', style: AppText.label.copyWith(color: c.text3))),
+                          Expanded(
+                            child: Text(
+                              nameOf(i),
+                              style: AppText.body.copyWith(
+                                color: plan.dayAt(i)?.templateId == null ? c.text3 : c.text,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
-                        ),
-                        Icon(Icons.chevron_right_rounded, color: c.text3),
-                      ],
+                          Icon(Icons.chevron_right_rounded, color: c.text3),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -174,16 +180,20 @@ class PlanEditPage extends ConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, AppSpace.s12),
           child: plan.plan.isActive
-              ? OutlinedButton(
-                  style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
-                  onPressed: () => repo.deactivatePlan(planId),
-                  child: const Text('当前计划 · 点击停用'),
-                )
-              : FilledButton(
-                  style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
-                  onPressed: () => repo.activatePlan(planId),
-                  child: const Text('设为当前计划（从今天开始）'),
-                ),
+              ? PressScale(
+                child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
+                    onPressed: () => repo.deactivatePlan(planId),
+                    child: const Text('当前计划 · 点击停用'),
+                  ),
+              )
+              : PressScale(
+                child: FilledButton(
+                    style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
+                    onPressed: () => repo.activatePlan(planId),
+                    child: const Text('设为当前计划（从今天开始）'),
+                  ),
+              ),
         ),
       ),
     );
@@ -200,12 +210,15 @@ class _Choice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      title: Text(label, style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
-      subtitle: sub == null ? null : Text(sub!, style: AppText.label.copyWith(color: c.text2)),
-      trailing: selected ? Icon(Icons.check_rounded, color: c.accent) : null,
-      onTap: onTap,
+    return PressScale(
+      scale: PressScale.cardScale,
+      child: ListTile(
+        contentPadding: EdgeInsets.zero,
+        title: Text(label, style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
+        subtitle: sub == null ? null : Text(sub!, style: AppText.label.copyWith(color: c.text2)),
+        trailing: selected ? Icon(Icons.check_rounded, color: c.accent) : null,
+        onTap: onTap,
+      ),
     );
   }
 }

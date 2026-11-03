@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_image.dart';
 import 'package:my_fitness/features/exercises/exercise_repository.dart';
@@ -46,10 +47,13 @@ class ExercisesPage extends ConsumerWidget {
                 child: Row(
                   children: [
                     if (onPick != null)
-                      IconButton(
-                        tooltip: '返回',
-                        onPressed: () => context.pop(),
-                        icon: const Icon(Icons.arrow_back_rounded),
+                      PressScale(
+                        scale: PressScale.smallScale,
+                        child: IconButton(
+                          tooltip: '返回',
+                          onPressed: () => context.pop(),
+                          icon: const Icon(Icons.arrow_back_rounded),
+                        ),
                       ),
                     Text(onPick != null ? '选择动作' : '动作',
                         style: AppText.titleLarge.copyWith(color: c.text)),
@@ -157,23 +161,26 @@ class _CategoryButton extends StatelessWidget {
     final c = context.colors;
     return Padding(
       padding: const EdgeInsets.only(bottom: 2),
-      child: Semantics(
-        button: true,
-        selected: selected,
-        child: Material(
-          color: selected ? c.surface : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-          child: InkWell(
+      child: PressScale(
+        scale: PressScale.chipScale,
+        child: Semantics(
+          button: true,
+          selected: selected,
+          child: Material(
+            color: selected ? c.surface : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
-            onTap: onTap,
-            child: SizedBox(
-              height: 44,
-              child: Center(
-                child: Text(
-                  label,
-                  style: AppText.body.copyWith(
-                    color: selected ? c.text : c.text2,
-                    fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: onTap,
+              child: SizedBox(
+                height: 44,
+                child: Center(
+                  child: Text(
+                    label,
+                    style: AppText.body.copyWith(
+                      color: selected ? c.text : c.text2,
+                      fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
+                    ),
                   ),
                 ),
               ),
@@ -323,26 +330,29 @@ class _EquipmentChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    return Semantics(
-      button: true,
-      selected: selected,
-      child: Material(
-        color: selected ? c.text : c.surface,
-        borderRadius: BorderRadius.circular(16),
-        child: InkWell(
+    return PressScale(
+      scale: PressScale.chipScale,
+      child: Semantics(
+        button: true,
+        selected: selected,
+        child: Material(
+          color: selected ? c.text : c.surface,
           borderRadius: BorderRadius.circular(16),
-          onTap: onTap,
-          child: SizedBox(
-            height: 32,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Center(
-                widthFactor: 1,
-                child: Text(
-                  label,
-                  style: AppText.label.copyWith(
-                    color: selected ? c.bg : c.text,
-                    fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: onTap,
+            child: SizedBox(
+              height: 32,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Center(
+                  widthFactor: 1,
+                  child: Text(
+                    label,
+                    style: AppText.label.copyWith(
+                      color: selected ? c.bg : c.text,
+                      fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+                    ),
                   ),
                 ),
               ),
@@ -362,24 +372,27 @@ class _ExerciseTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    return InkWell(
-      borderRadius: BorderRadius.circular(16),
-      onTap: () => onPick != null ? onPick!(exercise) : context.push('/exercise/${exercise.slug}'),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ExerciseImage(exercise: exercise, cacheWidth: 360),
-          const SizedBox(height: 6),
-          Text(
-            exercise.nameZh,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: AppText.label.copyWith(color: c.text, fontWeight: FontWeight.w600, fontSize: 14, height: 1.3),
-          ),
-          const SizedBox(height: 2),
-          Text(_subtitle(exercise),
-              style: AppText.caption.copyWith(color: c.text3, fontSize: 12)),
-        ],
+    return PressScale(
+      scale: PressScale.cardScale,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () => onPick != null ? onPick!(exercise) : context.push('/exercise/${exercise.slug}'),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ExerciseImage(exercise: exercise, cacheWidth: 360),
+            const SizedBox(height: 6),
+            Text(
+              exercise.nameZh,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: AppText.label.copyWith(color: c.text, fontWeight: FontWeight.w600, fontSize: 14, height: 1.3),
+            ),
+            const SizedBox(height: 2),
+            Text(_subtitle(exercise),
+                style: AppText.caption.copyWith(color: c.text3, fontSize: 12)),
+          ],
+        ),
       ),
     );
   }

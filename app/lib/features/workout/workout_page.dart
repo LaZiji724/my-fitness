@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_image.dart';
 import 'package:my_fitness/features/exercises/exercise_prefs.dart';
@@ -52,7 +53,7 @@ class _NoActiveWorkout extends StatelessWidget {
             const SizedBox(height: AppSpace.s16),
             SizedBox(
               width: 200,
-              child: ElevatedButton(onPressed: () => context.go('/today'), child: const Text('回到首页')),
+              child: PressScale(child: ElevatedButton(onPressed: () => context.go('/today'), child: const Text('回到首页'))),
             ),
           ],
         ),
@@ -79,15 +80,17 @@ class _WorkoutBody extends ConsumerWidget {
                 ? '还有 $incomplete 组没完成，结束后会被丢弃。'
                 : '已完成全部 $done 组。'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('继续练')),
+          PressScale(child: TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('继续练'))),
           if (done == 0)
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, 'discard'),
-              style: TextButton.styleFrom(foregroundColor: context.colors.danger),
-              child: const Text('放弃训练'),
+            PressScale(
+              child: TextButton(
+                onPressed: () => Navigator.pop(ctx, 'discard'),
+                style: TextButton.styleFrom(foregroundColor: context.colors.danger),
+                child: const Text('放弃训练'),
+              ),
             )
           else
-            TextButton(onPressed: () => Navigator.pop(ctx, 'finish'), child: const Text('结束并保存')),
+            PressScale(child: TextButton(onPressed: () => Navigator.pop(ctx, 'finish'), child: const Text('结束并保存'))),
         ],
       ),
     );
@@ -137,11 +140,13 @@ class _WorkoutBody extends ConsumerWidget {
                 ),
                 const SizedBox(height: AppSpace.s12),
               ],
-              OutlinedButton.icon(
-                onPressed: () => context.push('/workout/pick'),
-                icon: const Icon(Icons.add_rounded),
-                label: const Text('添加动作'),
-                style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
+              PressScale(
+                child: OutlinedButton.icon(
+                  onPressed: () => context.push('/workout/pick'),
+                  icon: const Icon(Icons.add_rounded),
+                  label: const Text('添加动作'),
+                  style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
+                ),
               ),
               if (view.exercises.isEmpty) ...[
                 const SizedBox(height: AppSpace.s24),
@@ -178,10 +183,13 @@ class _Header extends StatelessWidget {
       height: 56,
       child: Row(
         children: [
-          IconButton(
-            tooltip: '收起',
-            icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 30),
-            onPressed: () => context.canPop() ? context.pop() : context.go('/today'),
+          PressScale(
+            scale: PressScale.smallScale,
+            child: IconButton(
+              tooltip: '收起',
+              icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 30),
+              onPressed: () => context.canPop() ? context.pop() : context.go('/today'),
+            ),
           ),
           Expanded(
             child: Column(
@@ -196,15 +204,17 @@ class _Header extends StatelessWidget {
               ],
             ),
           ),
-          TextButton(
-            onPressed: onFinish,
-            style: TextButton.styleFrom(
-              backgroundColor: c.accentSoft,
-              foregroundColor: c.accentText,
-              minimumSize: const Size(64, 38),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(19)),
+          PressScale(
+            child: TextButton(
+              onPressed: onFinish,
+              style: TextButton.styleFrom(
+                backgroundColor: c.accentSoft,
+                foregroundColor: c.accentText,
+                minimumSize: const Size(64, 38),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(19)),
+              ),
+              child: const Text('结束'),
             ),
-            child: const Text('结束'),
           ),
         ],
       ),
@@ -330,36 +340,38 @@ class _ExerciseCard extends ConsumerWidget {
                   ),
                 ),
                 if (hasPr) const _PrTag(),
-                PopupMenuButton<String>(
-                  tooltip: '动作选项',
-                  icon: Icon(Icons.more_horiz_rounded, color: c.text2),
-                  onSelected: (v) async {
-                    if (v == 'remove') {
-                      repo.removeExercise(block.exercise.id);
-                    } else if (v == 'time' || v == 'reps') {
-                      final ex = exercise;
-                      if (ex == null) return;
-                      final timed = v == 'time';
-                      await ref
-                          .read(exercisePrefsRepositoryProvider)
-                          .setTracking(ex, timed ? TrackingType.duration : ex.repsVariant);
-                      await repo.retargetSets(block.exercise.id,
-                          timed: timed, seconds: ex.defaultSeconds, reps: ex.defaultReps);
-                    } else if (v.startsWith('section:')) {
-                      repo.setSection(block.exercise.id, v.substring(8));
-                    }
-                  },
-                  itemBuilder: (_) => [
-                    if (exercise?.canSwitchTracking ?? false)
-                      PopupMenuItem(
-                        value: exercise!.isTimed ? 'reps' : 'time',
-                        child: Text(exercise!.isTimed ? '改为按次数记录' : '改为按时间记录'),
-                      ),
-                    for (final sec in WorkoutSection.values)
-                      if (sec.key != block.exercise.section)
-                        PopupMenuItem(value: 'section:${sec.key}', child: Text('移到「${sec.label}」')),
-                    const PopupMenuItem(value: 'remove', child: Text('删除这个动作')),
-                  ],
+                PressScale(
+                  child: PopupMenuButton<String>(
+                    tooltip: '动作选项',
+                    icon: Icon(Icons.more_horiz_rounded, color: c.text2),
+                    onSelected: (v) async {
+                      if (v == 'remove') {
+                        repo.removeExercise(block.exercise.id);
+                      } else if (v == 'time' || v == 'reps') {
+                        final ex = exercise;
+                        if (ex == null) return;
+                        final timed = v == 'time';
+                        await ref
+                            .read(exercisePrefsRepositoryProvider)
+                            .setTracking(ex, timed ? TrackingType.duration : ex.repsVariant);
+                        await repo.retargetSets(block.exercise.id,
+                            timed: timed, seconds: ex.defaultSeconds, reps: ex.defaultReps);
+                      } else if (v.startsWith('section:')) {
+                        repo.setSection(block.exercise.id, v.substring(8));
+                      }
+                    },
+                    itemBuilder: (_) => [
+                      if (exercise?.canSwitchTracking ?? false)
+                        PopupMenuItem(
+                          value: exercise!.isTimed ? 'reps' : 'time',
+                          child: Text(exercise!.isTimed ? '改为按次数记录' : '改为按时间记录'),
+                        ),
+                      for (final sec in WorkoutSection.values)
+                        if (sec.key != block.exercise.section)
+                          PopupMenuItem(value: 'section:${sec.key}', child: Text('移到「${sec.label}」')),
+                      const PopupMenuItem(value: 'remove', child: Text('删除这个动作')),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -393,11 +405,13 @@ class _ExerciseCard extends ConsumerWidget {
               const SizedBox(height: 4),
             ],
             Center(
-              child: TextButton.icon(
-                onPressed: () => repo.addSet(block.exercise.id),
-                icon: Icon(Icons.add_rounded, size: 18, color: c.text2),
-                label: Text('添加一组', style: AppText.label.copyWith(color: c.text2)),
-                style: TextButton.styleFrom(minimumSize: const Size(0, 40)),
+              child: PressScale(
+                child: TextButton.icon(
+                  onPressed: () => repo.addSet(block.exercise.id),
+                  icon: Icon(Icons.add_rounded, size: 18, color: c.text2),
+                  label: Text('添加一组', style: AppText.label.copyWith(color: c.text2)),
+                  style: TextButton.styleFrom(minimumSize: const Size(0, 40)),
+                ),
               ),
             ),
           ],
@@ -576,18 +590,21 @@ class _SetRow extends ConsumerWidget {
     Widget cell(String text, VoidCallback onTap, double width, String label) => SizedBox(
           width: width,
           height: AppSize.setCellH,
-          child: Semantics(
-            button: true,
-            label: label,
-            child: Material(
-              color: cellBg,
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-              child: InkWell(
+          child: PressScale(
+            scale: PressScale.chipScale,
+            child: Semantics(
+              button: true,
+              label: label,
+              child: Material(
+                color: cellBg,
                 borderRadius: BorderRadius.circular(AppRadius.sm),
-                onTap: onTap,
-                child: Center(
-                  child: Text(text.isEmpty ? '—' : text,
-                      style: AppText.numMedium.copyWith(color: text.isEmpty ? c.text3 : cellFg)),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(AppRadius.sm),
+                  onTap: onTap,
+                  child: Center(
+                    child: Text(text.isEmpty ? '—' : text,
+                        style: AppText.numMedium.copyWith(color: text.isEmpty ? c.text3 : cellFg)),
+                  ),
                 ),
               ),
             ),
@@ -610,36 +627,38 @@ class _SetRow extends ConsumerWidget {
           children: [
             SizedBox(
               width: _colSet,
-              child: PopupMenuButton<String>(
-                tooltip: '第 $number 组选项',
-                padding: EdgeInsets.zero,
-                onSelected: (v) {
-                  if (v == 'remove') {
-                    onRemove();
-                  } else {
-                    repo.updateSet(set.id, kind: v);
-                  }
-                },
-                itemBuilder: (_) => const [
-                  PopupMenuItem(value: 'normal', child: Text('正式组')),
-                  PopupMenuItem(value: 'warmup', child: Text('热身组')),
-                  PopupMenuItem(value: 'drop', child: Text('递减组')),
-                  PopupMenuItem(value: 'failure', child: Text('力竭组')),
-                  PopupMenuItem(value: 'remove', child: Text('删除这一组')),
-                ],
-                child: Center(
-                  child: Container(
-                    width: 30,
-                    height: 30,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: warm ? c.warmupBg : (done ? c.accent : c.sunken),
-                    ),
-                    child: Text(
-                      warm ? 'W' : '$number',
-                      style: AppText.numSmall.copyWith(
-                          color: warm ? c.warmupFg : (done ? c.onAccent : c.text2)),
+              child: PressScale(
+                child: PopupMenuButton<String>(
+                  tooltip: '第 $number 组选项',
+                  padding: EdgeInsets.zero,
+                  onSelected: (v) {
+                    if (v == 'remove') {
+                      onRemove();
+                    } else {
+                      repo.updateSet(set.id, kind: v);
+                    }
+                  },
+                  itemBuilder: (_) => const [
+                    PopupMenuItem(value: 'normal', child: Text('正式组')),
+                    PopupMenuItem(value: 'warmup', child: Text('热身组')),
+                    PopupMenuItem(value: 'drop', child: Text('递减组')),
+                    PopupMenuItem(value: 'failure', child: Text('力竭组')),
+                    PopupMenuItem(value: 'remove', child: Text('删除这一组')),
+                  ],
+                  child: Center(
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: warm ? c.warmupBg : (done ? c.accent : c.sunken),
+                      ),
+                      child: Text(
+                        warm ? 'W' : '$number',
+                        style: AppText.numSmall.copyWith(
+                            color: warm ? c.warmupFg : (done ? c.onAccent : c.text2)),
+                      ),
                     ),
                   ),
                 ),
@@ -659,19 +678,22 @@ class _SetRow extends ConsumerWidget {
             SizedBox(
               width: _colCheck,
               height: AppSize.setCheck,
-              child: Semantics(
-                button: true,
-                label: done ? '取消完成第 $number 组' : '完成第 $number 组',
-                child: Material(
-                  color: done ? c.accent : Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    side: done ? BorderSide.none : BorderSide(color: c.line, width: 1.5),
-                  ),
-                  child: InkWell(
-                    customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    onTap: () => _toggle(context, ref),
-                    child: Icon(Icons.check_rounded, color: done ? c.onAccent : c.text3),
+              child: PressScale(
+                scale: PressScale.smallScale,
+                child: Semantics(
+                  button: true,
+                  label: done ? '取消完成第 $number 组' : '完成第 $number 组',
+                  child: Material(
+                    color: done ? c.accent : Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: done ? BorderSide.none : BorderSide(color: c.line, width: 1.5),
+                    ),
+                    child: InkWell(
+                      customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      onTap: () => _toggle(context, ref),
+                      child: Icon(Icons.check_rounded, color: done ? c.onAccent : c.text3),
+                    ),
                   ),
                 ),
               ),
@@ -788,14 +810,16 @@ class _DockState extends ConsumerState<_Dock> {
                   const SizedBox(height: 10),
                   SizedBox(
                     height: AppSize.buttonLarge,
-                    child: FilledButton.icon(
-                      onPressed: _completeNext,
-                      icon: Icon(next == null ? Icons.add_rounded : Icons.check_rounded),
-                      label: Text(label),
-                      style: FilledButton.styleFrom(
-                        minimumSize: const Size.fromHeight(AppSize.buttonLarge),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                        textStyle: AppText.button.copyWith(fontSize: 17),
+                    child: PressScale(
+                      child: FilledButton.icon(
+                        onPressed: _completeNext,
+                        icon: Icon(next == null ? Icons.add_rounded : Icons.check_rounded),
+                        label: Text(label),
+                        style: FilledButton.styleFrom(
+                          minimumSize: const Size.fromHeight(AppSize.buttonLarge),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          textStyle: AppText.button.copyWith(fontSize: 17),
+                        ),
                       ),
                     ),
                   ),
@@ -823,20 +847,23 @@ class _RestRow extends ConsumerWidget {
 
     Widget chip(String text, VoidCallback onTap, {bool numeric = true}) => Padding(
           padding: const EdgeInsets.only(left: 6),
-          child: Material(
-            color: c.hero2,
-            borderRadius: BorderRadius.circular(10),
-            child: InkWell(
+          child: PressScale(
+            scale: PressScale.chipScale,
+            child: Material(
+              color: c.hero2,
               borderRadius: BorderRadius.circular(10),
-              onTap: onTap,
-              child: SizedBox(
-                height: 36,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Center(
-                    child: Text(text,
-                        style: (numeric ? AppText.numSmall : AppText.label.copyWith(fontWeight: FontWeight.w600))
-                            .copyWith(color: c.onHero)),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(10),
+                onTap: onTap,
+                child: SizedBox(
+                  height: 36,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Center(
+                      child: Text(text,
+                          style: (numeric ? AppText.numSmall : AppText.label.copyWith(fontWeight: FontWeight.w600))
+                              .copyWith(color: c.onHero)),
+                    ),
                   ),
                 ),
               ),

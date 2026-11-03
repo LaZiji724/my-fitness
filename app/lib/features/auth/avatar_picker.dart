@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/avatar_view.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/auth/avatars.dart';
 
 /// 注册页的默认头像选择：4 列 × 3 行，选中项用炭火橙描边。
@@ -22,27 +23,30 @@ class AvatarPicker extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       children: [
         for (final ref in kPresetAvatarRefs)
-          Semantics(
-            button: true,
-            selected: ref == selected,
-            label: '头像 ${ref.substring(ref.length - 2)}',
-            child: GestureDetector(
-              onTap: () => onChanged(ref),
-              child: AnimatedContainer(
-                duration: AppMotion.fast,
-                padding: const EdgeInsets.all(3),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: ref == selected ? c.accent : Colors.transparent,
-                    width: 3,
+          PressScale(
+            scale: PressScale.chipScale,
+            child: Semantics(
+              button: true,
+              selected: ref == selected,
+              label: '头像 ${ref.substring(ref.length - 2)}',
+              child: GestureDetector(
+                onTap: () => onChanged(ref),
+                child: AnimatedContainer(
+                  duration: AppMotion.fast,
+                  padding: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: ref == selected ? c.accent : Colors.transparent,
+                      width: 3,
+                    ),
                   ),
-                ),
-                child: LayoutBuilder(
-                  builder: (_, box) => AvatarView(
-                    kind: 'preset',
-                    avatarRef: ref,
-                    size: box.biggest.shortestSide,
+                  child: LayoutBuilder(
+                    builder: (_, box) => AvatarView(
+                      kind: 'preset',
+                      avatarRef: ref,
+                      size: box.biggest.shortestSide,
+                    ),
                   ),
                 ),
               ),

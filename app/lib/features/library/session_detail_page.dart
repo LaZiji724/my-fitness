@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_image.dart';
 import 'package:my_fitness/features/library/library_providers.dart';
@@ -58,10 +59,12 @@ class SessionDetailPage extends ConsumerWidget {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, AppSpace.s12),
-          child: FilledButton(
-            style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
-            onPressed: () => startProgramSession(context, ref, program, session),
-            child: const Text('开始这节训练'),
+          child: PressScale(
+            child: FilledButton(
+              style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
+              onPressed: () => startProgramSession(context, ref, program, session),
+              child: const Text('开始这节训练'),
+            ),
           ),
         ),
       ),
@@ -79,51 +82,54 @@ class _ChainRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     final ex = exercise;
-    return Material(
-      color: c.surface,
-      borderRadius: AppRadius.card,
-      child: InkWell(
+    return PressScale(
+      scale: PressScale.cardScale,
+      child: Material(
+        color: c.surface,
         borderRadius: AppRadius.card,
-        onTap: ex == null ? null : () => context.push('/exercise/${ex.slug}'),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpace.s12),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: 28,
-                child: Text('$index', style: AppText.numMedium.copyWith(color: c.text3)),
-              ),
-              if (ex != null && ex.imageCount > 0) ...[
-                SizedBox(width: AppSize.exerciseThumb, child: ExerciseImage(exercise: ex, cacheWidth: 160, radius: AppRadius.md - 4)),
-                const SizedBox(width: AppSpace.s12),
-              ],
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(ex?.nameZh ?? '未知动作', style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 2),
-                    Text(describeItemTarget(item), style: AppText.label.copyWith(color: c.accentText)),
-                    if (item.warmupSets > 0) ...[
-                      const SizedBox(height: 4),
-                      DecoratedBox(
-                        decoration: BoxDecoration(color: c.warmupBg, borderRadius: BorderRadius.circular(AppRadius.xs)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          child: Text('先做 ${item.warmupSets} 组热身',
-                              style: AppText.caption.copyWith(color: c.warmupFg, fontWeight: FontWeight.w700)),
-                        ),
-                      ),
-                    ],
-                    if (item.note != null) ...[
-                      const SizedBox(height: 4),
-                      Text(item.note!, style: AppText.label.copyWith(color: c.text2)),
-                    ],
-                  ],
+        child: InkWell(
+          borderRadius: AppRadius.card,
+          onTap: ex == null ? null : () => context.push('/exercise/${ex.slug}'),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpace.s12),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 28,
+                  child: Text('$index', style: AppText.numMedium.copyWith(color: c.text3)),
                 ),
-              ),
-            ],
+                if (ex != null && ex.imageCount > 0) ...[
+                  SizedBox(width: AppSize.exerciseThumb, child: ExerciseImage(exercise: ex, cacheWidth: 160, radius: AppRadius.md - 4)),
+                  const SizedBox(width: AppSpace.s12),
+                ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(ex?.nameZh ?? '未知动作', style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
+                      const SizedBox(height: 2),
+                      Text(describeItemTarget(item), style: AppText.label.copyWith(color: c.accentText)),
+                      if (item.warmupSets > 0) ...[
+                        const SizedBox(height: 4),
+                        DecoratedBox(
+                          decoration: BoxDecoration(color: c.warmupBg, borderRadius: BorderRadius.circular(AppRadius.xs)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            child: Text('先做 ${item.warmupSets} 组热身',
+                                style: AppText.caption.copyWith(color: c.warmupFg, fontWeight: FontWeight.w700)),
+                          ),
+                        ),
+                      ],
+                      if (item.note != null) ...[
+                        const SizedBox(height: 4),
+                        Text(item.note!, style: AppText.label.copyWith(color: c.text2)),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

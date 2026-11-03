@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/auth/auth_providers.dart';
 import 'package:my_fitness/features/auth/auth_service.dart';
 import 'package:my_fitness/features/auth/avatar_picker.dart';
@@ -60,10 +61,13 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     final c = context.colors;
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          tooltip: '返回登录',
-          icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: _busy ? null : () => context.go('/login'),
+        leading: PressScale(
+          scale: PressScale.smallScale,
+          child: IconButton(
+            tooltip: '返回登录',
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: _busy ? null : () => context.go('/login'),
+          ),
         ),
       ),
       body: SafeArea(
@@ -115,12 +119,15 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   onFieldSubmitted: (_) => _submit(),
                   decoration: InputDecoration(
                     labelText: '密码（至少 8 位）',
-                    suffixIcon: IconButton(
-                      tooltip: _obscure ? '显示密码' : '隐藏密码',
-                      icon: Icon(_obscure
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined),
-                      onPressed: () => setState(() => _obscure = !_obscure),
+                    suffixIcon: PressScale(
+                      scale: PressScale.smallScale,
+                      child: IconButton(
+                        tooltip: _obscure ? '显示密码' : '隐藏密码',
+                        icon: Icon(_obscure
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined),
+                        onPressed: () => setState(() => _obscure = !_obscure),
+                      ),
                     ),
                   ),
                   validator: AuthValidators.newPassword,
@@ -130,23 +137,27 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   Text(_error!, style: AppText.label.copyWith(color: c.danger)),
                 ],
                 const SizedBox(height: AppSpace.s24),
-                FilledButton(
-                  onPressed: _busy ? null : _submit,
-                  child: _busy
-                      ? const SizedBox.square(
-                          dimension: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2.5),
-                        )
-                      : const Text('注册并开始'),
+                PressScale(
+                  child: FilledButton(
+                    onPressed: _busy ? null : _submit,
+                    child: _busy
+                        ? const SizedBox.square(
+                            dimension: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2.5),
+                          )
+                        : const Text('注册并开始'),
+                  ),
                 ),
                 const SizedBox(height: AppSpace.s16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('已有账号？', style: AppText.body.copyWith(color: c.text2)),
-                    TextButton(
-                      onPressed: _busy ? null : () => context.go('/login'),
-                      child: const Text('去登录'),
+                    PressScale(
+                      child: TextButton(
+                        onPressed: _busy ? null : () => context.go('/login'),
+                        child: const Text('去登录'),
+                      ),
                     ),
                   ],
                 ),

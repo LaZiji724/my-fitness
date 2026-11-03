@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:my_fitness/core/widgets/press_scale.dart';
+
 /// 底部 5 个分栏：训练 · 计划 · 日历 · 动作 · 数据。
 /// 「模板」并入「计划」页，「我的」从训练页左上角头像进入。
 class AppShell extends StatelessWidget {
@@ -42,7 +44,10 @@ class AppShell extends StatelessWidget {
       body: shell,
       bottomNavigationBar: NavigationBar(
         selectedIndex: shell.currentIndex,
-        destinations: destinations,
+        // 每个分栏项按下时轻轻缩一下
+        destinations: [
+          for (final d in destinations) PressScale(scale: PressScale.chipScale, child: d),
+        ],
         onDestinationSelected: (i) =>
             shell.goBranch(i, initialLocation: i == shell.currentIndex),
       ),
