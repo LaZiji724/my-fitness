@@ -82,6 +82,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "ios-v${IOS_VERSION}" app/my-fitness-ios-*-unsigned.ipa \
-            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --latest=false \
             --title "我的健身 苹果版 ${IOS_VERSION}（未签名 IPA）" \
             --notes "未签名 IPA，需用全能签 / AltStore / Sideloadly 等工具自行签名后安装 iPhone。"
