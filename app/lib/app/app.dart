@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_fitness/app/router.dart';
 import 'package:my_fitness/app/setup_required_page.dart';
 import 'package:my_fitness/core/config/env.dart';
+import 'package:my_fitness/core/notifications/reminder_host.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/features/sync/sync_providers.dart';
 
@@ -37,7 +38,7 @@ class MyFitnessApp extends ConsumerWidget {
     // 保持自动同步一直在后台运行
     ref.watch(syncControllerProvider);
 
-    return MaterialApp.router(
+    final router = MaterialApp.router(
       title: common.title,
       locale: common.locale,
       supportedLocales: common.supportedLocales,
@@ -47,5 +48,7 @@ class MyFitnessApp extends ConsumerWidget {
       themeMode: ThemeMode.system,
       routerConfig: ref.watch(routerProvider),
     );
+    // 计时结束的系统通知提醒（只在退到后台/熄屏时才弹）
+    return ReminderHost(child: router);
   }
 }

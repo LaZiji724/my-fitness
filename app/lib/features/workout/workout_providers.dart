@@ -45,6 +45,9 @@ final bestBeforeProvider =
       .bestBefore(key.exerciseId, excludeWorkoutId: key.workoutId);
 });
 
+/// 当前时间。单独做成 provider，测试里可以换成假时钟。
+final clockProvider = Provider<DateTime Function()>((ref) => DateTime.now);
+
 /// 组间休息倒计时。只存结束时刻，界面每秒自行刷新。
 class RestState {
   const RestState({required this.endsAt, required this.totalSec});
@@ -63,7 +66,7 @@ class RestTimerNotifier extends Notifier<RestState?> {
 
   void start(int seconds, {DateTime? now}) {
     state = RestState(
-      endsAt: (now ?? DateTime.now()).add(Duration(seconds: seconds)),
+      endsAt: (now ?? ref.read(clockProvider)()).add(Duration(seconds: seconds)),
       totalSec: seconds,
     );
   }
