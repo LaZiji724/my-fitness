@@ -6,12 +6,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/db/app_database.dart';
+import 'package:my_fitness/core/notifications/reminder_scheduler.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_image.dart';
 import 'package:my_fitness/features/exercises/exercise_prefs.dart';
 import 'package:my_fitness/features/workout/number_pad_sheet.dart';
+import 'package:my_fitness/features/workout/set_timer.dart';
 import 'package:my_fitness/features/workout/workout_math.dart';
 import 'package:my_fitness/features/workout/workout_providers.dart';
 import 'package:my_fitness/features/workout/workout_repository.dart';
@@ -96,6 +98,7 @@ class _WorkoutBody extends ConsumerWidget {
     );
     if (choice == null || !context.mounted) return;
     ref.read(restTimerProvider.notifier).skip();
+    ref.read(setTimerProvider.notifier).cancel();
     if (choice == 'discard') {
       await repo.discardWorkout(view.workout.id);
       if (context.mounted) context.go('/today');
@@ -128,6 +131,7 @@ class _WorkoutBody extends ConsumerWidget {
               _Header(view: view, onFinish: () => _finish(context, ref)),
               const SizedBox(height: AppSpace.s8),
               _ProgressRow(done: doneSets, total: totalSets),
+              if (ref.watch(reminderPermissionProvider) == false) const _NotifyHint(),
               const SizedBox(height: AppSpace.s12),
               for (final (i, block) in view.exercises.indexed) ...[
                 if (hasSections && (i == 0 || view.exercises[i - 1].exercise.section != block.exercise.section))
@@ -279,6 +283,29 @@ class _ProgressRow extends StatelessWidget {
   }
 }
 
+/// 通知权限被拒绝时的提醒：退到后台就收不到计时结束的弹窗了。
+class _NotifyHint extends StatelessWidget {
+  const _NotifyHint();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpace.s8),
+      child: Row(
+        children: [
+          Icon(Icons.notifications_off_outlined, size: 16, color: c.text3),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Text('通知权限没开，退到后台或熄屏时不会弹窗提醒。可在手机的系统设置里打开。',
+                key: const Key('notify-hint'), style: AppText.caption.copyWith(color: c.text3, fontSize: 12)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 // ------------------------------------------------------------------ 动作卡片
 
 class _ExerciseCard extends ConsumerWidget {
@@ -346,11 +373,13 @@ class _ExerciseCard extends ConsumerWidget {
                     icon: Icon(Icons.more_horiz_rounded, color: c.text2),
                     onSelected: (v) async {
                       if (v == 'remove') {
+                        ref.read(setTimerProvider.notifier).cancel();
                         repo.removeExercise(block.exercise.id);
                       } else if (v == 'time' || v == 'reps') {
                         final ex = exercise;
                         if (ex == null) return;
                         final timed = v == 'time';
+                        ref.read(setTimerProvider.notifier).cancel();
                         await ref
                             .read(exercisePrefsRepositoryProvider)
                             .setTracking(ex, timed ? TrackingType.duration : ex.repsVariant);
@@ -400,7 +429,11 @@ class _ExerciseCard extends ConsumerWidget {
                 tracking: tracking,
                 restSec: restSec,
                 best: best,
-                onRemove: () => repo.removeSet(block.sets[i].id),
+                label: '${exercise?.nameZh ?? '动作'} 第 ${i + 1} 组',
+                onRemove: () {
+                  ref.read(setTimerProvider.notifier).cancel(setId: block.sets[i].id);
+                  repo.removeSet(block.sets[i].id);
+                },
               ),
               const SizedBox(height: 4),
             ],
@@ -469,6 +502,7 @@ const _colSet = 34.0;
 const _colWeight = 72.0;
 const _colReps = 64.0;
 const _colCheck = 44.0;
+const _colStart = 56.0;
 
 class _SetsHeader extends StatelessWidget {
   const _SetsHeader({required this.tracking});
@@ -493,6 +527,10 @@ class _SetsHeader extends StatelessWidget {
           ],
           SizedBox(width: _colReps, child: Center(child: Text(isDuration ? '秒' : '次数', style: style))),
           const SizedBox(width: 8),
+          if (isDuration) ...[
+            SizedBox(width: _colStart, child: Center(child: Text('计时', style: style))),
+            const SizedBox(width: 8),
+          ],
           SizedBox(width: _colCheck, child: Center(child: Text('完成', style: style))),
         ],
       ),
@@ -509,6 +547,7 @@ class _SetRow extends ConsumerWidget {
     required this.tracking,
     required this.restSec,
     required this.best,
+    required this.label,
     required this.onRemove,
   });
 
@@ -518,6 +557,9 @@ class _SetRow extends ConsumerWidget {
   final TrackingType tracking;
   final int restSec;
   final ExerciseBest best;
+
+  /// 通知文字里用的名称，例如「平板支撑 第 2 组」。
+  final String label;
   final VoidCallback onRemove;
 
   bool get _isDuration => tracking == TrackingType.duration;
@@ -574,14 +616,34 @@ class _SetRow extends ConsumerWidget {
     } else {
       HapticFeedback.mediumImpact();
     }
+    ref.read(setTimerProvider.notifier).cancel(setId: set.id);
     await repo.setCompleted(set.id, true);
     ref.read(restTimerProvider.notifier).start(restSec);
+  }
+
+  void _startTimer(BuildContext context, WidgetRef ref) {
+    final seconds = set.durationSec;
+    if (seconds == null || seconds <= 0) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(const SnackBar(content: Text('先设置时长')));
+      return;
+    }
+    HapticFeedback.mediumImpact();
+    ref.read(setTimerProvider.notifier).start(
+          setId: set.id,
+          label: label,
+          seconds: seconds,
+          restSec: restSec,
+        );
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final c = context.colors;
     final done = set.completed;
+    // 这一组正在倒数时才不为空
+    final timer = ref.watch(setTimerProvider.select((t) => t?.setId == set.id ? t : null));
     final warm = set.kind == 'warmup';
     final repo = ref.read(workoutRepositoryProvider);
     final cellBg = done ? c.accentSoft : c.sunken;
@@ -673,8 +735,21 @@ class _SetRow extends ConsumerWidget {
               cell(weightText, () => _editWeight(context, ref), _colWeight, '第 $number 组重量'),
               const SizedBox(width: 8),
             ],
-            cell(repsText, () => _editReps(context, ref), _colReps, '第 $number 组${_isDuration ? '时长' : '次数'}'),
+            if (timer != null)
+              _RunningCell(timer: timer, width: _colReps, label: '第 $number 组倒计时')
+            else
+              cell(repsText, () => _editReps(context, ref), _colReps, '第 $number 组${_isDuration ? '时长' : '次数'}'),
             const SizedBox(width: 8),
+            if (_isDuration) ...[
+              _TimerButton(
+                width: _colStart,
+                running: timer != null,
+                done: done,
+                onStart: () => _startTimer(context, ref),
+                onStop: () => ref.read(setTimerProvider.notifier).cancel(setId: set.id),
+              ),
+              const SizedBox(width: 8),
+            ],
             SizedBox(
               width: _colCheck,
               height: AppSize.setCheck,
@@ -699,6 +774,87 @@ class _SetRow extends ConsumerWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 倒数中的时间格：时间固定不可再调，读秒递减，归零显示「完成」。
+class _RunningCell extends ConsumerWidget {
+  const _RunningCell({required this.timer, required this.width, required this.label});
+  final SetTimerState timer;
+  final double width;
+  final String label;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final c = context.colors;
+    final clock = ref.read(clockProvider);
+    return SizedBox(
+      width: width,
+      height: AppSize.setCellH,
+      child: DecoratedBox(
+        decoration: BoxDecoration(color: c.accent, borderRadius: BorderRadius.circular(AppRadius.sm)),
+        child: StreamBuilder<int>(
+          stream: Stream.periodic(const Duration(milliseconds: 250), (i) => i),
+          builder: (context, _) {
+            final left = timer.remainingSec(clock());
+            return Semantics(
+              label: label,
+              child: Center(
+                child: Text(left == 0 ? '完成' : '$left',
+                    key: const Key('set-timer-remaining'),
+                    style: AppText.numMedium.copyWith(color: c.onAccent)),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+/// 「开始 / 停止 / 完成」按钮：放在时间格和打勾之间。
+class _TimerButton extends StatelessWidget {
+  const _TimerButton({
+    required this.width,
+    required this.running,
+    required this.done,
+    required this.onStart,
+    required this.onStop,
+  });
+  final double width;
+  final bool running;
+  final bool done;
+  final VoidCallback onStart;
+  final VoidCallback onStop;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    final text = done ? '完成' : (running ? '停止' : '开始');
+    final VoidCallback? onTap = done ? null : (running ? onStop : onStart);
+    return SizedBox(
+      width: width,
+      height: AppSize.setCellH,
+      child: PressScale(
+        scale: PressScale.chipScale,
+        child: Material(
+          color: done ? Colors.transparent : (running ? c.sunken : c.accentSoft),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(AppRadius.sm),
+            onTap: onTap,
+            child: Center(
+              child: Text(text,
+                  key: Key('set-timer-button-$text'),
+                  style: AppText.label.copyWith(
+                    color: done ? c.text3 : (running ? c.text2 : c.accentText),
+                    fontWeight: FontWeight.w700,
+                  )),
+            ),
+          ),
         ),
       ),
     );
@@ -752,6 +908,7 @@ class _DockState extends ConsumerState<_Dock> {
         .future);
     final pr = detectPr(best, SetEntry(weightKg: s.weightKg, reps: s.reps, kind: s.kind, completed: true));
     pr.isNotEmpty ? HapticFeedback.heavyImpact() : HapticFeedback.mediumImpact();
+    ref.read(setTimerProvider.notifier).cancel(setId: s.id);
     await repo.setCompleted(s.id, true);
     ref.read(restTimerProvider.notifier).start(next.block.exercise.restSec ?? kDefaultRestSec);
   }
@@ -799,7 +956,7 @@ class _DockState extends ConsumerState<_Dock> {
                     StreamBuilder<int>(
                       stream: Stream.periodic(const Duration(milliseconds: 250), (i) => i),
                       builder: (context, _) {
-                        final left = rest.remainingSec(DateTime.now());
+                        final left = rest.remainingSec(ref.read(clockProvider)());
                         if (left == 0 && _alertedFor != rest.endsAt) {
                           _alertedFor = rest.endsAt;
                           HapticFeedback.vibrate();
