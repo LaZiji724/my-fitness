@@ -143,35 +143,38 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
               },
             ),
             const SizedBox(height: AppSpace.s12),
-            Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 14,
-              runSpacing: 6,
-              children: [
-                // 有当前计划：图例就是计划里每天练的模板名；没有计划：按部位。
-                for (final (label, color) in tags.isNotEmpty
-                    ? [for (final t in tags) (t.name, partColor(c, t.part))]
-                    : [
-                        for (final p in const [
-                          BodyPart.chest,
-                          BodyPart.back,
-                          BodyPart.legs,
-                          BodyPart.shoulders,
-                          BodyPart.arms,
-                          BodyPart.core,
-                        ])
-                          (partGroupLabel(p), partColor(c, p)),
-                      ])
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-                      const SizedBox(width: 5),
-                      Text(label, style: AppText.label.copyWith(color: c.text2)),
-                    ],
-                  ),
-              ],
-            ),
+            if (tags.isEmpty)
+              // 没有启用计划：不显示部位图例，提示去启用计划
+              Row(
+                key: const Key('calendar-no-plan-hint'),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(width: 8, height: 8, decoration: BoxDecoration(color: c.danger, shape: BoxShape.circle)),
+                  const SizedBox(width: 6),
+                  Text('启用计划以显示每日训练任务', style: AppText.label.copyWith(color: c.text2)),
+                ],
+              )
+            else
+              Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 14,
+                runSpacing: 6,
+                children: [
+                  // 图例就是计划里每天练的模板名
+                  for (final t in tags)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(color: partColor(c, t.part), shape: BoxShape.circle)),
+                        const SizedBox(width: 5),
+                        Text(t.name, style: AppText.label.copyWith(color: c.text2)),
+                      ],
+                    ),
+                ],
+              ),
             const SizedBox(height: AppSpace.s24),
             Text(formatMd(_selected), style: AppText.titleSmall.copyWith(color: c.text)),
             const SizedBox(height: AppSpace.s12),

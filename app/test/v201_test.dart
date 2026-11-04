@@ -132,6 +132,7 @@ void main() {
     // 图例是模板名，不再是写死的「胸 / 背 / 腿臀…」
     expect(find.text('推日'), findsOneWidget);
     expect(find.text('腿臀'), findsNothing);
+    expect(find.text('启用计划以显示每日训练任务'), findsNothing);
 
     // 在计划里改模板名，日历立刻跟着变
     await plans.renameTemplate(t, '胸肩日');
@@ -141,12 +142,13 @@ void main() {
     await unmount(tester);
   });
 
-  testWidgets('日历：没有当前计划时图例仍按部位', (tester) async {
+  testWidgets('日历：没有启用计划时不显示部位图例，改为提示启用计划', (tester) async {
     setViewport(tester);
     await tester.pumpWidget(host(const CalendarPage()));
     await tester.pumpAndSettle();
-    expect(find.text('腿臀'), findsOneWidget);
-    expect(find.text('胸'), findsOneWidget);
+    expect(find.text('启用计划以显示每日训练任务'), findsOneWidget);
+    expect(find.text('腿臀'), findsNothing);
+    expect(find.text('胸'), findsNothing);
     await unmount(tester);
   });
 
