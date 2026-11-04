@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:my_fitness/core/notifications/reminder_scheduler.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/avatar_view.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
@@ -180,6 +181,14 @@ class _SyncSection extends ConsumerWidget {
           row(Icons.ios_share_rounded, '导出备份', '把全部训练数据保存成一个文件', () => exportBackup(context, ref)),
           const Divider(height: 1, indent: 68, endIndent: 16),
           row(Icons.file_open_outlined, '导入备份', '从备份文件恢复数据', () => importBackup(context, ref)),
+          const Divider(height: 1, indent: 68, endIndent: 16),
+          row(Icons.notifications_active_outlined, '测试提醒', '10 秒后弹一条通知，检查计时提醒能不能用', () async {
+            final msg = await runReminderSelfTest(ref.read(reminderSchedulerProvider), DateTime.now());
+            if (!context.mounted) return;
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(SnackBar(content: Text(msg), duration: const Duration(seconds: 8)));
+          }),
         ],
       ),
     );

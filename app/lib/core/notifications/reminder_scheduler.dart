@@ -10,7 +10,8 @@ abstract class ReminderScheduler {
   Future<bool> requestPermission();
 
   /// 在 [at] 时刻弹出通知；同一个 [id] 重复调用会覆盖上一次。
-  Future<void> schedule({
+  /// 成功返回 null，失败返回原因（给「测试提醒」显示用）。
+  Future<String?> schedule({
     required int id,
     required DateTime at,
     required String title,
@@ -27,6 +28,24 @@ abstract class ReminderScheduler {
 /// 提醒编号：动作计时与组间休息各占一个。
 const int kSetTimerReminderId = 1001;
 const int kRestReminderId = 1002;
+const int kTestReminderId = 1003;
+
+/// 「我的」页里的「测试提醒」：申请权限、登记一条 10 秒后的通知，
+/// 并把结果（或失败原因）说清楚，方便在真机上排查。
+Future<String> runReminderSelfTest(ReminderScheduler scheduler, DateTime now) async {
+  final granted = await scheduler.requestPermission();
+  if (!granted) {
+    return '通知权限没有开启：请到手机「设置 → 通知 → 我的健身」里允许通知，再试一次。';
+  }
+  final err = await scheduler.schedule(
+    id: kTestReminderId,
+    at: now.add(const Duration(seconds: 10)),
+    title: '测试提醒',
+    body: '收到这条，说明提醒功能正常',
+  );
+  if (err != null) return '登记提醒失败：$err';
+  return '已登记，10 秒后弹出。现在请按 Home 键回桌面，或按电源键熄屏，等一下看看有没有弹窗。';
+}
 
 /// 基于 flutter_local_notifications 的实现。
 /// 所有调用都吞掉异常：提醒是锦上添花，失败不能影响训练记录。
@@ -108,13 +127,13 @@ class LocalNotificationScheduler implements ReminderScheduler {
   }
 
   @override
-  Future<void> schedule({
+  Future<String?> schedule({
     required int id,
     required DateTime at,
     required String title,
     required String body,
   }) async {
-    if (!await _ensureInit()) return;
+    if (!await _ensureInit()) return '通知组件初始化失败';
     try {
       var mode = AndroidScheduleMode.inexactAllowWhileIdle;
       if (defaultTargetPlatform == TargetPlatform.android) {
@@ -134,8 +153,10 @@ class LocalNotificationScheduler implements ReminderScheduler {
         title: title,
         body: body,
       );
+      return null;
     } catch (e) {
       debugPrint('安排提醒失败：$e');
+      return '$e';
     }
   }
 
