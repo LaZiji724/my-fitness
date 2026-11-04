@@ -40,8 +40,9 @@ class _FakeScheduler implements ReminderScheduler {
   }
 
   @override
-  Future<void> schedule({required int id, required DateTime at, required String title, required String body}) async {
+  Future<String?> schedule({required int id, required DateTime at, required String title, required String body}) async {
     scheduled.add((id: id, at: at, title: title, body: body));
+    return null;
   }
 
   final cancelled = <int>[];
@@ -285,6 +286,17 @@ void main() {
     await tester.tap(find.text('开始'));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('notify-hint')), findsOneWidget);
+  });
+
+  test('测试提醒：权限被拒时说明原因；通过后登记 10 秒后的通知', () async {
+    final denied = _FakeScheduler(granted: false);
+    expect(await runReminderSelfTest(denied, now), contains('通知权限没有开启'));
+    expect(denied.scheduled, isEmpty);
+
+    final ok = _FakeScheduler();
+    expect(await runReminderSelfTest(ok, now), contains('10 秒后弹出'));
+    expect(ok.scheduled.single.id, kTestReminderId);
+    expect(ok.scheduled.single.at, now.add(const Duration(seconds: 10)));
   });
 
   group('iOS：一开始倒数就登记（不依赖退后台那一瞬间）', () {
