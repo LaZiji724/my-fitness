@@ -17,6 +17,9 @@ abstract class ReminderScheduler {
     required String body,
   });
 
+  /// 取消某一个还没触发的提醒。
+  Future<void> cancel(int id);
+
   /// 取消所有还没触发的提醒，并清掉通知栏里已显示的。
   Future<void> cancelAll();
 }
@@ -49,9 +52,12 @@ class LocalNotificationScheduler implements ReminderScheduler {
       enableVibration: true,
       autoCancel: true,
     ),
+    // 应用在前台时 iOS 不显示横幅/通知列表（界面里自己有读秒和震动）；
+    // 退到后台或熄屏时系统照常弹出。这几个选项只管「前台时怎么展示」。
     iOS: DarwinNotificationDetails(
-      presentAlert: true,
-      presentBanner: true,
+      presentAlert: false,
+      presentBanner: false,
+      presentList: false,
       presentSound: true,
       presentBadge: false,
     ),
@@ -130,6 +136,16 @@ class LocalNotificationScheduler implements ReminderScheduler {
       );
     } catch (e) {
       debugPrint('安排提醒失败：$e');
+    }
+  }
+
+  @override
+  Future<void> cancel(int id) async {
+    if (!await _ensureInit()) return;
+    try {
+      await _plugin.cancel(id: id);
+    } catch (e) {
+      debugPrint('取消提醒失败：$e');
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -42,6 +43,11 @@ class _FakeScheduler implements ReminderScheduler {
   Future<void> schedule({required int id, required DateTime at, required String title, required String body}) async {
     scheduled.add((id: id, at: at, title: title, body: body));
   }
+
+  final cancelled = <int>[];
+
+  @override
+  Future<void> cancel(int id) async => cancelled.add(id);
 
   @override
   Future<void> cancelAll() async => cancelAllCalls++;
@@ -279,5 +285,54 @@ void main() {
     await tester.tap(find.text('开始'));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('notify-hint')), findsOneWidget);
+  });
+
+  group('iOS：一开始倒数就登记（不依赖退后台那一瞬间）', () {
+    // 平台覆盖必须在测试体结束前恢复
+    void iosTest(String name, Future<void> Function(WidgetTester) body) {
+      testWidgets(name, (tester) async {
+        debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+        try {
+          await body(tester);
+        } finally {
+          debugDefaultTargetPlatformOverride = null;
+        }
+      });
+    }
+
+    iosTest('动作计时一开始就登记；停止就撤销；回前台仍保留', (tester) async {
+      await timedWorkout();
+      await tester.pumpWidget(host(const WorkoutPage()));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('开始'));
+      await tester.pump();
+      expect(scheduler.scheduled.where((s) => s.id == kSetTimerReminderId), isNotEmpty);
+      expect(scheduler.scheduled.last.at, now.add(const Duration(seconds: 30)));
+
+      // 退后台、回前台：先清空，再把还在倒数的重新登记
+      scheduler.scheduled.clear();
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+      await tester.pump();
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pump();
+      expect(scheduler.cancelAllCalls, 1);
+      expect(scheduler.scheduled.where((s) => s.id == kSetTimerReminderId), isNotEmpty);
+
+      // 点停止：撤销已登记的提醒
+      scheduler.cancelled.clear();
+      await tester.tap(find.text('停止'));
+      await tester.pump();
+      expect(scheduler.cancelled, contains(kSetTimerReminderId));
+    });
+
+    iosTest('组间休息开始时登记', (tester) async {
+      await tester.pumpWidget(host(const SizedBox()));
+      final container = ProviderScope.containerOf(tester.element(find.byType(SizedBox).first));
+      container.read(restTimerProvider.notifier).start(60, now: now);
+      await tester.pump();
+      expect(scheduler.scheduled.map((s) => s.id), contains(kRestReminderId));
+      expect(scheduler.scheduled.last.at, now.add(const Duration(seconds: 60)));
+    });
   });
 }
