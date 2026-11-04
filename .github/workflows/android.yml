@@ -47,27 +47,16 @@ jobs:
           echo "name=${v%%+*}" >> "$GITHUB_OUTPUT"
           echo "code=${v##*+}" >> "$GITHUB_OUTPUT"
 
-      - name: 写入 Supabase 配置与签名密钥
+      - name: 写入 Supabase 配置
         working-directory: app
         env:
           URL: ${{ secrets.SUPABASE_URL }}
           KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          KS: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          for n in URL KEY KS KS_PASS KEY_ALIAS KEY_PASS; do
-            if [ -z "${!n}" ]; then echo "::error::仓库还没有配置完整的 Secret（缺 $n 对应的那一项）"; exit 1; fi
-          done
+          if [ -z "$URL" ] || [ -z "$KEY" ]; then
+            echo "::error::仓库还没有配置 SUPABASE_URL / SUPABASE_ANON_KEY 两个 Secret"; exit 1
+          fi
           printf '{"SUPABASE_URL":"%s","SUPABASE_ANON_KEY":"%s","AUTH_EMAIL_DOMAIN":"myfit.app"}' "$URL" "$KEY" > env.json
-          echo "$KS" | base64 --decode > android/release.jks
-          {
-            echo "storeFile=release.jks"
-            echo "storePassword=$KS_PASS"
-            echo "keyAlias=$KEY_ALIAS"
-            echo "keyPassword=$KEY_PASS"
-          } > android/key.properties
 
       - name: 依赖、检查与测试
         working-directory: app
@@ -75,6 +64,26 @@ jobs:
           flutter pub get
           dart analyze
           flutter test
+
+      # 签名密钥放在测试之后、编译之前才写入，缩短它出现在运行环境里的时间
+      - name: 写入签名密钥
+        working-directory: app
+        env:
+          KS: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          for n in KS KS_PASS KEY_ALIAS KEY_PASS; do
+            if [ -z "${!n}" ]; then echo "::error::仓库还没有配置安卓签名的 4 个 Secret（缺 $n 对应的那一项）"; exit 1; fi
+          done
+          echo "$KS" | base64 --decode > android/release.jks
+          {
+            echo "storeFile=release.jks"
+            echo "storePassword=$KS_PASS"
+            echo "keyAlias=$KEY_ALIAS"
+            echo "keyPassword=$KEY_PASS"
+          } > android/key.properties
 
       - name: 编译 APK
         working-directory: app
