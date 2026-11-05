@@ -9,6 +9,8 @@ import 'package:my_fitness/features/auth/auth_providers.dart';
 import 'package:my_fitness/features/sync/backup_actions.dart';
 import 'package:my_fitness/features/sync/sync_chip.dart';
 import 'package:my_fitness/features/sync/sync_providers.dart';
+import 'package:my_fitness/features/update/update_service.dart';
+import 'package:my_fitness/features/update/update_ui.dart';
 
 /// 「我的」：账号信息、云同步状态、数据备份与退出登录。
 class ProfilePage extends ConsumerWidget {
@@ -189,6 +191,13 @@ class _SyncSection extends ConsumerWidget {
               ..hideCurrentSnackBar()
               ..showSnackBar(SnackBar(content: Text(msg), duration: const Duration(seconds: 8)));
           }),
+          const Divider(height: 1, indent: 68, endIndent: 16),
+          row(
+            Icons.system_update_alt_rounded,
+            '检查更新',
+            '当前版本 ${ref.watch(currentVersionProvider).value ?? ''}',
+            () => checkForUpdateManually(context, ref),
+          ),
         ],
       ),
     );
