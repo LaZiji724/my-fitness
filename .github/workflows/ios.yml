@@ -20,8 +20,8 @@ permissions:
   contents: write
 
 env:
-  IOS_VERSION: "2.2.3"
-  IOS_BUILD: "14"
+  IOS_VERSION: "2.3.0"
+  IOS_BUILD: "15"
 
 jobs:
   build:
@@ -81,7 +81,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          notes=".github/release-notes/${IOS_VERSION}.md"
+          { [ -f "$notes" ] && cat "$notes" && echo; echo "未签名 IPA，需用全能签 / AltStore / Sideloadly 等工具自行签名后安装 iPhone。"; } > /tmp/notes.md
           gh release create "ios-v${IOS_VERSION}" app/my-fitness-ios-*-unsigned.ipa \
             --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --latest=false \
             --title "我的健身 苹果版 ${IOS_VERSION}（未签名 IPA）" \
-            --notes "未签名 IPA，需用全能签 / AltStore / Sideloadly 等工具自行签名后安装 iPhone。"
+            --notes-file /tmp/notes.md

@@ -119,7 +119,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           V: ${{ steps.ver.outputs.name }}
         run: |
+          notes=".github/release-notes/${V}.md"
+          { [ -f "$notes" ] && cat "$notes" && echo; echo "安卓安装包，直接安装即可覆盖旧版，数据保留。"; } > /tmp/notes.md
           gh release create "v${V}" app/my-fitness-*.apk \
             --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --latest \
             --title "我的健身 ${V}" \
-            --notes "安卓安装包，直接安装即可覆盖旧版，数据保留。"
+            --notes-file /tmp/notes.md

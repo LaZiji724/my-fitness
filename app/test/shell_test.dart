@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_fitness/app/app_shell.dart';
@@ -22,7 +23,7 @@ void main() {
         ),
       ],
     );
-    return MaterialApp.router(theme: theme, routerConfig: router);
+    return ProviderScope(child: MaterialApp.router(theme: theme, routerConfig: router));
   }
 
   for (final dark in [false, true]) {
