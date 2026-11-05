@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:my_fitness/core/db/app_database.dart';
@@ -169,6 +170,30 @@ void main() {
       expect(nov.single.workout.localDate, '2026-11-03');
       final all = await workouts.watchCompleted().first;
       expect(all, hasLength(2));
+    });
+
+    test('watchCompleted：训练主记录先到、动作和组后到（重新登录拉取）时，数字会自动刷新', () async {
+      final t = DateTime(2026, 11, 4, 23, 7);
+      // 先写入训练主记录（模拟同步先拉回 workouts）
+      await db.into(db.workouts).insert(WorkoutsCompanion.insert(
+          id: 'w1', createdAt: t, updatedAt: t, userId: 'u1', startedAt: t,
+          endedAt: Value(t.add(const Duration(minutes: 31))), localDate: '2026-11-04', name: const Value('臂')));
+      final seen = <int>[];
+      final sub = workouts.watchCompleted().listen((v) => seen.add(v.single.setCount));
+      await pumpEventQueue();
+      expect(seen.last, 0);
+
+      // 再写入动作和组（模拟同步随后拉回 workout_exercises / workout_sets）
+      await db.into(db.workoutExercises).insert(WorkoutExercisesCompanion.insert(
+          id: 'we1', createdAt: t, updatedAt: t, userId: 'u1', workoutId: 'w1', exerciseId: 'ex-bench', position: 0));
+      for (var i = 0; i < 3; i++) {
+        await db.into(db.workoutSets).insert(WorkoutSetsCompanion.insert(
+            id: 's$i', createdAt: t, updatedAt: t, userId: 'u1', workoutExerciseId: 'we1', setIndex: i,
+            weightKg: const Value(9.5), reps: const Value(12), completed: const Value(true)));
+      }
+      await pumpEventQueue();
+      expect(seen.last, 3);
+      await sub.cancel();
     });
   });
 }
