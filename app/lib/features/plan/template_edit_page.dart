@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -114,13 +115,29 @@ class _TemplateEditPageState extends ConsumerState<TemplateEditPage> {
         children: [
           if (view.exercises.isEmpty)
             const EmptyCard(title: '还没有动作', hint: '点下面的「添加动作」从动作库里选'),
-          for (final (i, e) in sortedBySection(view.exercises, (e) => e.section, (e) => e.position).indexed) ...[
-            if (view.exercises.any((x) => x.section != 'main') &&
-                (i == 0 || sortedBySection(view.exercises, (x) => x.section, (x) => x.position)[i - 1].section != e.section))
-              _SectionLabel(WorkoutSection.fromKey(e.section)),
-            _ExerciseRow(entry: e, exercise: byId[e.exerciseId]),
-            const SizedBox(height: AppSpace.s8),
-          ],
+          ...templateExerciseRows(
+            view.exercises,
+            (e) => TemplateExerciseCard(
+              entry: e,
+              exercise: byId[e.exerciseId],
+              onEdit: () => showDoseSheet(
+                context,
+                entry: e,
+                exercise: byId[e.exerciseId],
+                update: ({targetSets, repsMin, repsMax, restSec, warmupSets, targetDurationSec, clearDuration = false, section}) =>
+                    repo.updateTemplateExercise(e.id,
+                        targetSets: targetSets,
+                        repsMin: repsMin,
+                        repsMax: repsMax,
+                        restSec: restSec,
+                        warmupSets: warmupSets,
+                        targetDurationSec: targetDurationSec,
+                        clearDuration: clearDuration,
+                        section: section),
+              ),
+              onRemove: () => repo.removeTemplateExercise(e.id),
+            ),
+          ),
           const SizedBox(height: AppSpace.s8),
           PressScale(
             child: OutlinedButton.icon(
@@ -154,14 +171,51 @@ class _TemplateEditPageState extends ConsumerState<TemplateEditPage> {
   }
 }
 
-class _ExerciseRow extends ConsumerWidget {
-  const _ExerciseRow({required this.entry, required this.exercise});
-  final TemplateExercise entry;
-  final Exercise? exercise;
+/// 模板 / 首页预览里的分区标题 + 动作卡片列表：热身、正式训练、放松各一段。
+List<Widget> templateExerciseRows(List<TemplateExercise> entries, Widget Function(TemplateExercise) card) {
+  final sorted = sortedBySection(entries, (e) => e.section, (e) => e.position);
+  final hasSections = entries.any((x) => x.section != 'main');
+  return [
+    for (final (i, e) in sorted.indexed) ...[
+      if (hasSections && (i == 0 || sorted[i - 1].section != e.section)) _SectionLabel(WorkoutSection.fromKey(e.section)),
+      card(e),
+      const SizedBox(height: AppSpace.s8),
+    ],
+  ];
+}
+
+/// 小铅笔图标（SVG 线条风格），颜色跟随主题。
+class PencilIcon extends StatelessWidget {
+  const PencilIcon({super.key, required this.color, this.size = 20});
+  final Color color;
+  final double size;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final hex = (color.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0');
+    return SvgPicture.string(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#$hex" '
+      'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+      '<path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>',
+      width: size,
+      height: size,
+    );
+  }
+}
+
+/// 动作卡片：点卡片看动作详情（和动作库里一样）；右侧小笔改运动量；[onRemove] 不为空时再显示 ✕。
+class TemplateExerciseCard extends StatelessWidget {
+  const TemplateExerciseCard({super.key, required this.entry, required this.exercise, required this.onEdit, this.onRemove});
+  final TemplateExercise entry;
+  final Exercise? exercise;
+  final VoidCallback onEdit;
+  final VoidCallback? onRemove;
+
+  @override
+  Widget build(BuildContext context) {
     final c = context.colors;
+    final ex = exercise;
+    final name = ex?.nameZh ?? '未知动作';
     return PressScale(
       scale: PressScale.cardScale,
       child: Material(
@@ -169,33 +223,21 @@ class _ExerciseRow extends ConsumerWidget {
         borderRadius: AppRadius.card,
         child: InkWell(
           borderRadius: AppRadius.card,
-          onTap: () => showModalBottomSheet<void>(
-            context: context,
-            isScrollControlled: true,
-            builder: (_) => _ConfigSheet(
-              entry: entry,
-              name: exercise?.nameZh ?? '动作',
-              timed: exercise?.trackingType == TrackingType.duration,
-              exercise: exercise,
-            ),
-          ),
+          onTap: ex == null ? null : () => context.push('/exercise/${ex.slug}'),
           child: Padding(
             padding: const EdgeInsets.all(AppSpace.s12),
             child: Row(
               children: [
                 SizedBox(
                   width: AppSize.exerciseThumb,
-                  child: exercise == null
-                      ? const SizedBox.shrink()
-                      : ExerciseImage(exercise: exercise!, cacheWidth: 160, radius: AppRadius.md - 4),
+                  child: ex == null ? const SizedBox.shrink() : ExerciseImage(exercise: ex, cacheWidth: 160, radius: AppRadius.md - 4),
                 ),
                 const SizedBox(width: AppSpace.s12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(exercise?.nameZh ?? '未知动作',
-                          style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
+                      Text(name, style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
                       Text(describeTemplateExercise(entry), style: AppText.label.copyWith(color: c.text2)),
                     ],
                   ),
@@ -203,11 +245,20 @@ class _ExerciseRow extends ConsumerWidget {
                 PressScale(
                   scale: PressScale.smallScale,
                   child: IconButton(
-                    tooltip: '移除动作',
-                    onPressed: () => ref.read(planRepositoryProvider).removeTemplateExercise(entry.id),
-                    icon: Icon(Icons.close_rounded, color: c.text3),
+                    tooltip: '编辑 $name',
+                    onPressed: onEdit,
+                    icon: PencilIcon(color: c.text2),
                   ),
                 ),
+                if (onRemove != null)
+                  PressScale(
+                    scale: PressScale.smallScale,
+                    child: IconButton(
+                      tooltip: '移除动作',
+                      onPressed: onRemove,
+                      icon: Icon(Icons.close_rounded, color: c.text3),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -217,9 +268,53 @@ class _ExerciseRow extends ConsumerWidget {
   }
 }
 
+/// 改运动量时把「改了哪几项」交给调用方保存：模板页写进模板，首页预览只记到今天这次训练。
+typedef DoseUpdater = Future<void> Function({
+  int? targetSets,
+  int? repsMin,
+  int? repsMax,
+  int? restSec,
+  int? warmupSets,
+  int? targetDurationSec,
+  bool clearDuration,
+  String? section,
+});
+
+/// 弹出运动量编辑面板。[todayOnly] 为真时是首页预览里的「只改今天」模式。
+Future<void> showDoseSheet(
+  BuildContext context, {
+  required TemplateExercise entry,
+  required Exercise? exercise,
+  required DoseUpdater update,
+  bool todayOnly = false,
+}) =>
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => _ConfigSheet(
+        entry: entry,
+        name: exercise?.nameZh ?? '动作',
+        timed: exercise?.trackingType == TrackingType.duration,
+        exercise: exercise,
+        update: update,
+        todayOnly: todayOnly,
+      ),
+    );
+
 class _ConfigSheet extends ConsumerStatefulWidget {
-  const _ConfigSheet({required this.entry, required this.name, this.timed = false, this.exercise});
+  const _ConfigSheet({
+    required this.entry,
+    required this.name,
+    required this.update,
+    this.timed = false,
+    this.exercise,
+    this.todayOnly = false,
+  });
   final Exercise? exercise;
+  final DoseUpdater update;
+
+  /// 首页预览里打开：只改今天这次训练，不动模板，也不切换动作的记录方式。
+  final bool todayOnly;
   final TemplateExercise entry;
   final String name;
 
@@ -244,27 +339,27 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
   /// 切换「按次数 / 按时间」：记到账号偏好里，并把这个模板动作的目标换成对应的量。
   Future<void> _setTimed(bool timed) async {
     final ex = widget.exercise;
-    final repo = ref.read(planRepositoryProvider);
+    final update = widget.update;
     setState(() => _timed = timed);
     if (ex != null) {
       await ref.read(exercisePrefsRepositoryProvider).setTracking(ex, timed ? TrackingType.duration : ex.repsVariant);
     }
     if (timed) {
       setState(() => duration = widget.entry.targetDurationSec ?? ex?.defaultSeconds ?? 30);
-      await repo.updateTemplateExercise(widget.entry.id, targetDurationSec: duration);
+      await update(targetDurationSec: duration);
     } else {
       setState(() {
         repsMin = ex?.defaultReps ?? repsMin;
         repsMax = ex?.defaultReps ?? repsMax;
       });
-      await repo.updateTemplateExercise(widget.entry.id, clearDuration: true, repsMin: repsMin, repsMax: repsMax);
+      await update(clearDuration: true, repsMin: repsMin, repsMax: repsMax);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final repo = ref.read(planRepositoryProvider);
+    final update = widget.update;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(AppSpace.s20, AppSpace.s8, AppSpace.s20, AppSpace.s20),
@@ -273,8 +368,12 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(widget.name, style: AppText.titleMedium.copyWith(color: c.text)),
+            if (widget.todayOnly) ...[
+              const SizedBox(height: AppSpace.s4),
+              Text('只改今天这次训练，不会改动模板', style: AppText.label.copyWith(color: c.text2)),
+            ],
             const SizedBox(height: AppSpace.s8),
-            if (widget.exercise?.canSwitchTracking ?? false) ...[
+            if (!widget.todayOnly && (widget.exercise?.canSwitchTracking ?? false)) ...[
               SizedBox(
                 width: double.infinity,
                 child: SegmentedButton<bool>(
@@ -299,7 +398,7 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
                 selected: {section},
                 onSelectionChanged: (v) {
                   setState(() => section = v.first);
-                  repo.updateTemplateExercise(widget.entry.id, section: v.first);
+                  update(section: v.first);
                 },
               ),
             ),
@@ -311,7 +410,7 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
               unit: ' 组',
               onChanged: (v) {
                 setState(() => sets = v);
-                repo.updateTemplateExercise(widget.entry.id, targetSets: v);
+                update(targetSets: v);
               },
             ),
             if (!_timed) ...[
@@ -325,7 +424,7 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
                   repsMin = v;
                   if (repsMax < v) repsMax = v;
                 });
-                repo.updateTemplateExercise(widget.entry.id, repsMin: v, repsMax: repsMax);
+                update(repsMin: v, repsMax: repsMax);
               },
             ),
             StepperField(
@@ -338,7 +437,7 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
                   repsMax = v;
                   if (repsMin > v) repsMin = v;
                 });
-                repo.updateTemplateExercise(widget.entry.id, repsMin: repsMin, repsMax: v);
+                update(repsMin: repsMin, repsMax: v);
               },
             ),
             ] else
@@ -351,7 +450,7 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
                 unit: ' 秒',
                 onChanged: (v) {
                   setState(() => duration = v);
-                  repo.updateTemplateExercise(widget.entry.id, targetDurationSec: v);
+                  update(targetDurationSec: v);
                 },
               ),
             if (!_timed)
@@ -363,7 +462,7 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
                 unit: ' 组',
                 onChanged: (v) {
                   setState(() => warmup = v);
-                  repo.updateTemplateExercise(widget.entry.id, warmupSets: v);
+                  update(warmupSets: v);
                 },
               ),
             StepperField(
@@ -375,7 +474,7 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
               unit: ' 秒',
               onChanged: (v) {
                 setState(() => rest = v);
-                repo.updateTemplateExercise(widget.entry.id, restSec: v);
+                update(restSec: v);
               },
             ),
             const SizedBox(height: AppSpace.s12),

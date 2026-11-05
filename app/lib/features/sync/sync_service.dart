@@ -236,8 +236,8 @@ class SyncService {
             variables: [Variable<String>(uid)], updates: {t.table}, updateKind: UpdateKind.delete);
       }
       await _db.customStatement(
-        'DELETE FROM sync_states WHERE key = ? OR key LIKE ?',
-        [_lastSyncKey, 'cursor:$uid:%'],
+        'DELETE FROM sync_states WHERE key = ? OR key LIKE ? OR key LIKE ?',
+        [_lastSyncKey, 'cursor:$uid:%', 'today_override:$uid:%'],
       );
     });
   }

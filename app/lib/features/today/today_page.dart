@@ -9,6 +9,7 @@ import 'package:my_fitness/features/auth/auth_providers.dart';
 import 'package:my_fitness/features/calendar/calendar_math.dart';
 import 'package:my_fitness/features/plan/plan_providers.dart';
 import 'package:my_fitness/features/plan/plan_repository.dart';
+import 'package:my_fitness/features/plan/today_overrides.dart';
 import 'package:my_fitness/features/sync/sync_chip.dart';
 import 'package:my_fitness/features/workout/workout_providers.dart';
 import 'package:my_fitness/features/workout/workout_repository.dart';
@@ -33,10 +34,14 @@ class TodayPage extends ConsumerWidget {
   }
 
   Future<void> _startTemplate(BuildContext context, WidgetRef ref, String templateId, {String? planId}) async {
-    await ref
-        .read(planRepositoryProvider)
-        .startFromTemplate(ref.read(workoutRepositoryProvider), templateId,
-            planId: planId, exercises: ref.read(exerciseByIdProvider));
+    if (planId != null) {
+      // 今日计划：按「模板 + 今天预览里的修改」开始
+      await startTodayPlan(ref);
+    } else {
+      await ref
+          .read(planRepositoryProvider)
+          .startFromTemplate(ref.read(workoutRepositoryProvider), templateId, exercises: ref.read(exerciseByIdProvider));
+    }
     if (context.mounted) context.push('/workout');
   }
 
@@ -95,7 +100,8 @@ class TodayPage extends ConsumerWidget {
     final weekSets = recent.fold<int>(0, (s, w) => s + w.setCount);
     final weekMin = recent.fold<int>(0, (s, w) => s + (w.workout.endedAt?.difference(w.workout.startedAt).inMinutes ?? 0));
 
-    final tpl = entry?.template;
+    // 今天实际要练的量：模板 + 首页预览里对今天的修改
+    final tpl = ref.watch(todayEffectiveTemplateProvider);
     final tplSets = tpl?.exercises.fold<int>(0, (n, e) => n + e.targetSets) ?? 0;
     final byId = ref.watch(exerciseByIdProvider);
     // 今日计划卡片里预览前几个动作，开练前心里有数
@@ -108,6 +114,8 @@ class TodayPage extends ConsumerWidget {
     String heroSub;
     String buttonText;
     VoidCallback onStart;
+    // 除了按钮，点卡片其他地方进入今日预览（有今日模板、且还没开始训练时）
+    final canPreview = active == null && tpl != null;
     if (active != null) {
       heroLabel = '训练进行中';
       heroTitle = active.workout.name ?? '自由训练';
@@ -171,9 +179,13 @@ class TodayPage extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: AppSpace.s24),
-            DecoratedBox(
-              decoration: BoxDecoration(color: c.hero, borderRadius: AppRadius.card),
-              child: Padding(
+            Material(
+              color: c.hero,
+              borderRadius: AppRadius.card,
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: canPreview ? () => context.push('/today/preview') : null,
+                child: Padding(
                 padding: const EdgeInsets.all(AppSpace.cardPadding),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,6 +217,10 @@ class TodayPage extends ConsumerWidget {
                           overflow: TextOverflow.ellipsis,
                           style: AppText.label.copyWith(color: c.onHero)),
                     ],
+                    if (canPreview) ...[
+                      const SizedBox(height: AppSpace.s4),
+                      Text('点击预览', style: AppText.caption.copyWith(color: c.onHero2)),
+                    ],
                     const SizedBox(height: AppSpace.s16),
                     PressScale(
                       child: FilledButton(
@@ -215,6 +231,7 @@ class TodayPage extends ConsumerWidget {
                     ),
                   ],
                 ),
+              ),
               ),
             ),
             if (active == null) ...[
