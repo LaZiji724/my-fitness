@@ -17,7 +17,9 @@ import 'package:my_fitness/features/plan/plan_providers.dart';
 import 'package:my_fitness/features/plan/plan_repository.dart';
 import 'package:my_fitness/features/plan/template_edit_page.dart';
 import 'package:my_fitness/features/sync/sync_providers.dart';
+import 'package:my_fitness/features/plan/today_overrides.dart';
 import 'package:my_fitness/features/today/today_page.dart';
+import 'package:my_fitness/features/today/today_preview_page.dart';
 import 'package:my_fitness/features/workout/workout_providers.dart';
 import 'package:my_fitness/features/workout/workout_repository.dart';
 
@@ -72,6 +74,8 @@ void main() {
         GoRoute(path: '/workout', builder: (_, _) => const Scaffold(body: Text('训练页'))),
         GoRoute(path: '/plan/:id', builder: (_, s) => PlanEditPage(planId: s.pathParameters['id']!)),
         GoRoute(path: '/template/:id', builder: (_, s) => TemplateEditPage(templateId: s.pathParameters['id']!)),
+        GoRoute(path: '/today/preview', builder: (_, _) => const TodayPreviewPage()),
+        GoRoute(path: '/exercise/:slug', builder: (_, s) => Scaffold(body: Text('动作详情 ${s.pathParameters['slug']}'))),
         GoRoute(path: '/me', builder: (_, _) => const SizedBox()),
         GoRoute(path: '/calendar', builder: (_, _) => const Text('日历页')),
       ],
@@ -81,6 +85,7 @@ void main() {
         appDatabaseProvider.overrideWithValue(db),
         workoutRepositoryProvider.overrideWithValue(workouts),
         planRepositoryProvider.overrideWithValue(plans),
+        todayOverridesRepositoryProvider.overrideWithValue(TodayOverridesRepository(db, userId: () => 'u1')),
         exerciseRepositoryProvider.overrideWithValue(_FakeRepo(all)),
         profileSummaryProvider.overrideWithValue(null),
         todayProvider.overrideWithValue(today),
@@ -133,13 +138,118 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('3 组 · 8–12 次 · 休息 90 秒'), findsOneWidget);
 
-    await tester.tap(find.text(bench.nameZh));
+    await tester.tap(find.byTooltip('编辑 ${bench.nameZh}'));
     await tester.pumpAndSettle();
+    expect(find.text('只改今天这次训练，不会改动模板'), findsNothing);
     await tester.tap(find.bySemanticsLabel('组数 增加'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('完成'));
     await tester.pumpAndSettle();
     expect(find.text('4 组 · 8–12 次 · 休息 90 秒'), findsOneWidget);
+    await unmount(tester);
+  });
+
+  testWidgets('模板页：点动作本体打开动作详情，不再弹出编辑面板', (tester) async {
+    await setViewport(tester);
+    final id = await plans.createTemplate('推日');
+    await plans.addTemplateExercise(id, bench.id);
+    await tester.pumpWidget(host(TemplateEditPage(templateId: id)));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(bench.nameZh));
+    await tester.pumpAndSettle();
+    expect(find.text('动作详情 ${bench.slug}'), findsOneWidget);
+    expect(find.text('完成'), findsNothing);
+    await unmount(tester);
+  });
+
+  Future<(String, String)> planToday() async {
+    final t = await plans.createTemplate('推日');
+    await plans.addTemplateExercise(t, bench.id);
+    final p = await plans.createPlan('推拉腿', 3, startDate: today);
+    await plans.setPlanDay(p, 0, t);
+    return (t, p);
+  }
+
+  testWidgets('首页：黑卡显示「点击预览」，点卡片其他地方进入预览页，按钮仍直接开练', (tester) async {
+    await setViewport(tester);
+    await planToday();
+    await tester.pumpWidget(host(const TodayPage()));
+    await tester.pumpAndSettle();
+    expect(find.text('点击预览'), findsOneWidget);
+
+    await tester.tap(find.text('推日'));
+    await tester.pumpAndSettle();
+    expect(find.text(bench.nameZh), findsOneWidget);
+    expect(find.text('3 组 · 8–12 次 · 休息 90 秒'), findsOneWidget);
+    expect(find.text('开始训练'), findsOneWidget);
+    expect(find.text('训练页'), findsNothing);
+    await unmount(tester);
+
+    await tester.pumpWidget(host(const TodayPage()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('开始训练'));
+    await tester.pumpAndSettle();
+    expect(find.text('训练页'), findsOneWidget);
+    await unmount(tester);
+  });
+
+  testWidgets('首页预览：改今天的组数只影响今天这次训练，模板和计划不变', (tester) async {
+    await setViewport(tester);
+    final (t, _) = await planToday();
+    await tester.pumpWidget(host(const TodayPage()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('推日'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('编辑 ${bench.nameZh}'));
+    await tester.pumpAndSettle();
+    expect(find.text('只改今天这次训练，不会改动模板'), findsOneWidget);
+    await tester.tap(find.bySemanticsLabel('组数 增加'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.bySemanticsLabel('组间休息 增加'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('完成'));
+    await tester.pumpAndSettle();
+    expect(find.text('4 组 · 8–12 次 · 休息 105 秒'), findsOneWidget);
+
+    // 模板里的量一点没变
+    final tpl = (await plans.getTemplate(t))!;
+    expect(tpl.exercises.single.targetSets, 3);
+    expect(tpl.exercises.single.restSec, isNull);
+
+    // 开始训练按今天改过的量
+    await tester.tap(find.text('开始训练'));
+    await tester.pumpAndSettle();
+    expect(find.text('训练页'), findsOneWidget);
+    final active = (await workouts.loadWorkout((await workouts.activeWorkout())!.id))!;
+    expect(active.exercises.single.sets, hasLength(4));
+    expect(active.exercises.single.exercise.restSec, 105);
+    // 模板依旧没变
+    expect((await plans.getTemplate(t))!.exercises.single.targetSets, 3);
+    await unmount(tester);
+  });
+
+  testWidgets('首页：改过今天后黑卡组数同步，「恢复为模板原来的量」可还原', (tester) async {
+    await setViewport(tester);
+    final (t, _) = await planToday();
+    await tester.pumpWidget(host(const TodayPage()));
+    await tester.pumpAndSettle();
+    expect(find.text('1 个动作 · 3 组'), findsOneWidget);
+
+    await tester.tap(find.text('推日'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('编辑 ${bench.nameZh}'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.bySemanticsLabel('组数 增加'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('完成'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('恢复为模板原来的量'));
+    await tester.pumpAndSettle();
+    expect(find.text('3 组 · 8–12 次 · 休息 90 秒'), findsOneWidget);
+    expect(find.text('恢复为模板原来的量'), findsNothing);
+    expect((await plans.getTemplate(t))!.exercises.single.targetSets, 3);
     await unmount(tester);
   });
 

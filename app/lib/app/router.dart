@@ -21,6 +21,7 @@ import 'package:my_fitness/features/plan/template_edit_page.dart';
 import 'package:my_fitness/features/profile/profile_page.dart';
 import 'package:my_fitness/features/stats/stats_page.dart';
 import 'package:my_fitness/features/today/today_page.dart';
+import 'package:my_fitness/features/today/today_preview_page.dart';
 import 'package:my_fitness/features/workout/workout_page.dart';
 import 'package:my_fitness/features/workout/workout_pick_page.dart';
 import 'package:my_fitness/features/workout/workout_repository.dart';
@@ -93,6 +94,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/exercise/:slug',
         builder: (_, state) => ExerciseDetailPage(slug: state.pathParameters['slug']!),
       ),
+      GoRoute(path: '/today/preview', builder: (_, _) => const TodayPreviewPage()),
       ...templateRoutes,
       GoRoute(path: '/library', builder: (_, _) => const LibraryPage()),
       GoRoute(

@@ -212,14 +212,18 @@ class PlanRepository {
   }
 
   /// 按模板开始一次训练：组数与休息时间来自模板，重量借用上次的记录。
+  /// [adjust] 可在开练前改写要练的量（首页预览里对今天的修改），不会写回模板。
   Future<Workout> startFromTemplate(
     WorkoutRepository workouts,
     String templateId, {
     String? planId,
     Map<String, Exercise>? exercises,
+    TemplateView Function(TemplateView view)? adjust,
   }) async {
-    final tv = await getTemplate(templateId);
+    var tv = await getTemplate(templateId);
     if (tv == null) throw StateError('模板不存在');
+    // 首页「今天这次」的临时修改只在这里叠加到本次训练上，模板本身不动
+    if (adjust != null) tv = adjust(tv);
     final existing = await workouts.activeWorkout();
     if (existing != null) return existing;
     String? programId;
