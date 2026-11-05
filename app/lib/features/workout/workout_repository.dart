@@ -377,23 +377,54 @@ class WorkoutRepository {
   // ---------------------------------------------------------------- 历史
 
   /// 已结束的训练（含所有组），按开始时间倒序；[fromDate]/[toDate] 为 yyyy-MM-dd，含两端。
+  ///
+  /// 训练的动作、组分别在 workout_exercises / workout_sets 里，同步时它们是在训练主记录之后才拉回来的，
+  /// 所以三张表任何一张变化都要重新读取，否则重新登录后首页会停在「0 kg · 0 组」。
   Stream<List<WorkoutView>> watchCompleted({String? fromDate, String? toDate}) {
-    final q = _db.select(_db.workouts)
-      ..where((w) {
-        var cond = w.endedAt.isNotNull() & w.deletedAt.isNull() & w.userId.equals(_userId());
-        if (fromDate != null) cond = cond & w.localDate.isBiggerOrEqualValue(fromDate);
-        if (toDate != null) cond = cond & w.localDate.isSmallerOrEqualValue(toDate);
-        return cond;
-      })
-      ..orderBy([(w) => OrderingTerm.desc(w.startedAt)]);
-    return q.watch().asyncMap((rows) async {
+    Future<List<WorkoutView>> load() async {
+      final rows = await (_db.select(_db.workouts)
+            ..where((w) {
+              var cond = w.endedAt.isNotNull() & w.deletedAt.isNull() & w.userId.equals(_userId());
+              if (fromDate != null) cond = cond & w.localDate.isBiggerOrEqualValue(fromDate);
+              if (toDate != null) cond = cond & w.localDate.isSmallerOrEqualValue(toDate);
+              return cond;
+            })
+            ..orderBy([(w) => OrderingTerm.desc(w.startedAt)]))
+          .get();
       final views = <WorkoutView>[];
       for (final r in rows) {
         final v = await loadWorkout(r.id);
         if (v != null) views.add(v);
       }
       return views;
-    });
+    }
+
+    late final StreamController<List<WorkoutView>> controller;
+    StreamSubscription<Set<TableUpdate>>? sub;
+    var seq = 0;
+
+    Future<void> emit() async {
+      final mine = ++seq;
+      try {
+        final views = await load();
+        // 丢弃过期结果：同步时更新很密集，只保留最后一次查询
+        if (!controller.isClosed && mine == seq) controller.add(views);
+      } catch (e, st) {
+        if (!controller.isClosed) controller.addError(e, st);
+      }
+    }
+
+    controller = StreamController<List<WorkoutView>>(
+      onListen: () {
+        emit();
+        sub = _db
+            .tableUpdates(TableUpdateQuery.onAllTables(
+                [_db.workouts, _db.workoutExercises, _db.workoutSets]))
+            .listen((_) => emit());
+      },
+      onCancel: () => sub?.cancel(),
+    );
+    return controller.stream;
   }
 
   // ---------------------------------------------------------------- 结束 / 放弃
