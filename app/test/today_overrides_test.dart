@@ -43,7 +43,7 @@ void main() {
     expect(tpl.exercises.single.dirty, isFalse);
 
     final loaded = await overrides.load(day, t);
-    final applied = applyDoseOverrides(tpl, loaded);
+    final applied = applyTodayEdits(tpl, loaded);
     expect(applied.exercises.single.targetSets, 5);
     expect(applied.exercises.single.restSec, 120);
     expect(applied.exercises.single.repsMin, tpl.exercises.single.repsMin);
@@ -54,7 +54,7 @@ void main() {
     await overrides.save(day, t, te, const DoseOverride(targetSets: 5));
     await overrides.save(day, t, te, const DoseOverride(restSec: 60));
     await overrides.save(day, t, te, const DoseOverride(targetSets: 4));
-    final o = (await overrides.load(day, t))[te]!;
+    final o = (await overrides.load(day, t)).doses[te]!;
     expect(o.targetSets, 4);
     expect(o.restSec, 60);
   });
@@ -62,27 +62,27 @@ void main() {
   test('换一天不再生效；新的一天写入时顺便清掉旧日子的记录', () async {
     final (t, te) = await template();
     await overrides.save(day, t, te, const DoseOverride(targetSets: 5));
-    expect(await overrides.load(day.add(const Duration(days: 1)), t), isEmpty);
+    expect((await overrides.load(day.add(const Duration(days: 1)), t)).isEmpty, isTrue);
     await overrides.save(day.add(const Duration(days: 1)), t, te, const DoseOverride(targetSets: 2));
-    expect(await overrides.load(day, t), isEmpty);
-    expect((await overrides.load(day.add(const Duration(days: 1)), t))[te]!.targetSets, 2);
+    expect((await overrides.load(day, t)).isEmpty, isTrue);
+    expect((await overrides.load(day.add(const Duration(days: 1)), t)).doses[te]!.targetSets, 2);
   });
 
   test('不同账号互不影响；恢复后清空', () async {
     final (t, te) = await template();
     await overrides.save(day, t, te, const DoseOverride(targetSets: 5));
     uid = 'u2';
-    expect(await overrides.load(day, t), isEmpty);
+    expect((await overrides.load(day, t)).isEmpty, isTrue);
     uid = 'u1';
     await overrides.clear(day, t);
-    expect(await overrides.load(day, t), isEmpty);
+    expect((await overrides.load(day, t)).isEmpty, isTrue);
   });
 
   test('按今天的修改开练：训练里是修改后的组数，模板里还是原来的', () async {
     final (t, te) = await template();
     await overrides.save(day, t, te, const DoseOverride(targetSets: 5, restSec: 45));
     final o = await overrides.load(day, t);
-    final w = await plans.startFromTemplate(workouts, t, adjust: (v) => applyDoseOverrides(v, o));
+    final w = await plans.startFromTemplate(workouts, t, adjust: (v) => applyTodayEdits(v, o));
     final view = (await workouts.loadWorkout(w.id))!;
     expect(view.exercises.single.sets, hasLength(5));
     expect(view.exercises.single.exercise.restSec, 45);

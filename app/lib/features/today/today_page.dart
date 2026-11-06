@@ -125,9 +125,16 @@ class TodayPage extends ConsumerWidget {
     } else if (tpl != null) {
       heroLabel = '今日计划 · ${entry!.plan.plan.name}';
       heroTitle = tpl.template.name;
-      heroSub = '${tpl.exercises.length} 个动作 · $tplSets 组';
-      buttonText = '开始训练';
-      onStart = () => _startTemplate(context, ref, tpl.template.id, planId: entry.plan.plan.id);
+      if (tpl.exercises.isEmpty) {
+        // 在预览里把今天的动作都去掉了：只能空白开练，点卡片进预览可以恢复
+        heroSub = '今天的动作都去掉了，点卡片进预览可以恢复';
+        buttonText = '开始空白训练';
+        onStart = () => _startBlank(context, ref);
+      } else {
+        heroSub = '${tpl.exercises.length} 个动作 · $tplSets 组';
+        buttonText = '开始训练';
+        onStart = () => _startTemplate(context, ref, tpl.template.id, planId: entry.plan.plan.id);
+      }
     } else if (entry != null) {
       heroLabel = '今日计划 · ${entry.plan.plan.name}';
       heroTitle = '今天休息';

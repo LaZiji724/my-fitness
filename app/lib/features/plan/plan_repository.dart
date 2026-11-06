@@ -180,6 +180,33 @@ class PlanRepository {
         TemplateExercisesCompanion(deletedAt: Value(t), updatedAt: Value(t), dirty: const Value(true)));
   }
 
+  /// 按拖动后的顺序保存模板里的动作：[order] 是排好的 (动作 id, 所在分区)，位置就是下标。
+  /// 只改真的变了的行（并标记待同步），模板里没出现在 [order] 里的动作不动。
+  Future<void> reorderTemplateExercises(String templateId, List<({String id, String section})> order) async {
+    final t = _now();
+    await _db.transaction(() async {
+      final rows = await (_db.select(_db.templateExercises)
+            ..where((e) => e.templateId.equals(templateId) & e.deletedAt.isNull()))
+          .get();
+      final byId = {for (final r in rows) r.id: r};
+      var changed = false;
+      for (final (i, slot) in order.indexed) {
+        final row = byId[slot.id];
+        if (row == null || (row.position == i && row.section == slot.section)) continue;
+        changed = true;
+        await (_db.update(_db.templateExercises)..where((e) => e.id.equals(slot.id))).write(
+          TemplateExercisesCompanion(
+            position: Value(i),
+            section: Value(slot.section),
+            updatedAt: Value(t),
+            dirty: const Value(true),
+          ),
+        );
+      }
+      if (changed) await _touchTemplate(templateId, t);
+    });
+  }
+
   Future<void> _touchTemplate(String id, DateTime t) =>
       (_db.update(_db.templates)..where((x) => x.id.equals(id)))
           .write(TemplatesCompanion(updatedAt: Value(t), dirty: const Value(true)));

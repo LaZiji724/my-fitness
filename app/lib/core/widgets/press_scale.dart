@@ -72,7 +72,8 @@ class _PressScaleState extends State<PressScale> {
   }
 
   void _onMove(PointerMoveEvent e) {
-    if (e.pointer != _pointer || !_down) return;
+    // 长按拖动排序时，原来的卡片会被拿走换成拖动中的副本，手指的后续事件仍会路由到这里
+    if (!mounted || e.pointer != _pointer || !_down) return;
     if ((e.position - _start).distance > kTouchSlop) {
       setState(() => _down = false);
     }
@@ -81,7 +82,7 @@ class _PressScaleState extends State<PressScale> {
   void _onEnd(PointerEvent e) {
     if (e.pointer != _pointer) return;
     _pointer = null;
-    if (_down) setState(() => _down = false);
+    if (mounted && _down) setState(() => _down = false);
   }
 
   @override

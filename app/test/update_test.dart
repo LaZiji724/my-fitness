@@ -108,7 +108,7 @@ void main() {
       await pumpDialog(tester, svc, inst);
       expect(find.text('发现新版本'), findsOneWidget);
       expect(find.textContaining('2.3.0'), findsWidgets);
-      await tester.tap(find.text('下载并安装'));
+      await tester.tap(find.text('更新'));
       await tester.pumpAndSettle();
       expect(svc.downloads, 1);
       expect(inst.calls, ['settings']);
@@ -121,4 +121,88 @@ void main() {
       debugDefaultTargetPlatformOverride = null;
     }
   });
+
+  testWidgets('启动自动检查：有新版就弹窗，点「暂不更新」关掉；再次进入软件（切回前台）仍会提示', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+    try {
+      resetUpdateAutoCheckThrottle();
+      final update = findUpdate(releases: releases, ios: false, current: '2.2.3')!;
+      var checks = 0;
+      final svc = CountingService(update, () => checks++);
+      Future<void> pumpShell() async {
+        await tester.pumpWidget(ProviderScope(
+          overrides: [
+            updateServiceProvider.overrideWithValue(svc),
+            apkInstallerProvider.overrideWithValue(FakeInstaller(true)),
+            currentVersionProvider.overrideWith((ref) async => '2.2.3'),
+            autoUpdateCheckProvider.overrideWithValue(true),
+          ],
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            home: const UpdateAutoCheck(child: Scaffold(body: Text('首页'))),
+          ),
+        ));
+        await tester.pumpAndSettle();
+      }
+
+      await pumpShell();
+      expect(checks, 1);
+      expect(find.text('发现新版本'), findsOneWidget);
+      expect(find.text('暂不更新'), findsOneWidget);
+      expect(find.text('更新'), findsOneWidget);
+
+      await tester.tap(find.text('暂不更新'));
+      await tester.pumpAndSettle();
+      expect(find.text('发现新版本'), findsNothing);
+
+      // 刚检查过不久，马上切回来不重复打扰
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
+      expect(checks, 1);
+      expect(find.text('发现新版本'), findsNothing);
+
+      // 隔了一阵再回到软件：还没更新就再次提示
+      resetUpdateAutoCheckThrottle();
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
+      expect(checks, 2);
+      expect(find.text('发现新版本'), findsOneWidget);
+      await tester.tap(find.text('暂不更新'));
+      await tester.pumpAndSettle();
+
+      // 重新启动软件（新进程）= 一定会检查
+      await tester.pumpWidget(const SizedBox());
+      resetUpdateAutoCheckThrottle();
+      await pumpShell();
+      expect(checks, 3);
+      expect(find.text('发现新版本'), findsOneWidget);
+    } finally {
+      debugDefaultTargetPlatformOverride = null;
+    }
+  });
+
+  testWidgets('已是最新版：自动检查不弹窗', (tester) async {
+    resetUpdateAutoCheckThrottle();
+    await tester.pumpWidget(ProviderScope(
+      overrides: [
+        updateServiceProvider.overrideWithValue(FakeService(null)),
+        currentVersionProvider.overrideWith((ref) async => '2.3.0'),
+        autoUpdateCheckProvider.overrideWithValue(true),
+      ],
+      child: MaterialApp(theme: AppTheme.light(), home: const UpdateAutoCheck(child: Scaffold(body: Text('首页')))),
+    ));
+    await tester.pumpAndSettle();
+    expect(find.text('发现新版本'), findsNothing);
+  });
+}
+
+class CountingService extends FakeService {
+  CountingService(super.result, this.onCheck);
+  final void Function() onCheck;
+
+  @override
+  Future<AppUpdate?> check({required String current, required bool ios}) async {
+    onCheck();
+    return result;
+  }
 }
