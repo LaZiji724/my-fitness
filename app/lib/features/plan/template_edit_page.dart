@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -110,41 +112,61 @@ class _TemplateEditPageState extends ConsumerState<TemplateEditPage> {
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, 160),
-        children: [
-          if (view.exercises.isEmpty)
-            const EmptyCard(title: '还没有动作', hint: '点下面的「添加动作」从动作库里选'),
-          ...templateExerciseRows(
-            view.exercises,
-            (e) => TemplateExerciseCard(
-              entry: e,
-              exercise: byId[e.exerciseId],
-              onEdit: () => showDoseSheet(
-                context,
+      body: CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, 0),
+            sliver: SliverList.list(children: [
+              if (view.exercises.isEmpty)
+                const Padding(
+                  padding: EdgeInsets.only(bottom: AppSpace.s8),
+                  child: EmptyCard(title: '还没有动作', hint: '点下面的「添加动作」从动作库里选'),
+                ),
+              if (view.exercises.length > 1)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpace.s8),
+                  child: Text('长按动作卡片，上下拖动就能排序。', style: AppText.label.copyWith(color: c.text2)),
+                ),
+            ]),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpace.pageGutter),
+            sliver: ReorderableExerciseSliver(
+              entries: view.exercises,
+              onReorder: (order) => repo.reorderTemplateExercises(templateId, order),
+              cardBuilder: (e) => TemplateExerciseCard(
                 entry: e,
                 exercise: byId[e.exerciseId],
-                update: ({targetSets, repsMin, repsMax, restSec, warmupSets, targetDurationSec, clearDuration = false, section}) =>
-                    repo.updateTemplateExercise(e.id,
-                        targetSets: targetSets,
-                        repsMin: repsMin,
-                        repsMax: repsMax,
-                        restSec: restSec,
-                        warmupSets: warmupSets,
-                        targetDurationSec: targetDurationSec,
-                        clearDuration: clearDuration,
-                        section: section),
+                onEdit: () => showDoseSheet(
+                  context,
+                  entry: e,
+                  exercise: byId[e.exerciseId],
+                  update: ({targetSets, repsMin, repsMax, restSec, warmupSets, targetDurationSec, clearDuration = false, section}) =>
+                      repo.updateTemplateExercise(e.id,
+                          targetSets: targetSets,
+                          repsMin: repsMin,
+                          repsMax: repsMax,
+                          restSec: restSec,
+                          warmupSets: warmupSets,
+                          targetDurationSec: targetDurationSec,
+                          clearDuration: clearDuration,
+                          section: section),
+                ),
+                onRemove: () => repo.removeTemplateExercise(e.id),
               ),
-              onRemove: () => repo.removeTemplateExercise(e.id),
             ),
           ),
-          const SizedBox(height: AppSpace.s8),
-          PressScale(
-            child: OutlinedButton.icon(
-              onPressed: () => context.push('/template/$templateId/pick'),
-              icon: const Icon(Icons.add_rounded),
-              label: const Text('添加动作'),
-              style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, 0, AppSpace.pageGutter, 160),
+            sliver: SliverToBoxAdapter(
+              child: PressScale(
+                child: OutlinedButton.icon(
+                  onPressed: () => context.push('/template/$templateId/pick'),
+                  icon: const Icon(Icons.add_rounded),
+                  label: const Text('添加动作'),
+                  style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
+                ),
+              ),
             ),
           ),
         ],
@@ -171,17 +193,115 @@ class _TemplateEditPageState extends ConsumerState<TemplateEditPage> {
   }
 }
 
-/// 模板 / 首页预览里的分区标题 + 动作卡片列表：热身、正式训练、放松各一段。
-List<Widget> templateExerciseRows(List<TemplateExercise> entries, Widget Function(TemplateExercise) card) {
-  final sorted = sortedBySection(entries, (e) => e.section, (e) => e.position);
-  final hasSections = entries.any((x) => x.section != 'main');
-  return [
-    for (final (i, e) in sorted.indexed) ...[
-      if (hasSections && (i == 0 || sorted[i - 1].section != e.section)) _SectionLabel(WorkoutSection.fromKey(e.section)),
-      card(e),
-      const SizedBox(height: AppSpace.s8),
-    ],
-  ];
+/// 拖动排好后的一个位置：哪个动作、落在哪个分区（热身 / 正式训练 / 放松）。
+typedef ExerciseSlot = ({String id, String section});
+
+/// 模板 / 首页预览里的动作列表（放在 CustomScrollView 里）：分区标题 + 动作卡片，
+/// 长按卡片就能拖动排序，拖过分区标题就换到那个分区。
+///
+/// 松手后先在本地立刻排好（动画不回弹），再通过 [onReorder] 交给调用方保存。
+class ReorderableExerciseSliver extends StatefulWidget {
+  const ReorderableExerciseSliver({super.key, required this.entries, required this.cardBuilder, required this.onReorder});
+  final List<TemplateExercise> entries;
+  final Widget Function(TemplateExercise) cardBuilder;
+  final void Function(List<ExerciseSlot> order) onReorder;
+
+  @override
+  State<ReorderableExerciseSliver> createState() => _ReorderableExerciseSliverState();
+}
+
+/// 列表里的一行：分区标题或动作卡片。
+class _Row {
+  const _Row.header(this.section) : entry = null;
+  const _Row.card(TemplateExercise this.entry) : section = null;
+  final String? section;
+  final TemplateExercise? entry;
+}
+
+class _ReorderableExerciseSliverState extends State<ReorderableExerciseSliver> {
+  late List<_Row> _rows = _build(widget.entries);
+
+  static List<_Row> _build(List<TemplateExercise> entries) {
+    final sorted = sortedBySection(entries, (e) => e.section, (e) => e.position);
+    final hasSections = entries.any((x) => x.section != 'main');
+    return [
+      for (final (i, e) in sorted.indexed) ...[
+        if (hasSections && (i == 0 || sorted[i - 1].section != e.section)) _Row.header(e.section),
+        _Row.card(e),
+      ],
+    ];
+  }
+
+  @override
+  void didUpdateWidget(ReorderableExerciseSliver old) {
+    super.didUpdateWidget(old);
+    // 数据真的变了（改了运动量、删了动作、云端同步）才重排；只是重建界面时保留刚拖好的顺序
+    if (!listEquals(old.entries, widget.entries)) _rows = _build(widget.entries);
+  }
+
+  void _onReorder(int oldIndex, int newIndex) {
+    if (newIndex == oldIndex) return; // onReorderItem 已经按「先拿掉再插入」修正过下标
+    final rows = [..._rows];
+    rows.insert(newIndex, rows.removeAt(oldIndex));
+
+    // 每张卡片属于它上面最近的分区标题；拖到第一个标题上面就归第一个分区
+    var section = rows.firstWhere((r) => r.section != null, orElse: () => const _Row.header('main')).section!;
+    final order = <ExerciseSlot>[];
+    for (final r in rows) {
+      if (r.section != null) {
+        section = r.section!;
+      } else {
+        order.add((id: r.entry!.id, section: section));
+      }
+    }
+    setState(() => _rows = rows);
+    widget.onReorder(order);
+  }
+
+  Widget _proxy(Widget child, int index, Animation<double> animation) => AnimatedBuilder(
+        animation: animation,
+        child: child,
+        builder: (context, child) {
+          final t = Curves.easeOutCubic.transform(animation.value);
+          return Transform.scale(
+            scale: 1 + 0.03 * t,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                borderRadius: AppRadius.card,
+                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.22 * t), blurRadius: 16 * t, offset: Offset(0, 6 * t))],
+              ),
+              child: child,
+            ),
+          );
+        },
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverReorderableList(
+      itemCount: _rows.length,
+      onReorderStart: (_) => HapticFeedback.mediumImpact(),
+      onReorderEnd: (_) => HapticFeedback.lightImpact(),
+      onReorderItem: _onReorder,
+      proxyDecorator: _proxy,
+      itemBuilder: (context, i) {
+        final r = _rows[i];
+        final e = r.entry;
+        if (e == null) {
+          // 分区标题不能拖，但可以被卡片挤开 / 作为落点
+          return _SectionLabel(WorkoutSection.fromKey(r.section!), key: ValueKey('section-${r.section}'));
+        }
+        return ReorderableDelayedDragStartListener(
+          key: ValueKey('exercise-${e.id}'),
+          index: i,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: AppSpace.s8),
+            child: widget.cardBuilder(e),
+          ),
+        );
+      },
+    );
+  }
 }
 
 /// 小铅笔图标（SVG 线条风格），颜色跟随主题。
@@ -532,7 +652,7 @@ class TemplatePickDetailPage extends ConsumerWidget {
 
 /// 模板 / 训练里的分区小标题：热身、正式训练、放松。
 class _SectionLabel extends StatelessWidget {
-  const _SectionLabel(this.section);
+  const _SectionLabel(this.section, {super.key});
   final WorkoutSection section;
 
   @override

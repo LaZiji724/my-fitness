@@ -34,8 +34,12 @@ Future<void> checkForUpdateManually(BuildContext context, WidgetRef ref) async {
   }
 }
 
-/// 包在底部分栏外面：这次启动后第一次进入主界面时，悄悄检查一次更新；
-/// 有新版才弹窗，没有或失败都不打扰。
+/// 包在底部分栏外面：每次启动进入主界面时检查更新（从后台切回来隔一阵也查）；
+/// 有新版就弹窗，让用户选「更新」或「暂不更新」，没有或失败都不打扰。
+/// 测试用：假装离上次检查已经过了很久。
+@visibleForTesting
+void resetUpdateAutoCheckThrottle() => _UpdateAutoCheckState._lastCheck = null;
+
 class UpdateAutoCheck extends ConsumerStatefulWidget {
   const UpdateAutoCheck({super.key, required this.child});
   final Widget child;
@@ -44,26 +48,52 @@ class UpdateAutoCheck extends ConsumerStatefulWidget {
   ConsumerState<UpdateAutoCheck> createState() => _UpdateAutoCheckState();
 }
 
-class _UpdateAutoCheckState extends ConsumerState<UpdateAutoCheck> {
-  /// 整个进程只自动检查一次（切换分栏、重建界面都不会重复弹）。
-  static bool _checked = false;
+class _UpdateAutoCheckState extends ConsumerState<UpdateAutoCheck> with WidgetsBindingObserver {
+  /// 整个进程共用：上次检查的时间、更新窗口是否正开着（切换分栏、重建界面都不会重复弹）。
+  static DateTime? _lastCheck;
+  static bool _showing = false;
+
+  /// 从后台切回来时，距离上次检查不到这么久就不再查（免得频繁打扰、频繁访问 GitHub）。
+  static const _recheckAfter = Duration(minutes: 10);
 
   @override
   void initState() {
     super.initState();
-    if (_checked || !ref.read(autoUpdateCheckProvider)) return;
-    _checked = true;
-    unawaited(_run());
+    WidgetsBinding.instance.addObserver(this);
+    unawaited(_maybeCheck());
   }
 
-  Future<void> _run() async {
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  /// 每次启动进入软件都查一次；之后每次从后台切回来（隔了一阵）也查。有新版就一直提示到更新为止。
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) unawaited(_maybeCheck());
+  }
+
+  Future<void> _maybeCheck() async {
+    if (_showing || !ref.read(autoUpdateCheckProvider)) return;
+    final now = DateTime.now();
+    final last = _lastCheck;
+    if (last != null && now.difference(last) < _recheckAfter) return;
+    _lastCheck = now;
     try {
       final current = await ref.read(currentVersionProvider.future);
       final update = await ref.read(updateServiceProvider).check(current: current, ios: isIosPlatform);
-      if (update == null || !mounted) return;
-      await showUpdateDialog(context, update, current);
+      if (update == null || !mounted || _showing) return;
+      _showing = true;
+      try {
+        await showUpdateDialog(context, update, current);
+      } finally {
+        _showing = false;
+      }
     } catch (_) {
-      // 自动检查失败不打扰用户
+      // 自动检查失败不打扰用户，下次进入再查
+      _lastCheck = null;
     }
   }
 
@@ -242,13 +272,13 @@ class _UpdateDialogState extends ConsumerState<UpdateDialog> {
           Navigator.pop(context);
         })
       else ...[
-        btn('稍后', () => Navigator.pop(context)),
+        btn('暂不更新', () => Navigator.pop(context)),
         if (_ios || _error != null) btn('打开下载页', _openPage),
         if (_ios && _phase == _Phase.ready) btn('复制链接', _copyLink),
         if (_phase == _Phase.ready)
           btn(_ios ? '导入全能签' : '安装', _ios ? _shareToSigner : _installAndroid, primary: true)
         else
-          btn(_error != null ? '重试' : (_ios ? '下载安装包' : '下载并安装'), _download, primary: true),
+          btn(_error != null ? '重试' : '更新', _download, primary: true),
       ],
     ];
 
