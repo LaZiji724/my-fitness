@@ -38,7 +38,7 @@ class FakeService extends UpdateService {
   Future<AppUpdate?> check({required String current, required bool ios}) async => result;
 
   @override
-  Future<File> download(AppUpdate update, void Function(int, int) onProgress, DownloadCancel cancel) async {
+  Future<File> download(AppUpdate update, void Function(int, int) onProgress, DownloadCancel cancel, {void Function(String)? onStatus}) async {
     downloads++;
     onProgress(50, 100);
     return File('/tmp/${update.assetName}');
@@ -122,6 +122,26 @@ void main() {
     }
   });
 
+  testWidgets('下载失败：显示中文原因，可重试，也可以用浏览器下载（列出各条线路）', (tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+    try {
+      final svc = FailingService();
+      await pumpDialog(tester, svc, FakeInstaller(true));
+      await tester.tap(find.text('更新'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('所有下载线路都失败了'), findsOneWidget);
+      expect(find.textContaining('已下载的部分会保留'), findsOneWidget);
+      expect(find.text('重试'), findsOneWidget);
+      await tester.tap(find.text('用浏览器下载'));
+      await tester.pumpAndSettle();
+      expect(find.text('加速线路一'), findsOneWidget);
+      expect(find.text('GitHub 官方'), findsOneWidget);
+      expect(find.text('Release 页面'), findsOneWidget);
+    } finally {
+      debugDefaultTargetPlatformOverride = null;
+    }
+  });
+
   testWidgets('启动自动检查：有新版就弹窗，点「暂不更新」关掉；再次进入软件（切回前台）仍会提示', (tester) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.android;
     try {
@@ -194,6 +214,16 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('发现新版本'), findsNothing);
   });
+}
+
+class FailingService extends FakeService {
+  FailingService() : super(null);
+
+  @override
+  Future<File> download(AppUpdate update, void Function(int, int) onProgress, DownloadCancel cancel, {void Function(String)? onStatus}) async {
+    onStatus?.call('线路 1/4：备用服务器');
+    throw UpdateException('所有下载线路都失败了。备用服务器：连接超时');
+  }
 }
 
 class CountingService extends FakeService {

@@ -125,3 +125,16 @@ jobs:
             --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --latest \
             --title "我的健身 ${V}" \
             --notes-file /tmp/notes.md
+
+      # 备用下载源：把安装包和「最新版本信息」同步一份到 Supabase 存储。
+      # 国内网络连不上 GitHub 时，App 里的「检查更新」会改走这里。需要 Secret：SUPABASE_SERVICE_KEY
+      # （没配置就只警告、跳过，不影响上面的 Release）。
+      - name: 同步到备用下载源（Supabase）
+        if: ${{ inputs.publish }}
+        continue-on-error: true
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          MIRRORS: ${{ vars.MIRRORS }}
+          V: ${{ steps.ver.outputs.name }}
+        run: tools/publish_mirror.sh android "$V" "v${V}" "app/my-fitness-${V}.apk" /tmp/notes.md
