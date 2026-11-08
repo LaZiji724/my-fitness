@@ -53,6 +53,15 @@ void main() {
     expect(feb.length, 35);
   });
 
+  test('streakLength：前后连着练的总天数，可跨月', () {
+    final days = {DateTime(2026, 10, 31), DateTime(2026, 11, 1), DateTime(2026, 11, 2), DateTime(2026, 11, 5)};
+    bool trained(DateTime d) => days.contains(DateTime(d.year, d.month, d.day));
+    expect(streakLength(DateTime(2026, 11, 1), trained), 3);
+    expect(streakLength(DateTime(2026, 10, 31), trained), 3);
+    expect(streakLength(DateTime(2026, 11, 5), trained), 1);
+    expect(streakLength(DateTime(2026, 11, 3), trained), 0);
+  });
+
   late AppDatabase db;
   late WorkoutRepository workouts;
   late PlanRepository plans;
@@ -348,6 +357,28 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('2026年10月'), findsOneWidget);
     expect(find.text('0 次 · 0 kg'), findsOneWidget);
+    await unmount(tester);
+  });
+
+  testWidgets('日历：连续练的天合并成长框，长框右上角写「连续N天」', (tester) async {
+    await setViewport(tester);
+    // 11/1(周日)、11/2、11/3 连着练，11/5 单独练
+    for (final day in [1, 2, 3, 5]) {
+      final repo = WorkoutRepository(db, userId: () => 'u1', now: () => DateTime(2026, 11, day, 9));
+      final w = await repo.startWorkout();
+      final we = await repo.addExercise(w.id, bench.id, defaultSets: 0);
+      final s = await repo.addSet(we);
+      await repo.updateSet(s, weightKg: 80, reps: 5);
+      await repo.setCompleted(s, true);
+      await repo.finishWorkout(w.id);
+    }
+    await tester.pumpWidget(host(const CalendarPage()));
+    await tester.pumpAndSettle();
+    // 11/2、11/3 在同一行连成一段，总共连续 3 天（含跨行的 11/1）
+    expect(find.byKey(const Key('calendar-streak-2026-11-03')), findsOneWidget);
+    expect(find.text('连续3天'), findsOneWidget);
+    // 只占一格的不写字
+    expect(find.textContaining('连续'), findsOneWidget);
     await unmount(tester);
   });
 

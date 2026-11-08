@@ -20,8 +20,8 @@ permissions:
   contents: write
 
 env:
-  IOS_VERSION: "2.4.0"
-  IOS_BUILD: "16"
+  IOS_VERSION: "2.5.0"
+  IOS_BUILD: "17"
 
 jobs:
   build:
