@@ -4,7 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
-import 'package:my_fitness/features/plan/plan_widgets.dart' show EmptyCard;
+import 'package:my_fitness/features/plan/plan_widgets.dart' show EmptyCard, EstimateHint;
+import 'package:my_fitness/features/plan/plan_estimate.dart';
 import 'package:my_fitness/features/plan/plan_providers.dart';
 import 'package:my_fitness/features/plan/template_edit_page.dart';
 import 'package:my_fitness/features/plan/today_overrides.dart';
@@ -111,17 +112,23 @@ class TodayPreviewPage extends ConsumerWidget {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, AppSpace.s12),
-          child: PressScale(
-            child: FilledButton(
-              style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
-              onPressed: view.exercises.isEmpty
-                  ? null
-                  : () async {
-                      await startTodayPlan(ref);
-                      if (context.mounted) context.go('/workout');
-                    },
-              child: const Text('开始训练'),
-            ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              EstimateHint(label: estimateLabel(view.exercises, byId)),
+              PressScale(
+                child: FilledButton(
+                  style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
+                  onPressed: view.exercises.isEmpty
+                      ? null
+                      : () async {
+                          await startTodayPlan(ref);
+                          if (context.mounted) context.go('/workout');
+                        },
+                  child: const Text('开始训练'),
+                ),
+              ),
+            ],
           ),
         ),
       ),
