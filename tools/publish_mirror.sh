@@ -57,13 +57,13 @@ i=0
 for p in $(ls "$TMP"/part.* | sort); do
   path="$PLATFORM/$VERSION/$NAME.part$i"
   psize="$(size_of "$p")"
-  echo "上传 $path（$psize 字节）"
+  echo "上传 ${path}（$psize 字节）"
   api -X POST -H 'Content-Type: application/octet-stream' -H 'x-upsert: true' --data-binary @"$p" \
     "$URL/storage/v1/object/$BUCKET/$path" >/dev/null
   # 传完马上用公开地址核对大小，确保 App 以后真的下得到
   got=$(curl -sSI --retry 3 "$URL/storage/v1/object/public/$BUCKET/$path" | tr -d '\r' | awk 'tolower($1)=="content-length:"{print $2}' | tail -1)
   if [ "$got" != "$psize" ]; then
-    echo "::error::$path 上传后公开地址返回的大小是「$got」，应为 $psize（存储桶没设成公开，或文件超过了存储的单文件上限）"; exit 1
+    echo "::error::$path 上传后公开地址返回的大小是「${got}」，应为 ${psize}（存储桶没设成公开，或文件超过了存储的单文件上限）"; exit 1
   fi
   PARTS_JSON="$(jq -c --arg path "$path" --argjson size "$psize" '. + [{path:$path,size:$size}]' <<<"$PARTS_JSON")"
   rm -f "$p"
@@ -89,7 +89,7 @@ api -X POST -H 'Content-Type: application/json' -H 'x-upsert: true' -H 'cache-co
   --data-binary @"$TMP/manifest.json" "$URL/storage/v1/object/$BUCKET/$PLATFORM.json" >/dev/null
 live=$(curl -sS --retry 3 "$URL/storage/v1/object/public/$BUCKET/$PLATFORM.json?t=$(date +%s)" | jq -r .version)
 if [ "$live" != "$VERSION" ]; then
-  echo "::error::$PLATFORM.json 上传后读回来的版本是「$live」，应为 $VERSION"; exit 1
+  echo "::error::$PLATFORM.json 上传后读回来的版本是「${live}」，应为 $VERSION"; exit 1
 fi
 
 echo "== 清理旧版本"
@@ -100,9 +100,9 @@ echo "== 清理旧版本"
     [ "$f" = "$VERSION" ] && continue
     names=$(api -X POST -H 'Content-Type: application/json' -d "{\"prefix\":\"$PLATFORM/$f\",\"limit\":100}" \
       "$URL/storage/v1/object/list/$BUCKET" | jq -c --arg d "$PLATFORM/$f" '[.[].name | "\($d)/\(.)"]')
-    echo "删除旧版本 $PLATFORM/$f：$names"
+    echo "删除旧版本 $PLATFORM/${f}：$names"
     api -X DELETE -H 'Content-Type: application/json' -d "{\"prefixes\":$names}" "$URL/storage/v1/object/$BUCKET" >/dev/null
   done
 ) || echo "::warning::清理旧版本时出了点问题，不影响使用"
 
-echo "完成：备用下载源已同步 $PLATFORM $VERSION（$i 段，共 $SIZE 字节，sha256=$SHA）"
+echo "完成：备用下载源已同步 $PLATFORM ${VERSION}（$i 段，共 $SIZE 字节，sha256=${SHA}）"

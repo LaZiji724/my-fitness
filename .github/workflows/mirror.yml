@@ -1,0 +1,43 @@
+# 补传备用下载源：把某个已发布的 Release 里的安装包同步到 Supabase 存储（并写好最新版本信息）。
+# 平时发版时 android.yml / ios.yml 会自动做这一步；只有那一步失败了才需要手动运行：
+#   Actions → mirror-release → Run workflow → 选平台，填版本号（如 2.6.0）。
+name: mirror-release
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 平台
+        type: choice
+        options: [android, ios]
+        default: ios
+      version:
+        description: 版本号（如 2.6.0）
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 从 Release 取安装包并同步
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          MIRRORS: ${{ vars.MIRRORS }}
+          PLATFORM: ${{ inputs.platform }}
+          V: ${{ inputs.version }}
+        run: |
+          if [ "$PLATFORM" = ios ]; then tag="ios-v${V}"; pat='*.ipa'; else tag="v${V}"; pat='*.apk'; fi
+          mkdir -p /tmp/dl
+          gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "$pat" --dir /tmp/dl
+          gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json body --jq .body > /tmp/notes.md
+          file=$(ls /tmp/dl/*)
+          tools/publish_mirror.sh "$PLATFORM" "$V" "$tag" "$file" /tmp/notes.md
