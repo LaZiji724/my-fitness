@@ -39,6 +39,7 @@ class WorkoutSummary {
     required this.setCount,
     required this.exerciseCount,
     required this.prs,
+    this.auto = false,
   });
 
   final String workoutId;
@@ -49,6 +50,9 @@ class WorkoutSummary {
 
   /// 本次打破的纪录：动作 id → 纪录类型
   final Map<String, Set<PrKind>> prs;
+
+  /// 是不是长时间没有操作、由应用自动结束的
+  final bool auto;
 }
 
 class WorkoutRepository {
@@ -436,10 +440,16 @@ class WorkoutRepository {
   // ---------------------------------------------------------------- 结束 / 放弃
 
   /// 结束训练。未完成的组被丢弃；一个组都没完成则整次训练作废并返回 null。
-  Future<WorkoutSummary?> finishWorkout(String workoutId) async {
+  ///
+  /// [endedAt] 用于自动结束：长时间没操作时，把结束时刻记在「最后一次操作」那一刻，
+  /// 多出来的空闲时间不计入时长。不传则为现在。
+  Future<WorkoutSummary?> finishWorkout(String workoutId, {DateTime? endedAt, bool auto = false}) async {
     final t = _now();
     final view = await loadWorkout(workoutId);
     if (view == null) return null;
+    var end = endedAt ?? t;
+    if (end.isAfter(t)) end = t;
+    if (end.isBefore(view.workout.startedAt)) end = view.workout.startedAt;
 
     // 先算 PR（要在丢弃前、用结束前的历史）
     final prs = <String, Set<PrKind>>{};
@@ -469,18 +479,45 @@ class WorkoutRepository {
         if (keep.isEmpty) await removeExercise(b.exercise.id);
       }
       await (_db.update(_db.workouts)..where((w) => w.id.equals(workoutId))).write(
-          WorkoutsCompanion(endedAt: Value(t), updatedAt: Value(t), dirty: const Value(true)));
+          WorkoutsCompanion(endedAt: Value(end), updatedAt: Value(t), dirty: const Value(true)));
     });
 
     final done = (await loadWorkout(workoutId))!;
     return WorkoutSummary(
       workoutId: workoutId,
-      duration: t.difference(done.workout.startedAt),
+      duration: end.difference(done.workout.startedAt),
       volume: done.volume,
       setCount: done.setCount,
       exerciseCount: done.exercises.length,
       prs: prs,
+      auto: auto,
     );
+  }
+
+  /// 同一天内继续一次已经结束的训练：之前的动作、组数全部保留，计时接着走。
+  ///
+  /// 中间停掉的时间不计入时长：把开始时刻往后挪到「现在 − 已练时长」，
+  /// 这样「现在 − 开始时刻」正好等于已练时长，也不需要改云端表结构。
+  /// 只有今天开始的训练能继续；已经有进行中的训练时返回 null。
+  Future<Workout?> resumeWorkout(String workoutId) async {
+    if (await activeWorkout() != null) return null;
+    final w = await (_db.select(_db.workouts)
+          ..where((t) =>
+              t.id.equals(workoutId) &
+              t.deletedAt.isNull() &
+              t.endedAt.isNotNull() &
+              t.userId.equals(_userId())))
+        .getSingleOrNull();
+    final t = _now();
+    if (w == null || w.localDate != dateKey(t)) return null;
+    final worked = w.endedAt!.difference(w.startedAt);
+    await (_db.update(_db.workouts)..where((x) => x.id.equals(workoutId))).write(WorkoutsCompanion(
+      startedAt: Value(t.subtract(worked.isNegative ? Duration.zero : worked)),
+      endedAt: const Value(null),
+      updatedAt: Value(t),
+      dirty: const Value(true),
+    ));
+    return (_db.select(_db.workouts)..where((x) => x.id.equals(workoutId))).getSingle();
   }
 
   /// 放弃（删除）一次训练。
