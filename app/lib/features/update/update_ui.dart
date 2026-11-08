@@ -29,8 +29,20 @@ Future<void> checkForUpdateManually(BuildContext context, WidgetRef ref) async {
       return;
     }
     await showUpdateDialog(context, update, current);
-  } catch (_) {
-    say('检查更新失败：连不上 GitHub，换个网络再试');
+  } catch (e) {
+    if (!context.mounted) return;
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        duration: const Duration(seconds: 8),
+        content: Text(e is UpdateException
+            ? '检查更新失败：${e.message}。换个网络（Wi-Fi / 流量）或开关一下 VPN 再试'
+            : '检查更新失败，请检查网络后重试'),
+        action: SnackBarAction(
+          label: '打开下载页',
+          onPressed: () => launchUrl(Uri.parse(kReleasesPage), mode: LaunchMode.externalApplication).catchError((_) => false),
+        ),
+      ));
   }
 }
 
@@ -123,6 +135,12 @@ class UpdateDialog extends ConsumerStatefulWidget {
 class _UpdateDialogState extends ConsumerState<UpdateDialog> {
   _Phase _phase = _Phase.idle;
   double? _progress; // 0~1
+  int _received = 0;
+  int _total = 0;
+  String? _status; // 当前走哪条线路
+  double _speed = 0; // 字节/秒
+  int _speedBytes = 0;
+  DateTime _speedAt = DateTime.now();
   String? _error;
   String? _hint;
   File? _file;
@@ -142,14 +160,32 @@ class _UpdateDialogState extends ConsumerState<UpdateDialog> {
     setState(() {
       _phase = _Phase.downloading;
       _progress = null;
+      _status = '正在连接…';
+      _speed = 0;
       _error = null;
       _hint = null;
     });
+    _speedBytes = 0;
+    _speedAt = DateTime.now();
     try {
       final file = await ref.read(updateServiceProvider).download(widget.update, (got, total) {
-        if (!mounted || total <= 0) return;
-        setState(() => _progress = got / total);
-      }, _cancel);
+        if (!mounted) return;
+        // 每秒算一次下载速度（换线路时字节数会从头计，所以只在增长时算）
+        final now = DateTime.now();
+        final ms = now.difference(_speedAt).inMilliseconds;
+        if (ms >= 1000) {
+          _speed = got > _speedBytes ? (got - _speedBytes) * 1000 / ms : 0;
+          _speedBytes = got;
+          _speedAt = now;
+        }
+        setState(() {
+          _received = got;
+          _total = total;
+          _progress = total > 0 ? got / total : null;
+        });
+      }, _cancel, onStatus: (text) {
+        if (mounted) setState(() => _status = text);
+      });
       if (!mounted) return;
       setState(() {
         _file = file;
@@ -161,6 +197,7 @@ class _UpdateDialogState extends ConsumerState<UpdateDialog> {
       setState(() {
         _phase = _Phase.idle;
         _error = e is UpdateException ? e.message : '下载失败，请检查网络后重试';
+        if (e is UpdateException && e.message == '已取消') _error = null;
       });
     }
   }
@@ -195,15 +232,18 @@ class _UpdateDialogState extends ConsumerState<UpdateDialog> {
     }
   }
 
-  Future<void> _openPage() async {
-    final ok = await launchUrl(Uri.parse(widget.update.pageUrl), mode: LaunchMode.externalApplication).catchError((_) => false);
-    if (!ok && mounted) {
-      setState(() => _error = '打不开浏览器，请复制链接到浏览器里打开');
-    }
+  /// 兜底：让用户用系统浏览器下载（浏览器有自己的网络和下载管理器，有时 App 内连不上它却能连上）。
+  Future<void> _openBrowserSheet() async {
+    await showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (_) => _BrowserDownloadSheet(update: widget.update, ios: _ios),
+    );
   }
 
   Future<void> _copyLink() async {
-    await Clipboard.setData(ClipboardData(text: widget.update.assetUrl));
+    final link = widget.update.browserLinks.first.url;
+    await Clipboard.setData(ClipboardData(text: link));
     if (!mounted) return;
     setState(() => _hint = '下载链接已复制，可以粘贴到浏览器或全能签里下载。');
   }
@@ -248,8 +288,17 @@ class _UpdateDialogState extends ConsumerState<UpdateDialog> {
         const SizedBox(height: AppSpace.s16),
         LinearProgressIndicator(value: _progress),
         const SizedBox(height: AppSpace.s8),
-        Text(_progress == null ? '正在连接…' : '正在下载 ${(_progress! * 100).toStringAsFixed(0)}%',
-            style: AppText.label.copyWith(color: c.text2)),
+        Text(
+          _progress == null
+              ? (_status ?? '正在连接…')
+              : '正在下载 ${(_progress! * 100).toStringAsFixed(0)}%（${_mb(_received)} / ${_mb(_total)}'
+                  '${_speed > 0 ? '，${_mb(_speed.round())}/秒' : ''}）',
+          style: AppText.label.copyWith(color: c.text2),
+        ),
+        if (_progress != null && _status != null) ...[
+          const SizedBox(height: 2),
+          Text(_status!, style: AppText.label.copyWith(color: c.text2)),
+        ],
       ],
       if (_hint != null) ...[
         const SizedBox(height: AppSpace.s12),
@@ -258,6 +307,11 @@ class _UpdateDialogState extends ConsumerState<UpdateDialog> {
       if (_error != null) ...[
         const SizedBox(height: AppSpace.s12),
         Text(_error!, style: AppText.label.copyWith(color: c.danger)),
+        if (_phase == _Phase.idle) ...[
+          const SizedBox(height: AppSpace.s8),
+          Text('已下载的部分会保留，点「重试」从断点继续；也可以换个网络（Wi-Fi / 流量）、开关一下 VPN，或者点「用浏览器下载」。',
+              style: AppText.label.copyWith(color: c.text2)),
+        ],
       ],
     ];
 
@@ -273,7 +327,7 @@ class _UpdateDialogState extends ConsumerState<UpdateDialog> {
         })
       else ...[
         btn('暂不更新', () => Navigator.pop(context)),
-        if (_ios || _error != null) btn('打开下载页', _openPage),
+        if (_ios || _error != null) btn('用浏览器下载', _openBrowserSheet),
         if (_ios && _phase == _Phase.ready) btn('复制链接', _copyLink),
         if (_phase == _Phase.ready)
           btn(_ios ? '导入全能签' : '安装', _ios ? _shareToSigner : _installAndroid, primary: true)
@@ -290,6 +344,66 @@ class _UpdateDialogState extends ConsumerState<UpdateDialog> {
           child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: body),
         ),
         actions: actions,
+      ),
+    );
+  }
+}
+
+
+/// 「用浏览器下载」：列出几条线路，点哪条就用系统浏览器打开哪条；一条不行换另一条。
+class _BrowserDownloadSheet extends StatelessWidget {
+  const _BrowserDownloadSheet({required this.update, required this.ios});
+  final AppUpdate update;
+  final bool ios;
+
+  Future<void> _open(BuildContext context, String url) async {
+    final ok = await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication).catchError((_) => false);
+    if (!ok && context.mounted) {
+      await Clipboard.setData(ClipboardData(text: url));
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('打不开浏览器，链接已复制，请粘贴到浏览器里打开')));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    final links = [...update.browserLinks, DownloadLink('Release 页面', update.pageUrl)];
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(AppSpace.s20, 0, AppSpace.s20, AppSpace.s16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('用浏览器下载', style: AppText.titleMedium.copyWith(color: c.text)),
+            const SizedBox(height: AppSpace.s8),
+            Text(
+              ios
+                  ? '点一条线路，用浏览器下载 ipa，下好后到全能签里导入签名。一条不行就换下一条。'
+                  : '点一条线路，用浏览器下载 apk，下好后点开安装包即可覆盖安装，数据保留。一条不行就换下一条。',
+              style: AppText.label.copyWith(color: c.text2),
+            ),
+            const SizedBox(height: AppSpace.s8),
+            for (final link in links)
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(link.label),
+                subtitle: Text(Uri.parse(link.url).host, style: AppText.label.copyWith(color: c.text2)),
+                trailing: IconButton(
+                  tooltip: '复制链接',
+                  icon: const Icon(Icons.copy_rounded),
+                  onPressed: () async {
+                    await Clipboard.setData(ClipboardData(text: link.url));
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('链接已复制')));
+                    }
+                  },
+                ),
+                onTap: () => _open(context, link.url),
+              ),
+          ],
+        ),
       ),
     );
   }

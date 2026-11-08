@@ -63,6 +63,19 @@ flutter build apk --release --dart-define-from-file=env.json
 苹果取最新的 `ios-v*` 发布，下载未签名 IPA 后用分享面板交给全能签等工具签名安装（iOS 不允许 App 自己安装未签名包）。
 发版时可在 `.github/release-notes/<版本号>.md` 写更新说明，会显示在更新弹窗里。
 
+### 备用下载源（国内连不上 GitHub 时）
+
+国内网络访问 GitHub（尤其是下载用的 githubusercontent.com）时好时坏，所以更新做了多条后路：
+
+- **查版本**：同时问 ① Supabase 存储里的 `android.json` / `ios.json`、② GitHub API、③ GitHub 的 `releases.atom`，哪条通就用哪条。
+- **下载**：按顺序试 Supabase 备用服务器 → GitHub 官方 → 两个 GitHub 加速代理（`ghfast.top`、`gh-proxy.com`）。
+  一条失败（连不上、超时、太慢、文件校验不对）自动换下一条，最多轮 3 圈；已下载的部分保留，换线路或点「重试」都从断点继续。
+  下载完会校验大小和 SHA-256。仍不行时，弹窗里有「用浏览器下载」，列出各条线路的链接。
+- **备用服务器的内容**由发布流程自动同步：`android.yml` / `ios.yml` 发布 Release 后会运行 `tools/publish_mirror.sh`，
+  把安装包切成每段 40MB（Supabase 免费版单文件上限 50MB）传到公开存储桶 `app-releases`，并写入最新版本信息，旧版本自动清理。
+  这一步需要仓库 Secret `SUPABASE_SERVICE_KEY`（Supabase 的 secret key，只放在 GitHub Secrets 里，不要写进代码或聊天）；没配置会跳过并给出警告，不影响 GitHub Release。
+- 加速代理会不定期失效：可以在仓库 Settings → Secrets and variables → Actions → Variables 里新建变量 `MIRRORS`（空格分隔的代理前缀，如 `https://ghfast.top/ https://gh-proxy.com/`），下次发布时写进版本信息，覆盖 App 自带的列表，无需改代码。
+
 ## 云同步、备份与保活
 
 - **本地优先**：训练时写的是手机本地数据库，没网也能正常记录；有网时自动同步到 Supabase
