@@ -10,6 +10,7 @@ import 'package:my_fitness/features/stats/body_repository.dart';
 import 'package:my_fitness/features/sync/sync_remote.dart';
 import 'package:my_fitness/features/sync/sync_service.dart';
 import 'package:my_fitness/features/workout/workout_repository.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show PostgrestException;
 
 /// 内存里的假云端：upsert 时模拟 Postgres 触发器（更新会把 updated_at 改成服务器当前时间）。
 class FakeRemote implements SyncRemote {
@@ -28,11 +29,22 @@ class FakeRemote implements SyncRemote {
     }
     upsertCalls++;
     final t = tables.putIfAbsent(table, () => {});
+    final backup = {for (final e in t.entries) e.key: Map<String, dynamic>.from(e.value)};
     for (final r in rows) {
       final id = r['id'] as String;
       final row = Map<String, dynamic>.from(r);
       row['updated_at'] = t.containsKey(id) ? _fmt(serverNow) : _fmt(DateTime.parse(r['updated_at'] as String));
       t[id] = row;
+      // 模拟云端唯一索引 plans_one_active_key：每写一行立刻检查，同一用户只能有一个当前计划
+      if (table == 'plans') {
+        final active = t.values.where((p) => p['user_id'] == row['user_id'] && p['is_active'] == true && p['deleted_at'] == null);
+        if (active.length > 1) {
+          t
+            ..clear()
+            ..addAll(backup); // 整条语句回滚
+          throw const PostgrestException(message: 'duplicate key value violates unique constraint "plans_one_active_key"', code: '23505');
+        }
+      }
     }
   }
 
@@ -480,6 +492,57 @@ void main() {
       // 网络恢复后，同一账号重新登录会把它推上去
       await asU1.syncNow();
       expect(remote.tables['templates']!.values, hasLength(1));
+    });
+  });
+
+  group('当前计划唯一约束（23505）', () {
+    // 新计划的 id 排在旧计划前面：以前按 id 排序推送，新的「当前」先到云端就会撞约束
+    Future<void> seedTwoPlans(PlanRepository repo, AppDatabase db) async {
+      final a = await repo.createPlan('旧计划', 7); // 第一个计划自动成为当前计划
+      final b = await repo.createPlan('新计划', 7);
+      await db.customStatement("UPDATE plans SET id = 'zzzz-old' WHERE id = '$a'");
+      await db.customStatement("UPDATE plans SET id = 'aaaa-new' WHERE id = '$b'");
+    }
+
+    test('切换当前计划时，旧计划先取消、新计划后设为当前，不再报 23505', () async {
+      await seedTwoPlans(plansA, dbA);
+      await syncA.syncNow(); // 先把两个计划都推上去
+      clock = clock.add(const Duration(minutes: 5));
+      await plansA.activatePlan('aaaa-new'); // 两行 updated_at 相同
+      await syncA.syncNow();
+      final cloud = remote.tables['plans']!;
+      expect(cloud['aaaa-new']!['is_active'], true);
+      expect(cloud['zzzz-old']!['is_active'], false);
+      expect(await syncA.hasDirty(), isFalse);
+    });
+
+    test('两台设备各设了一个当前计划：保留较新的，同步不报错', () async {
+      await seedTwoPlans(plansA, dbA);
+      await syncA.syncNow();
+      await syncB.syncNow();
+      final plansB = PlanRepository(dbB, userId: () => 'u1', now: () => clock);
+      clock = clock.add(const Duration(minutes: 5));
+      await plansB.activatePlan('aaaa-new');
+      await syncB.syncNow();
+      // A 离线时又把旧计划设回当前（比 B 更晚）
+      clock = clock.add(const Duration(minutes: 5));
+      await plansA.activatePlan('zzzz-old');
+      await syncA.syncNow(); // 先拉到 B 的改动，再整理、再推
+      await syncB.syncNow();
+      for (final db in [remote.tables['plans']!.values]) {
+        expect(db.where((p) => p['is_active'] == true && p['deleted_at'] == null), hasLength(1));
+      }
+      expect(await syncA.hasDirty(), isFalse);
+      expect(await syncB.hasDirty(), isFalse);
+    });
+
+    test('本机已有两个当前计划（历史遗留）：整理成一个后正常同步', () async {
+      await seedTwoPlans(plansA, dbA);
+      await dbA.customStatement("UPDATE plans SET is_active = 1, dirty = 1");
+      await syncA.syncNow();
+      final active = remote.tables['plans']!.values.where((p) => p['is_active'] == true);
+      expect(active, hasLength(1));
+      expect(await syncA.hasDirty(), isFalse);
     });
   });
 }
