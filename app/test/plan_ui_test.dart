@@ -244,7 +244,8 @@ void main() {
     final (t, _) = await planToday();
     await tester.pumpWidget(host(const TodayPage()));
     await tester.pumpAndSettle();
-    expect(find.text('1 个动作 · 3 组'), findsOneWidget);
+    expect(find.textContaining('1 个动作 · 3 组'), findsOneWidget);
+    expect(find.textContaining('分钟'), findsWidgets); // 黑卡上有「预估 x 分钟」
 
     await tester.tap(find.text('推日'));
     await tester.pumpAndSettle();
@@ -306,7 +307,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('今日计划 · 推拉腿'), findsOneWidget);
     expect(find.text('推日'), findsOneWidget);
-    expect(find.text('1 个动作 · 3 组'), findsOneWidget);
+    expect(find.textContaining('1 个动作 · 3 组'), findsOneWidget);
 
     await tester.tap(find.text('开始训练'));
     await tester.pumpAndSettle();
@@ -477,7 +478,7 @@ void main() {
     await plans.setPlanDay(p, 0, t);
     await tester.pumpWidget(host(const TodayPage()));
     await tester.pumpAndSettle();
-    expect(find.text('2 个动作 · 6 组'), findsOneWidget);
+    expect(find.textContaining('2 个动作 · 6 组'), findsOneWidget);
     await tester.tap(find.text('推日'));
     await tester.pumpAndSettle();
 

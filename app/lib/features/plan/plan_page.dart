@@ -7,6 +7,7 @@ import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/core/widgets/swipe_to_delete.dart';
 import 'package:my_fitness/features/plan/plan_math.dart';
+import 'package:my_fitness/features/plan/plan_estimate.dart';
 import 'package:my_fitness/features/plan/plan_providers.dart';
 import 'package:my_fitness/features/plan/plan_repository.dart';
 import 'package:my_fitness/features/plan/plan_widgets.dart';
@@ -358,6 +359,7 @@ class _TemplateCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     final sets = view.exercises.fold<int>(0, (n, e) => n + e.targetSets);
+    final est = estimateLabel(view.exercises, byId);
     final names = view.exercises.map((e) => byId[e.exerciseId]?.nameZh).whereType<String>().take(4).join('、');
     return PressScale(
       scale: PressScale.cardScale,
@@ -377,7 +379,7 @@ class _TemplateCard extends StatelessWidget {
                     children: [
                       Text(view.template.name, style: AppText.titleSmall.copyWith(color: c.text)),
                       const SizedBox(height: 2),
-                      Text('${view.exercises.length} 个动作 · $sets 组',
+                      Text('${view.exercises.length} 个动作 · $sets 组${est == null ? '' : ' · $est'}',
                           style: AppText.label.copyWith(color: c.text2)),
                       if (names.isNotEmpty) ...[
                         const SizedBox(height: AppSpace.s8),

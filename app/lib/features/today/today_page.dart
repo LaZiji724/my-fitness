@@ -7,6 +7,7 @@ import 'package:my_fitness/core/widgets/avatar_view.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/auth/auth_providers.dart';
 import 'package:my_fitness/features/calendar/calendar_math.dart';
+import 'package:my_fitness/features/plan/plan_estimate.dart';
 import 'package:my_fitness/features/plan/plan_providers.dart';
 import 'package:my_fitness/features/plan/plan_repository.dart';
 import 'package:my_fitness/features/plan/today_overrides.dart';
@@ -131,7 +132,8 @@ class TodayPage extends ConsumerWidget {
         buttonText = '开始空白训练';
         onStart = () => _startBlank(context, ref);
       } else {
-        heroSub = '${tpl.exercises.length} 个动作 · $tplSets 组';
+        final est = estimateLabel(tpl.exercises, byId);
+        heroSub = '${tpl.exercises.length} 个动作 · $tplSets 组${est == null ? '' : ' · $est'}';
         buttonText = '开始训练';
         onStart = () => _startTemplate(context, ref, tpl.template.id, planId: entry.plan.plan.id);
       }
