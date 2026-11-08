@@ -203,6 +203,37 @@ void main() {
     await unmount(tester);
   });
 
+  testWidgets('首页最近训练分成今天和过去：只有今天的有「继续」，点后回到那次训练', (tester) async {
+    await setViewport(tester);
+    Future<String> finished(WorkoutRepository repo, {int minutes = 30}) async {
+      final w = await repo.startWorkout();
+      final weId = await repo.addExercise(w.id, bench.id, defaultSets: 0);
+      final sid = await repo.addSet(weId);
+      await repo.updateSet(sid, weightKg: 60, reps: 8);
+      await repo.setCompleted(sid, true);
+      await repo.finishWorkout(w.id);
+      return w.id;
+    }
+
+    final pastRepo = WorkoutRepository(db, userId: () => 'u1', now: () => DateTime(2026, 10, 30, 9));
+    await finished(pastRepo);
+    final todayId = await finished(workouts);
+
+    await tester.pumpWidget(host(const TodayPage()));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('过去'), 300, scrollable: find.byType(Scrollable).first);
+    expect(find.text('今天'), findsOneWidget);
+    expect(find.text('过去'), findsOneWidget);
+    expect(find.text('继续'), findsOneWidget); // 过去的那次没有按钮
+
+    await tester.tap(find.text('继续'));
+    await tester.pumpAndSettle();
+    expect(find.text('训练页'), findsOneWidget);
+    final active = await workouts.activeWorkout();
+    expect(active?.id, todayId);
+    await unmount(tester);
+  });
+
   testWidgets('首页预览：改今天的组数只影响今天这次训练，模板和计划不变', (tester) async {
     await setViewport(tester);
     final (t, _) = await planToday();

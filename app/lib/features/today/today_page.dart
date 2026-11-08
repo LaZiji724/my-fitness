@@ -46,6 +46,20 @@ class TodayPage extends ConsumerWidget {
     if (context.mounted) context.push('/workout');
   }
 
+  /// 同一天内继续一次已经结束的训练：之前的动作和组数都保留，计时接着走。
+  Future<void> _resume(BuildContext context, WidgetRef ref, String workoutId) async {
+    final w = await ref.read(workoutRepositoryProvider).resumeWorkout(workoutId);
+    if (w == null) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(const SnackBar(content: Text('现在没法继续这次训练')));
+      }
+      return;
+    }
+    if (context.mounted) context.push('/workout');
+  }
+
   Future<void> _pickTemplate(BuildContext context, WidgetRef ref) async {
     final templates = ref.read(templatesProvider).value ?? const <TemplateView>[];
     final c = context.colors;
@@ -93,6 +107,11 @@ class TodayPage extends ConsumerWidget {
     final entry = ref.watch(todayPlanProvider);
     final today = ref.watch(todayProvider);
     final completed = ref.watch(completedWorkoutsProvider).value ?? const <WorkoutView>[];
+
+    // 最近训练分成「今天」和「过去」：只有今天的才能继续
+    final todayKey = dateKeyOf(today);
+    final todays = completed.where((w) => w.workout.localDate == todayKey).toList();
+    final past = completed.where((w) => w.workout.localDate != todayKey).toList();
 
     final weekStart = DateTime(today.year, today.month, today.day - 6);
     final recent = completed.where((w) => !w.workout.startedAt.isBefore(weekStart)).toList();
@@ -320,9 +339,24 @@ class TodayPage extends ConsumerWidget {
                   child: Center(child: Text('还没有训练记录，开始你的第一次吧', style: AppText.body.copyWith(color: c.text2))),
                 ),
               ),
-            for (final w in completed.take(3)) ...[
-              _RecentRow(view: w),
-              const SizedBox(height: AppSpace.s8),
+            if (todays.isNotEmpty) ...[
+              _GroupTitle(text: '今天', count: todays.length),
+              for (final w in todays) ...[
+                _RecentRow(
+                  view: w,
+                  // 正在训练时首页上方已经是「继续训练」，这里不再重复给入口
+                  onContinue: active == null ? () => _resume(context, ref, w.workout.id) : null,
+                ),
+                const SizedBox(height: AppSpace.s8),
+              ],
+            ],
+            if (past.isNotEmpty) ...[
+              if (todays.isNotEmpty) const SizedBox(height: AppSpace.s8),
+              const _GroupTitle(text: '过去'),
+              for (final w in past.take(3)) ...[
+                _RecentRow(view: w),
+                const SizedBox(height: AppSpace.s8),
+              ],
             ],
           ],
         ),
@@ -385,9 +419,36 @@ class _Metric extends StatelessWidget {
   }
 }
 
+/// 「最近训练」里的分组小标题：今天 / 过去。
+class _GroupTitle extends StatelessWidget {
+  const _GroupTitle({required this.text, this.count});
+  final String text;
+  final int? count;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(AppSpace.s4, AppSpace.s4, AppSpace.s4, AppSpace.s8),
+      child: Row(
+        children: [
+          Text(text, style: AppText.label.copyWith(color: c.text2, fontWeight: FontWeight.w600)),
+          if (count != null && count! > 1) ...[
+            const SizedBox(width: AppSpace.s8),
+            Text('$count 次', style: AppText.caption.copyWith(color: c.text3)),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 class _RecentRow extends StatelessWidget {
-  const _RecentRow({required this.view});
+  const _RecentRow({required this.view, this.onContinue});
   final WorkoutView view;
+
+  /// 不为空时右侧显示小「继续」按钮（只有今天的训练才有）
+  final VoidCallback? onContinue;
 
   @override
   Widget build(BuildContext context) {
@@ -421,6 +482,25 @@ class _RecentRow extends StatelessWidget {
                 ],
               ),
             ),
+            if (onContinue != null) ...[
+              const SizedBox(width: AppSpace.s12),
+              PressScale(
+                scale: PressScale.chipScale,
+                child: TextButton(
+                  onPressed: onContinue,
+                  style: TextButton.styleFrom(
+                    backgroundColor: c.accentSoft,
+                    foregroundColor: c.accentText,
+                    minimumSize: const Size(56, 32),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpace.s16),
+                    tapTargetSize: MaterialTapTargetSize.padded,
+                    shape: const StadiumBorder(),
+                    textStyle: AppText.label.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  child: const Text('继续'),
+                ),
+              ),
+            ],
           ],
         ),
       ),

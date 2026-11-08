@@ -81,7 +81,10 @@ class WorkoutSummaryPage extends ConsumerWidget {
               const SizedBox(height: AppSpace.s16),
               Text('训练完成', style: AppText.titleLarge.copyWith(color: c.text)),
               const SizedBox(height: AppSpace.s4),
-              Text(prs.isEmpty ? '这次练得不错，记录已保存' : '破了 ${prs.length} 个动作的纪录，记录已保存',
+              Text(
+                  summary.auto
+                      ? '你有一阵子没操作了，已自动保存，时长算到最后一次操作'
+                      : (prs.isEmpty ? '这次练得不错，记录已保存' : '破了 ${prs.length} 个动作的纪录，记录已保存'),
                   style: AppText.body.copyWith(color: c.text2)),
               const SizedBox(height: AppSpace.s24),
               DecoratedBox(

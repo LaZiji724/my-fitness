@@ -8,6 +8,7 @@ import 'package:my_fitness/core/config/env.dart';
 import 'package:my_fitness/core/notifications/reminder_host.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/features/sync/sync_providers.dart';
+import 'package:my_fitness/features/workout/auto_end.dart';
 
 class MyFitnessApp extends ConsumerWidget {
   const MyFitnessApp({super.key});
@@ -49,6 +50,7 @@ class MyFitnessApp extends ConsumerWidget {
       routerConfig: ref.watch(routerProvider),
     );
     // 计时结束的系统通知提醒（只在退到后台/熄屏时才弹）
-    return ReminderHost(child: router);
+    // 忘记点「结束」时自动收尾（无界面，悄悄生效）
+    return AutoEndHost(child: ReminderHost(child: router));
   }
 }
