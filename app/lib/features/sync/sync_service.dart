@@ -2,6 +2,7 @@
 import 'dart:async';
 
 import 'package:drift/drift.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show PostgrestException;
 
 import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/features/sync/sync_remote.dart';
@@ -100,6 +101,7 @@ class SyncService {
     for (final t in tables) {
       pulled += await _pull(t);
     }
+    await _repairConflicts();
     for (final t in tables) {
       pushed += await _push(t);
     }
@@ -135,37 +137,103 @@ class SyncService {
 
   // ------------------------------------------------------------------ 推送
 
+  /// 「腾位置」的行：已删除的，以及（计划表）已取消「当前」的。
+  /// 云端有「同一时刻只能有一个当前计划」之类的唯一约束，这类行必须先于「占位置」的行上传，
+  /// 否则同一批里新计划先到、旧计划后到，云端就会报 23505（重复键）。
+  String _releasesSlot(SyncTableSpec t) =>
+      t.name == 'plans' ? '(deleted_at IS NOT NULL OR is_active = 0)' : '(deleted_at IS NOT NULL)';
+
   Future<int> _push(SyncTableSpec t) async {
     var total = 0;
     while (true) {
       final rows = await _db
           .customSelect(
-              'SELECT * FROM ${t.name} WHERE dirty = 1 AND user_id = ? ORDER BY updated_at, id LIMIT $pageSize',
+              'SELECT * FROM ${t.name} WHERE dirty = 1 AND user_id = ? '
+              'ORDER BY CASE WHEN ${_releasesSlot(t)} THEN 0 ELSE 1 END, updated_at, id LIMIT $pageSize',
               variables: [Variable<String>(_userId())],
               readsFrom: {t.table})
           .get();
       if (rows.isEmpty) return total;
-      final datas = [for (final r in rows) t.table.map(r.data) as DataClass];
-      final json = [
-        for (final d in datas)
-          {
-            for (final e in d.toJson(serializer: _ser).entries)
-              if (e.key != 'dirty') _snake(e.key): e.value,
-          },
-      ];
-      await _remote.upsert(t.name, json);
-      // 只把「推送期间没再被改动」的行标记为已同步，期间的新改动留到下一轮。
-      for (final r in rows) {
-        await _db.customUpdate(
-          'UPDATE ${t.name} SET dirty = 0 WHERE id = ? AND updated_at = ?',
-          variables: [Variable<String>(r.read<String>('id')), Variable<int>(r.read<int>('updated_at'))],
-          updates: {t.table},
-          updateKind: UpdateKind.update,
-        );
+      try {
+        await _remote.upsert(t.name, _toJson(t, rows));
+        await _markClean(t, rows);
+      } on PostgrestException catch (e) {
+        if (e.code != '23505') rethrow;
+        // 整批被云端拒绝：改成一行一行推，能推的先推上去，剩下的再报错
+        Object? firstError;
+        for (final r in rows) {
+          try {
+            await _remote.upsert(t.name, _toJson(t, [r]));
+            await _markClean(t, [r]);
+          } on PostgrestException catch (e2) {
+            if (e2.code != '23505') rethrow;
+            firstError ??= e2;
+          }
+        }
+        if (firstError != null) throw firstError;
       }
       total += rows.length;
       if (rows.length < pageSize) return total;
     }
+  }
+
+  List<Map<String, dynamic>> _toJson(SyncTableSpec t, List<QueryRow> rows) => [
+        for (final r in rows)
+          {
+            for (final e in (t.table.map(r.data) as DataClass).toJson(serializer: _ser).entries)
+              if (e.key != 'dirty') _snake(e.key): e.value,
+          },
+      ];
+
+  /// 只把「推送期间没再被改动」的行标记为已同步，期间的新改动留到下一轮。
+  Future<void> _markClean(SyncTableSpec t, List<QueryRow> rows) async {
+    for (final r in rows) {
+      await _db.customUpdate(
+        'UPDATE ${t.name} SET dirty = 0 WHERE id = ? AND updated_at = ?',
+        variables: [Variable<String>(r.read<String>('id')), Variable<int>(r.read<int>('updated_at'))],
+        updates: {t.table},
+        updateKind: UpdateKind.update,
+      );
+    }
+  }
+
+  /// 拉取之后、推送之前：整理本机里会和云端唯一约束打架的重复数据，保留最新的一条。
+  /// - 同时有多个「当前计划」（比如两台设备各设了一个）→ 只留最近设置的那个
+  /// - 同一计划同一天有多条安排 / 同一天多条体重 / 重复的收藏与动作偏好 → 只留最新的
+  /// 被整理掉的行只是取消「当前」或标记删除，并等待同步；训练记录不受影响。
+  Future<void> _repairConflicts() async {
+    const now = "CAST(strftime('%s','now') AS INTEGER)";
+    final uid = _userId();
+    SyncTableSpec spec(String name) => tables.firstWhere((t) => t.name == name);
+    await _db.transaction(() async {
+      await _db.customUpdate(
+        'UPDATE plans SET is_active = 0, updated_at = $now, dirty = 1 '
+        'WHERE user_id = ? AND is_active = 1 AND deleted_at IS NULL AND id NOT IN ('
+        'SELECT id FROM plans WHERE user_id = ? AND is_active = 1 AND deleted_at IS NULL '
+        'ORDER BY updated_at DESC, id DESC LIMIT 1)',
+        variables: [Variable<String>(uid), Variable<String>(uid)],
+        updates: {spec('plans').table},
+        updateKind: UpdateKind.update,
+      );
+      const keys = {
+        'plan_days': ['plan_id', 'day_index'],
+        'body_metrics': ['date'],
+        'favorite_programs': ['program_id'],
+        'exercise_prefs': ['exercise_id'],
+      };
+      for (final e in keys.entries) {
+        final same = e.value.map((c) => 'o.$c = ${e.key}.$c').join(' AND ');
+        await _db.customUpdate(
+          'UPDATE ${e.key} SET deleted_at = $now, updated_at = $now, dirty = 1 '
+          'WHERE user_id = ? AND deleted_at IS NULL AND EXISTS ('
+          'SELECT 1 FROM ${e.key} o WHERE o.user_id = ${e.key}.user_id AND o.deleted_at IS NULL AND $same '
+          'AND (o.updated_at > ${e.key}.updated_at OR (o.updated_at = ${e.key}.updated_at AND o.id > ${e.key}.id)))',
+          variables: [Variable<String>(uid)],
+          updates: {spec(e.key).table},
+          updateKind: UpdateKind.update,
+        );
+      }
+    });
   }
 
   // ------------------------------------------------------------------ 拉取

@@ -52,7 +52,8 @@ String describeSyncError(Object e) {
     if (e.code == '23503') return '云端还没有动作库数据，请先按 README 上传动作库';
     if (e.code == '42501' || e.code == 'PGRST301' || e.code == '401') return '登录已失效，请退出后重新登录';
     if (e.code == '42P01' || e.code == 'PGRST205') return '云端数据库还没建表，请先执行 supabase 迁移';
-    return '云端返回错误（${e.code ?? e.message}）';
+    if (e.code == '23505') return '云端发现重复的数据，App 会自动整理后再试；若一直这样，请到「我的」点一次「立即同步」';
+    return '云端暂时出错了，稍后会自动重试（错误代码 ${e.code ?? e.message}）';
   }
   if (e is AuthException) return '登录已失效，请退出后重新登录';
   final s = e.toString();
