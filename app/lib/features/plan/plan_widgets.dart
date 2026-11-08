@@ -281,3 +281,27 @@ class EmptyCard extends StatelessWidget {
     );
   }
 }
+
+/// 模板 / 首页预览页底部、开始按钮上方的一行「预估 38 分钟」。[label] 为空时不占位置。
+class EstimateHint extends StatelessWidget {
+  const EstimateHint({super.key, required this.label});
+  final String? label;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = label;
+    if (text == null) return const SizedBox.shrink();
+    final c = context.colors;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpace.s8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.timer_outlined, size: 16, color: c.text2),
+          const SizedBox(width: AppSpace.s4),
+          Text(text, style: AppText.label.copyWith(color: c.text2, fontWeight: FontWeight.w600)),
+        ],
+      ),
+    );
+  }
+}

@@ -13,6 +13,7 @@ import 'package:my_fitness/features/exercises/exercise_detail_page.dart';
 import 'package:my_fitness/features/exercises/exercise_image.dart';
 import 'package:my_fitness/features/exercises/exercise_repository.dart';
 import 'package:my_fitness/features/exercises/exercises_page.dart';
+import 'package:my_fitness/features/plan/plan_estimate.dart';
 import 'package:my_fitness/features/plan/plan_providers.dart';
 import 'package:my_fitness/features/plan/plan_repository.dart' show sortedBySection;
 import 'package:my_fitness/features/exercises/exercise_prefs.dart';
@@ -174,18 +175,24 @@ class _TemplateEditPageState extends ConsumerState<TemplateEditPage> {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, AppSpace.s12),
-          child: PressScale(
-            child: FilledButton(
-              style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
-              onPressed: view.exercises.isEmpty
-                  ? null
-                  : () async {
-                      await repo.startFromTemplate(ref.read(workoutRepositoryProvider), templateId,
-                          exercises: byId);
-                      if (context.mounted) context.go('/workout');
-                    },
-              child: const Text('用这个模板开始训练'),
-            ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              EstimateHint(label: estimateLabel(view.exercises, byId)),
+              PressScale(
+                child: FilledButton(
+                  style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
+                  onPressed: view.exercises.isEmpty
+                      ? null
+                      : () async {
+                          await repo.startFromTemplate(ref.read(workoutRepositoryProvider), templateId,
+                              exercises: byId);
+                          if (context.mounted) context.go('/workout');
+                        },
+                  child: const Text('用这个模板开始训练'),
+                ),
+              ),
+            ],
           ),
         ),
       ),
