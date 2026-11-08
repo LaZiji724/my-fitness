@@ -195,7 +195,7 @@ void main() {
       await tester.tap(find.text(squat.nameZh).first);
       await tester.pumpAndSettle();
       expect(find.text('添加动作'), findsOneWidget);
-      expect(find.text('主要肌群'), findsOneWidget);
+      expect(find.text('加入设置'), findsOneWidget);
       expect((await plans.listTemplates()).single.exercises, isEmpty);
 
       // 只从详情返回：仍然没有加入

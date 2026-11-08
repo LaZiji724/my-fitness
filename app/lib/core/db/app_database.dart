@@ -85,6 +85,9 @@ class TemplateExercises extends Table with SyncColumns {
 
   /// warmup 热身 / main 正式训练 / cooldown 放松
   TextColumn get section => text().withDefault(const Constant('main'))();
+
+  /// 每组的目标负重（公斤）；为空表示不设，开练时沿用上次的重量
+  RealColumn get targetWeightKg => real().nullable()();
 }
 
 /// 计划：N 天一个循环，每天绑定一个模板或休息。
@@ -165,7 +168,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -204,6 +207,9 @@ class AppDatabase extends _$AppDatabase {
             await m.addColumn(templateExercises, templateExercises.section);
             await m.addColumn(workoutExercises, workoutExercises.section);
             await m.createTable(exercisePrefs);
+          }
+          if (from < 7) {
+            await m.addColumn(templateExercises, templateExercises.targetWeightKg);
           }
         },
       );

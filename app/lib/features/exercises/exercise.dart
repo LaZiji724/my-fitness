@@ -93,6 +93,63 @@ enum WorkoutSection {
       values.firstWhere((s) => s.key == key, orElse: () => WorkoutSection.main);
 }
 
+/// 在动作详情页「添加动作」时设置的运动量：放进哪个模块、按次数还是按时间、组数、每组次数 / 秒数、负重。
+class ExerciseDose {
+  const ExerciseDose({
+    required this.section,
+    required this.timed,
+    required this.sets,
+    required this.reps,
+    required this.seconds,
+    this.weightKg,
+  });
+
+  final WorkoutSection section;
+
+  /// 为真按时间（用 [seconds]），否则按次数（用 [reps]）。
+  final bool timed;
+  final int sets;
+  final int reps;
+  final int seconds;
+
+  /// 每组负重（公斤）；为空表示不设。
+  final double? weightKg;
+
+  /// 该动作最合适的默认模块：激活 / 动态热身放热身，拉伸 / 泡沫轴放放松，其余放正式训练。
+  static WorkoutSection defaultSectionFor(Exercise e) {
+    if (e.kind.isActivationTab) return WorkoutSection.warmup;
+    if (e.kind.isStretchTab) return WorkoutSection.cooldown;
+    return WorkoutSection.main;
+  }
+
+  /// 按动作自身的建议量生成初始值。
+  factory ExerciseDose.initial(Exercise e) => ExerciseDose(
+        section: defaultSectionFor(e),
+        timed: e.isTimed,
+        sets: e.defaultSets ?? 3,
+        reps: e.defaultReps ?? 10,
+        seconds: e.defaultSeconds ?? 30,
+      );
+
+  ExerciseDose copyWith({
+    WorkoutSection? section,
+    bool? timed,
+    int? sets,
+    int? reps,
+    int? seconds,
+    double? weightKg,
+    bool clearWeight = false,
+  }) =>
+      ExerciseDose(
+        section: section ?? this.section,
+        timed: timed ?? this.timed,
+        sets: sets ?? this.sets,
+        reps: reps ?? this.reps,
+        seconds: seconds ?? this.seconds,
+        weightKg: clearWeight ? null : (weightKg ?? this.weightKg),
+      );
+}
+
 /// 器械筛选分组：数据里的英文器械归到页面上的 6 个中文分组。
 enum EquipmentGroup {
   all('all', '全部'),

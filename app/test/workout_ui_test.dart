@@ -7,6 +7,7 @@ import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/core/db/database_provider.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
+import 'package:my_fitness/features/exercises/exercise_prefs.dart';
 import 'package:my_fitness/features/exercises/exercise_repository.dart';
 import 'package:my_fitness/features/workout/workout_math.dart';
 import 'package:my_fitness/features/workout/workout_page.dart';
@@ -36,13 +37,17 @@ void main() {
   });
   tearDown(() => db.close());
 
-  Widget host(Widget home, {List<RouteBase> extra = const []}) {
+  Widget host(Widget home, {List<RouteBase> extra = const [], bool withPrefs = false}) {
     final router = GoRouter(
       initialLocation: '/start',
       routes: [
         GoRoute(path: '/start', builder: (_, _) => home),
         GoRoute(path: '/today', builder: (_, _) => const Scaffold(body: Text('首页'))),
-        GoRoute(path: '/workout/pick', builder: (_, _) => const WorkoutPickPage()),
+        GoRoute(
+          path: '/workout/pick',
+          builder: (_, _) => const WorkoutPickPage(),
+          routes: [GoRoute(path: ':slug', builder: (_, state) => WorkoutPickDetailPage(slug: state.pathParameters['slug']!))],
+        ),
         ...extra,
       ],
     );
@@ -51,6 +56,7 @@ void main() {
         appDatabaseProvider.overrideWithValue(db),
         workoutRepositoryProvider.overrideWithValue(repo),
         exerciseRepositoryProvider.overrideWithValue(_FakeRepo(all)),
+        if (withPrefs) exercisePrefsRepositoryProvider.overrideWithValue(ExercisePrefsRepository(db, userId: () => 'u1')),
       ],
       child: MaterialApp.router(theme: AppTheme.light(), routerConfig: router),
     );
@@ -105,10 +111,79 @@ void main() {
     await tester.tap(find.text(
         all.firstWhere((e) => e.bodyPart == BodyPart.chest).nameZh).first);
     await tester.pumpAndSettle();
+    // 先进详情，点「添加动作」才加入
+    expect((await repo.loadWorkout(w.id))!.exercises, isEmpty);
+    expect(find.text('加入设置'), findsOneWidget);
+    await tester.tap(find.text('添加动作'));
+    await tester.pumpAndSettle();
 
     expect(find.text('选择动作'), findsNothing);
     final view = await repo.loadWorkout(w.id);
     expect(view!.exercises, hasLength(1));
+  });
+
+  testWidgets('详情页改好模块、组数、次数、负重后加入当前训练', (tester) async {
+    tester.view.physicalSize = const Size(1080, 2340);
+    tester.view.devicePixelRatio = 2;
+    addTearDown(tester.view.reset);
+    final w = await repo.startWorkout();
+    await tester.pumpWidget(host(const WorkoutPage()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('添加动作').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(bench.nameZh).first);
+    await tester.pumpAndSettle();
+
+    // 放进「热身」，组数 +1，次数 +1，负重 +2.5 两下
+    for (final finder in [
+      find.text('热身'),
+      find.bySemanticsLabel('组数 增加'),
+      find.bySemanticsLabel('每组次数 增加'),
+      find.bySemanticsLabel('负重 增加'),
+      find.bySemanticsLabel('负重 增加'),
+    ]) {
+      await tester.tap(finder);
+      await tester.pumpAndSettle();
+    }
+    expect(find.text('5 kg'), findsOneWidget);
+    await tester.tap(find.text('添加动作'));
+    await tester.pumpAndSettle();
+
+    final ex = (await repo.loadWorkout(w.id))!.exercises.single;
+    expect(ex.exercise.section, 'warmup');
+    expect(ex.sets, hasLength(bench.defaultSets == null ? 4 : bench.defaultSets! + 1));
+    expect(ex.sets.every((s) => s.weightKg == 5), isTrue);
+    expect(ex.sets.first.reps, (bench.defaultReps ?? 10) + 1);
+  });
+
+  testWidgets('详情页选「按时间」：训练里按秒记，不出现次数', (tester) async {
+    tester.view.physicalSize = const Size(1080, 2340);
+    tester.view.devicePixelRatio = 2;
+    addTearDown(tester.view.reset);
+    final w = await repo.startWorkout();
+    await tester.pumpWidget(host(const WorkoutPage(), withPrefs: true));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('添加动作').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(bench.nameZh).first);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('按时间'));
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.text('每组时间'), findsOneWidget);
+    expect(find.text('每组次数'), findsNothing);
+    await tester.tap(find.bySemanticsLabel('每组时间 增加'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('添加动作'));
+    await tester.pumpAndSettle();
+
+    final ex = (await repo.loadWorkout(w.id))!.exercises.single;
+    expect(ex.sets.every((s) => s.reps == null), isTrue);
+    expect(ex.sets.first.durationSec, (bench.defaultSeconds ?? 30) + 5);
+    // 卸载页面，让监听偏好的数据库流先停下，tearDown 才能关库
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(Duration.zero);
   });
 
   testWidgets('总结页展示时长、容量、组数和纪录', (tester) async {

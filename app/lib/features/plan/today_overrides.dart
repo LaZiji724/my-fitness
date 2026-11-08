@@ -24,6 +24,8 @@ class DoseOverride {
     this.targetDurationSec,
     this.clearDuration = false,
     this.section,
+    this.targetWeightKg,
+    this.clearWeight = false,
   });
 
   final int? targetSets;
@@ -37,6 +39,10 @@ class DoseOverride {
   final bool clearDuration;
   final String? section;
 
+  /// 今天的负重（公斤）；[clearWeight] 为真表示今天不设负重（沿用上次的重量）。
+  final double? targetWeightKg;
+  final bool clearWeight;
+
   bool get isEmpty =>
       targetSets == null &&
       repsMin == null &&
@@ -45,7 +51,9 @@ class DoseOverride {
       warmupSets == null &&
       targetDurationSec == null &&
       !clearDuration &&
-      section == null;
+      section == null &&
+      targetWeightKg == null &&
+      !clearWeight;
 
   /// 在已有修改上再叠一次修改（后改的覆盖先改的）。
   DoseOverride merge(DoseOverride o) => DoseOverride(
@@ -58,6 +66,8 @@ class DoseOverride {
         targetDurationSec: o.clearDuration ? null : (o.targetDurationSec ?? targetDurationSec),
         clearDuration: o.targetDurationSec != null ? false : (o.clearDuration || clearDuration),
         section: o.section ?? section,
+        targetWeightKg: o.clearWeight ? null : (o.targetWeightKg ?? targetWeightKg),
+        clearWeight: o.targetWeightKg != null ? false : (o.clearWeight || clearWeight),
       );
 
   Map<String, dynamic> toJson() => {
@@ -69,6 +79,8 @@ class DoseOverride {
         'duration': ?targetDurationSec,
         if (clearDuration) 'clearDuration': true,
         'section': ?section,
+        'weight': ?targetWeightKg,
+        if (clearWeight) 'clearWeight': true,
       };
 
   factory DoseOverride.fromJson(Map<String, dynamic> j) => DoseOverride(
@@ -80,6 +92,8 @@ class DoseOverride {
         targetDurationSec: j['duration'] as int?,
         clearDuration: j['clearDuration'] == true,
         section: j['section'] as String?,
+        targetWeightKg: (j['weight'] as num?)?.toDouble(),
+        clearWeight: j['clearWeight'] == true,
       );
 
   /// 把修改叠到模板动作上，得到「今天实际要练的量」。模板本身不变。
@@ -93,6 +107,9 @@ class DoseOverride {
             ? const Value(null)
             : (targetDurationSec == null ? const Value.absent() : Value(targetDurationSec!.clamp(1, 36000))),
         section: section,
+        targetWeightKg: clearWeight
+            ? const Value(null)
+            : (targetWeightKg == null ? const Value.absent() : Value(targetWeightKg!.clamp(0, 1000).toDouble())),
       );
 }
 
