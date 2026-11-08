@@ -116,6 +116,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
               today: today,
               selected: _selected,
               onPick: (d) => setState(() => _selected = d),
+              trainedFor: (d) => byDay.containsKey(dateKeyOf(d)),
               dotsFor: (d) {
                 final ws = byDay[dateKeyOf(d)];
                 if (ws == null) return const [];
@@ -206,6 +207,7 @@ class _Grid extends StatelessWidget {
     required this.onPick,
     required this.dotsFor,
     required this.plannedFor,
+    required this.trainedFor,
   });
 
   final List<DateTime?> cells;
@@ -215,45 +217,105 @@ class _Grid extends StatelessWidget {
   final List<Color> Function(DateTime) dotsFor;
   /// 计划里这天要练但还没练：返回标签色（画成空心圈）；不用练返回 null。
   final Color? Function(DateTime) plannedFor;
+  /// 这天是否练过（连续天数要跨月、跨行算，所以对任意日期都能回答）。
+  final bool Function(DateTime) trainedFor;
+
+  static const double _cellHeight = 56;
+  static const double _radius = 16;
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    // 点选的框：比「练过」的淡橙更深、比「今天」的描边更浅，介于两者之间
+    final selectedFill = Color.lerp(c.accentSoft, c.accent, 0.3)!;
     final rows = cells.length ~/ 7;
     return Column(
       children: [
         for (var r = 0; r < rows; r++)
           Padding(
             padding: const EdgeInsets.only(bottom: 4),
-            child: Row(
-              children: [
-                for (var i = 0; i < 7; i++)
-                  Expanded(
-                    child: Builder(builder: (_) {
-                      final d = cells[r * 7 + i];
-                      if (d == null) return const SizedBox(height: 50);
-                      final isSel = dateKeyOf(d) == dateKeyOf(selected);
-                      final isToday = dateKeyOf(d) == dateKeyOf(today);
-                      final dots = dotsFor(d);
-                      final plannedColor = plannedFor(d);
-                      return PressScale(
-                        scale: PressScale.chipScale,
-                        child: Semantics(
-                          button: true,
-                          excludeSemantics: true,
-                          selected: isSel,
-                          label: '${d.month}月${d.day}日${dots.isNotEmpty ? '，有训练' : ''}',
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () => onPick(d),
-                            child: Container(
-                              height: 50,
-                              margin: const EdgeInsets.symmetric(horizontal: 1),
-                              decoration: BoxDecoration(
-                                color: isSel ? c.accentSoft : Colors.transparent,
-                                borderRadius: BorderRadius.circular(14),
-                                border: isToday && !isSel ? Border.all(color: c.accent, width: 1.5) : null,
+            child: _buildRow(context, c, selectedFill, [for (var i = 0; i < 7; i++) cells[r * 7 + i]]),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildRow(BuildContext context, AppColors c, Color selectedFill, List<DateTime?> week) {
+    final trained = [for (final d in week) d != null && trainedFor(d)];
+    // 同一行里相邻的练过的天连成一段：段首、段尾、这一段在本行的格数
+    final segStart = List<bool>.filled(7, false);
+    final segEnd = List<bool>.filled(7, false);
+    final segLen = List<int>.filled(7, 0);
+    for (var i = 0; i < 7; i++) {
+      if (!trained[i]) continue;
+      segStart[i] = i == 0 || !trained[i - 1];
+      segEnd[i] = i == 6 || !trained[i + 1];
+    }
+    for (var i = 0; i < 7; i++) {
+      if (!segStart[i]) continue;
+      var j = i;
+      while (j < 6 && trained[j + 1]) {
+        j++;
+      }
+      segLen[j] = j - i + 1; // 记在段尾，段尾格负责写「连续N天」
+    }
+
+    return Row(
+      children: [
+        for (var i = 0; i < 7; i++)
+          Expanded(
+            child: Builder(builder: (_) {
+              final d = week[i];
+              if (d == null) return const SizedBox(height: _cellHeight);
+              final isSel = dateKeyOf(d) == dateKeyOf(selected);
+              final isToday = dateKeyOf(d) == dateKeyOf(today);
+              final dots = dotsFor(d);
+              final plannedColor = plannedFor(d);
+              final streak = segEnd[i] && segLen[i] >= 2 ? streakLength(d, trainedFor) : 0;
+              return PressScale(
+                scale: PressScale.chipScale,
+                child: Semantics(
+                  button: true,
+                  excludeSemantics: true,
+                  selected: isSel,
+                  label: '${d.month}月${d.day}日${dots.isNotEmpty ? '，有训练' : ''}',
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => onPick(d),
+                    child: SizedBox(
+                      height: _cellHeight,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          // 底层：练过的天淡橙色底框；相邻天之间不留缝，只有两端是圆角，连成长框
+                          if (trained[i])
+                            Positioned.fill(
+                              child: Container(
+                                margin: EdgeInsets.only(left: segStart[i] ? 1 : 0, right: segEnd[i] ? 1 : 0),
+                                decoration: BoxDecoration(
+                                  color: c.accentSoft,
+                                  borderRadius: BorderRadius.horizontal(
+                                    left: Radius.circular(segStart[i] ? _radius : 0),
+                                    right: Radius.circular(segEnd[i] ? _radius : 0),
+                                  ),
+                                ),
                               ),
+                            ),
+                          // 点选的框（更深）和今天的描边
+                          if (isSel || isToday)
+                            Positioned.fill(
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(horizontal: 1),
+                                decoration: BoxDecoration(
+                                  color: isSel ? selectedFill : null,
+                                  borderRadius: BorderRadius.circular(_radius),
+                                  border: isToday ? Border.all(color: c.accent, width: 1.5) : null,
+                                ),
+                              ),
+                            ),
+                          Positioned.fill(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 12),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -262,7 +324,7 @@ class _Grid extends StatelessWidget {
                                     style: AppText.numSmall.copyWith(
                                       fontSize: 18,
                                       color: isSel ? c.accentText : c.text,
-                                      fontWeight: isToday || isSel ? FontWeight.w700 : FontWeight.w500,
+                                      fontWeight: isToday || isSel || trained[i] ? FontWeight.w700 : FontWeight.w500,
                                     ),
                                   ),
                                   const SizedBox(height: 4),
@@ -294,12 +356,27 @@ class _Grid extends StatelessWidget {
                               ),
                             ),
                           ),
-                        ),
-                      );
-                    }),
+                          // 连续两天以上：长框右上角写小字
+                          if (streak >= 2)
+                            Positioned(
+                              top: 4,
+                              right: 10,
+                              width: 96,
+                              child: Text(
+                                '连续$streak天',
+                                key: Key('calendar-streak-${dateKeyOf(d)}'),
+                                textAlign: TextAlign.right,
+                                softWrap: false,
+                                style: AppText.label.copyWith(fontSize: 12, height: 1, color: c.accentText),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
                   ),
-              ],
-            ),
+                ),
+              );
+            }),
           ),
       ],
     );
