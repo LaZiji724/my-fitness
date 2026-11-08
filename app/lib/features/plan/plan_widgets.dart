@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
+import 'package:my_fitness/features/workout/number_pad_sheet.dart';
+import 'package:my_fitness/features/workout/workout_math.dart' show formatWeight;
 
 /// 弹出一个输入名称的对话框，取消返回 null。
 Future<String?> promptName(
@@ -196,6 +198,93 @@ class StepperField extends StatelessWidget {
             ),
           ),
           button(Icons.add_rounded, '$label 增加', value + step > max ? null : () => onChanged(value + step)),
+        ],
+      ),
+    );
+  }
+}
+
+/// 「− 负重 +」步进器：每次加减 2.5 公斤，点中间的数字可以直接输入；减到 0 就是「不设」。
+/// [value] 为空表示不设负重（开练时沿用上次的重量）。
+class WeightField extends StatelessWidget {
+  const WeightField({super.key, required this.value, required this.onChanged, this.label = '负重'});
+
+  final double? value;
+  final ValueChanged<double?> onChanged;
+  final String label;
+
+  static const step = 2.5;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    final v = value;
+
+    Widget button(IconData icon, String tip, VoidCallback? onTap) => PressScale(
+          scale: PressScale.smallScale,
+          child: Semantics(
+            button: true,
+            label: tip,
+            child: Material(
+              color: c.sunken,
+              shape: const CircleBorder(),
+              child: InkWell(
+                customBorder: const CircleBorder(),
+                onTap: onTap,
+                child: SizedBox(
+                  width: 44,
+                  height: 44,
+                  child: Icon(icon, color: onTap == null ? c.text3 : c.text),
+                ),
+              ),
+            ),
+          ),
+        );
+
+    Future<void> type() async {
+      final r = await showNumberPad(
+        context,
+        title: label,
+        unit: 'kg',
+        hint: '单位：公斤；填 0 表示不设',
+        initial: v,
+        decimal: true,
+        steps: const [2.5, 5],
+      );
+      if (r == null) return;
+      onChanged(r <= 0 ? null : r);
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpace.s8),
+      child: Row(
+        children: [
+          Expanded(child: Text(label, style: AppText.body.copyWith(color: c.text))),
+          button(
+            Icons.remove_rounded,
+            '$label 减少',
+            v == null ? null : () => onChanged(v - step <= 0 ? null : v - step),
+          ),
+          SizedBox(
+            width: 84,
+            child: InkWell(
+              onTap: type,
+              child: Center(
+                child: Semantics(
+                  button: true,
+                  label: '$label 输入数值',
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      v == null ? '不设' : '${formatWeight(v)} kg',
+                      style: AppText.numMedium.copyWith(color: v == null ? c.text3 : c.text),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          button(Icons.add_rounded, '$label 增加', v == null ? () => onChanged(step) : (v + step > 1000 ? null : () => onChanged(v + step))),
         ],
       ),
     );

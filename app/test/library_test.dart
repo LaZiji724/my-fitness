@@ -322,7 +322,7 @@ void main() {
     });
   });
 
-  test('本地库从 v4 升级到 v6：旧数据保留，新列有默认值，新表可用', () async {
+  test('本地库从 v4 升级到 v7：旧数据保留，新列有默认值，新表可用', () async {
     final dir = Directory.systemTemp.createTempSync('mf_mig');
     addTearDown(() => dir.deleteSync(recursive: true));
     final file = File('${dir.path}/db.sqlite');
@@ -344,6 +344,7 @@ void main() {
     await old.customStatement('DROP TABLE favorite_programs');
     await old.customStatement('DROP TABLE exercise_prefs');
     await old.customStatement('ALTER TABLE template_exercises DROP COLUMN section');
+    await old.customStatement('ALTER TABLE template_exercises DROP COLUMN target_weight_kg');
     await old.customStatement('ALTER TABLE workout_exercises DROP COLUMN section');
     await old.customStatement('PRAGMA user_version = 4');
     await old.close();
@@ -360,6 +361,7 @@ void main() {
         FavoriteProgramsCompanion.insert(id: 'f', createdAt: t, updatedAt: t, userId: 'u', programId: 'x'));
     expect(await db.select(db.favoritePrograms).get(), hasLength(1));
     expect(te.section, 'main', reason: '新增的分区列默认是正式训练');
+    expect(te.targetWeightKg, isNull, reason: '新增的目标负重列默认为空');
     await db.into(db.exercisePrefs).insert(ExercisePrefsCompanion.insert(
         id: 'x', createdAt: t, updatedAt: t, userId: 'u', exerciseId: 'e', trackingType: 'duration'));
     expect(await db.select(db.exercisePrefs).get(), hasLength(1));

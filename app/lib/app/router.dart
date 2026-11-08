@@ -115,7 +115,16 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, state) => PlanEditPage(planId: state.pathParameters['id']!),
       ),
       GoRoute(path: '/workout', builder: (_, _) => const WorkoutPage()),
-      GoRoute(path: '/workout/pick', builder: (_, _) => const WorkoutPickPage()),
+      GoRoute(
+        path: '/workout/pick',
+        builder: (_, _) => const WorkoutPickPage(),
+        routes: [
+          GoRoute(
+            path: ':slug',
+            builder: (_, state) => WorkoutPickDetailPage(slug: state.pathParameters['slug']!),
+          ),
+        ],
+      ),
       GoRoute(
         path: '/workout/summary',
         redirect: (_, state) => state.extra is WorkoutSummary ? null : '/today',

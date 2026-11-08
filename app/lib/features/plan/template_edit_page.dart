@@ -17,6 +17,7 @@ import 'package:my_fitness/features/plan/plan_providers.dart';
 import 'package:my_fitness/features/plan/plan_repository.dart' show sortedBySection;
 import 'package:my_fitness/features/exercises/exercise_prefs.dart';
 import 'package:my_fitness/features/plan/plan_widgets.dart';
+import 'package:my_fitness/features/workout/workout_math.dart' show formatWeight;
 import 'package:my_fitness/features/workout/workout_providers.dart';
 
 const kTemplateDefaultRest = 90;
@@ -34,7 +35,8 @@ String describeTemplateExercise(TemplateExercise e) {
     target = ' · ${e.repsMin}–${e.repsMax} 次';
   }
   final warm = e.warmupSets > 0 ? ' · 热身 ${e.warmupSets} 组' : '';
-  return '${e.targetSets} 组$target$warm · 休息 ${e.restSec ?? kTemplateDefaultRest} 秒';
+  final load = e.targetWeightKg == null ? '' : ' · ${formatWeight(e.targetWeightKg)} kg';
+  return '${e.targetSets} 组$target$load$warm · 休息 ${e.restSec ?? kTemplateDefaultRest} 秒';
 }
 
 /// 编辑模板：改名、调整每个动作的组数/次数/休息，直接用它开始训练。
@@ -141,7 +143,7 @@ class _TemplateEditPageState extends ConsumerState<TemplateEditPage> {
                   context,
                   entry: e,
                   exercise: byId[e.exerciseId],
-                  update: ({targetSets, repsMin, repsMax, restSec, warmupSets, targetDurationSec, clearDuration = false, section}) =>
+                  update: ({targetSets, repsMin, repsMax, restSec, warmupSets, targetDurationSec, clearDuration = false, section, targetWeightKg, clearWeight = false}) =>
                       repo.updateTemplateExercise(e.id,
                           targetSets: targetSets,
                           repsMin: repsMin,
@@ -150,7 +152,9 @@ class _TemplateEditPageState extends ConsumerState<TemplateEditPage> {
                           warmupSets: warmupSets,
                           targetDurationSec: targetDurationSec,
                           clearDuration: clearDuration,
-                          section: section),
+                          section: section,
+                          targetWeightKg: targetWeightKg,
+                          clearWeight: clearWeight),
                 ),
                 onRemove: () => repo.removeTemplateExercise(e.id),
               ),
@@ -398,6 +402,8 @@ typedef DoseUpdater = Future<void> Function({
   int? targetDurationSec,
   bool clearDuration,
   String? section,
+  double? targetWeightKg,
+  bool clearWeight,
 });
 
 /// 弹出运动量编辑面板。[todayOnly] 为真时是首页预览里的「只改今天」模式。
@@ -452,6 +458,7 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
   late int rest = widget.entry.restSec ?? kTemplateDefaultRest;
   late int warmup = widget.entry.warmupSets;
   late int duration = widget.entry.targetDurationSec ?? 30;
+  late double? weight = widget.entry.targetWeightKg;
 
   late bool _timed = widget.timed || widget.entry.targetDurationSec != null;
   late String section = widget.entry.section;
@@ -573,6 +580,14 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
                   update(targetDurationSec: v);
                 },
               ),
+            if (widget.exercise?.kind == ExerciseKind.strength || weight != null)
+              WeightField(
+                value: weight,
+                onChanged: (v) {
+                  setState(() => weight = v);
+                  v == null ? update(clearWeight: true) : update(targetWeightKg: v);
+                },
+              ),
             if (!_timed)
               StepperField(
                 label: '热身组',
@@ -639,8 +654,10 @@ class TemplatePickDetailPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ExerciseDetailPage(
       slug: slug,
-      onAdd: (exercise) async {
-        await ref.read(planRepositoryProvider).addTemplateExercise(templateId, exercise.id, exercise: exercise);
+      onAdd: (exercise, dose) async {
+        await ref
+            .read(planRepositoryProvider)
+            .addTemplateExercise(templateId, exercise.id, exercise: exercise, dose: dose);
         if (!context.mounted) return;
         final router = GoRouter.of(context);
         router.pop(); // 详情页

@@ -68,7 +68,7 @@ class TodayPreviewPage extends ConsumerWidget {
                   todayOnly: true,
                   entry: e,
                   exercise: byId[e.exerciseId],
-                  update: ({targetSets, repsMin, repsMax, restSec, warmupSets, targetDurationSec, clearDuration = false, section}) =>
+                  update: ({targetSets, repsMin, repsMax, restSec, warmupSets, targetDurationSec, clearDuration = false, section, targetWeightKg, clearWeight = false}) =>
                       repo.save(
                         today,
                         base.template.id,
@@ -82,6 +82,8 @@ class TodayPreviewPage extends ConsumerWidget {
                           targetDurationSec: targetDurationSec,
                           clearDuration: clearDuration,
                           section: section,
+                          targetWeightKg: targetWeightKg,
+                          clearWeight: clearWeight,
                         ),
                       ),
                 ),
