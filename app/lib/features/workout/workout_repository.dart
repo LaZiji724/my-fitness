@@ -203,11 +203,13 @@ class WorkoutRepository {
     int? restSec,
     int warmupSets = 0,
     int? defaultDurationSec,
+    double? defaultWeightKg,
     String? note,
     TrackingType? tracking,
     int? fallbackReps,
     int? fallbackSeconds,
     String section = 'main',
+    bool explicitDose = false,
   }) async {
     final t = _now();
     final timed = tracking == TrackingType.duration;
@@ -250,9 +252,13 @@ class WorkoutRepository {
               workoutExerciseId: weId,
               setIndex: i,
               kind: Value(kind),
-              weightKg: Value(prev?.weightKg),
-              reps: Value(timed ? null : (prev?.reps ?? defaultReps)),
-              durationSec: Value(repsTracked ? null : (prev?.durationSec ?? defaultDurationSec)),
+              // 指定了负重（详情页添加动作 / 模板里设了）就用它；热身组仍沿用上次的重量
+              weightKg: Value(kind == 'warmup' ? prev?.weightKg : (defaultWeightKg ?? prev?.weightKg)),
+              // 详情页里手动设的次数 / 秒数以设的为准，不再被上次的记录盖掉
+              reps: Value(timed ? null : (explicitDose ? (defaultReps ?? prev?.reps) : (prev?.reps ?? defaultReps))),
+              durationSec: Value(repsTracked
+                  ? null
+                  : (explicitDose ? (defaultDurationSec ?? prev?.durationSec) : (prev?.durationSec ?? defaultDurationSec))),
             ));
       }
     });

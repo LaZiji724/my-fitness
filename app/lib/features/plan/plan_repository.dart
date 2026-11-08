@@ -120,12 +120,17 @@ class PlanRepository {
     });
   }
 
-  /// 往模板里加一个动作。传入 [exercise] 时按它当前的记录方式和建议量预填：
-  /// 按时间的写每组秒数，按次数的写次数范围。
-  Future<void> addTemplateExercise(String templateId, String exerciseId, {Exercise? exercise}) async {
+  /// 往模板里加一个动作。传入 [dose]（详情页里设置的模块、计量方式、组数、次数 / 秒数、负重）时照它写；
+  /// 否则传入 [exercise] 时按它当前的记录方式和建议量预填：按时间的写每组秒数，按次数的写次数范围。
+  Future<void> addTemplateExercise(
+    String templateId,
+    String exerciseId, {
+    Exercise? exercise,
+    ExerciseDose? dose,
+  }) async {
     final t = _now();
-    final timed = exercise?.isTimed ?? false;
-    final reps = exercise?.defaultReps;
+    final timed = dose?.timed ?? exercise?.isTimed ?? false;
+    final reps = dose?.reps ?? exercise?.defaultReps;
     final existing = await (_db.select(_db.templateExercises)
           ..where((e) => e.templateId.equals(templateId) & e.deletedAt.isNull()))
         .get();
@@ -137,10 +142,12 @@ class PlanRepository {
           templateId: templateId,
           exerciseId: exerciseId,
           position: existing.length,
-          targetSets: Value(exercise?.defaultSets ?? 3),
+          section: Value(dose?.section.key ?? 'main'),
+          targetSets: Value((dose?.sets ?? exercise?.defaultSets ?? 3).clamp(1, 50)),
           repsMin: timed ? const Value(null) : Value(reps ?? 8),
           repsMax: timed ? const Value(null) : Value(reps ?? 12),
-          targetDurationSec: timed ? Value(exercise?.defaultSeconds ?? 30) : const Value(null),
+          targetDurationSec: timed ? Value(dose?.seconds ?? exercise?.defaultSeconds ?? 30) : const Value(null),
+          targetWeightKg: Value(dose?.weightKg),
         ));
     await _touchTemplate(templateId, t);
   }
@@ -155,6 +162,8 @@ class PlanRepository {
     int? targetDurationSec,
     bool clearDuration = false,
     String? section,
+    double? targetWeightKg,
+    bool clearWeight = false,
   }) async {
     final t = _now();
     await (_db.update(_db.templateExercises)..where((e) => e.id.equals(id))).write(
@@ -168,6 +177,9 @@ class PlanRepository {
         targetDurationSec: clearDuration
             ? const Value(null)
             : (targetDurationSec == null ? const Value.absent() : Value(targetDurationSec.clamp(1, 36000))),
+        targetWeightKg: clearWeight
+            ? const Value(null)
+            : (targetWeightKg == null ? const Value.absent() : Value(targetWeightKg.clamp(0, 1000).toDouble())),
         updatedAt: Value(t),
         dirty: const Value(true),
       ),
@@ -274,6 +286,7 @@ class PlanRepository {
         restSec: e.restSec,
         warmupSets: e.warmupSets,
         defaultDurationSec: e.targetDurationSec,
+        defaultWeightKg: e.targetWeightKg,
         note: e.note,
       );
     }

@@ -3117,6 +3117,17 @@ class $TemplateExercisesTable extends TemplateExercises
     requiredDuringInsert: false,
     defaultValue: const Constant('main'),
   );
+  static const VerificationMeta _targetWeightKgMeta = const VerificationMeta(
+    'targetWeightKg',
+  );
+  @override
+  late final GeneratedColumn<double> targetWeightKg = GeneratedColumn<double>(
+    'target_weight_kg',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -3136,6 +3147,7 @@ class $TemplateExercisesTable extends TemplateExercises
     warmupSets,
     targetDurationSec,
     section,
+    targetWeightKg,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3265,6 +3277,15 @@ class $TemplateExercisesTable extends TemplateExercises
         section.isAcceptableOrUnknown(data['section']!, _sectionMeta),
       );
     }
+    if (data.containsKey('target_weight_kg')) {
+      context.handle(
+        _targetWeightKgMeta,
+        targetWeightKg.isAcceptableOrUnknown(
+          data['target_weight_kg']!,
+          _targetWeightKgMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -3342,6 +3363,10 @@ class $TemplateExercisesTable extends TemplateExercises
         DriftSqlType.string,
         data['${effectivePrefix}section'],
       )!,
+      targetWeightKg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}target_weight_kg'],
+      ),
     );
   }
 
@@ -3376,6 +3401,9 @@ class TemplateExercise extends DataClass
 
   /// warmup 热身 / main 正式训练 / cooldown 放松
   final String section;
+
+  /// 每组的目标负重（公斤）；为空表示不设，开练时沿用上次的重量
+  final double? targetWeightKg;
   const TemplateExercise({
     required this.id,
     required this.createdAt,
@@ -3394,6 +3422,7 @@ class TemplateExercise extends DataClass
     required this.warmupSets,
     this.targetDurationSec,
     required this.section,
+    this.targetWeightKg,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3427,6 +3456,9 @@ class TemplateExercise extends DataClass
       map['target_duration_sec'] = Variable<int>(targetDurationSec);
     }
     map['section'] = Variable<String>(section);
+    if (!nullToAbsent || targetWeightKg != null) {
+      map['target_weight_kg'] = Variable<double>(targetWeightKg);
+    }
     return map;
   }
 
@@ -3459,6 +3491,9 @@ class TemplateExercise extends DataClass
           ? const Value.absent()
           : Value(targetDurationSec),
       section: Value(section),
+      targetWeightKg: targetWeightKg == null && nullToAbsent
+          ? const Value.absent()
+          : Value(targetWeightKg),
     );
   }
 
@@ -3485,6 +3520,7 @@ class TemplateExercise extends DataClass
       warmupSets: serializer.fromJson<int>(json['warmupSets']),
       targetDurationSec: serializer.fromJson<int?>(json['targetDurationSec']),
       section: serializer.fromJson<String>(json['section']),
+      targetWeightKg: serializer.fromJson<double?>(json['targetWeightKg']),
     );
   }
   @override
@@ -3508,6 +3544,7 @@ class TemplateExercise extends DataClass
       'warmupSets': serializer.toJson<int>(warmupSets),
       'targetDurationSec': serializer.toJson<int?>(targetDurationSec),
       'section': serializer.toJson<String>(section),
+      'targetWeightKg': serializer.toJson<double?>(targetWeightKg),
     };
   }
 
@@ -3529,6 +3566,7 @@ class TemplateExercise extends DataClass
     int? warmupSets,
     Value<int?> targetDurationSec = const Value.absent(),
     String? section,
+    Value<double?> targetWeightKg = const Value.absent(),
   }) => TemplateExercise(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -3549,6 +3587,9 @@ class TemplateExercise extends DataClass
         ? targetDurationSec.value
         : this.targetDurationSec,
     section: section ?? this.section,
+    targetWeightKg: targetWeightKg.present
+        ? targetWeightKg.value
+        : this.targetWeightKg,
   );
   TemplateExercise copyWithCompanion(TemplateExercisesCompanion data) {
     return TemplateExercise(
@@ -3579,6 +3620,9 @@ class TemplateExercise extends DataClass
           ? data.targetDurationSec.value
           : this.targetDurationSec,
       section: data.section.present ? data.section.value : this.section,
+      targetWeightKg: data.targetWeightKg.present
+          ? data.targetWeightKg.value
+          : this.targetWeightKg,
     );
   }
 
@@ -3601,7 +3645,8 @@ class TemplateExercise extends DataClass
           ..write('note: $note, ')
           ..write('warmupSets: $warmupSets, ')
           ..write('targetDurationSec: $targetDurationSec, ')
-          ..write('section: $section')
+          ..write('section: $section, ')
+          ..write('targetWeightKg: $targetWeightKg')
           ..write(')'))
         .toString();
   }
@@ -3625,6 +3670,7 @@ class TemplateExercise extends DataClass
     warmupSets,
     targetDurationSec,
     section,
+    targetWeightKg,
   );
   @override
   bool operator ==(Object other) =>
@@ -3646,7 +3692,8 @@ class TemplateExercise extends DataClass
           other.note == this.note &&
           other.warmupSets == this.warmupSets &&
           other.targetDurationSec == this.targetDurationSec &&
-          other.section == this.section);
+          other.section == this.section &&
+          other.targetWeightKg == this.targetWeightKg);
 }
 
 class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
@@ -3667,6 +3714,7 @@ class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
   final Value<int> warmupSets;
   final Value<int?> targetDurationSec;
   final Value<String> section;
+  final Value<double?> targetWeightKg;
   final Value<int> rowid;
   const TemplateExercisesCompanion({
     this.id = const Value.absent(),
@@ -3686,6 +3734,7 @@ class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
     this.warmupSets = const Value.absent(),
     this.targetDurationSec = const Value.absent(),
     this.section = const Value.absent(),
+    this.targetWeightKg = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   TemplateExercisesCompanion.insert({
@@ -3706,6 +3755,7 @@ class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
     this.warmupSets = const Value.absent(),
     this.targetDurationSec = const Value.absent(),
     this.section = const Value.absent(),
+    this.targetWeightKg = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        createdAt = Value(createdAt),
@@ -3732,6 +3782,7 @@ class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
     Expression<int>? warmupSets,
     Expression<int>? targetDurationSec,
     Expression<String>? section,
+    Expression<double>? targetWeightKg,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -3752,6 +3803,7 @@ class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
       if (warmupSets != null) 'warmup_sets': warmupSets,
       if (targetDurationSec != null) 'target_duration_sec': targetDurationSec,
       if (section != null) 'section': section,
+      if (targetWeightKg != null) 'target_weight_kg': targetWeightKg,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -3774,6 +3826,7 @@ class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
     Value<int>? warmupSets,
     Value<int?>? targetDurationSec,
     Value<String>? section,
+    Value<double?>? targetWeightKg,
     Value<int>? rowid,
   }) {
     return TemplateExercisesCompanion(
@@ -3794,6 +3847,7 @@ class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
       warmupSets: warmupSets ?? this.warmupSets,
       targetDurationSec: targetDurationSec ?? this.targetDurationSec,
       section: section ?? this.section,
+      targetWeightKg: targetWeightKg ?? this.targetWeightKg,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -3852,6 +3906,9 @@ class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
     if (section.present) {
       map['section'] = Variable<String>(section.value);
     }
+    if (targetWeightKg.present) {
+      map['target_weight_kg'] = Variable<double>(targetWeightKg.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -3878,6 +3935,7 @@ class TemplateExercisesCompanion extends UpdateCompanion<TemplateExercise> {
           ..write('warmupSets: $warmupSets, ')
           ..write('targetDurationSec: $targetDurationSec, ')
           ..write('section: $section, ')
+          ..write('targetWeightKg: $targetWeightKg, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -8320,6 +8378,7 @@ typedef $$TemplateExercisesTableCreateCompanionBuilder =
       Value<int> warmupSets,
       Value<int?> targetDurationSec,
       Value<String> section,
+      Value<double?> targetWeightKg,
       Value<int> rowid,
     });
 typedef $$TemplateExercisesTableUpdateCompanionBuilder =
@@ -8341,6 +8400,7 @@ typedef $$TemplateExercisesTableUpdateCompanionBuilder =
       Value<int> warmupSets,
       Value<int?> targetDurationSec,
       Value<String> section,
+      Value<double?> targetWeightKg,
       Value<int> rowid,
     });
 
@@ -8435,6 +8495,11 @@ class $$TemplateExercisesTableFilterComposer
 
   ColumnFilters<String> get section => $composableBuilder(
     column: $table.section,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get targetWeightKg => $composableBuilder(
+    column: $table.targetWeightKg,
     builder: (column) => ColumnFilters(column),
   );
 }
@@ -8532,6 +8597,11 @@ class $$TemplateExercisesTableOrderingComposer
     column: $table.section,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<double> get targetWeightKg => $composableBuilder(
+    column: $table.targetWeightKg,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$TemplateExercisesTableAnnotationComposer
@@ -8603,6 +8673,11 @@ class $$TemplateExercisesTableAnnotationComposer
 
   GeneratedColumn<String> get section =>
       $composableBuilder(column: $table.section, builder: (column) => column);
+
+  GeneratedColumn<double> get targetWeightKg => $composableBuilder(
+    column: $table.targetWeightKg,
+    builder: (column) => column,
+  );
 }
 
 class $$TemplateExercisesTableTableManager
@@ -8662,6 +8737,7 @@ class $$TemplateExercisesTableTableManager
                 Value<int> warmupSets = const Value.absent(),
                 Value<int?> targetDurationSec = const Value.absent(),
                 Value<String> section = const Value.absent(),
+                Value<double?> targetWeightKg = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TemplateExercisesCompanion(
                 id: id,
@@ -8681,6 +8757,7 @@ class $$TemplateExercisesTableTableManager
                 warmupSets: warmupSets,
                 targetDurationSec: targetDurationSec,
                 section: section,
+                targetWeightKg: targetWeightKg,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -8702,6 +8779,7 @@ class $$TemplateExercisesTableTableManager
                 Value<int> warmupSets = const Value.absent(),
                 Value<int?> targetDurationSec = const Value.absent(),
                 Value<String> section = const Value.absent(),
+                Value<double?> targetWeightKg = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TemplateExercisesCompanion.insert(
                 id: id,
@@ -8721,6 +8799,7 @@ class $$TemplateExercisesTableTableManager
                 warmupSets: warmupSets,
                 targetDurationSec: targetDurationSec,
                 section: section,
+                targetWeightKg: targetWeightKg,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
