@@ -58,6 +58,13 @@ final List<RouteBase> templateRoutes = [
     builder: (_, state) => TemplateEditPage(templateId: state.pathParameters['id']!),
     routes: [
       GoRoute(
+        path: 'exercise/:entryId',
+        builder: (_, state) => TemplateEntryDetailPage(
+          templateId: state.pathParameters['id']!,
+          entryId: state.pathParameters['entryId']!,
+        ),
+      ),
+      GoRoute(
         path: 'pick',
         builder: (_, state) => TemplatePickPage(templateId: state.pathParameters['id']!),
         routes: [
@@ -94,7 +101,19 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/exercise/:slug',
         builder: (_, state) => ExerciseDetailPage(slug: state.pathParameters['slug']!),
       ),
-      GoRoute(path: '/today/preview', builder: (_, _) => const TodayPreviewPage()),
+      GoRoute(
+        path: '/today/preview',
+        builder: (_, _) => const TodayPreviewPage(),
+        routes: [
+          GoRoute(
+            path: 'exercise/:entryId',
+            builder: (_, state) => TemplateEntryDetailPage(
+              entryId: state.pathParameters['entryId']!,
+              todayOnly: true,
+            ),
+          ),
+        ],
+      ),
       ...templateRoutes,
       GoRoute(path: '/library', builder: (_, _) => const LibraryPage()),
       GoRoute(
