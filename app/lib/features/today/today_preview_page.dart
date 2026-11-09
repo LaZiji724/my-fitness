@@ -43,7 +43,7 @@ class TodayPreviewPage extends ConsumerWidget {
             sliver: SliverList.list(children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: AppSpace.s12),
-                child: Text('点右边的小笔调整运动量，点 ✕ 去掉今天不练的动作，长按卡片上下拖动可以排序。'
+                child: Text('点动作可以看动作并调整运动量，点 ✕ 去掉今天不练的动作，长按卡片上下拖动可以排序。'
                     '这些只影响今天这次训练，不会改动模板。',
                     style: AppText.label.copyWith(color: c.text2)),
               ),
@@ -64,29 +64,13 @@ class TodayPreviewPage extends ConsumerWidget {
                 entry: e,
                 exercise: byId[e.exerciseId],
                 onRemove: () => repo.remove(today, base.template.id, e.id),
+                onOpen: () => context.push('/today/preview/exercise/${e.id}'),
                 onEdit: () => showDoseSheet(
                   context,
                   todayOnly: true,
                   entry: e,
                   exercise: byId[e.exerciseId],
-                  update: ({targetSets, repsMin, repsMax, restSec, warmupSets, targetDurationSec, clearDuration = false, section, targetWeightKg, clearWeight = false}) =>
-                      repo.save(
-                        today,
-                        base.template.id,
-                        e.id,
-                        DoseOverride(
-                          targetSets: targetSets,
-                          repsMin: repsMin,
-                          repsMax: repsMax,
-                          restSec: restSec,
-                          warmupSets: warmupSets,
-                          targetDurationSec: targetDurationSec,
-                          clearDuration: clearDuration,
-                          section: section,
-                          targetWeightKg: targetWeightKg,
-                          clearWeight: clearWeight,
-                        ),
-                      ),
+                  update: todayDoseUpdater(repo, today, base.template.id, e.id),
                 ),
               ),
             ),

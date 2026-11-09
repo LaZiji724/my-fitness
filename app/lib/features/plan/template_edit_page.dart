@@ -15,7 +15,8 @@ import 'package:my_fitness/features/exercises/exercise_repository.dart';
 import 'package:my_fitness/features/exercises/exercises_page.dart';
 import 'package:my_fitness/features/plan/plan_estimate.dart';
 import 'package:my_fitness/features/plan/plan_providers.dart';
-import 'package:my_fitness/features/plan/plan_repository.dart' show sortedBySection;
+import 'package:my_fitness/features/plan/plan_repository.dart' show PlanRepository, TemplateView, sortedBySection;
+import 'package:my_fitness/features/plan/today_overrides.dart';
 import 'package:my_fitness/features/exercises/exercise_prefs.dart';
 import 'package:my_fitness/features/plan/plan_widgets.dart';
 import 'package:my_fitness/features/workout/workout_math.dart' show formatWeight;
@@ -140,22 +141,12 @@ class _TemplateEditPageState extends ConsumerState<TemplateEditPage> {
               cardBuilder: (e) => TemplateExerciseCard(
                 entry: e,
                 exercise: byId[e.exerciseId],
+                onOpen: () => context.push('/template/$templateId/exercise/${e.id}'),
                 onEdit: () => showDoseSheet(
                   context,
                   entry: e,
                   exercise: byId[e.exerciseId],
-                  update: ({targetSets, repsMin, repsMax, restSec, warmupSets, targetDurationSec, clearDuration = false, section, targetWeightKg, clearWeight = false}) =>
-                      repo.updateTemplateExercise(e.id,
-                          targetSets: targetSets,
-                          repsMin: repsMin,
-                          repsMax: repsMax,
-                          restSec: restSec,
-                          warmupSets: warmupSets,
-                          targetDurationSec: targetDurationSec,
-                          clearDuration: clearDuration,
-                          section: section,
-                          targetWeightKg: targetWeightKg,
-                          clearWeight: clearWeight),
+                  update: templateDoseUpdater(repo, e.id),
                 ),
                 onRemove: () => repo.removeTemplateExercise(e.id),
               ),
@@ -336,10 +327,20 @@ class PencilIcon extends StatelessWidget {
 
 /// 动作卡片：点卡片看动作详情（和动作库里一样）；右侧小笔改运动量；[onRemove] 不为空时再显示 ✕。
 class TemplateExerciseCard extends StatelessWidget {
-  const TemplateExerciseCard({super.key, required this.entry, required this.exercise, required this.onEdit, this.onRemove});
+  const TemplateExerciseCard({
+    super.key,
+    required this.entry,
+    required this.exercise,
+    required this.onEdit,
+    this.onOpen,
+    this.onRemove,
+  });
   final TemplateExercise entry;
   final Exercise? exercise;
   final VoidCallback onEdit;
+
+  /// 点卡片本体：打开可以直接改设置的动作详情；不传就只看普通的动作详情。
+  final VoidCallback? onOpen;
   final VoidCallback? onRemove;
 
   @override
@@ -354,7 +355,7 @@ class TemplateExerciseCard extends StatelessWidget {
         borderRadius: AppRadius.card,
         child: InkWell(
           borderRadius: AppRadius.card,
-          onTap: ex == null ? null : () => context.push('/exercise/${ex.slug}'),
+          onTap: ex == null ? null : (onOpen ?? () => context.push('/exercise/${ex.slug}')),
           child: Padding(
             padding: const EdgeInsets.all(AppSpace.s12),
             child: Row(
@@ -412,6 +413,151 @@ typedef DoseUpdater = Future<void> Function({
   double? targetWeightKg,
   bool clearWeight,
 });
+
+/// 模板页的保存方式：改了哪几项就写进模板里的这个动作。
+DoseUpdater templateDoseUpdater(PlanRepository repo, String entryId) => ({
+      targetSets,
+      repsMin,
+      repsMax,
+      restSec,
+      warmupSets,
+      targetDurationSec,
+      clearDuration = false,
+      section,
+      targetWeightKg,
+      clearWeight = false,
+    }) =>
+        repo.updateTemplateExercise(entryId,
+            targetSets: targetSets,
+            repsMin: repsMin,
+            repsMax: repsMax,
+            restSec: restSec,
+            warmupSets: warmupSets,
+            targetDurationSec: targetDurationSec,
+            clearDuration: clearDuration,
+            section: section,
+            targetWeightKg: targetWeightKg,
+            clearWeight: clearWeight);
+
+/// 首页预览的保存方式：改动只记到今天这次训练（本机、当天有效），不动模板。
+DoseUpdater todayDoseUpdater(TodayOverridesRepository repo, DateTime today, String templateId, String entryId) => ({
+      targetSets,
+      repsMin,
+      repsMax,
+      restSec,
+      warmupSets,
+      targetDurationSec,
+      clearDuration = false,
+      section,
+      targetWeightKg,
+      clearWeight = false,
+    }) =>
+        repo.save(
+          today,
+          templateId,
+          entryId,
+          DoseOverride(
+            targetSets: targetSets,
+            repsMin: repsMin,
+            repsMax: repsMax,
+            restSec: restSec,
+            warmupSets: warmupSets,
+            targetDurationSec: targetDurationSec,
+            clearDuration: clearDuration,
+            section: section,
+            targetWeightKg: targetWeightKg,
+            clearWeight: clearWeight,
+          ),
+        );
+
+/// 动作详情里的设置改了之后，把「前后差别」换成「改了哪几项」交给 [update] 保存，没动的项不会被覆盖
+/// （比如次数范围 8–12 只要没碰次数就保持原样）。
+Future<void> saveDoseChange(DoseUpdater update, ExerciseDose before, ExerciseDose after) async {
+  if (after.section != before.section) await update(section: after.section.key);
+  if (after.sets != before.sets) await update(targetSets: after.sets);
+  if (after.timed != before.timed) {
+    if (after.timed) {
+      await update(targetDurationSec: after.seconds);
+    } else {
+      await update(clearDuration: true, repsMin: after.reps, repsMax: after.repsMax ?? after.reps);
+    }
+  } else if (after.timed) {
+    if (after.seconds != before.seconds) await update(targetDurationSec: after.seconds);
+  } else if (after.reps != before.reps || after.repsMax != before.repsMax) {
+    await update(repsMin: after.reps, repsMax: after.repsMax ?? after.reps);
+  }
+  if (after.weightKg != before.weightKg) {
+    await (after.weightKg == null ? update(clearWeight: true) : update(targetWeightKg: after.weightKg));
+  }
+  final warmup = after.warmupSets;
+  if (warmup != null && warmup != before.warmupSets) await update(warmupSets: warmup);
+  final rest = after.restSec;
+  if (rest != null && rest != before.restSec) await update(restSec: rest);
+}
+
+/// 点模板页 / 首页预览里的动作卡片打开的详情：和「添加动作」页是同一块设置，只是没有「添加动作」按钮，
+/// 改动马上保存（模板页写进模板，首页预览只记到今天这次训练）。
+class TemplateEntryDetailPage extends ConsumerWidget {
+  const TemplateEntryDetailPage({super.key, required this.entryId, this.templateId, this.todayOnly = false});
+
+  final String entryId;
+
+  /// 模板页打开时是这个模板的 id；首页预览打开（[todayOnly]）时不用传。
+  final String? templateId;
+  final bool todayOnly;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final c = context.colors;
+    final byId = ref.watch(exerciseByIdProvider);
+    final TemplateView? view;
+    String? baseTemplateId = templateId;
+    if (todayOnly) {
+      view = ref.watch(todayEffectiveTemplateProvider);
+      baseTemplateId = ref.watch(todayPlanProvider)?.template?.template.id;
+    } else {
+      view = ref.watch(templatesProvider).value?.where((t) => t.template.id == templateId).firstOrNull;
+    }
+    final entry = view?.exercises.where((e) => e.id == entryId).firstOrNull;
+    final ex = entry == null ? null : byId[entry.exerciseId];
+    if (entry == null || ex == null || baseTemplateId == null) {
+      return Scaffold(
+        appBar: AppBar(),
+        body: Center(child: Text('找不到这个动作', style: AppText.body.copyWith(color: c.text2))),
+      );
+    }
+
+    final DoseUpdater update;
+    if (todayOnly) {
+      final repo = ref.watch(todayOverridesRepositoryProvider);
+      final today = ref.watch(todayProvider);
+      update = todayDoseUpdater(repo, today, baseTemplateId, entryId);
+    } else {
+      update = templateDoseUpdater(ref.watch(planRepositoryProvider), entryId);
+    }
+
+    final reps = entry.repsMin ?? entry.repsMax ?? ex.defaultReps ?? 10;
+    return ExerciseDetailPage(
+      slug: ex.slug,
+      editing: DoseEditing(
+        initial: ExerciseDose(
+          section: WorkoutSection.fromKey(entry.section),
+          timed: ex.isTimed || entry.targetDurationSec != null,
+          sets: entry.targetSets,
+          reps: reps,
+          repsMax: entry.repsMax ?? reps,
+          seconds: entry.targetDurationSec ?? ex.defaultSeconds ?? 30,
+          weightKg: entry.targetWeightKg,
+          restSec: entry.restSec ?? kTemplateDefaultRest,
+          warmupSets: entry.warmupSets,
+        ),
+        repsRange: entry.repsMin != null && entry.repsMax != null && entry.repsMin != entry.repsMax,
+        hint: todayOnly ? '只改今天这次训练，不会改动模板' : '改动自动保存到模板',
+        onChanged: (before, after) => saveDoseChange(update, before, after),
+      ),
+    );
+  }
+}
 
 /// 弹出运动量编辑面板。[todayOnly] 为真时是首页预览里的「只改今天」模式。
 Future<void> showDoseSheet(

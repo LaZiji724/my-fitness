@@ -83,8 +83,29 @@ void main() {
         GoRoute(path: '/start', builder: (_, _) => home),
         GoRoute(path: '/workout', builder: (_, _) => const Scaffold(body: Text('训练页'))),
         GoRoute(path: '/plan/:id', builder: (_, s) => PlanEditPage(planId: s.pathParameters['id']!)),
-        GoRoute(path: '/template/:id', builder: (_, s) => TemplateEditPage(templateId: s.pathParameters['id']!)),
-        GoRoute(path: '/today/preview', builder: (_, _) => const TodayPreviewPage()),
+        GoRoute(
+          path: '/template/:id',
+          builder: (_, s) => TemplateEditPage(templateId: s.pathParameters['id']!),
+          routes: [
+            GoRoute(
+              path: 'exercise/:entryId',
+              builder: (_, s) => TemplateEntryDetailPage(
+                templateId: s.pathParameters['id']!,
+                entryId: s.pathParameters['entryId']!,
+              ),
+            ),
+          ],
+        ),
+        GoRoute(
+          path: '/today/preview',
+          builder: (_, _) => const TodayPreviewPage(),
+          routes: [
+            GoRoute(
+              path: 'exercise/:entryId',
+              builder: (_, s) => TemplateEntryDetailPage(entryId: s.pathParameters['entryId']!, todayOnly: true),
+            ),
+          ],
+        ),
         GoRoute(path: '/exercise/:slug', builder: (_, s) => Scaffold(body: Text('动作详情 ${s.pathParameters['slug']}'))),
         GoRoute(path: '/me', builder: (_, _) => const SizedBox()),
         GoRoute(path: '/calendar', builder: (_, _) => const Text('日历页')),
@@ -159,7 +180,7 @@ void main() {
     await unmount(tester);
   });
 
-  testWidgets('模板页：点动作本体打开动作详情，不再弹出编辑面板', (tester) async {
+  testWidgets('模板页：点动作本体打开可调设置的详情（没有添加动作），改动直接存进模板', (tester) async {
     await setViewport(tester);
     final id = await plans.createTemplate('推日');
     await plans.addTemplateExercise(id, bench.id);
@@ -167,9 +188,121 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text(bench.nameZh));
     await tester.pumpAndSettle();
-    expect(find.text('动作详情 ${bench.slug}'), findsOneWidget);
+    expect(find.text('动作设置'), findsOneWidget);
+    expect(find.text('改动自动保存到模板'), findsOneWidget);
+    expect(find.text('添加动作'), findsNothing);
     expect(find.text('完成'), findsNothing);
+    // 模板里是 8–12 次的范围，分别调下限和上限
+    expect(find.text('次数下限'), findsOneWidget);
+    expect(find.text('次数上限'), findsOneWidget);
+
+    await tester.tap(find.bySemanticsLabel('组数 增加'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('热身'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.bySemanticsLabel('次数上限 增加'));
+    await tester.pumpAndSettle();
+    await tester.drag(find.byType(ListView), const Offset(0, -500));
+    await tester.pumpAndSettle();
+    await tester.tap(find.bySemanticsLabel('组间休息 增加'));
+    await tester.pumpAndSettle();
+    var e = (await plans.getTemplate(id))!.exercises.single;
+    expect(e.targetSets, 4);
+    expect(e.section, 'warmup');
+    expect(e.repsMin, 8);
+    expect(e.repsMax, 13);
+    expect(e.restSec, 105);
+
+    // 返回模板页，列表文案同步更新
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    expect(find.text('4 组 · 8–13 次 · 休息 105 秒'), findsOneWidget);
     await unmount(tester);
+  });
+
+  testWidgets('详情页里没碰次数范围时保持 8–12 不变；只有单个次数时上下限一起变', (tester) async {
+    await setViewport(tester);
+    final id = await plans.createTemplate('推日');
+    await plans.addTemplateExercise(id, bench.id);
+    await plans.addTemplateExercise(id, bench.id,
+        dose: const ExerciseDose(section: WorkoutSection.main, timed: false, sets: 3, reps: 10, seconds: 30));
+    final entries = (await plans.getTemplate(id))!.exercises;
+    await tester.pumpWidget(host(TemplateEntryDetailPage(templateId: id, entryId: entries[1].id)));
+    await tester.pumpAndSettle();
+    expect(find.text('每组次数'), findsOneWidget);
+    await tester.tap(find.bySemanticsLabel('每组次数 增加'));
+    await tester.pumpAndSettle();
+    await tester.drag(find.byType(ListView), const Offset(0, -300));
+    await tester.pumpAndSettle();
+    await tester.tap(find.bySemanticsLabel('负重 增加'));
+    await tester.pumpAndSettle();
+    final after = (await plans.getTemplate(id))!.exercises;
+    expect(after[0].repsMin, 8);
+    expect(after[0].repsMax, 12);
+    expect(after[1].repsMin, 11);
+    expect(after[1].repsMax, 11);
+    expect(after[1].targetWeightKg, isNotNull);
+    await unmount(tester);
+  });
+
+  test('saveDoseChange：只把变了的项交给保存，切换计量方式时换成对应的量', () async {
+    final calls = <Map<String, Object?>>[];
+    Future<void> update({
+      int? targetSets,
+      int? repsMin,
+      int? repsMax,
+      int? restSec,
+      int? warmupSets,
+      int? targetDurationSec,
+      bool clearDuration = false,
+      String? section,
+      double? targetWeightKg,
+      bool clearWeight = false,
+    }) async =>
+        calls.add({
+          'sets': ?targetSets,
+          'min': ?repsMin,
+          'max': ?repsMax,
+          'rest': ?restSec,
+          'warm': ?warmupSets,
+          'dur': ?targetDurationSec,
+          if (clearDuration) 'clearDur': true,
+          'sec': ?section,
+          'w': ?targetWeightKg,
+          if (clearWeight) 'clearW': true,
+        });
+    const base = ExerciseDose(
+        section: WorkoutSection.main,
+        timed: false,
+        sets: 3,
+        reps: 8,
+        repsMax: 12,
+        seconds: 30,
+        restSec: 90,
+        warmupSets: 0);
+
+    await saveDoseChange(update, base, base);
+    expect(calls, isEmpty);
+
+    await saveDoseChange(update, base, base.copyWith(timed: true));
+    expect(calls.single, {'dur': 30});
+    calls.clear();
+
+    await saveDoseChange(update, base.copyWith(timed: true), base);
+    expect(calls.single, {'clearDur': true, 'min': 8, 'max': 12});
+    calls.clear();
+
+    await saveDoseChange(update, base, base.copyWith(weightKg: 20, warmupSets: 2, restSec: 60));
+    expect(calls, [
+      {'w': 20.0},
+      {'warm': 2},
+      {'rest': 60},
+    ]);
+    calls.clear();
+
+    await saveDoseChange(update, base.copyWith(weightKg: 20), base.copyWith(clearWeight: true));
+    // copyWith 的 clearWeight 把负重清空
+    expect(calls.single, {'clearW': true});
   });
 
   Future<(String, String)> planToday() async {
@@ -179,6 +312,32 @@ void main() {
     await plans.setPlanDay(p, 0, t);
     return (t, p);
   }
+
+  testWidgets('首页预览：点动作进入详情调整，只记到今天，模板不变', (tester) async {
+    await setViewport(tester);
+    final (t, _) = await planToday();
+    await tester.pumpWidget(host(const TodayPreviewPage()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(bench.nameZh));
+    await tester.pumpAndSettle();
+    expect(find.text('只改今天这次训练，不会改动模板'), findsOneWidget);
+    expect(find.text('添加动作'), findsNothing);
+    await tester.tap(find.bySemanticsLabel('组数 增加'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('拉伸放松'));
+    await tester.pumpAndSettle();
+    expect((await plans.getTemplate(t))!.exercises.single.targetSets, 3);
+    expect((await plans.getTemplate(t))!.exercises.single.section, 'main');
+    final edits = await TodayOverridesRepository(db, userId: () => 'u1').load(today, t);
+    final o = edits.doses.values.single;
+    expect(o.targetSets, 4);
+    expect(o.section, 'cooldown');
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    expect(find.text('4 组 · 8–12 次 · 休息 90 秒'), findsOneWidget);
+    await unmount(tester);
+  });
 
   testWidgets('首页：黑卡显示「点击预览」，点卡片其他地方进入预览页，按钮仍直接开练', (tester) async {
     await setViewport(tester);
@@ -461,7 +620,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text(bench.nameZh));
     await tester.pumpAndSettle();
-    expect(find.text('动作详情 ${bench.slug}'), findsOneWidget);
+    expect(find.text('动作设置'), findsOneWidget);
     final saved = (await plans.getTemplate(t))!.exercises;
     expect(saved.firstWhere((e) => e.id == benchId).position, 0);
     await unmount(tester);

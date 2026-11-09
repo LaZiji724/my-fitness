@@ -93,7 +93,7 @@ enum WorkoutSection {
       values.firstWhere((s) => s.key == key, orElse: () => WorkoutSection.main);
 }
 
-/// 在动作详情页「添加动作」时设置的运动量：放进哪个模块、按次数还是按时间、组数、每组次数 / 秒数、负重。
+/// 在动作详情页「添加动作」或修改模板动作时设置的运动量：放进哪个模块、按次数还是按时间、组数、每组次数 / 秒数、负重。
 class ExerciseDose {
   const ExerciseDose({
     required this.section,
@@ -102,6 +102,9 @@ class ExerciseDose {
     required this.reps,
     required this.seconds,
     this.weightKg,
+    this.repsMax,
+    this.restSec,
+    this.warmupSets,
   });
 
   final WorkoutSection section;
@@ -114,6 +117,11 @@ class ExerciseDose {
 
   /// 每组负重（公斤）；为空表示不设。
   final double? weightKg;
+
+  /// 以下三项只在「改模板里已有的动作」时用到：次数上限（[reps] 是下限）、组间休息秒数、热身组数。
+  final int? repsMax;
+  final int? restSec;
+  final int? warmupSets;
 
   /// 该动作最合适的默认模块：激活 / 动态热身放热身，拉伸 / 泡沫轴放放松，其余放正式训练。
   static WorkoutSection defaultSectionFor(Exercise e) {
@@ -139,6 +147,9 @@ class ExerciseDose {
     int? seconds,
     double? weightKg,
     bool clearWeight = false,
+    int? repsMax,
+    int? restSec,
+    int? warmupSets,
   }) =>
       ExerciseDose(
         section: section ?? this.section,
@@ -147,6 +158,9 @@ class ExerciseDose {
         reps: reps ?? this.reps,
         seconds: seconds ?? this.seconds,
         weightKg: clearWeight ? null : (weightKg ?? this.weightKg),
+        repsMax: repsMax ?? this.repsMax,
+        restSec: restSec ?? this.restSec,
+        warmupSets: warmupSets ?? this.warmupSets,
       );
 }
 

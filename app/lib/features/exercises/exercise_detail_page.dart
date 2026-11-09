@@ -15,13 +15,18 @@ import 'package:my_fitness/features/workout/workout_math.dart' show formatWeight
 ///
 /// 传入 [onAdd] 时（给模板 / 当前训练挑动作）图片下方多一块「加入设置」和「添加动作」按钮：
 /// 可以改放进哪个模块（热身 / 正式训练 / 拉伸放松）、按次数还是按时间、组数、次数或秒数、负重，点了按钮才真正加入。
+///
+/// 传入 [editing] 时（看模板 / 首页预览里已有的动作）是同一块设置，但没有「添加动作」，每次改动立刻保存。
 class ExerciseDetailPage extends ConsumerWidget {
-  const ExerciseDetailPage({super.key, required this.slug, this.onAdd});
+  const ExerciseDetailPage({super.key, required this.slug, this.onAdd, this.editing});
 
   final String slug;
 
   /// 点「添加动作」时调用，带上在详情页里设好的运动量；为空则不显示按钮。
   final Future<void> Function(Exercise exercise, ExerciseDose dose)? onAdd;
+
+  /// 修改已有动作的设置；和 [onAdd] 不会同时用。
+  final DoseEditing? editing;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,30 +42,63 @@ class ExerciseDetailPage extends ConsumerWidget {
           if (matches.isEmpty) {
             return Center(child: Text('找不到这个动作', style: AppText.body.copyWith(color: c.text2)));
           }
-          return _Body(exercise: matches.first, onAdd: onAdd);
+          return _Body(exercise: matches.first, onAdd: onAdd, editing: editing);
         },
       ),
     );
   }
 }
 
+/// 修改模板（或今天这次训练）里已有动作的设置：详情页里的设置块改一下就保存，不用点按钮。
+class DoseEditing {
+  const DoseEditing({
+    required this.initial,
+    required this.onChanged,
+    required this.hint,
+    this.repsRange = false,
+  });
+
+  /// 打开时动作当前的设置。
+  final ExerciseDose initial;
+
+  /// 改动后调用：带上改之前和改之后的设置，由调用方只保存变了的几项。
+  final Future<void> Function(ExerciseDose previous, ExerciseDose next) onChanged;
+
+  /// 设置块标题下的一行说明，例如「改动自动保存到模板」。
+  final String hint;
+
+  /// 模板里这个动作的次数是个范围（如 8–12）时为真：分别调下限和上限，不会被压成一个数。
+  final bool repsRange;
+}
+
 class _Body extends ConsumerStatefulWidget {
-  const _Body({required this.exercise, this.onAdd});
+  const _Body({required this.exercise, this.onAdd, this.editing});
   final Exercise exercise;
   final Future<void> Function(Exercise exercise, ExerciseDose dose)? onAdd;
+  final DoseEditing? editing;
 
   @override
   ConsumerState<_Body> createState() => _BodyState();
 }
 
 class _BodyState extends ConsumerState<_Body> {
-  late ExerciseDose _setup = ExerciseDose.initial(widget.exercise);
+  late ExerciseDose _setup = widget.editing?.initial ?? ExerciseDose.initial(widget.exercise);
   bool _adding = false;
+
+  /// 打开时次数是范围就一直按范围显示，调到上下限相等也不会中途换样子。
+  late final bool _repsRange = widget.editing?.repsRange ?? false;
+
+  /// 设置有改动：先更新界面，修改已有动作时再立刻保存。
+  void _changed(ExerciseDose next) {
+    final previous = _setup;
+    setState(() => _setup = next);
+    widget.editing?.onChanged(previous, next);
+  }
 
   /// 在「按次数 / 按时间」之间切换：和动作库里的开关一样记到账号里，下次这个动作也是这个方式。
   Future<void> _setTimed(bool timed) async {
     final e = widget.exercise;
-    setState(() => _setup = _setup.copyWith(timed: timed));
+    _changed(_setup.copyWith(timed: timed));
     await ref.read(exercisePrefsRepositoryProvider).setTracking(e, timed ? TrackingType.duration : e.repsVariant);
   }
 
@@ -79,6 +117,7 @@ class _BodyState extends ConsumerState<_Body> {
     final c = context.colors;
     final e = widget.exercise;
     final onAdd = widget.onAdd;
+    final editing = widget.editing;
     final list = ListView(
       padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, 0, AppSpace.pageGutter, AppSpace.s32),
       children: [
@@ -94,13 +133,15 @@ class _BodyState extends ConsumerState<_Body> {
               ],
             ),
           ),
-        if (onAdd != null) ...[
+        if (onAdd != null || editing != null) ...[
           const SizedBox(height: AppSpace.s16),
           _DosePanel(
             exercise: e,
             dose: _setup,
-            onChanged: (d) => setState(() => _setup = d),
+            onChanged: _changed,
             onTimedChanged: _setTimed,
+            editing: editing,
+            repsRange: _repsRange,
           ),
         ],
         const SizedBox(height: AppSpace.s16),
@@ -121,8 +162,8 @@ class _BodyState extends ConsumerState<_Body> {
             if (e.perSide) const _Tag('左右各做'),
           ],
         ),
-        // 添加动作时「按次数 / 按时间」已经在上面的加入设置里，不再重复显示
-        if (e.canSwitchTracking && onAdd == null) ...[
+        // 添加 / 修改动作时「按次数 / 按时间」已经在上面的设置里，不再重复显示
+        if (e.canSwitchTracking && onAdd == null && editing == null) ...[
           const SizedBox(height: AppSpace.s16),
           _TrackingSwitch(exercise: e),
         ],
@@ -225,30 +266,41 @@ class _Section extends StatelessWidget {
 }
 
 
-/// 添加动作时的「加入设置」：放进哪个模块、按次数还是按时间、组数、次数或秒数、负重。
+/// 动作的设置块：放进哪个模块、按次数还是按时间、组数、次数或秒数、负重。
+/// 添加动作时叫「加入设置」；修改模板里已有的动作时还多出热身组和组间休息。
 class _DosePanel extends StatelessWidget {
   const _DosePanel({
     required this.exercise,
     required this.dose,
     required this.onChanged,
     required this.onTimedChanged,
+    this.editing,
+    this.repsRange = false,
   });
 
   final Exercise exercise;
   final ExerciseDose dose;
   final ValueChanged<ExerciseDose> onChanged;
   final ValueChanged<bool> onTimedChanged;
+  final DoseEditing? editing;
+  final bool repsRange;
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final canWeight = exercise.kind == ExerciseKind.strength;
+    final canWeight = exercise.kind == ExerciseKind.strength || dose.weightKg != null;
+    final editing = this.editing;
+    final isEditing = editing != null;
     return _Section(
-      title: '加入设置',
+      title: isEditing ? '动作设置' : '加入设置',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('放进哪个模块', style: AppText.body.copyWith(color: c.text)),
+          if (isEditing) ...[
+            Text(editing.hint, style: AppText.label.copyWith(color: c.text2)),
+            const SizedBox(height: AppSpace.s12),
+          ],
+          Text(isEditing ? '所在模块' : '放进哪个模块', style: AppText.body.copyWith(color: c.text)),
           const SizedBox(height: AppSpace.s8),
           SizedBox(
             width: double.infinity,
@@ -297,21 +349,57 @@ class _DosePanel extends StatelessWidget {
               unit: ' 秒',
               onChanged: (v) => onChanged(dose.copyWith(seconds: v)),
             )
-          else
+          else if (isEditing && repsRange) ...[
+            StepperField(
+              label: '次数下限',
+              value: dose.reps,
+              max: 100,
+              unit: ' 次',
+              onChanged: (v) => onChanged(dose.copyWith(reps: v, repsMax: (dose.repsMax ?? v) < v ? v : null)),
+            ),
+            StepperField(
+              label: '次数上限',
+              value: dose.repsMax ?? dose.reps,
+              max: 100,
+              unit: ' 次',
+              onChanged: (v) => onChanged(v < dose.reps ? dose.copyWith(reps: v, repsMax: v) : dose.copyWith(repsMax: v)),
+            ),
+          ] else
             StepperField(
               label: '每组次数',
               value: dose.reps,
               max: 100,
               unit: ' 次',
-              onChanged: (v) => onChanged(dose.copyWith(reps: v)),
+              // 修改已有动作时上限跟着一起变，不会留下一个比下限小的上限
+              onChanged: (v) => onChanged(dose.copyWith(reps: v, repsMax: isEditing ? v : null)),
             ),
           if (canWeight)
             WeightField(
               value: dose.weightKg,
               onChanged: (v) => onChanged(v == null ? dose.copyWith(clearWeight: true) : dose.copyWith(weightKg: v)),
             ),
+          if (isEditing) ...[
+            if (!dose.timed)
+              StepperField(
+                label: '热身组',
+                value: dose.warmupSets ?? 0,
+                min: 0,
+                max: 10,
+                unit: ' 组',
+                onChanged: (v) => onChanged(dose.copyWith(warmupSets: v)),
+              ),
+            StepperField(
+              label: '组间休息',
+              value: dose.restSec ?? 90,
+              min: 0,
+              max: 600,
+              step: 15,
+              unit: ' 秒',
+              onChanged: (v) => onChanged(dose.copyWith(restSec: v)),
+            ),
+          ],
           Text(
-            _summary(exercise, dose),
+            _summary(exercise, dose, adding: !isEditing),
             style: AppText.caption.copyWith(color: c.text3),
           ),
         ],
@@ -320,11 +408,13 @@ class _DosePanel extends StatelessWidget {
   }
 }
 
-String _summary(Exercise e, ExerciseDose d) {
+String _summary(Exercise e, ExerciseDose d, {required bool adding}) {
   final side = e.perSide ? '，左右各做' : '';
   final load = d.weightKg == null ? '' : '，负重 ${formatWeight(d.weightKg)} kg';
-  final amount = d.timed ? '${d.seconds} 秒' : '${d.reps} 次';
-  return '${d.sets} 组 × $amount$side$load · 放进「${d.section.label}」';
+  final upper = d.repsMax;
+  final reps = upper != null && upper != d.reps ? '${d.reps}–$upper' : '${d.reps}';
+  final amount = d.timed ? '${d.seconds} 秒' : '$reps 次';
+  return '${d.sets} 组 × $amount$side$load，${adding ? '放进' : '在'}「${d.section.label}」';
 }
 
 /// 建议量文案：「2 组 × 30 秒（每侧）」。没有建议量时返回 null。
