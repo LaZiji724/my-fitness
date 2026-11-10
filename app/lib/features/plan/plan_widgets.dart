@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/app_ui.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/workout/number_pad_sheet.dart';
 import 'package:my_fitness/features/workout/workout_math.dart' show formatWeight;
@@ -41,8 +43,8 @@ class _NameDialogState extends State<_NameDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(widget.title),
+    return AppDialog(
+      title: widget.title,
       content: TextField(
         controller: _controller,
         autofocus: true,
@@ -51,8 +53,8 @@ class _NameDialogState extends State<_NameDialog> {
         onSubmitted: (v) => Navigator.pop(context, v),
       ),
       actions: [
-        PressScale(child: TextButton(onPressed: () => Navigator.pop(context), child: const Text('取消'))),
-        PressScale(child: TextButton(onPressed: () => Navigator.pop(context, _controller.text), child: Text(widget.confirm))),
+        AppDialogAction('取消', onPressed: () => Navigator.pop(context)),
+        AppDialogAction(widget.confirm, kind: AppDialogActionKind.primary, onPressed: () => Navigator.pop(context, _controller.text)),
       ],
     );
   }
@@ -85,8 +87,8 @@ class _NewPlanDialogState extends State<_NewPlanDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('新建计划'),
+    return AppDialog(
+      title: '新建计划',
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -100,13 +102,8 @@ class _NewPlanDialogState extends State<_NewPlanDialog> {
         ],
       ),
       actions: [
-        PressScale(child: TextButton(onPressed: () => Navigator.pop(context), child: const Text('取消'))),
-        PressScale(
-          child: TextButton(
-            onPressed: () => Navigator.pop(context, (name: _controller.text, days: _days)),
-            child: const Text('创建'),
-          ),
-        ),
+        AppDialogAction('取消', onPressed: () => Navigator.pop(context)),
+        AppDialogAction('创建', kind: AppDialogActionKind.primary, onPressed: () => Navigator.pop(context, (name: _controller.text, days: _days))),
       ],
     );
   }
@@ -120,18 +117,16 @@ Future<bool> confirmDialog(
 }) async {
   final ok = await showDialog<bool>(
     context: context,
-    builder: (ctx) => AlertDialog(
-      title: Text(title),
-      content: Text(message),
+    builder: (ctx) => AppDialog(
+      title: title,
+      message: message,
       actions: [
-        PressScale(child: TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('取消'))),
-        PressScale(
-          child: TextButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            // 删除类操作用警示红，避免和普通确认混淆
-            style: confirm.contains('删除') ? TextButton.styleFrom(foregroundColor: ctx.colors.danger) : null,
-            child: Text(confirm),
-          ),
+        AppDialogAction('取消', onPressed: () => Navigator.pop(ctx, false)),
+        // 删除类操作用警示红，避免和普通确认混淆
+        AppDialogAction(
+          confirm,
+          kind: confirm.contains('删除') ? AppDialogActionKind.danger : AppDialogActionKind.primary,
+          onPressed: () => Navigator.pop(ctx, true),
         ),
       ],
     ),
@@ -170,15 +165,18 @@ class StepperField extends StatelessWidget {
             button: true,
             label: tip,
             child: Material(
-              color: c.sunken,
-              shape: const CircleBorder(),
+              color: onTap == null ? Colors.transparent : c.sunken,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                side: onTap == null ? BorderSide(color: c.text.withValues(alpha: 0.08), width: 1) : BorderSide.none,
+              ),
               child: InkWell(
-                customBorder: const CircleBorder(),
+                customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
                 onTap: onTap,
                 child: SizedBox(
                   width: 44,
                   height: 44,
-                  child: Icon(icon, color: onTap == null ? c.text3 : c.text),
+                  child: Icon(icon, size: 16, color: onTap == null ? c.text3.withValues(alpha: 0.5) : c.text),
                 ),
               ),
             ),
@@ -186,18 +184,18 @@ class StepperField extends StatelessWidget {
     );
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpace.s8),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
           Expanded(child: Text(label, style: AppText.body.copyWith(color: c.text))),
-          button(Icons.remove_rounded, '$label 减少', value - step < min ? null : () => onChanged(value - step)),
+          button(AppIcons.minus, '$label 减少', value - step < min ? null : () => onChanged(value - step)),
           SizedBox(
             width: 84,
             child: Center(
               child: Text('$value$unit', style: AppText.numMedium.copyWith(color: c.text)),
             ),
           ),
-          button(Icons.add_rounded, '$label 增加', value + step > max ? null : () => onChanged(value + step)),
+          button(AppIcons.plus, '$label 增加', value + step > max ? null : () => onChanged(value + step)),
         ],
       ),
     );
@@ -226,15 +224,18 @@ class WeightField extends StatelessWidget {
             button: true,
             label: tip,
             child: Material(
-              color: c.sunken,
-              shape: const CircleBorder(),
+              color: onTap == null ? Colors.transparent : c.sunken,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                side: onTap == null ? BorderSide(color: c.text.withValues(alpha: 0.08), width: 1) : BorderSide.none,
+              ),
               child: InkWell(
-                customBorder: const CircleBorder(),
+                customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
                 onTap: onTap,
                 child: SizedBox(
                   width: 44,
                   height: 44,
-                  child: Icon(icon, color: onTap == null ? c.text3 : c.text),
+                  child: Icon(icon, size: 16, color: onTap == null ? c.text3.withValues(alpha: 0.5) : c.text),
                 ),
               ),
             ),
@@ -256,12 +257,12 @@ class WeightField extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpace.s8),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
           Expanded(child: Text(label, style: AppText.body.copyWith(color: c.text))),
           button(
-            Icons.remove_rounded,
+            AppIcons.minus,
             '$label 减少',
             v == null ? null : () => onChanged(v - step <= 0 ? null : v - step),
           ),
@@ -284,7 +285,7 @@ class WeightField extends StatelessWidget {
               ),
             ),
           ),
-          button(Icons.add_rounded, '$label 增加', v == null ? () => onChanged(step) : (v + step > 1000 ? null : () => onChanged(v + step))),
+          button(AppIcons.plus, '$label 增加', v == null ? () => onChanged(step) : (v + step > 1000 ? null : () => onChanged(v + step))),
         ],
       ),
     );
@@ -301,72 +302,26 @@ class SegmentTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.colors;
-    return DecoratedBox(
-      decoration: BoxDecoration(color: c.sunken, borderRadius: BorderRadius.circular(AppRadius.md)),
-      child: Padding(
-        padding: const EdgeInsets.all(4),
-        child: Row(
-          children: [
-            for (var i = 0; i < labels.length; i++)
-              Expanded(
-                child: PressScale(
-                  scale: PressScale.chipScale,
-                  child: Semantics(
-                    button: true,
-                    selected: i == index,
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () => onChanged(i),
-                      child: AnimatedContainer(
-                        duration: AppMotion.fast,
-                        height: AppSize.segmented - 8,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: i == index ? c.raised : Colors.transparent,
-                          borderRadius: BorderRadius.circular(AppRadius.md - 3),
-                        ),
-                        child: Text(
-                          labels[i],
-                          style: AppText.body.copyWith(
-                            color: i == index ? c.text : c.text2,
-                            fontWeight: i == index ? FontWeight.w700 : FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
+    return AppSegmented<int>(
+      values: [for (var i = 0; i < labels.length; i++) i],
+      labels: labels,
+      selected: index,
+      onChanged: onChanged,
     );
   }
 }
 
 class EmptyCard extends StatelessWidget {
-  const EmptyCard({super.key, required this.title, required this.hint});
+  const EmptyCard({super.key, required this.title, required this.hint, this.icon = AppIcons.navPlan});
   final String title;
   final String hint;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
-    final c = context.colors;
-    return DecoratedBox(
-      decoration: BoxDecoration(color: c.surface, borderRadius: AppRadius.card),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppSpace.s24, horizontal: AppSpace.s16),
-        child: Center(
-          child: Column(
-            children: [
-              Text(title, style: AppText.titleSmall.copyWith(color: c.text)),
-              const SizedBox(height: AppSpace.s4),
-              Text(hint, textAlign: TextAlign.center, style: AppText.label.copyWith(color: c.text2)),
-            ],
-          ),
-        ),
-      ),
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: Center(child: EmptyState(icon: icon, title: title, hint: hint, compact: true)),
     );
   }
 }
@@ -386,9 +341,9 @@ class EstimateHint extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.timer_outlined, size: 16, color: c.text2),
-          const SizedBox(width: AppSpace.s4),
-          Text(text, style: AppText.label.copyWith(color: c.text2, fontWeight: FontWeight.w600)),
+          Icon(AppIcons.timerSmall, size: 14, color: c.text3),
+          const SizedBox(width: 6),
+          Text(text, style: AppText.label.copyWith(color: c.text2, fontWeight: FontWeight.w500)),
         ],
       ),
     );

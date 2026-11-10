@@ -136,16 +136,16 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('动作'), findsOneWidget);
-    expect(find.textContaining('胸 · '), findsOneWidget);
+    expect(find.textContaining('胸  '), findsOneWidget);
     expect(find.text('杠铃卧推'), findsWidgets);
 
     await tester.tap(find.text('腿').first);
     await tester.pumpAndSettle();
-    expect(find.textContaining('腿 · '), findsOneWidget);
+    expect(find.textContaining('腿  '), findsOneWidget);
 
     await tester.enterText(find.byType(TextField), '深蹲');
     await tester.pumpAndSettle();
-    expect(find.textContaining('搜索结果 · '), findsOneWidget);
+    expect(find.textContaining('搜索结果  '), findsOneWidget);
 
     await tester.enterText(find.byType(TextField), 'zzzz');
     await tester.pumpAndSettle();

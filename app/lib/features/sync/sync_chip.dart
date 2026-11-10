@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/sync/sync_providers.dart';
@@ -25,10 +26,10 @@ class SyncChip extends ConsumerWidget {
     final c = context.colors;
     final s = ref.watch(syncControllerProvider);
     final (text, color, icon) = switch (s.phase) {
-      SyncPhase.syncing => ('同步中', c.text2, Icons.sync_rounded),
-      SyncPhase.error => ('同步失败', c.danger, Icons.cloud_off_rounded),
-      SyncPhase.idle when s.pending => ('待同步', c.text2, Icons.cloud_upload_outlined),
-      SyncPhase.idle => (s.lastSync == null ? '未同步' : '已同步', c.success, Icons.cloud_done_outlined),
+      SyncPhase.syncing => ('同步中', c.text2, AppIcons.syncing),
+      SyncPhase.error => ('同步失败', c.danger, AppIcons.cloudOff),
+      SyncPhase.idle when s.pending => ('待同步', c.text2, AppIcons.cloudUp),
+      SyncPhase.idle => (s.lastSync == null ? '未同步' : '已同步', c.text2, AppIcons.cloudDone),
     };
     return PressScale(
       scale: PressScale.chipScale,
@@ -38,14 +39,18 @@ class SyncChip extends ConsumerWidget {
         child: GestureDetector(
           onTap: () => ref.read(syncControllerProvider.notifier).requestSync(),
           child: Container(
-            height: 28,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(color: c.sunken, borderRadius: BorderRadius.circular(14)),
+            height: 32,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              color: c.surface,
+              borderRadius: BorderRadius.circular(AppRadius.full),
+              border: Border.all(color: c.border, width: AppStroke.hairline),
+            ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(icon, size: 15, color: color),
-                const SizedBox(width: 4),
+                Icon(icon, size: 14, color: color),
+                const SizedBox(width: 6),
                 Text(text, style: AppText.caption.copyWith(color: color, fontWeight: FontWeight.w600)),
               ],
             ),

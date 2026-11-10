@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 
 /// 左滑露出红色「删除」按钮（占整张卡片宽度的 30%），点按钮才真正删除。
@@ -72,11 +73,11 @@ class _SwipeToDeleteState extends State<SwipeToDelete> with SingleTickerProvider
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.delete_outline_rounded, color: Colors.white, size: 24),
-                              const SizedBox(height: 2),
+                              const Icon(AppIcons.delete, color: Colors.white, size: 22),
+                              const SizedBox(height: 4),
                               Text(
                                 widget.label,
-                                style: AppText.label.copyWith(color: Colors.white, fontWeight: FontWeight.w600),
+                                style: AppText.caption.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
                               ),
                             ],
                           ),

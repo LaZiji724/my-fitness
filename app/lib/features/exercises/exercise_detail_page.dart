@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/app_ui.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_image.dart';
@@ -119,16 +121,16 @@ class _BodyState extends ConsumerState<_Body> {
     final onAdd = widget.onAdd;
     final editing = widget.editing;
     final list = ListView(
-      padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, 0, AppSpace.pageGutter, AppSpace.s32),
+      padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s4, AppSpace.pageGutter, AppSpace.s32),
       children: [
         if (e.imageCount > 0)
           SizedBox(
-            height: 160,
+            height: 168,
             child: Row(
               children: [
                 for (var i = 0; i < e.imageCount; i++) ...[
                   if (i > 0) const SizedBox(width: AppSpace.s8),
-                  Expanded(child: ExerciseImage(exercise: e, index: i, radius: AppRadius.md, cacheWidth: 600)),
+                  Expanded(child: ExerciseImage(exercise: e, index: i, radius: AppRadius.md, cacheWidth: 600, mono: false)),
                 ],
               ],
             ),
@@ -144,13 +146,13 @@ class _BodyState extends ConsumerState<_Body> {
             repsRange: _repsRange,
           ),
         ],
-        const SizedBox(height: AppSpace.s16),
+        const SizedBox(height: AppSpace.s24),
         Text(e.nameZh, style: AppText.titleLarge.copyWith(color: c.text)),
         if (e.nameEn != null) ...[
-          const SizedBox(height: AppSpace.s4),
+          const SizedBox(height: 2),
           Text(e.nameEn!, style: AppText.label.copyWith(color: c.text3)),
         ],
-        const SizedBox(height: AppSpace.s16),
+        const SizedBox(height: AppSpace.s12),
         Wrap(
           spacing: AppSpace.s8,
           runSpacing: AppSpace.s8,
@@ -171,7 +173,7 @@ class _BodyState extends ConsumerState<_Body> {
           const SizedBox(height: AppSpace.s16),
           _Section(title: '建议量', child: Text(_dose(e)!, style: AppText.body.copyWith(color: c.text))),
         ],
-        const SizedBox(height: AppSpace.s24),
+        const SizedBox(height: AppSpace.s16),
         _Section(
           title: '主要肌群',
           child: Text(
@@ -180,7 +182,7 @@ class _BodyState extends ConsumerState<_Body> {
           ),
         ),
         if (e.secondaryMuscles.isNotEmpty) ...[
-          const SizedBox(height: AppSpace.s16),
+          const SizedBox(height: AppSpace.s12),
           _Section(
             title: '次要肌群',
             child: Text(
@@ -189,12 +191,12 @@ class _BodyState extends ConsumerState<_Body> {
             ),
           ),
         ],
-        const SizedBox(height: AppSpace.s16),
+        const SizedBox(height: AppSpace.s12),
         _Section(
           title: '动作要领',
           child: Text(
             e.instructionsZh ?? '要领说明会在后续版本补充。',
-            style: AppText.body.copyWith(color: e.instructionsZh == null ? c.text3 : c.text),
+            style: AppText.body.copyWith(color: e.instructionsZh == null ? c.text3 : c.text, height: 1.7),
           ),
         ),
       ],
@@ -204,17 +206,13 @@ class _BodyState extends ConsumerState<_Body> {
     return Column(
       children: [
         Expanded(child: list),
-        SafeArea(
-          top: false,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, AppSpace.s12),
-            child: PressScale(
-              child: FilledButton.icon(
-                onPressed: _adding ? null : _add,
-                icon: const Icon(Icons.add_rounded),
-                label: const Text('添加动作'),
-                style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
-              ),
+        BottomActionBar(
+          child: PressScale(
+            child: FilledButton.icon(
+              onPressed: _adding ? null : _add,
+              icon: const Icon(AppIcons.plus, size: 18),
+              label: const Text('添加动作'),
+              style: const ButtonStyle(minimumSize: WidgetStatePropertyAll(Size.fromHeight(AppSize.buttonLarge))),
             ),
           ),
         ),
@@ -228,16 +226,7 @@ class _Tag extends StatelessWidget {
   final String text;
 
   @override
-  Widget build(BuildContext context) {
-    final c = context.colors;
-    return DecoratedBox(
-      decoration: BoxDecoration(color: c.sunken, borderRadius: BorderRadius.circular(AppRadius.full)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        child: Text(text, style: AppText.label.copyWith(color: c.text)),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AppTag(text, color: context.colors.text);
 }
 
 class _Section extends StatelessWidget {
@@ -248,23 +237,18 @@ class _Section extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    return DecoratedBox(
-      decoration: BoxDecoration(color: c.surface, borderRadius: AppRadius.card),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpace.cardPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: AppText.label.copyWith(color: c.text2)),
-            const SizedBox(height: AppSpace.s8),
-            child,
-          ],
-        ),
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: AppText.caption.copyWith(color: c.text3, fontWeight: FontWeight.w600)),
+          const SizedBox(height: AppSpace.s8),
+          child,
+        ],
       ),
     );
   }
 }
-
 
 /// 动作的设置块：放进哪个模块、按次数还是按时间、组数、次数或秒数、负重。
 /// 添加动作时叫「加入设置」；修改模板里已有的动作时还多出热身组和组间休息。
@@ -297,38 +281,26 @@ class _DosePanel extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (isEditing) ...[
-            Text(editing.hint, style: AppText.label.copyWith(color: c.text2)),
-            const SizedBox(height: AppSpace.s12),
+            Text(editing.hint, style: AppText.label.copyWith(color: c.text)),
+            const SizedBox(height: AppSpace.s16),
           ],
-          Text(isEditing ? '所在模块' : '放进哪个模块', style: AppText.body.copyWith(color: c.text)),
+          Text(isEditing ? '所在模块' : '放进哪个模块', style: AppText.label.copyWith(color: c.text2)),
           const SizedBox(height: AppSpace.s8),
-          SizedBox(
-            width: double.infinity,
-            child: SegmentedButton<WorkoutSection>(
-              showSelectedIcon: false,
-              segments: [
-                for (final sec in WorkoutSection.values)
-                  ButtonSegment(value: sec, label: Text(sec == WorkoutSection.cooldown ? '拉伸放松' : sec.label)),
-              ],
-              selected: {dose.section},
-              onSelectionChanged: (v) => onChanged(dose.copyWith(section: v.first)),
-            ),
+          AppSegmented<WorkoutSection>(
+            values: WorkoutSection.values,
+            labels: [for (final sec in WorkoutSection.values) sec == WorkoutSection.cooldown ? '拉伸放松' : sec.label],
+            selected: dose.section,
+            onChanged: (v) => onChanged(dose.copyWith(section: v)),
           ),
           if (exercise.canSwitchTracking) ...[
             const SizedBox(height: AppSpace.s16),
-            Text('怎么计量', style: AppText.body.copyWith(color: c.text)),
+            Text('怎么计量', style: AppText.label.copyWith(color: c.text2)),
             const SizedBox(height: AppSpace.s8),
-            SizedBox(
-              width: double.infinity,
-              child: SegmentedButton<bool>(
-                showSelectedIcon: false,
-                segments: const [
-                  ButtonSegment(value: false, label: Text('按数量（次数）')),
-                  ButtonSegment(value: true, label: Text('按时间')),
-                ],
-                selected: {dose.timed},
-                onSelectionChanged: (v) => onTimedChanged(v.first),
-              ),
+            AppSegmented<bool>(
+              values: const [false, true],
+              labels: const ['按数量（次数）', '按时间'],
+              selected: dose.timed,
+              onChanged: onTimedChanged,
             ),
           ],
           const SizedBox(height: AppSpace.s8),
@@ -398,6 +370,7 @@ class _DosePanel extends StatelessWidget {
               onChanged: (v) => onChanged(dose.copyWith(restSec: v)),
             ),
           ],
+          const SizedBox(height: AppSpace.s8),
           Text(
             _summary(exercise, dose, adding: !isEditing),
             style: AppText.caption.copyWith(color: c.text3),
@@ -445,20 +418,14 @@ class _TrackingSwitch extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: double.infinity,
-            child: SegmentedButton<bool>(
-              showSelectedIcon: false,
-              segments: const [
-                ButtonSegment(value: false, label: Text('按次数')),
-                ButtonSegment(value: true, label: Text('按时间')),
-              ],
-              selected: {timed},
-              onSelectionChanged: (v) {
-                final next = v.first ? TrackingType.duration : exercise.repsVariant;
-                ref.read(exercisePrefsRepositoryProvider).setTracking(exercise, next);
-              },
-            ),
+          AppSegmented<bool>(
+            values: const [false, true],
+            labels: const ['按次数', '按时间'],
+            selected: timed,
+            onChanged: (v) {
+              final next = v ? TrackingType.duration : exercise.repsVariant;
+              ref.read(exercisePrefsRepositoryProvider).setTracking(exercise, next);
+            },
           ),
           const SizedBox(height: AppSpace.s8),
           Text(

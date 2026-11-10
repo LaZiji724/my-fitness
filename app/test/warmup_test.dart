@@ -258,14 +258,14 @@ void main() {
 
       await tester.tap(find.text('激活'));
       await tester.pumpAndSettle();
-      expect(find.textContaining('激活热身 · '), findsOneWidget);
+      expect(find.textContaining('激活热身  '), findsOneWidget);
       expect(find.text('动态热身'), findsOneWidget);
       expect(find.text('全部部位'), findsOneWidget);
       expect(find.text('髋臀'), findsWidgets);
 
       await tester.tap(find.text('拉伸'));
       await tester.pumpAndSettle();
-      expect(find.textContaining('拉伸放松 · '), findsOneWidget);
+      expect(find.textContaining('拉伸放松  '), findsOneWidget);
       expect(find.text('静态拉伸'), findsOneWidget);
       expect(find.text('泡沫轴'), findsOneWidget);
       await tester.pumpWidget(const SizedBox());

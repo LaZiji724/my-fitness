@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/db/app_database.dart';
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/app_ui.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_detail_page.dart';
@@ -25,20 +26,24 @@ import 'package:my_fitness/features/workout/workout_providers.dart';
 const kTemplateDefaultRest = 90;
 
 String describeTemplateExercise(TemplateExercise e) {
-  final String target;
+  String? target;
   if (e.targetDurationSec != null) {
     final s = e.targetDurationSec!;
-    target = ' · ${s >= 60 && s % 60 == 0 ? '${s ~/ 60} 分钟' : '$s 秒'}';
+    target = s >= 60 && s % 60 == 0 ? '${s ~/ 60} 分钟' : '$s 秒';
   } else if (e.repsMin == null) {
-    target = '';
+    target = null;
   } else if (e.repsMax == null || e.repsMax == e.repsMin) {
-    target = ' · ${e.repsMin} 次';
+    target = '${e.repsMin} 次';
   } else {
-    target = ' · ${e.repsMin}–${e.repsMax} 次';
+    target = '${e.repsMin}–${e.repsMax} 次';
   }
-  final warm = e.warmupSets > 0 ? ' · 热身 ${e.warmupSets} 组' : '';
-  final load = e.targetWeightKg == null ? '' : ' · ${formatWeight(e.targetWeightKg)} kg';
-  return '${e.targetSets} 组$target$load$warm · 休息 ${e.restSec ?? kTemplateDefaultRest} 秒';
+  return metaLine([
+    '${e.targetSets} 组',
+    target,
+    if (e.targetWeightKg != null) '${formatWeight(e.targetWeightKg)} kg',
+    if (e.warmupSets > 0) '热身 ${e.warmupSets} 组',
+    '休息 ${e.restSec ?? kTemplateDefaultRest} 秒',
+  ]);
 }
 
 /// 编辑模板：改名、调整每个动作的组数/次数/休息，直接用它开始训练。
@@ -93,8 +98,8 @@ class _TemplateEditPageState extends ConsumerState<TemplateEditPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Flexible(child: Text(view.template.name, overflow: TextOverflow.ellipsis)),
-              const SizedBox(width: 6),
-              Icon(Icons.edit_outlined, size: 18, color: c.text3),
+              const SizedBox(width: 8),
+              Icon(AppIcons.editSmall, size: 16, color: c.text3),
             ],
           ),
         ),
@@ -102,6 +107,7 @@ class _TemplateEditPageState extends ConsumerState<TemplateEditPage> {
           PressScale(
             child: PopupMenuButton<String>(
               tooltip: '更多',
+              icon: const Icon(AppIcons.more),
               onSelected: (v) async {
                 if (v == 'delete') {
                   final ok = await confirmDialog(context,
@@ -129,7 +135,7 @@ class _TemplateEditPageState extends ConsumerState<TemplateEditPage> {
               if (view.exercises.length > 1)
                 Padding(
                   padding: const EdgeInsets.only(bottom: AppSpace.s8),
-                  child: Text('长按动作卡片，上下拖动就能排序。', style: AppText.label.copyWith(color: c.text2)),
+                  child: Text('长按动作卡片，上下拖动就能排序。', style: AppText.label.copyWith(color: c.text3)),
                 ),
             ]),
           ),
@@ -158,7 +164,7 @@ class _TemplateEditPageState extends ConsumerState<TemplateEditPage> {
               child: PressScale(
                 child: OutlinedButton.icon(
                   onPressed: () => context.push('/template/$templateId/pick'),
-                  icon: const Icon(Icons.add_rounded),
+                  icon: const Icon(AppIcons.plus, size: 16),
                   label: const Text('添加动作'),
                   style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
                 ),
@@ -167,28 +173,24 @@ class _TemplateEditPageState extends ConsumerState<TemplateEditPage> {
           ),
         ],
       ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, AppSpace.s12),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              EstimateHint(label: estimateLabel(view.exercises, byId)),
-              PressScale(
-                child: FilledButton(
-                  style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
-                  onPressed: view.exercises.isEmpty
-                      ? null
-                      : () async {
-                          await repo.startFromTemplate(ref.read(workoutRepositoryProvider), templateId,
-                              exercises: byId);
-                          if (context.mounted) context.go('/workout');
-                        },
-                  child: const Text('用这个模板开始训练'),
-                ),
+      bottomNavigationBar: BottomActionBar(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            EstimateHint(label: estimateLabel(view.exercises, byId)),
+            PressScale(
+              child: FilledButton(
+                style: const ButtonStyle(minimumSize: WidgetStatePropertyAll(Size.fromHeight(AppSize.buttonLarge))),
+                onPressed: view.exercises.isEmpty
+                    ? null
+                    : () async {
+                        await repo.startFromTemplate(ref.read(workoutRepositoryProvider), templateId, exercises: byId);
+                        if (context.mounted) context.go('/workout');
+                      },
+                child: const Text('用这个模板开始训练'),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -270,7 +272,7 @@ class _ReorderableExerciseSliverState extends State<ReorderableExerciseSliver> {
             child: DecoratedBox(
               decoration: BoxDecoration(
                 borderRadius: AppRadius.card,
-                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.22 * t), blurRadius: 16 * t, offset: Offset(0, 6 * t))],
+                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.18 * t), blurRadius: 24 * t, spreadRadius: -4 * t, offset: Offset(0, 10 * t))],
               ),
               child: child,
             ),
@@ -306,25 +308,6 @@ class _ReorderableExerciseSliverState extends State<ReorderableExerciseSliver> {
   }
 }
 
-/// 小铅笔图标（SVG 线条风格），颜色跟随主题。
-class PencilIcon extends StatelessWidget {
-  const PencilIcon({super.key, required this.color, this.size = 20});
-  final Color color;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    final hex = (color.toARGB32() & 0xFFFFFF).toRadixString(16).padLeft(6, '0');
-    return SvgPicture.string(
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#$hex" '
-      'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
-      '<path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>',
-      width: size,
-      height: size,
-    );
-  }
-}
-
 /// 动作卡片：点卡片看动作详情（和动作库里一样）；右侧小笔改运动量；[onRemove] 不为空时再显示 ✕。
 class TemplateExerciseCard extends StatelessWidget {
   const TemplateExerciseCard({
@@ -348,53 +331,43 @@ class TemplateExerciseCard extends StatelessWidget {
     final c = context.colors;
     final ex = exercise;
     final name = ex?.nameZh ?? '未知动作';
-    return PressScale(
-      scale: PressScale.cardScale,
-      child: Material(
-        color: c.surface,
-        borderRadius: AppRadius.card,
-        child: InkWell(
-          borderRadius: AppRadius.card,
-          onTap: ex == null ? null : (onOpen ?? () => context.push('/exercise/${ex.slug}')),
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpace.s12),
-            child: Row(
+    return AppCard(
+      padding: const EdgeInsets.fromLTRB(12, 12, 4, 12),
+      onTap: ex == null ? null : (onOpen ?? () => context.push('/exercise/${ex.slug}')),
+      child: Row(
+        children: [
+          SizedBox(
+            width: AppSize.exerciseThumb,
+            child: ex == null ? const SizedBox.shrink() : ExerciseImage(exercise: ex, cacheWidth: 160, radius: AppRadius.sm),
+          ),
+          const SizedBox(width: AppSpace.s12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: AppSize.exerciseThumb,
-                  child: ex == null ? const SizedBox.shrink() : ExerciseImage(exercise: ex, cacheWidth: 160, radius: AppRadius.md - 4),
-                ),
-                const SizedBox(width: AppSpace.s12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(name, style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
-                      Text(describeTemplateExercise(entry), style: AppText.label.copyWith(color: c.text2)),
-                    ],
-                  ),
-                ),
-                PressScale(
-                  scale: PressScale.smallScale,
-                  child: IconButton(
-                    tooltip: '编辑 $name',
-                    onPressed: onEdit,
-                    icon: PencilIcon(color: c.text2),
-                  ),
-                ),
-                if (onRemove != null)
-                  PressScale(
-                    scale: PressScale.smallScale,
-                    child: IconButton(
-                      tooltip: '移除动作',
-                      onPressed: onRemove,
-                      icon: Icon(Icons.close_rounded, color: c.text3),
-                    ),
-                  ),
+                Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
+                Text(describeTemplateExercise(entry), style: AppText.label.copyWith(color: c.text2)),
               ],
             ),
           ),
-        ),
+          PressScale(
+            scale: PressScale.smallScale,
+            child: IconButton(
+              tooltip: '编辑 $name',
+              onPressed: onEdit,
+              icon: Icon(AppIcons.edit, size: 20, color: c.text2),
+            ),
+          ),
+          if (onRemove != null)
+            PressScale(
+              scale: PressScale.smallScale,
+              child: IconButton(
+                tooltip: '移除动作',
+                onPressed: onRemove,
+                icon: Icon(AppIcons.close, size: 20, color: c.text3),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -642,7 +615,7 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
     final update = widget.update;
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(AppSpace.s20, AppSpace.s8, AppSpace.s20, AppSpace.s20),
+        padding: const EdgeInsets.fromLTRB(AppSpace.s20, AppSpace.s4, AppSpace.s20, AppSpace.s16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -652,35 +625,24 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
               const SizedBox(height: AppSpace.s4),
               Text('只改今天这次训练，不会改动模板', style: AppText.label.copyWith(color: c.text2)),
             ],
-            const SizedBox(height: AppSpace.s8),
+            const SizedBox(height: AppSpace.s16),
             if (!widget.todayOnly && (widget.exercise?.canSwitchTracking ?? false)) ...[
-              SizedBox(
-                width: double.infinity,
-                child: SegmentedButton<bool>(
-                  showSelectedIcon: false,
-                  segments: const [
-                    ButtonSegment(value: false, label: Text('按次数')),
-                    ButtonSegment(value: true, label: Text('按时间')),
-                  ],
-                  selected: {_timed},
-                  onSelectionChanged: (v) => _setTimed(v.first),
-                ),
+              AppSegmented<bool>(
+                values: const [false, true],
+                labels: const ['按次数', '按时间'],
+                selected: _timed,
+                onChanged: _setTimed,
               ),
               const SizedBox(height: AppSpace.s8),
             ],
-            SizedBox(
-              width: double.infinity,
-              child: SegmentedButton<String>(
-                showSelectedIcon: false,
-                segments: [
-                  for (final sec in WorkoutSection.values) ButtonSegment(value: sec.key, label: Text(sec.label)),
-                ],
-                selected: {section},
-                onSelectionChanged: (v) {
-                  setState(() => section = v.first);
-                  update(section: v.first);
-                },
-              ),
+            AppSegmented<String>(
+              values: [for (final sec in WorkoutSection.values) sec.key],
+              labels: [for (final sec in WorkoutSection.values) sec.label],
+              selected: section,
+              onChanged: (v) {
+                setState(() => section = v);
+                update(section: v);
+              },
             ),
             const SizedBox(height: AppSpace.s8),
             StepperField(
@@ -768,7 +730,6 @@ class _ConfigSheetState extends ConsumerState<_ConfigSheet> {
             const SizedBox(height: AppSpace.s12),
             PressScale(
               child: FilledButton(
-                style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
                 onPressed: () => Navigator.pop(context),
                 child: const Text('完成'),
               ),
@@ -829,7 +790,7 @@ class _SectionLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpace.s8, bottom: AppSpace.s8),
+      padding: const EdgeInsets.fromLTRB(4, AppSpace.s8, 4, AppSpace.s8),
       child: Text(section.label, style: AppText.label.copyWith(color: c.text2, fontWeight: FontWeight.w700)),
     );
   }

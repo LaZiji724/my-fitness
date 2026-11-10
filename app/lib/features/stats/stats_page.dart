@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:my_fitness/core/db/app_database.dart';
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/app_ui.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/plan/plan_providers.dart';
@@ -48,50 +50,48 @@ class StatsPage extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, AppSpace.s32),
           children: [
+            PageHeader(title: '数据', trailing: [_RangeTabs(value: range, onChanged: notifier.setRange)]),
             SizedBox(
               height: 48,
               child: Row(
                 children: [
-                  Text('数据', style: AppText.titleLarge.copyWith(color: c.text)),
-                  const Spacer(),
-                  _RangeTabs(value: range, onChanged: notifier.setRange),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 44,
-              child: Row(
-                children: [
-                  PressScale(scale: PressScale.smallScale, child: IconButton(tooltip: '上一段', onPressed: () => notifier.shift(-1), icon: const Icon(Icons.chevron_left_rounded))),
                   Expanded(
                     child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
                       onTap: () => notifier.reset(today),
-                      child: Center(
-                        child: Text(windowLabel(range, window),
-                            style: AppText.titleSmall.copyWith(color: c.text)),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 4),
+                          child: Text(windowLabel(range, window), style: AppText.titleSmall.copyWith(color: c.text)),
+                        ),
                       ),
                     ),
+                  ),
+                  PressScale(
+                    scale: PressScale.smallScale,
+                    child: IconButton(tooltip: '上一段', onPressed: () => notifier.shift(-1), icon: const Icon(AppIcons.chevronLeft, size: 16)),
                   ),
                   PressScale(
                     scale: PressScale.smallScale,
                     child: IconButton(
                       tooltip: '下一段',
                       onPressed: canGoNext ? () => notifier.shift(1) : null,
-                      icon: const Icon(Icons.chevron_right_rounded),
+                      icon: const Icon(AppIcons.chevronRight, size: 16),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: AppSpace.s8),
+            const SizedBox(height: AppSpace.s4),
             GridView(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                mainAxisExtent: 124,
+                mainAxisSpacing: 12,
+                crossAxisSpacing: 12,
+                mainAxisExtent: 116,
               ),
               children: [
                 _KpiCard(label: '训练次数', value: '${k.count}', unit: '次', delta: deltaText(k.count, kPrev.count)),
@@ -113,7 +113,7 @@ class StatsPage extends ConsumerWidget {
             const SizedBox(height: AppSpace.sectionGap),
             _Card(
               title: '肌肉部位',
-              trailing: '主要肌肉每组计 1，次要计 0.5',
+              subtitle: '主要肌肉每组计 1，次要计 0.5',
               child: Column(
                 children: [
                   Row(
@@ -121,11 +121,11 @@ class StatsPage extends ConsumerWidget {
                     children: [
                       Column(children: [
                         MuscleFigure(front: true, weeklySets: weekly, height: 280),
-                        Text('正面', style: AppText.label.copyWith(color: c.text3)),
+                        Text('正面', style: AppText.caption.copyWith(color: c.text3)),
                       ]),
                       Column(children: [
                         MuscleFigure(front: false, weeklySets: weekly, height: 280),
-                        Text('背面', style: AppText.label.copyWith(color: c.text3)),
+                        Text('背面', style: AppText.caption.copyWith(color: c.text3)),
                       ]),
                     ],
                   ),
@@ -136,14 +136,14 @@ class StatsPage extends ConsumerWidget {
                   if (insight != null) ...[
                     const SizedBox(height: AppSpace.s12),
                     DecoratedBox(
-                      decoration: BoxDecoration(color: c.accentSoft, borderRadius: BorderRadius.circular(AppRadius.md)),
+                      decoration: BoxDecoration(color: c.text.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(AppRadius.sm)),
                       child: Padding(
                         padding: const EdgeInsets.all(AppSpace.s12),
                         child: Row(
                           children: [
-                            Icon(Icons.lightbulb_outline_rounded, size: 18, color: c.accentText),
+                            Icon(AppIcons.tip, size: 18, color: c.text2),
                             const SizedBox(width: AppSpace.s8),
-                            Expanded(child: Text(insight, style: AppText.label.copyWith(color: c.accentText))),
+                            Expanded(child: Text(insight, style: AppText.label.copyWith(color: c.text))),
                           ],
                         ),
                       ),
@@ -174,44 +174,14 @@ class _RangeTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.colors;
-    return DecoratedBox(
-      decoration: BoxDecoration(color: c.sunken, borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(3),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (final r in StatRange.values)
-              PressScale(
-                scale: PressScale.chipScale,
-                child: Semantics(
-                  button: true,
-                  selected: r == value,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => onChanged(r),
-                    child: AnimatedContainer(
-                      duration: AppMotion.fast,
-                      width: 52,
-                      height: 32,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: r == value ? c.raised : Colors.transparent,
-                        borderRadius: BorderRadius.circular(9),
-                      ),
-                      child: Text(r.label,
-                          style: AppText.label.copyWith(
-                            fontSize: 14,
-                            color: r == value ? c.text : c.text2,
-                            fontWeight: r == value ? FontWeight.w700 : FontWeight.w500,
-                          )),
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
+    return SizedBox(
+      width: 156,
+      child: AppSegmented<StatRange>(
+        values: StatRange.values,
+        labels: [for (final r in StatRange.values) r.label],
+        selected: value,
+        onChanged: onChanged,
+        height: 40,
       ),
     );
   }
@@ -229,78 +199,74 @@ class _KpiCard extends StatelessWidget {
     final c = context.colors;
     final up = delta?.startsWith('+') ?? false;
     final down = delta?.startsWith('−') ?? false;
-    return DecoratedBox(
-      decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(18)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(label, style: AppText.label.copyWith(color: c.text2)),
-            const SizedBox(height: 2),
-            Text.rich(TextSpan(children: [
-              TextSpan(text: value, style: AppText.numLarge.copyWith(color: c.text)),
-              TextSpan(text: ' $unit', style: AppText.label.copyWith(color: c.text2)),
-            ])),
-            const SizedBox(height: 4),
-            if (delta != null)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
-                decoration: BoxDecoration(
-                  color: up ? c.success.withValues(alpha: 0.15) : c.sunken,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text('较上期 $delta',
+    return AppCard(
+      padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: AppText.caption.copyWith(color: c.text3)),
+          Text.rich(TextSpan(children: [
+            TextSpan(text: value, style: AppText.numLarge.copyWith(color: c.text, height: 1.1)),
+            TextSpan(text: ' $unit', style: AppText.caption.copyWith(color: c.text3)),
+          ])),
+          if (delta != null)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (up || down) ...[
+                  Icon(up ? AppIcons.arrowUp : AppIcons.arrowDown, size: 12, color: up ? c.text : c.text3),
+                  const SizedBox(width: 4),
+                ],
+                Text('较上期 $delta',
                     style: AppText.caption.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: up ? c.success : (down ? c.text2 : c.text3),
+                      fontWeight: up ? FontWeight.w700 : FontWeight.w500,
+                      color: up ? c.text : c.text3,
                     )),
-              )
-            else
-              Text('上期没有数据', style: AppText.caption.copyWith(color: c.text3)),
-          ],
-        ),
+              ],
+            )
+          else
+            Text('上期没有数据', style: AppText.caption.copyWith(color: c.text3)),
+        ],
       ),
     );
   }
 }
 
 class _Card extends StatelessWidget {
-  const _Card({required this.title, required this.child, this.trailing});
+  const _Card({required this.title, required this.child, this.trailing, this.subtitle});
   final String title;
   final String? trailing;
+
+  /// 标题下面的一行小字说明（长一点的说明放这里，不挤在标题右边）
+  final String? subtitle;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    return DecoratedBox(
-      decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(22)),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpace.cardPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
-              children: [
-                Text(title, style: AppText.titleSmall.copyWith(color: c.text, fontSize: 17)),
-                if (trailing != null) ...[
-                  const Spacer(),
-                  Flexible(
-                    child: Text(trailing!,
-                        textAlign: TextAlign.end,
-                        style: AppText.caption.copyWith(color: c.text3, fontSize: 12)),
-                  ),
-                ],
-              ],
-            ),
-            const SizedBox(height: AppSpace.s12),
-            child,
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(title, style: AppText.titleSmall.copyWith(color: c.text)),
+              if (trailing != null)
+                Expanded(
+                  child: Text(trailing!, textAlign: TextAlign.end, style: AppText.caption.copyWith(color: c.text3)),
+                ),
+            ],
+          ),
+          if (subtitle != null) ...[
+            const SizedBox(height: AppSpace.s4),
+            Text(subtitle!, style: AppText.caption.copyWith(color: c.text3)),
           ],
-        ),
+          const SizedBox(height: AppSpace.s16),
+          child,
+        ],
       ),
     );
   }
@@ -317,10 +283,10 @@ class _HeatLegend extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text('少', style: AppText.caption.copyWith(color: c.text3)),
-        const SizedBox(width: 6),
+        const SizedBox(width: 8),
         for (final col in c.heat)
-          Container(width: 22, height: 8, margin: const EdgeInsets.symmetric(horizontal: 1), decoration: BoxDecoration(color: col, borderRadius: BorderRadius.circular(2))),
-        const SizedBox(width: 6),
+          Container(width: 20, height: 8, margin: const EdgeInsets.symmetric(horizontal: 1), decoration: BoxDecoration(color: col, borderRadius: BorderRadius.circular(2))),
+        const SizedBox(width: 8),
         Text('多（每周平均组数）', style: AppText.caption.copyWith(color: c.text3)),
       ],
     );
@@ -345,25 +311,16 @@ class _MuscleList extends StatelessWidget {
       children: [
         for (final e in top)
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
+            padding: const EdgeInsets.symmetric(vertical: 6),
             child: Row(
               children: [
                 SizedBox(width: 72, child: Text(muscleZh(e.key), style: AppText.label.copyWith(color: c.text))),
                 Expanded(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: LinearProgressIndicator(
-                      value: e.value / maxV,
-                      minHeight: 8,
-                      backgroundColor: c.sunken,
-                      valueColor: AlwaysStoppedAnimation(c.accent),
-                    ),
-                  ),
+                  child: _Bar(value: e.value / maxV, color: c.text),
                 ),
                 SizedBox(
                   width: 56,
-                  child: Text('${_fmt(e.value)} 组',
-                      textAlign: TextAlign.end, style: AppText.label.copyWith(color: c.text2)),
+                  child: Text('${_fmt(e.value)} 组', textAlign: TextAlign.end, style: AppText.label.copyWith(color: c.text2)),
                 ),
               ],
             ),
@@ -388,55 +345,68 @@ class _TrendCard extends ConsumerWidget {
     final maxV = bars.fold<double>(0, (m, b) => b.value > m ? b.value : m);
     final cur = bars.last.value;
     return _Card(
-      title: '趋势 · 近 8 周',
+      title: '趋势',
+      trailing: '近 8 周',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Wrap(
-            spacing: 6,
+            spacing: 8,
+            runSpacing: 8,
             children: [
               for (final m in TrendMetric.values)
-                PressScale(
-                  scale: PressScale.chipScale,
-                  child: ChoiceChip(
-                    label: Text(m.label),
-                    selected: m == metric,
-                    showCheckmark: false,
-                    onSelected: (_) => ref.read(trendMetricProvider.notifier).set(m),
-                  ),
+                AppChip(
+                  label: m.label,
+                  selected: m == metric,
+                  height: 32,
+                  onTap: () => ref.read(trendMetricProvider.notifier).set(m),
                 ),
             ],
           ),
-          const SizedBox(height: AppSpace.s12),
+          const SizedBox(height: AppSpace.s16),
           Text.rich(TextSpan(children: [
             TextSpan(text: metric == TrendMetric.sets || metric == TrendMetric.count ? '${cur.round()}' : cur.toStringAsFixed(1), style: AppText.numLarge.copyWith(color: c.text)),
-            TextSpan(text: ' ${metric.unit} · 当周', style: AppText.label.copyWith(color: c.text2)),
+            TextSpan(text: ' ${metric.unit}  当周', style: AppText.caption.copyWith(color: c.text3)),
           ])),
           const SizedBox(height: AppSpace.s12),
           SizedBox(
-            height: 136,
+            height: 124,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 for (var i = 0; i < bars.length; i++)
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 3),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          AnimatedContainer(
-                            duration: AppMotion.standard,
-                            curve: AppMotion.curve,
-                            height: maxV <= 0 ? 4 : (4 + (bars[i].value / maxV) * 80),
-                            decoration: BoxDecoration(
-                              color: i == bars.length - 1 ? c.accent : c.chartBar,
-                              borderRadius: BorderRadius.circular(6),
+                          // 柱子做细：最宽 16，居中
+                          Center(
+                            child: AnimatedContainer(
+                              duration: AppMotion.standard,
+                              curve: AppMotion.curve,
+                              width: 16,
+                              height: maxV <= 0 ? 2 : (2 + (bars[i].value / maxV) * 88),
+                              decoration: BoxDecoration(
+                                color: i == bars.length - 1 ? c.accent : c.chartBar,
+                                borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 6),
-                          Text('${bars[i].weekStart.month}/${bars[i].weekStart.day}',
-                              style: AppText.caption.copyWith(color: c.text3, fontSize: 10)),
+                          Container(height: 1, color: c.line),
+                          const SizedBox(height: 8),
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text('${bars[i].weekStart.month}/${bars[i].weekStart.day}',
+                                maxLines: 1,
+                                style: AppText.caption.copyWith(
+                                  color: i == bars.length - 1 ? c.text : c.text3,
+                                  fontWeight: i == bars.length - 1 ? FontWeight.w700 : FontWeight.w400,
+                                  height: 1.2,
+                                )),
+                          ),
                         ],
                       ),
                     ),
@@ -483,7 +453,7 @@ class _CompareCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              _Dot(color: c.accent, text: label),
+              _Dot(color: c.text, text: label),
               const SizedBox(width: AppSpace.s12),
               _Dot(color: c.info, text: prevLabel),
             ],
@@ -491,15 +461,15 @@ class _CompareCard extends StatelessWidget {
           const SizedBox(height: AppSpace.s8),
           for (final g in groups)
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5),
+              padding: const EdgeInsets.symmetric(vertical: 6),
               child: Row(
                 children: [
                   SizedBox(width: 44, child: Text(g.$1, style: AppText.label.copyWith(color: c.text))),
                   Expanded(
                     child: Column(
                       children: [
-                        _Bar(value: _sum(now, g.$2) / maxV, color: c.accent),
-                        const SizedBox(height: 3),
+                        _Bar(value: _sum(now, g.$2) / maxV, color: c.text),
+                        const SizedBox(height: 2),
                         _Bar(value: _sum(before, g.$2) / maxV, color: c.info),
                       ],
                     ),
@@ -507,7 +477,7 @@ class _CompareCard extends StatelessWidget {
                   SizedBox(
                     width: 64,
                     child: Text('${_sum(now, g.$2)} / ${_sum(before, g.$2)}',
-                        textAlign: TextAlign.end, style: AppText.numSmall.copyWith(color: c.text2, fontSize: 15)),
+                        textAlign: TextAlign.end, style: AppText.numSmall.copyWith(color: c.text2, fontWeight: FontWeight.w500)),
                   ),
                 ],
               ),
@@ -528,7 +498,7 @@ class _Dot extends StatelessWidget {
     final c = context.colors;
     return Row(children: [
       Container(width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-      const SizedBox(width: 5),
+      const SizedBox(width: 6),
       Text(text, style: AppText.caption.copyWith(color: c.text2)),
     ]);
   }
@@ -542,13 +512,19 @@ class _Bar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(3),
-      child: LinearProgressIndicator(
-        value: value.clamp(0, 1),
-        minHeight: 6,
-        backgroundColor: c.sunken,
-        valueColor: AlwaysStoppedAnimation(color),
+    // 细条：左端贴着基线，只有右端（数据那一头）是圆角
+    return LayoutBuilder(
+      builder: (context, box) => Container(
+        height: 6,
+        alignment: Alignment.centerLeft,
+        decoration: BoxDecoration(color: c.text.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(3)),
+        child: Container(
+          width: box.maxWidth * value.clamp(0, 1),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: const BorderRadius.horizontal(left: Radius.circular(3), right: Radius.circular(3)),
+          ),
+        ),
       ),
     );
   }
@@ -571,7 +547,7 @@ class _PrCard extends StatelessWidget {
       PrKind.reps => '次数纪录',
       PrKind.oneRepMax => '估算 1RM',
     };
-    return '${int.parse(d[1])}月${int.parse(d[2])}日 · $kind';
+    return metaLine(['${int.parse(d[1])}月${int.parse(d[2])}日', kind]);
   }
 
   @override
@@ -586,10 +562,15 @@ class _PrCard extends StatelessWidget {
               children: [
                 for (final p in prs)
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    padding: const EdgeInsets.symmetric(vertical: 8),
                     child: Row(
                       children: [
-                        Icon(Icons.emoji_events_rounded, size: 20, color: c.accent),
+                        Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(color: c.accentSoft, borderRadius: BorderRadius.circular(AppRadius.sm)),
+                          child: Icon(AppIcons.trophy, size: 18, color: c.accentText),
+                        ),
                         const SizedBox(width: AppSpace.s12),
                         Expanded(
                           child: Column(
@@ -604,9 +585,9 @@ class _PrCard extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(_value(p), style: AppText.numMedium.copyWith(color: c.text)),
+                            Text(_value(p), style: AppText.numMedium.copyWith(color: c.text, height: 1.1)),
                             Text('+${_fmt(p.value - p.previous)}',
-                                style: AppText.caption.copyWith(color: c.success, fontWeight: FontWeight.w600)),
+                                style: AppText.caption.copyWith(color: c.accentText, fontWeight: FontWeight.w700)),
                           ],
                         ),
                       ],
@@ -665,16 +646,15 @@ class _BodyWeightCard extends ConsumerWidget {
                       TextSpan(
                           text: last == null ? '—' : last.weightKg!.toStringAsFixed(1),
                           style: AppText.numLarge.copyWith(color: c.text)),
-                      TextSpan(text: ' kg', style: AppText.label.copyWith(color: c.text2)),
+                      TextSpan(text: ' kg', style: AppText.caption.copyWith(color: c.text3)),
                     ])),
-                    if (delta != null) Text(delta, style: AppText.label.copyWith(color: c.text2)),
+                    if (delta != null) Text(delta, style: AppText.caption.copyWith(color: c.text3)),
                   ],
                 ),
               ),
               PressScale(
-                child: FilledButton.tonal(
+                child: OutlinedButton(
                   onPressed: record,
-                  style: FilledButton.styleFrom(minimumSize: const Size(0, 36)),
                   child: const Text('记录体重'),
                 ),
               ),
@@ -686,7 +666,13 @@ class _BodyWeightCard extends ConsumerWidget {
               height: 64,
               child: CustomPaint(
                 size: const Size.fromHeight(64),
-                painter: _SparkPainter(values: [for (final m in recent) m.weightKg!], color: c.accent, fill: c.accentSoft),
+                painter: _SparkPainter(
+                  values: [for (final m in recent) m.weightKg!],
+                  color: c.text,
+                  fill: c.text.withValues(alpha: 0.06),
+                  dot: c.accent,
+                  ring: c.surface,
+                ),
               ),
             ),
           ] else
@@ -702,10 +688,12 @@ class _BodyWeightCard extends ConsumerWidget {
 }
 
 class _SparkPainter extends CustomPainter {
-  _SparkPainter({required this.values, required this.color, required this.fill});
+  _SparkPainter({required this.values, required this.color, required this.fill, required this.dot, required this.ring});
   final List<double> values;
   final Color color;
   final Color fill;
+  final Color dot;
+  final Color ring;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -730,17 +718,19 @@ class _SparkPainter extends CustomPainter {
       ..lineTo(pt(values.length - 1).dx, size.height)
       ..lineTo(pt(0).dx, size.height)
       ..close();
-    canvas.drawPath(area, Paint()..color = fill.withValues(alpha: 0.6));
+    canvas.drawPath(area, Paint()..color = fill);
     canvas.drawPath(
       line,
       Paint()
         ..color = color
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.5
+        ..strokeWidth = 2
         ..strokeJoin = StrokeJoin.round
         ..strokeCap = StrokeCap.round,
     );
-    canvas.drawCircle(pt(values.length - 1), 4, Paint()..color = color);
+    // 最新一天：橙点外面套一圈卡片底色，和线分开
+    canvas.drawCircle(pt(values.length - 1), 6, Paint()..color = ring);
+    canvas.drawCircle(pt(values.length - 1), 4, Paint()..color = dot);
   }
 
   @override

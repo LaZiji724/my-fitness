@@ -5,7 +5,7 @@ import 'package:my_fitness/core/widgets/avatar_view.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/auth/avatars.dart';
 
-/// 注册页的默认头像选择：4 列 × 3 行，选中项用炭火橙描边。
+/// 注册页的默认头像选择：4 列 × 3 行，选中项用墨色描边。
 class AvatarPicker extends StatelessWidget {
   const AvatarPicker({super.key, required this.selected, required this.onChanged});
 
@@ -33,12 +33,12 @@ class AvatarPicker extends StatelessWidget {
                 onTap: () => onChanged(ref),
                 child: AnimatedContainer(
                   duration: AppMotion.fast,
-                  padding: const EdgeInsets.all(3),
+                  padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: ref == selected ? c.accent : Colors.transparent,
-                      width: 3,
+                      color: ref == selected ? c.text : Colors.transparent,
+                      width: 2,
                     ),
                   ),
                   child: LayoutBuilder(

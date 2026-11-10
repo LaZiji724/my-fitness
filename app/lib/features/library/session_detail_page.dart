@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/app_ui.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_image.dart';
@@ -36,18 +37,18 @@ class SessionDetailPage extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, 140),
         children: [
-          Text(program.name, style: AppText.label.copyWith(color: c.text2)),
+          Text(metaLine([program.name, '第 ${session.key} 节']), style: AppText.label.copyWith(color: c.text3)),
           const SizedBox(height: 2),
-          Text('第 ${session.key} 节 · ${session.focus}', style: AppText.titleMedium.copyWith(color: c.text)),
+          Text(session.focus.isEmpty ? session.name : session.focus, style: AppText.titleMedium.copyWith(color: c.text)),
           const SizedBox(height: AppSpace.s4),
-          Text('${session.items.length} 个动作 · ${session.totalSets} 组 · 约 ${session.minutes} 分钟',
+          Text(metaLine(['${session.items.length} 个动作', '${session.totalSets} 组', '约 ${session.minutes} 分钟']),
               style: AppText.label.copyWith(color: c.text2)),
-          const SizedBox(height: AppSpace.s16),
+          const SizedBox(height: AppSpace.s20),
           for (var i = 0; i < session.items.length; i++) ...[
             if (session.items.any((x) => x.section != 'main') &&
                 (i == 0 || session.items[i - 1].section != session.items[i].section))
               Padding(
-                padding: const EdgeInsets.only(top: AppSpace.s8, bottom: AppSpace.s8),
+                padding: const EdgeInsets.fromLTRB(4, AppSpace.s8, 4, AppSpace.s8),
                 child: Text(WorkoutSection.fromKey(session.items[i].section).label,
                     style: AppText.label.copyWith(color: c.text2, fontWeight: FontWeight.w700)),
               ),
@@ -56,15 +57,12 @@ class SessionDetailPage extends ConsumerWidget {
           ],
         ],
       ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, AppSpace.s12),
-          child: PressScale(
-            child: FilledButton(
-              style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
-              onPressed: () => startProgramSession(context, ref, program, session),
-              child: const Text('开始这节训练'),
-            ),
+      bottomNavigationBar: BottomActionBar(
+        child: PressScale(
+          child: FilledButton(
+            style: const ButtonStyle(minimumSize: WidgetStatePropertyAll(Size.fromHeight(AppSize.buttonLarge))),
+            onPressed: () => startProgramSession(context, ref, program, session),
+            child: const Text('开始这节训练'),
           ),
         ),
       ),
@@ -82,56 +80,37 @@ class _ChainRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     final ex = exercise;
-    return PressScale(
-      scale: PressScale.cardScale,
-      child: Material(
-        color: c.surface,
-        borderRadius: AppRadius.card,
-        child: InkWell(
-          borderRadius: AppRadius.card,
-          onTap: ex == null ? null : () => context.push('/exercise/${ex.slug}'),
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpace.s12),
-            child: Row(
+    return AppCard(
+      padding: const EdgeInsets.all(12),
+      onTap: ex == null ? null : () => context.push('/exercise/${ex.slug}'),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (ex != null && ex.imageCount > 0) ...[
+            SizedBox(width: AppSize.exerciseThumb, child: ExerciseImage(exercise: ex, cacheWidth: 160, radius: AppRadius.sm)),
+            const SizedBox(width: AppSpace.s12),
+          ],
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: 28,
-                  child: Text('$index', style: AppText.numMedium.copyWith(color: c.text3)),
-                ),
-                if (ex != null && ex.imageCount > 0) ...[
-                  SizedBox(width: AppSize.exerciseThumb, child: ExerciseImage(exercise: ex, cacheWidth: 160, radius: AppRadius.md - 4)),
-                  const SizedBox(width: AppSpace.s12),
+                Text(ex?.nameZh ?? '未知动作', style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
+                const SizedBox(height: 2),
+                Text(describeItemTarget(item), style: AppText.label.copyWith(color: c.text2)),
+                if (item.warmupSets > 0) ...[
+                  const SizedBox(height: 8),
+                  AppTag('先做 ${item.warmupSets} 组热身', color: c.warmupFg, background: c.warmupBg),
                 ],
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(ex?.nameZh ?? '未知动作', style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
-                      const SizedBox(height: 2),
-                      Text(describeItemTarget(item), style: AppText.label.copyWith(color: c.accentText)),
-                      if (item.warmupSets > 0) ...[
-                        const SizedBox(height: 4),
-                        DecoratedBox(
-                          decoration: BoxDecoration(color: c.warmupBg, borderRadius: BorderRadius.circular(AppRadius.xs)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                            child: Text('先做 ${item.warmupSets} 组热身',
-                                style: AppText.caption.copyWith(color: c.warmupFg, fontWeight: FontWeight.w700)),
-                          ),
-                        ),
-                      ],
-                      if (item.note != null) ...[
-                        const SizedBox(height: 4),
-                        Text(item.note!, style: AppText.label.copyWith(color: c.text2)),
-                      ],
-                    ],
-                  ),
-                ),
+                if (item.note != null) ...[
+                  const SizedBox(height: 4),
+                  Text(item.note!, style: AppText.label.copyWith(color: c.text3)),
+                ],
               ],
             ),
           ),
-        ),
+          const SizedBox(width: AppSpace.s8),
+          Text('$index'.padLeft(2, '0'), style: AppText.numSmall.copyWith(color: c.text3, fontWeight: FontWeight.w500)),
+        ],
       ),
     );
   }

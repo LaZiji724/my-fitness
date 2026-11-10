@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/app_ui.dart';
 import 'package:my_fitness/core/widgets/avatar_view.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/auth/auth_providers.dart';
@@ -71,26 +73,38 @@ class TodayPage extends ConsumerWidget {
           constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(ctx).height * 0.7),
           child: ListView(
             shrinkWrap: true,
-            padding: const EdgeInsets.fromLTRB(AppSpace.s20, AppSpace.s8, AppSpace.s20, AppSpace.s20),
+            padding: const EdgeInsets.fromLTRB(AppSpace.s20, AppSpace.s4, AppSpace.s20, AppSpace.s20),
             children: [
               Text('从模板开始', style: AppText.titleMedium.copyWith(color: c.text)),
-              const SizedBox(height: AppSpace.s8),
+              const SizedBox(height: AppSpace.s12),
               if (templates.isEmpty)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpace.s16),
-                  child: Text('还没有模板，去「计划 → 模板」新建一个', style: AppText.body.copyWith(color: c.text2)),
-                ),
-              for (final t in templates)
-                PressScale(
-                  scale: PressScale.cardScale,
-                  child: ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(t.template.name, style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
-                    subtitle: Text('${t.exercises.length} 个动作', style: AppText.label.copyWith(color: c.text2)),
-                    enabled: t.exercises.isNotEmpty,
-                    onTap: () => Navigator.pop(ctx, t.template.id),
+                const EmptyState(icon: AppIcons.navPlan, title: '还没有模板', hint: '去「计划 → 模板」新建一个', compact: true),
+              for (final t in templates) ...[
+                AppCard(
+                  color: c.bg,
+                  radius: AppRadius.md,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  onTap: t.exercises.isEmpty ? null : () => Navigator.pop(ctx, t.template.id),
+                  child: Opacity(
+                    opacity: t.exercises.isEmpty ? 0.5 : 1,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(t.template.name, style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
+                              Text('${t.exercises.length} 个动作', style: AppText.label.copyWith(color: c.text2)),
+                            ],
+                          ),
+                        ),
+                        Icon(AppIcons.chevronRight, size: 14, color: c.text3),
+                      ],
+                    ),
                   ),
                 ),
+                const SizedBox(height: AppSpace.s8),
+              ],
             ],
           ),
         ),
@@ -126,12 +140,14 @@ class TodayPage extends ConsumerWidget {
     final byId = ref.watch(exerciseByIdProvider);
     // 今日计划卡片里预览前几个动作，开练前心里有数
     final preview = active == null && tpl != null
-        ? tpl.exercises.map((e) => byId[e.exerciseId]?.nameZh).whereType<String>().take(4).join(' · ')
+        ? tpl.exercises.map((e) => byId[e.exerciseId]?.nameZh).whereType<String>().take(4).join('、')
         : '';
 
     String heroLabel;
     String heroTitle;
-    String heroSub;
+    String? heroSub;
+    // 有今日模板时，用三个数字代替一句话：动作数、组数、预估分钟
+    var heroStats = const <(String, String)>[];
     String buttonText;
     VoidCallback onStart;
     // 除了按钮，点卡片其他地方进入今日预览（有今日模板、且还没开始训练时）
@@ -139,33 +155,38 @@ class TodayPage extends ConsumerWidget {
     if (active != null) {
       heroLabel = '训练进行中';
       heroTitle = active.workout.name ?? '自由训练';
-      heroSub = '已添加 ${active.exercises.length} 个动作，点击继续';
+      heroSub = '已添加 ${active.exercises.length} 个动作';
       buttonText = '继续训练';
       onStart = () => context.push('/workout');
     } else if (tpl != null) {
-      heroLabel = '今日计划 · ${entry!.plan.plan.name}';
+      heroLabel = metaLine(['今日计划', entry!.plan.plan.name]);
       heroTitle = tpl.template.name;
       if (tpl.exercises.isEmpty) {
         // 在预览里把今天的动作都去掉了：只能空白开练，点卡片进预览可以恢复
-        heroSub = '今天的动作都去掉了，点卡片进预览可以恢复';
+        heroSub = '今天的动作都去掉了，进预览可以恢复';
         buttonText = '开始空白训练';
         onStart = () => _startBlank(context, ref);
       } else {
-        final est = estimateLabel(tpl.exercises, byId);
-        heroSub = '${tpl.exercises.length} 个动作 · $tplSets 组${est == null ? '' : ' · $est'}';
+        final minutes = estimateTemplateMinutes(tpl.exercises, byId);
+        heroSub = null;
+        heroStats = [
+          ('${tpl.exercises.length}', '个动作'),
+          ('$tplSets', '组'),
+          if (minutes > 0) ('$minutes', '分钟'),
+        ];
         buttonText = '开始训练';
         onStart = () => _startTemplate(context, ref, tpl.template.id, planId: entry.plan.plan.id);
       }
     } else if (entry != null) {
-      heroLabel = '今日计划 · ${entry.plan.plan.name}';
+      heroLabel = metaLine(['今日计划', entry.plan.plan.name]);
       heroTitle = '今天休息';
-      heroSub = '恢复也是训练的一部分，想练也可以随时开始';
+      heroSub = '恢复也是训练的一部分';
       buttonText = '开始空白训练';
       onStart = () => _startBlank(context, ref);
     } else {
       heroLabel = '今日训练';
       heroTitle = '自由训练';
-      heroSub = '想练什么就练什么，也可以在「计划」里安排';
+      heroSub = '想练什么就练什么';
       buttonText = '开始训练';
       onStart = () => _startBlank(context, ref);
     }
@@ -173,93 +194,114 @@ class TodayPage extends ConsumerWidget {
     return Scaffold(
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(AppSpace.pageGutter),
+          padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, AppSpace.s24),
           children: [
-            Row(
-              children: [
-                PressScale(
-                  scale: PressScale.chipScale,
-                  child: Semantics(
-                    button: true,
-                    label: '我的',
-                    child: GestureDetector(
-                      onTap: () => context.push('/me'),
-                      child: AvatarView(
-                        kind: profile?.avatarKind ?? 'preset',
-                        avatarRef: profile?.avatarRef ?? 'avatar_01',
-                        size: 44,
+            SizedBox(
+              height: AppSize.pageHeader,
+              child: Row(
+                children: [
+                  PressScale(
+                    scale: PressScale.chipScale,
+                    child: Semantics(
+                      button: true,
+                      label: '我的',
+                      child: GestureDetector(
+                        onTap: () => context.push('/me'),
+                        child: Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: c.text.withValues(alpha: 0.12), width: 1)),
+                          child: AvatarView(
+                            kind: profile?.avatarKind ?? 'preset',
+                            avatarRef: profile?.avatarRef ?? 'avatar_01',
+                            size: 40,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: AppSpace.s12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('${greetingFor(DateTime.now())}，${profile?.displayName ?? ''}',
-                          style: AppText.titleMedium.copyWith(color: c.text), overflow: TextOverflow.ellipsis),
-                      Text(formatMd(today), style: AppText.label.copyWith(color: c.text2)),
-                    ],
-                  ),
-                ),
-                const SyncChip(),
-              ],
-            ),
-            const SizedBox(height: AppSpace.s24),
-            Material(
-              color: c.hero,
-              borderRadius: AppRadius.card,
-              clipBehavior: Clip.antiAlias,
-              child: InkWell(
-                onTap: canPreview ? () => context.push('/today/preview') : null,
-                child: Padding(
-                padding: const EdgeInsets.all(AppSpace.cardPadding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+                  const SizedBox(width: AppSpace.s12),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: BoxDecoration(color: c.accent, shape: BoxShape.circle),
-                        ),
-                        const SizedBox(width: AppSpace.s8),
-                        Expanded(
-                          child: Text(heroLabel,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: AppText.label.copyWith(color: c.onHero2)),
-                        ),
+                        Text(formatMd(today), style: AppText.caption.copyWith(color: c.text3)),
+                        Text('${greetingFor(DateTime.now())}，${profile?.displayName ?? ''}',
+                            style: AppText.titleSmall.copyWith(color: c.text), overflow: TextOverflow.ellipsis),
                       ],
                     ),
-                    const SizedBox(height: AppSpace.s8),
-                    Text(heroTitle, style: AppText.titleMedium.copyWith(color: c.onHero)),
+                  ),
+                  const SyncChip(),
+                ],
+              ),
+            ),
+            const SizedBox(height: AppSpace.s12),
+            HeroCard(
+              onTap: canPreview ? () => context.push('/today/preview') : null,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        width: 6,
+                        height: 6,
+                        decoration: BoxDecoration(color: c.accent, shape: BoxShape.circle),
+                      ),
+                      const SizedBox(width: AppSpace.s8),
+                      Expanded(
+                        child: Text(heroLabel,
+                            maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.label.copyWith(color: c.onHero2)),
+                      ),
+                      if (canPreview) ...[
+                        Text('预览', style: AppText.label.copyWith(color: c.onHero2)),
+                        const SizedBox(width: 2),
+                        Icon(AppIcons.chevronRight, size: 12, color: c.onHero2),
+                      ],
+                    ],
+                  ),
+                  const SizedBox(height: AppSpace.s12),
+                  Text(heroTitle,
+                      maxLines: 2, overflow: TextOverflow.ellipsis, style: AppText.titleLarge.copyWith(color: c.onHero)),
+                  if (heroSub != null) ...[
                     const SizedBox(height: AppSpace.s4),
-                    Text(heroSub, style: AppText.body.copyWith(color: c.onHero2)),
-                    if (preview.isNotEmpty) ...[
-                      const SizedBox(height: AppSpace.s12),
-                      Text(preview,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppText.label.copyWith(color: c.onHero)),
-                    ],
-                    if (canPreview) ...[
-                      const SizedBox(height: AppSpace.s4),
-                      Text('点击预览', style: AppText.caption.copyWith(color: c.onHero2)),
-                    ],
+                    Text(heroSub, style: AppText.label.copyWith(color: c.onHero2)),
+                  ],
+                  if (heroStats.isNotEmpty) ...[
                     const SizedBox(height: AppSpace.s16),
-                    PressScale(
-                      child: FilledButton(
-                        style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
-                        onPressed: onStart,
-                        child: Text(buttonText),
+                    // 屏幕很窄或数字很长时整行等比缩小，不换行也不挤出去
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (var i = 0; i < heroStats.length; i++) ...[
+                            if (i > 0) ...[
+                              Container(width: 1, height: 24, margin: const EdgeInsets.symmetric(horizontal: 16), color: c.onHero.withValues(alpha: 0.12)),
+                            ],
+                            Text.rich(TextSpan(children: [
+                              TextSpan(text: heroStats[i].$1, style: AppText.numLarge.copyWith(color: c.onHero, height: 1)),
+                              TextSpan(text: ' ${heroStats[i].$2}', style: AppText.caption.copyWith(color: c.onHero2)),
+                            ])),
+                          ],
+                        ],
                       ),
                     ),
                   ],
-                ),
-              ),
+                  if (preview.isNotEmpty) ...[
+                    const SizedBox(height: AppSpace.s12),
+                    Text(preview, maxLines: 2, overflow: TextOverflow.ellipsis, style: AppText.label.copyWith(color: c.onHero2)),
+                  ],
+                  const SizedBox(height: AppSpace.s20),
+                  PressScale(
+                    child: FilledButton(
+                      style: const ButtonStyle(minimumSize: WidgetStatePropertyAll(Size.fromHeight(AppSize.buttonLarge))),
+                      onPressed: onStart,
+                      child: Text(buttonText),
+                    ),
+                  ),
+                ],
               ),
             ),
             if (active == null) ...[
@@ -269,7 +311,7 @@ class TodayPage extends ConsumerWidget {
                   if (tpl != null || entry != null) ...[
                     Expanded(
                       child: PressScale(
-                        child: OutlinedButton(
+                        child: ElevatedButton(
                           onPressed: () => _startBlank(context, ref),
                           child: const Text('空白训练'),
                         ),
@@ -279,7 +321,7 @@ class TodayPage extends ConsumerWidget {
                   ],
                   Expanded(
                     child: PressScale(
-                      child: OutlinedButton(
+                      child: ElevatedButton(
                         onPressed: () => _pickTemplate(context, ref),
                         child: const Text('从模板开始'),
                       ),
@@ -288,75 +330,78 @@ class TodayPage extends ConsumerWidget {
                 ],
               ),
             ],
-            const SizedBox(height: AppSpace.s24),
-            Row(
-              children: [
-                Text('近 7 天', style: AppText.titleSmall.copyWith(color: c.text)),
-                const SizedBox(width: AppSpace.s8),
-                Text('练了 ${days.length} 天', style: AppText.label.copyWith(color: c.text2)),
-              ],
-            ),
+            const SizedBox(height: AppSpace.s32),
+            SectionTitle('近 7 天', trailing: Text('练了 ${days.length} 天', style: AppText.label.copyWith(color: c.text2))),
             const SizedBox(height: AppSpace.s12),
-            Row(
-              children: [
-                for (var i = 0; i < 7; i++)
-                  Expanded(
-                    child: _WeekDot(
-                      date: DateTime(today.year, today.month, today.day - 6 + i),
-                      trained: days.contains(dateKeyOf(DateTime(today.year, today.month, today.day - 6 + i))),
-                      isToday: i == 6,
+            AppCard(
+              padding: EdgeInsets.zero,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
+                    child: Row(
+                      children: [
+                        for (var i = 0; i < 7; i++)
+                          Expanded(
+                            child: _WeekDot(
+                              date: DateTime(today.year, today.month, today.day - 6 + i),
+                              trained: days.contains(dateKeyOf(DateTime(today.year, today.month, today.day - 6 + i))),
+                              isToday: i == 6,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
-              ],
+                  const HairDivider(),
+                  Padding(
+                    padding: const EdgeInsets.all(AppSpace.cardPadding),
+                    child: Row(
+                      children: [
+                        _Metric(value: (weekVol / 1000).toStringAsFixed(1), unit: '吨', label: '容量'),
+                        _Metric(value: '$weekSets', unit: '组', label: '组数'),
+                        _Metric(value: (weekMin / 60).toStringAsFixed(1), unit: '小时', label: '时长'),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: AppSpace.s16),
-            DecoratedBox(
-              decoration: BoxDecoration(color: c.surface, borderRadius: AppRadius.card),
-              child: Padding(
-                padding: const EdgeInsets.all(AppSpace.cardPadding),
-                child: Row(
-                  children: [
-                    _Metric(value: (weekVol / 1000).toStringAsFixed(1), unit: '吨', label: '容量'),
-                    _Metric(value: '$weekSets', unit: '组', label: '组数'),
-                    _Metric(value: (weekMin / 60).toStringAsFixed(1), unit: '小时', label: '时长'),
-                  ],
+            // 右边的「全部记录」按钮有 44 高的点击区，上下各多出约 10，这里少留一点对齐其他分区
+            const SizedBox(height: AppSpace.s20),
+            SectionTitle(
+              '最近训练',
+              trailing: PressScale(
+                child: TextButton(
+                  onPressed: () => context.go('/calendar'),
+                  style: TextButton.styleFrom(foregroundColor: c.text2, padding: const EdgeInsets.only(left: 12, right: 4)),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [const Text('全部记录'), const SizedBox(width: 2), Icon(AppIcons.chevronRight, size: 12, color: c.text3)],
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: AppSpace.s24),
-            Row(
-              children: [
-                Text('最近训练', style: AppText.titleSmall.copyWith(color: c.text)),
-                const Spacer(),
-                PressScale(child: TextButton(onPressed: () => context.go('/calendar'), child: const Text('全部记录'))),
-              ],
-            ),
+            const SizedBox(height: AppSpace.s4),
             if (completed.isEmpty)
-              DecoratedBox(
-                decoration: BoxDecoration(color: c.surface, borderRadius: AppRadius.card),
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpace.cardPadding),
-                  child: Center(child: Text('还没有训练记录，开始你的第一次吧', style: AppText.body.copyWith(color: c.text2))),
-                ),
+              const AppCard(
+                padding: EdgeInsets.zero,
+                child: EmptyState(icon: AppIcons.barbell, title: '还没有训练记录', hint: '开始你的第一次吧', compact: true),
               ),
             if (todays.isNotEmpty) ...[
               _GroupTitle(text: '今天', count: todays.length),
-              for (final w in todays) ...[
-                _RecentRow(
-                  view: w,
-                  // 正在训练时首页上方已经是「继续训练」，这里不再重复给入口
-                  onContinue: active == null ? () => _resume(context, ref, w.workout.id) : null,
-                ),
-                const SizedBox(height: AppSpace.s8),
-              ],
+              _RecentGroup(children: [
+                for (final w in todays)
+                  _RecentRow(
+                    view: w,
+                    // 正在训练时首页上方已经是「继续训练」，这里不再重复给入口
+                    onContinue: active == null ? () => _resume(context, ref, w.workout.id) : null,
+                  ),
+              ]),
             ],
             if (past.isNotEmpty) ...[
-              if (todays.isNotEmpty) const SizedBox(height: AppSpace.s8),
+              if (todays.isNotEmpty) const SizedBox(height: AppSpace.s12),
               const _GroupTitle(text: '过去'),
-              for (final w in past.take(3)) ...[
-                _RecentRow(view: w),
-                const SizedBox(height: AppSpace.s8),
-              ],
+              _RecentGroup(children: [for (final w in past.take(3)) _RecentRow(view: w)]),
             ],
           ],
         ),
@@ -374,21 +419,26 @@ class _WeekDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    // 练过的天是墨色实心；今天用橙色（没练是橙圈，练了是橙色实心）
+    final fill = trained ? (isToday ? c.accent : c.text) : Colors.transparent;
+    final fg = trained ? (isToday ? c.onAccent : c.bg) : (isToday ? c.accentText : c.text2);
     return Column(
       children: [
-        Text(weekdayNames[date.weekday - 1].substring(1), style: AppText.caption.copyWith(color: c.text3)),
-        const SizedBox(height: 6),
+        Text(weekdayNames[date.weekday - 1].substring(1),
+            style: AppText.caption.copyWith(color: isToday ? c.text : c.text3, fontWeight: isToday ? FontWeight.w700 : FontWeight.w400)),
+        const SizedBox(height: 8),
         Container(
-          width: 32,
-          height: 32,
+          width: 36,
+          height: 36,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: trained ? c.accent : c.sunken,
-            border: isToday && !trained ? Border.all(color: c.accent, width: 1.5) : null,
+            color: fill,
+            border: trained
+                ? null
+                : Border.all(color: isToday ? c.accent : c.text.withValues(alpha: 0.10), width: isToday ? 1.5 : 1),
           ),
-          child: Text('${date.day}',
-              style: AppText.numSmall.copyWith(color: trained ? c.onAccent : c.text2, fontSize: 15)),
+          child: Text('${date.day}', style: AppText.numSmall.copyWith(color: fg)),
         ),
       ],
     );
@@ -408,11 +458,12 @@ class _Metric extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(label, style: AppText.caption.copyWith(color: c.text3)),
+          const SizedBox(height: 2),
           Text.rich(TextSpan(children: [
             TextSpan(text: value, style: AppText.numMedium.copyWith(color: c.text)),
             TextSpan(text: ' $unit', style: AppText.caption.copyWith(color: c.text3)),
           ])),
-          Text(label, style: AppText.caption.copyWith(color: c.text3)),
         ],
       ),
     );
@@ -432,10 +483,31 @@ class _GroupTitle extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(AppSpace.s4, AppSpace.s4, AppSpace.s4, AppSpace.s8),
       child: Row(
         children: [
-          Text(text, style: AppText.label.copyWith(color: c.text2, fontWeight: FontWeight.w600)),
+          Text(text, style: AppText.caption.copyWith(color: c.text3, fontWeight: FontWeight.w600)),
           if (count != null && count! > 1) ...[
             const SizedBox(width: AppSpace.s8),
             Text('$count 次', style: AppText.caption.copyWith(color: c.text3)),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// 一组训练记录放进同一张卡片，行与行之间用发丝线隔开。
+class _RecentGroup extends StatelessWidget {
+  const _RecentGroup({required this.children});
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        children: [
+          for (var i = 0; i < children.length; i++) ...[
+            if (i > 0) const HairDivider(indent: 72),
+            children[i],
           ],
         ],
       ),
@@ -456,53 +528,51 @@ class _RecentRow extends StatelessWidget {
     final w = view.workout;
     final d = parseLocalDate(w.localDate);
     final minutes = w.endedAt == null ? 0 : w.endedAt!.difference(w.startedAt).inMinutes;
-    return DecoratedBox(
-      decoration: BoxDecoration(color: c.surface, borderRadius: AppRadius.card),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpace.cardPadding),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 44,
-              child: Column(
-                children: [
-                  Text('${d.month}月', style: AppText.caption.copyWith(color: c.text3)),
-                  Text('${d.day}', style: AppText.numMedium.copyWith(color: c.text)),
-                ],
-              ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpace.cardPadding, vertical: AppSpace.s12),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 40,
+            child: Column(
+              children: [
+                Text('${d.day}', style: AppText.numMedium.copyWith(color: c.text, height: 1.1)),
+                Text('${d.month}月', style: AppText.caption.copyWith(color: c.text3)),
+              ],
             ),
+          ),
+          const SizedBox(width: AppSpace.s16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(w.name ?? '自由训练',
+                    maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
+                Text(metaLine(['$minutes 分钟', formatVolume(view.volume), '${view.setCount} 组']),
+                    style: AppText.label.copyWith(color: c.text2)),
+              ],
+            ),
+          ),
+          if (onContinue != null) ...[
             const SizedBox(width: AppSpace.s12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(w.name ?? '自由训练', style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
-                  Text('$minutes 分钟 · ${formatVolume(view.volume)} · ${view.setCount} 组',
-                      style: AppText.label.copyWith(color: c.text2)),
-                ],
+            PressScale(
+              scale: PressScale.chipScale,
+              child: TextButton(
+                onPressed: onContinue,
+                style: TextButton.styleFrom(
+                  backgroundColor: c.accentSoft,
+                  foregroundColor: c.accentText,
+                  minimumSize: const Size(60, AppSize.buttonSmall),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpace.s16),
+                  tapTargetSize: MaterialTapTargetSize.padded,
+                  shape: const StadiumBorder(),
+                  textStyle: AppText.label.copyWith(fontWeight: FontWeight.w700),
+                ),
+                child: const Text('继续'),
               ),
             ),
-            if (onContinue != null) ...[
-              const SizedBox(width: AppSpace.s12),
-              PressScale(
-                scale: PressScale.chipScale,
-                child: TextButton(
-                  onPressed: onContinue,
-                  style: TextButton.styleFrom(
-                    backgroundColor: c.accentSoft,
-                    foregroundColor: c.accentText,
-                    minimumSize: const Size(56, 32),
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpace.s16),
-                    tapTargetSize: MaterialTapTargetSize.padded,
-                    shape: const StadiumBorder(),
-                    textStyle: AppText.label.copyWith(fontWeight: FontWeight.w600),
-                  ),
-                  child: const Text('继续'),
-                ),
-              ),
-            ],
           ],
-        ),
+        ],
       ),
     );
   }

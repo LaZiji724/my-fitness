@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 
@@ -9,14 +10,18 @@ class ExerciseImage extends StatelessWidget {
     super.key,
     required this.exercise,
     this.index = 0,
-    this.radius = AppRadius.lg - 4,
+    this.radius = AppRadius.md,
     this.cacheWidth = 480,
+    this.mono = true,
   });
 
   final Exercise exercise;
   final int index;
   final double radius;
   final int cacheWidth;
+
+  /// 列表和小图统一成黑白，和界面的墨色一个调子；动作详情的大图保留原色。
+  final bool mono;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +36,11 @@ class ExerciseImage extends StatelessWidget {
           cacheWidth: cacheWidth,
           gaplessPlayback: true,
           semanticLabel: exercise.nameZh,
+          color: mono ? const Color(0xFF808080) : null,
+          colorBlendMode: mono ? BlendMode.saturation : null,
           errorBuilder: (_, _, _) => ColoredBox(
             color: c.sunken,
-            child: Icon(Icons.fitness_center, color: c.text3),
+            child: Icon(AppIcons.barbell, color: c.text3),
           ),
         ),
       ),

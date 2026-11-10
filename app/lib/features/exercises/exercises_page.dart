@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/app_ui.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_image.dart';
@@ -43,24 +45,19 @@ class ExercisesPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                height: 48,
+                height: AppSize.pageHeader,
                 child: Row(
                   children: [
-                    if (onPick != null)
-                      PressScale(
-                        scale: PressScale.smallScale,
-                        child: IconButton(
-                          tooltip: '返回',
-                          onPressed: () => context.pop(),
-                          icon: const Icon(Icons.arrow_back_rounded),
-                        ),
-                      ),
+                    if (onPick != null) ...[
+                      RoundIconButton(tooltip: '返回', icon: AppIcons.back, onPressed: () => context.pop()),
+                      const SizedBox(width: AppSpace.s12),
+                    ],
                     Text(onPick != null ? '选择动作' : '动作',
-                        style: AppText.titleLarge.copyWith(color: c.text)),
+                        style: (onPick != null ? AppText.titleMedium : AppText.titleLarge).copyWith(color: c.text)),
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpace.s12),
+              const SizedBox(height: AppSpace.s8),
               _SearchField(
                 initial: filter.query,
                 onChanged: ref.read(exerciseFilterProvider.notifier).setQuery,
@@ -76,7 +73,7 @@ class ExercisesPage extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: 60,
+                        width: 56,
                         child: ListView(
                           padding: const EdgeInsets.only(bottom: AppSpace.s24),
                           children: [
@@ -99,7 +96,7 @@ class ExercisesPage extends ConsumerWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 12),
                       Expanded(child: _Results(all: all, filter: filter, onPick: onPick)),
                     ],
                   ),
@@ -138,12 +135,17 @@ class _SearchFieldState extends State<_SearchField> {
       controller: _controller,
       onChanged: widget.onChanged,
       textInputAction: TextInputAction.search,
+      style: AppText.body.copyWith(color: c.text),
       decoration: InputDecoration(
         hintText: '搜索动作，如 卧推、深蹲',
         filled: true,
         fillColor: c.surface,
-        prefixIcon: Icon(Icons.search_rounded, color: c.text3),
-        contentPadding: const EdgeInsets.symmetric(vertical: 14),
+        prefixIcon: Icon(AppIcons.searchSmall, size: 18, color: c.text3),
+        contentPadding: const EdgeInsets.symmetric(vertical: 12),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: AppRadius.button,
+          borderSide: BorderSide(color: c.border, width: AppStroke.hairline),
+        ),
       ),
     );
   }
@@ -160,26 +162,26 @@ class _CategoryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 2),
+      padding: const EdgeInsets.only(bottom: 4),
       child: PressScale(
         scale: PressScale.chipScale,
         child: Semantics(
           button: true,
           selected: selected,
           child: Material(
-            color: selected ? c.surface : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
+            color: selected ? c.text : Colors.transparent,
+            borderRadius: BorderRadius.circular(AppRadius.md),
             child: InkWell(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(AppRadius.md),
               onTap: onTap,
               child: SizedBox(
                 height: 44,
                 child: Center(
                   child: Text(
                     label,
-                    style: AppText.body.copyWith(
-                      color: selected ? c.text : c.text2,
-                      fontWeight: selected ? FontWeight.w700 : FontWeight.w400,
+                    style: AppText.label.copyWith(
+                      color: selected ? c.bg : c.text2,
+                      fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
                     ),
                   ),
                 ),
@@ -250,8 +252,8 @@ class _ResultsState extends ConsumerState<_Results> {
           children: [
               if (warm) ...[
                 Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
+                  spacing: 8,
+                  runSpacing: 8,
                   children: [
                     _EquipmentChip(
                       label: '全部',
@@ -266,10 +268,10 @@ class _ResultsState extends ConsumerState<_Results> {
                       ),
                   ],
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 8),
                 Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
+                  spacing: 8,
+                  runSpacing: 8,
                   children: [
                     _EquipmentChip(
                       label: '全部部位',
@@ -287,8 +289,8 @@ class _ResultsState extends ConsumerState<_Results> {
                 ),
               ] else
                 Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
+                  spacing: 8,
+                  runSpacing: 8,
                   children: [
                     for (final g in groups)
                       _EquipmentChip(
@@ -299,8 +301,7 @@ class _ResultsState extends ConsumerState<_Results> {
                   ],
                 ),
               const SizedBox(height: AppSpace.s12),
-              Text('$title · ${counts[EquipmentGroup.all] ?? 0} 个动作',
-                  style: AppText.caption.copyWith(color: c.text3)),
+              Text(metaLine([title, '${counts[EquipmentGroup.all] ?? 0} 个动作']), style: AppText.caption.copyWith(color: c.text3)),
               const SizedBox(height: AppSpace.s12),
             ],
         ),
@@ -310,33 +311,31 @@ class _ResultsState extends ConsumerState<_Results> {
             slivers: [
         if (items.isEmpty)
           SliverToBoxAdapter(
-            child: DecoratedBox(
-              decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(18)),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: AppSpace.s24, horizontal: AppSpace.s16),
-                child: Column(
-                  children: [
-                    Text('没有找到动作', style: AppText.titleSmall.copyWith(color: c.text)),
-                    const SizedBox(height: AppSpace.s8),
-                    Text('换个关键词，或者切换左侧的部位试试',
-                        textAlign: TextAlign.center,
-                        style: AppText.label.copyWith(color: c.text2)),
-                  ],
-                ),
-              ),
+            child: AppCard(
+              padding: EdgeInsets.zero,
+              child: EmptyState(icon: AppIcons.search, title: '没有找到动作', hint: '换个关键词，或者切换左侧的部位试试', compact: true),
             ),
           )
         else
-          SliverGrid.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 14,
-              crossAxisSpacing: 10,
-              // 激活 / 拉伸的图是 4:3，格子更矮
-              childAspectRatio: warm ? 0.76 : 0.74,
-            ),
-            itemCount: items.length,
-            itemBuilder: (context, i) => _ExerciseTile(exercise: items[i], onPick: onPick),
+          // 格子高度按「图片高 + 两行名字 + 一行小字」算出来，不靠固定比例，窄屏宽屏都不会挤出去
+          SliverLayoutBuilder(
+            builder: (context, constraints) {
+              const gap = 12.0;
+              final tileW = (constraints.crossAxisExtent - gap) / 2;
+              // 搜索结果里 1:1 和 4:3 的图可能混在一起，按最高的那种留位置
+              final ratio = items.fold<double>(items.first.imageRatio, (m, e) => e.imageRatio < m ? e.imageRatio : m);
+              final imageH = tileW / ratio;
+              return SliverGrid.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: gap,
+                  mainAxisExtent: imageH + _ExerciseTile.textBlockHeight,
+                ),
+                itemCount: items.length,
+                itemBuilder: (context, i) => _ExerciseTile(exercise: items[i], onPick: onPick),
+              );
+            },
           ),
         const SliverToBoxAdapter(child: SizedBox(height: AppSpace.s24)),
             ],
@@ -356,37 +355,10 @@ class _EquipmentChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.colors;
-    return PressScale(
-      scale: PressScale.chipScale,
-      child: Semantics(
-        button: true,
-        selected: selected,
-        child: Material(
-          color: selected ? c.text : c.surface,
-          borderRadius: BorderRadius.circular(16),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(16),
-            onTap: onTap,
-            child: SizedBox(
-              height: 32,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Center(
-                  widthFactor: 1,
-                  child: Text(
-                    label,
-                    style: AppText.label.copyWith(
-                      color: selected ? c.bg : c.text,
-                      fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
+    return Semantics(
+      button: true,
+      selected: selected,
+      child: AppChip(label: label, selected: selected, onTap: onTap, height: 32),
     );
   }
 }
@@ -396,28 +368,37 @@ class _ExerciseTile extends StatelessWidget {
   final Exercise exercise;
   final ValueChanged<Exercise>? onPick;
 
+  /// 图片下面那块文字的高度：间距 8 + 名字两行（14 × 1.3 × 2）+ 间距 2 + 小字一行（12 × 1.4），向上取整
+  static const double textBlockHeight = 64;
+
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
     return PressScale(
       scale: PressScale.cardScale,
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.md),
         onTap: () => onPick != null ? onPick!(exercise) : context.push('/exercise/${exercise.slug}'),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ExerciseImage(exercise: exercise, cacheWidth: 360),
-            const SizedBox(height: 6),
+            DecoratedBox(
+              position: DecorationPosition.foreground,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                border: Border.all(color: c.border, width: AppStroke.hairline),
+              ),
+              child: ExerciseImage(exercise: exercise, cacheWidth: 360),
+            ),
+            const SizedBox(height: 8),
             Text(
               exercise.nameZh,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: AppText.label.copyWith(color: c.text, fontWeight: FontWeight.w600, fontSize: 14, height: 1.3),
+              style: AppText.label.copyWith(color: c.text, fontWeight: FontWeight.w600, height: 1.3),
             ),
             const SizedBox(height: 2),
-            Text(_subtitle(exercise),
-                style: AppText.caption.copyWith(color: c.text3, fontSize: 12)),
+            Text(_subtitle(exercise), style: AppText.caption.copyWith(color: c.text3)),
           ],
         ),
       ),
@@ -429,5 +410,5 @@ class _ExerciseTile extends StatelessWidget {
 String _subtitle(Exercise e) {
   if (e.kind == ExerciseKind.strength || e.kind == ExerciseKind.cardio) return e.equipmentGroup.label;
   final parts = <String>[e.kind.label, if (e.region != null) e.region!.label];
-  return parts.join(' · ');
+  return metaLine(parts);
 }

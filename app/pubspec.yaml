@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 2.7.2+21
+version: 2.8.0+22
 
 environment:
   sdk: ^3.13.7
@@ -87,6 +87,16 @@ flutter:
           weight: 500
         - asset: assets/fonts/NotoSansSC-Bold.ttf
           weight: 700
+    # 图标：Phosphor（MIT），只带用到的三种粗细
+    - family: PhosphorRegular
+      fonts:
+        - asset: assets/fonts/Phosphor-Regular.ttf
+    - family: PhosphorBold
+      fonts:
+        - asset: assets/fonts/Phosphor-Bold.ttf
+    - family: PhosphorFill
+      fonts:
+        - asset: assets/fonts/Phosphor-Fill.ttf
     - family: BarlowCondensed
       fonts:
         - asset: assets/fonts/BarlowCondensed-Medium.ttf

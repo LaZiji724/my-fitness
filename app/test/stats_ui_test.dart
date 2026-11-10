@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/core/db/database_provider.dart';
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_repository.dart';
@@ -100,7 +101,7 @@ void main() {
     expect(find.textContaining('较上期 +8%'), findsOneWidget);
     expect(find.text('胸大肌'), findsOneWidget);
     expect(find.text('杠铃卧推'), findsWidgets); // 个人纪录
-    expect(find.text('11月3日 · 重量纪录'), findsOneWidget);
+    expect(find.text('11月3日  重量纪录'), findsOneWidget);
 
     await tester.tap(find.text('月'));
     await tester.pumpAndSettle();
@@ -115,7 +116,7 @@ void main() {
     await tester.tap(find.byTooltip('下一段'));
     await tester.pumpAndSettle();
     expect(find.text('2026年11月'), findsOneWidget);
-    final next = tester.widget<IconButton>(find.widgetWithIcon(IconButton, Icons.chevron_right_rounded));
+    final next = tester.widget<IconButton>(find.widgetWithIcon(IconButton, AppIcons.chevronRight));
     expect(next.onPressed, isNull);
     await unmount(tester);
   });

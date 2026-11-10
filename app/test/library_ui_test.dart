@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/core/db/database_provider.dart';
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/features/auth/auth_providers.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
@@ -125,14 +126,14 @@ void main() {
 
     await tester.tap(find.text('增肌增重').first);
     await tester.pumpAndSettle();
-    expect(find.text('增肌增重 · ${programs.where((p) => p.category == '增肌增重').length} 个计划'), findsOneWidget);
+    expect(find.text('增肌增重  ${programs.where((p) => p.category == '增肌增重').length} 个计划'), findsOneWidget);
 
     await tester.tap(find.text('难度').first);
     await tester.pumpAndSettle();
     await tester.tap(find.text('高阶').last);
     await tester.pumpAndSettle();
     final advanced = programs.where((p) => p.category == '增肌增重' && p.level == 3).length;
-    expect(find.text('增肌增重 · $advanced 个计划'), findsOneWidget);
+    expect(find.text('增肌增重  $advanced 个计划'), findsOneWidget);
     expect(find.text('清除筛选'), findsOneWidget);
     await unmount(tester);
   });
@@ -148,7 +149,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('每周安排'), findsOneWidget);
-    expect(find.text('课程（${p.sessions.length} 节）'), findsOneWidget);
+    expect(find.text('课程'), findsOneWidget);
+    expect(find.text('${p.sessions.length} 节'), findsOneWidget);
     expect(find.text('加入计划'), findsOneWidget);
 
     await tester.tap(find.text('加入计划'));
@@ -199,7 +201,7 @@ void main() {
     final p = programs.firstWhere((p) => p.slug == 'stretch-bedtime');
     await tester.pumpWidget(host(ProgramDetailPage(slug: p.slug)));
     await tester.pumpAndSettle();
-    await tester.tap(find.byIcon(Icons.star_border_rounded));
+    await tester.tap(find.byIcon(AppIcons.star));
     await tester.pumpAndSettle();
     expect((await tester.runAsync(() => lib.watchFavoriteIds().first))!, {p.id});
     await unmount(tester);
