@@ -203,7 +203,7 @@ void main() {
     expect(find.text('52 分钟', findRichText: true), findsOneWidget);
     expect(find.text('12.35 吨', findRichText: true), findsOneWidget);
     expect(find.text('14', findRichText: true), findsOneWidget);
-    expect(find.text('重量纪录 · 1RM 纪录'), findsOneWidget);
+    expect(find.text('重量纪录、1RM 纪录'), findsOneWidget);
 
     await tester.tap(find.text('完成'));
     await tester.pumpAndSettle();

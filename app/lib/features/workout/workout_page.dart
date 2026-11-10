@@ -118,33 +118,48 @@ class _WorkoutBody extends ConsumerWidget {
       children: [
         SafeArea(
           bottom: false,
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, 240),
+          child: Column(
             children: [
-              _Header(view: view, onFinish: () => _finish(context, ref)),
-              const SizedBox(height: AppSpace.s4),
-              _ProgressRow(done: doneSets, total: totalSets),
-              if (ref.watch(reminderPermissionProvider) == false) const _NotifyHint(),
-              const SizedBox(height: AppSpace.s16),
-              for (final (i, block) in view.exercises.indexed) ...[
-                if (hasSections && (i == 0 || view.exercises[i - 1].exercise.section != block.exercise.section))
-                  _SectionLabel(WorkoutSection.fromKey(block.exercise.section)),
-                _ExerciseCard(
-                  key: ValueKey(block.exercise.id),
-                  workoutId: view.workout.id,
-                  block: block,
-                  exercise: byId[block.exercise.exerciseId],
+              // 用时、进度和「结束」固定在顶部，往下翻动作时一直看得到
+              Padding(
+                padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, 0),
+                child: Column(
+                  children: [
+                    _Header(view: view, onFinish: () => _finish(context, ref)),
+                    const SizedBox(height: AppSpace.s4),
+                    _ProgressRow(done: doneSets, total: totalSets),
+                    const SizedBox(height: AppSpace.s8),
+                  ],
                 ),
-                const SizedBox(height: AppSpace.s12),
-              ],
-              if (view.exercises.isEmpty)
-                const EmptyState(icon: AppIcons.barbell, title: '还没有动作', hint: '从动作库里选第一个动作开始吧'),
-              PressScale(
-                child: OutlinedButton.icon(
-                  onPressed: () => context.push('/workout/pick'),
-                  icon: const Icon(AppIcons.plus, size: 16),
-                  label: const Text('添加动作'),
-                  style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
+              ),
+              Expanded(
+                child: ListView(
+                  padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, 0, AppSpace.pageGutter, 240),
+                  children: [
+                    if (ref.watch(reminderPermissionProvider) == false) const _NotifyHint(),
+                    const SizedBox(height: AppSpace.s8),
+                    for (final (i, block) in view.exercises.indexed) ...[
+                      if (hasSections && (i == 0 || view.exercises[i - 1].exercise.section != block.exercise.section))
+                        _SectionLabel(WorkoutSection.fromKey(block.exercise.section)),
+                      _ExerciseCard(
+                        key: ValueKey(block.exercise.id),
+                        workoutId: view.workout.id,
+                        block: block,
+                        exercise: byId[block.exercise.exerciseId],
+                      ),
+                      const SizedBox(height: AppSpace.s12),
+                    ],
+                    if (view.exercises.isEmpty)
+                      const EmptyState(icon: AppIcons.barbell, title: '还没有动作', hint: '从动作库里选第一个动作开始吧'),
+                    PressScale(
+                      child: OutlinedButton.icon(
+                        onPressed: () => context.push('/workout/pick'),
+                        icon: const Icon(AppIcons.plus, size: 16),
+                        label: const Text('添加动作'),
+                        style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

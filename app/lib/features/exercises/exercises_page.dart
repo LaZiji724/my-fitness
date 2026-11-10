@@ -317,16 +317,25 @@ class _ResultsState extends ConsumerState<_Results> {
             ),
           )
         else
-          SliverGrid.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 16,
-              crossAxisSpacing: 12,
-              // 激活 / 拉伸的图是 4:3，格子更矮
-              childAspectRatio: warm ? 0.78 : 0.74,
-            ),
-            itemCount: items.length,
-            itemBuilder: (context, i) => _ExerciseTile(exercise: items[i], onPick: onPick),
+          // 格子高度按「图片高 + 两行名字 + 一行小字」算出来，不靠固定比例，窄屏宽屏都不会挤出去
+          SliverLayoutBuilder(
+            builder: (context, constraints) {
+              const gap = 12.0;
+              final tileW = (constraints.crossAxisExtent - gap) / 2;
+              // 搜索结果里 1:1 和 4:3 的图可能混在一起，按最高的那种留位置
+              final ratio = items.fold<double>(items.first.imageRatio, (m, e) => e.imageRatio < m ? e.imageRatio : m);
+              final imageH = tileW / ratio;
+              return SliverGrid.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: gap,
+                  mainAxisExtent: imageH + _ExerciseTile.textBlockHeight,
+                ),
+                itemCount: items.length,
+                itemBuilder: (context, i) => _ExerciseTile(exercise: items[i], onPick: onPick),
+              );
+            },
           ),
         const SliverToBoxAdapter(child: SizedBox(height: AppSpace.s24)),
             ],
@@ -358,6 +367,9 @@ class _ExerciseTile extends StatelessWidget {
   const _ExerciseTile({required this.exercise, this.onPick});
   final Exercise exercise;
   final ValueChanged<Exercise>? onPick;
+
+  /// 图片下面那块文字的高度：间距 8 + 名字两行（14 × 1.3 × 2）+ 间距 2 + 小字一行（12 × 1.4），向上取整
+  static const double textBlockHeight = 64;
 
   @override
   Widget build(BuildContext context) {

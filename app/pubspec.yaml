@@ -52,7 +52,6 @@ dependencies:
   package_info_plus: ^10.2.2
   url_launcher: ^6.3.3
   crypto: ^3.0.8
-  phosphor_flutter: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -88,6 +87,16 @@ flutter:
           weight: 500
         - asset: assets/fonts/NotoSansSC-Bold.ttf
           weight: 700
+    # 图标：Phosphor（MIT），只带用到的三种粗细
+    - family: PhosphorRegular
+      fonts:
+        - asset: assets/fonts/Phosphor-Regular.ttf
+    - family: PhosphorBold
+      fonts:
+        - asset: assets/fonts/Phosphor-Bold.ttf
+    - family: PhosphorFill
+      fonts:
+        - asset: assets/fonts/Phosphor-Fill.ttf
     - family: BarlowCondensed
       fonts:
         - asset: assets/fonts/BarlowCondensed-Medium.ttf

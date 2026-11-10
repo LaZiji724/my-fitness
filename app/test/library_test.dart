@@ -114,10 +114,10 @@ void main() {
             'reps_min': null, 'reps_max': null, 'duration_sec': null, 'distance_m': null, 'rest_sec': 60, 'note': null,
             ...m,
           }));
-      expect(d({'reps_min': 6, 'reps_max': 8, 'warmup_sets': 2, 'rest_sec': 120}), '3 组 × 6–8 次 · 热身 2 组 · 休息 120 秒');
-      expect(d({'sets': 1, 'duration_sec': 1200, 'distance_m': 2500, 'rest_sec': 0}), '1 组 × 20 分钟 · 目标 2.5 公里');
-      expect(d({'sets': 4, 'duration_sec': 45}), '4 组 × 45 秒 · 休息 60 秒');
-      expect(d({'reps_min': 12, 'reps_max': 12}), '3 组 × 12 次 · 休息 60 秒');
+      expect(d({'reps_min': 6, 'reps_max': 8, 'warmup_sets': 2, 'rest_sec': 120}), '3 组 × 6–8 次  热身 2 组  休息 120 秒');
+      expect(d({'sets': 1, 'duration_sec': 1200, 'distance_m': 2500, 'rest_sec': 0}), '1 组 × 20 分钟  目标 2.5 公里');
+      expect(d({'sets': 4, 'duration_sec': 45}), '4 组 × 45 秒  休息 60 秒');
+      expect(d({'reps_min': 12, 'reps_max': 12}), '3 组 × 12 次  休息 60 秒');
       expect(formatDistance(500), '500 米');
     });
   });

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/auth/auth_providers.dart';
@@ -65,7 +66,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
           scale: PressScale.smallScale,
           child: IconButton(
             tooltip: '返回登录',
-            icon: const Icon(Icons.arrow_back_rounded),
+            icon: const Icon(AppIcons.back),
             onPressed: _busy ? null : () => context.go('/login'),
           ),
         ),
@@ -73,7 +74,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(
-              AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, AppSpace.s24),
+              AppSpace.s24, AppSpace.s8, AppSpace.s24, AppSpace.s24),
           child: Form(
             key: _form,
             child: Column(
@@ -82,7 +83,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                 Text('创建账号', style: AppText.titleLarge.copyWith(color: c.text)),
                 const SizedBox(height: AppSpace.s24),
                 Text('选一个头像', style: AppText.titleSmall.copyWith(color: c.text)),
-                const SizedBox(height: AppSpace.s4),
+                const SizedBox(height: 2),
                 Text('以后在「我的」里随时更换',
                     style: AppText.caption.copyWith(color: c.text3)),
                 const SizedBox(height: AppSpace.s12),
@@ -97,7 +98,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                   enableSuggestions: false,
                   decoration: const InputDecoration(
                     labelText: '用户名（用于登录）',
-                    helperText: '可以使用 · 3–20 位小写字母、数字或下划线',
+                    helperText: '3–20 位小写字母、数字或下划线',
                   ),
                   validator: AuthValidators.username,
                 ),
@@ -123,9 +124,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                       scale: PressScale.smallScale,
                       child: IconButton(
                         tooltip: _obscure ? '显示密码' : '隐藏密码',
-                        icon: Icon(_obscure
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined),
+                        icon: Icon(_obscure ? AppIcons.eye : AppIcons.eyeOff, size: 20),
                         onPressed: () => setState(() => _obscure = !_obscure),
                       ),
                     ),
@@ -139,6 +138,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                 const SizedBox(height: AppSpace.s24),
                 PressScale(
                   child: FilledButton(
+                    style: const ButtonStyle(minimumSize: WidgetStatePropertyAll(Size.fromHeight(AppSize.buttonLarge))),
                     onPressed: _busy ? null : _submit,
                     child: _busy
                         ? const SizedBox.square(
@@ -152,7 +152,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('已有账号？', style: AppText.body.copyWith(color: c.text2)),
+                    Text('已有账号？', style: AppText.label.copyWith(color: c.text2)),
                     PressScale(
                       child: TextButton(
                         onPressed: _busy ? null : () => context.go('/login'),

@@ -120,7 +120,7 @@ String describeItemTarget(ProgramItem it) {
   final out = <String>[target, ...parts];
   if (it.distanceM != null) out.add('目标 ${formatDistance(it.distanceM!)}');
   if (it.sets > 1 && it.restSec > 0) out.add('休息 ${it.restSec} 秒');
-  return out.join(' · ');
+  return out.join('  ');
 }
 
 String formatDuration(int sec) {

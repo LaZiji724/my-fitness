@@ -7,8 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
-import 'package:my_fitness/core/widgets/press_scale.dart';
+import 'package:my_fitness/core/widgets/app_ui.dart';
 import 'package:my_fitness/features/update/update_models.dart';
 import 'package:my_fitness/features/update/update_service.dart';
 
@@ -259,16 +260,40 @@ class _UpdateDialogState extends ConsumerState<UpdateDialog> {
   Widget build(BuildContext context) {
     final c = context.colors;
     final u = widget.update;
-    final size = u.assetSize > 0 ? '，${_mb(u.assetSize)}' : '';
     final downloading = _phase == _Phase.downloading;
 
     final body = <Widget>[
-      Text('当前 ${widget.current} → 新版 ${u.version}$size', style: AppText.body.copyWith(color: c.text)),
+      // 版本号：旧的灰、新的黑，中间一个箭头
+      Row(
+        children: [
+          Expanded(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(widget.current, style: AppText.numMedium.copyWith(color: c.text3)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpace.s8),
+                    child: Icon(AppIcons.arrowRight, size: 16, color: c.text3),
+                  ),
+                  Text(u.version, style: AppText.numMedium.copyWith(color: c.text)),
+                ],
+              ),
+            ),
+          ),
+          if (u.assetSize > 0) ...[
+            const SizedBox(width: AppSpace.s12),
+            Text(_mb(u.assetSize), style: AppText.label.copyWith(color: c.text2)),
+          ],
+        ],
+      ),
       if (_notes.isNotEmpty) ...[
         const SizedBox(height: AppSpace.s12),
         ConstrainedBox(
           constraints: const BoxConstraints(maxHeight: 140),
-          child: SingleChildScrollView(child: Text(_notes, style: AppText.label.copyWith(color: c.text2))),
+          child: SingleChildScrollView(child: Text(_notes, style: AppText.label.copyWith(color: c.text2, height: 1.6))),
         ),
       ],
       if (_ios && _phase != _Phase.ready) ...[
@@ -286,7 +311,10 @@ class _UpdateDialogState extends ConsumerState<UpdateDialog> {
       ],
       if (downloading) ...[
         const SizedBox(height: AppSpace.s16),
-        LinearProgressIndicator(value: _progress),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(AppRadius.full),
+          child: LinearProgressIndicator(value: _progress, minHeight: 4),
+        ),
         const SizedBox(height: AppSpace.s8),
         Text(
           _progress == null
@@ -302,7 +330,7 @@ class _UpdateDialogState extends ConsumerState<UpdateDialog> {
       ],
       if (_hint != null) ...[
         const SizedBox(height: AppSpace.s12),
-        Text(_hint!, style: AppText.label.copyWith(color: c.accentText)),
+        Text(_hint!, style: AppText.label.copyWith(color: c.text, height: 1.6)),
       ],
       if (_error != null) ...[
         const SizedBox(height: AppSpace.s12),
@@ -315,31 +343,29 @@ class _UpdateDialogState extends ConsumerState<UpdateDialog> {
       ],
     ];
 
-    Widget btn(String text, VoidCallback? onTap, {bool primary = false}) => PressScale(
-          child: primary ? FilledButton(onPressed: onTap, child: Text(text)) : TextButton(onPressed: onTap, child: Text(text)),
-        );
-
-    final actions = <Widget>[
+    // 两个按钮并排（次要在左、主要在右）；多于两个时竖排，主要的放最上面。
+    final primary = _phase == _Phase.ready
+        ? AppDialogAction(_ios ? '导入全能签' : '安装', onPressed: _ios ? _shareToSigner : _installAndroid, kind: AppDialogActionKind.primary)
+        : AppDialogAction(_error != null ? '重试' : '更新', onPressed: _download, kind: AppDialogActionKind.primary);
+    final later = AppDialogAction('暂不更新', onPressed: () => Navigator.pop(context));
+    final extras = <AppDialogAction>[
+      if (_ios || _error != null) AppDialogAction('用浏览器下载', onPressed: _openBrowserSheet),
+      if (_ios && _phase == _Phase.ready) AppDialogAction('复制链接', onPressed: _copyLink),
+    ];
+    final actions = <AppDialogAction>[
       if (downloading)
-        btn('取消', () {
+        AppDialogAction('取消', onPressed: () {
           _cancel.cancelled = true;
           Navigator.pop(context);
         })
-      else ...[
-        btn('暂不更新', () => Navigator.pop(context)),
-        if (_ios || _error != null) btn('用浏览器下载', _openBrowserSheet),
-        if (_ios && _phase == _Phase.ready) btn('复制链接', _copyLink),
-        if (_phase == _Phase.ready)
-          btn(_ios ? '导入全能签' : '安装', _ios ? _shareToSigner : _installAndroid, primary: true)
-        else
-          btn(_error != null ? '重试' : '更新', _download, primary: true),
-      ],
+      else if (extras.isEmpty) ...[later, primary] else ...[primary, ...extras, later],
     ];
 
     return PopScope(
       canPop: !downloading,
-      child: AlertDialog(
-        title: const Text('发现新版本'),
+      child: AppDialog(
+        title: '发现新版本',
+        icon: AppIcons.update,
         content: SingleChildScrollView(
           child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: body),
         ),
@@ -385,22 +411,40 @@ class _BrowserDownloadSheet extends StatelessWidget {
               style: AppText.label.copyWith(color: c.text2),
             ),
             const SizedBox(height: AppSpace.s8),
+            const SizedBox(height: AppSpace.s8),
             for (final link in links)
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                title: Text(link.label),
-                subtitle: Text(Uri.parse(link.url).host, style: AppText.label.copyWith(color: c.text2)),
-                trailing: IconButton(
-                  tooltip: '复制链接',
-                  icon: const Icon(Icons.copy_rounded),
-                  onPressed: () async {
-                    await Clipboard.setData(ClipboardData(text: link.url));
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('链接已复制')));
-                    }
-                  },
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpace.s8),
+                child: AppCard(
+                  radius: AppRadius.md,
+                  padding: const EdgeInsets.fromLTRB(AppSpace.s16, AppSpace.s8, AppSpace.s4, AppSpace.s8),
+                  onTap: () => _open(context, link.url),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(link.label, style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
+                            const SizedBox(height: 2),
+                            Text(Uri.parse(link.url).host,
+                                maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.label.copyWith(color: c.text2)),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        tooltip: '复制链接',
+                        icon: Icon(AppIcons.copy, size: 22, color: c.text2),
+                        onPressed: () async {
+                          await Clipboard.setData(ClipboardData(text: link.url));
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('链接已复制')));
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-                onTap: () => _open(context, link.url),
               ),
           ],
         ),

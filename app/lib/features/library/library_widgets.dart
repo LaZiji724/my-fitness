@@ -1,57 +1,44 @@
 import 'package:flutter/material.dart';
 
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/app_ui.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/library/program.dart';
 
 /// 分类图标。
 IconData categoryIcon(String? category) => switch (category) {
-      '有氧跟练' => Icons.directions_run_rounded,
-      '团课计划' => Icons.groups_rounded,
-      '瘦身减脂' => Icons.local_fire_department_rounded,
-      '塑形美体' => Icons.accessibility_new_rounded,
-      '增肌增重' => Icons.fitness_center_rounded,
-      '健康改善' => Icons.health_and_safety_rounded,
-      '拉伸放松' => Icons.self_improvement_rounded,
-      '激活热身' => Icons.bolt_rounded,
-      '丰满翘臀' => Icons.sports_gymnastics_rounded,
-      _ => Icons.bolt_rounded,
+      '有氧跟练' => AppIcons.catCardio,
+      '团课计划' => AppIcons.catGroup,
+      '瘦身减脂' => AppIcons.catFatLoss,
+      '塑形美体' => AppIcons.catShape,
+      '增肌增重' => AppIcons.catMuscle,
+      '健康改善' => AppIcons.catRehab,
+      '拉伸放松' => AppIcons.catStretch,
+      '激活热身' => AppIcons.catPower,
+      '丰满翘臀' => AppIcons.catShape,
+      _ => AppIcons.catPower,
     };
 
-/// 分类的点缀色（取自部位色，随主题变化）。
-Color categoryTint(AppColors c, String category) => switch (category) {
-      '有氧跟练' => c.partLegs,
-      '团课计划' => c.partShoulders,
-      '瘦身减脂' => c.partChest,
-      '塑形美体' => c.partArms,
-      '增肌增重' => c.partBack,
-      '健康改善' => c.success,
-      '拉伸放松' => c.info,
-      '激活热身' => c.partShoulders,
-      _ => c.accent,
-    };
-
-/// 「铁与火」风格的计划封面：健身房照片（暖黑白处理）+ 深色渐变 + 大号图标；没有照片时退回到分类色渐变。
+/// 计划封面：黑白处理的健身房照片 + 自上而下压暗的墨色渐变；没有照片时是墨色底加滚花纹。
+/// 封面上不放颜色，颜色只留给「新上线」标签。
 class ProgramCover extends StatelessWidget {
   const ProgramCover({
     super.key,
     required this.program,
     required this.child,
-    this.height = 148,
+    this.height = 152,
     this.radius,
-    this.iconSize = 120,
   });
 
   final Program program;
   final Widget child;
   final double height;
   final BorderRadius? radius;
-  final double iconSize;
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final tint = categoryTint(c, program.category);
     return ClipRRect(
       borderRadius: radius ?? AppRadius.card,
       child: SizedBox(
@@ -59,22 +46,15 @@ class ProgramCover extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Color.lerp(c.hero, tint, 0.34)!, c.hero, Color.lerp(c.hero2, tint, 0.10)!],
-                  stops: const [0, 0.62, 1],
-                ),
-              ),
-            ),
+            ColoredBox(color: c.hero, child: CustomPaint(painter: KnurlPainter(color: c.onHero))),
             Image.asset(
               'assets/programs/${program.slug}.webp',
               fit: BoxFit.cover,
               cacheWidth: 720,
               gaplessPlayback: true,
               excludeFromSemantics: true,
+              color: const Color(0xFF808080),
+              colorBlendMode: BlendMode.saturation,
               errorBuilder: (_, _, _) => const SizedBox.shrink(),
             ),
             // 压暗照片，保证封面上的白字清晰
@@ -83,17 +63,9 @@ class ProgramCover extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    Color.lerp(c.hero, tint, 0.20)!.withValues(alpha: 0.45),
-                    c.hero.withValues(alpha: 0.86),
-                  ],
+                  colors: [const Color(0xFF0B0B0C).withValues(alpha: 0.35), const Color(0xFF0B0B0C).withValues(alpha: 0.88)],
                 ),
               ),
-            ),
-            Positioned(
-              right: -iconSize * 0.12,
-              top: -iconSize * 0.08,
-              child: Icon(categoryIcon(program.category), size: iconSize, color: tint.withValues(alpha: 0.22)),
             ),
             child,
           ],
@@ -114,16 +86,17 @@ class CoverTag extends StatelessWidget {
     final c = context.colors;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: filled ? c.accent : Colors.white.withValues(alpha: 0.14),
-        borderRadius: BorderRadius.circular(AppRadius.xs),
+        color: filled ? c.accent : Colors.white.withValues(alpha: 0.16),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Text(
           label,
           style: AppText.caption.copyWith(
             color: filled ? c.onAccent : c.onHero,
             fontWeight: FontWeight.w700,
+            height: 1.2,
           ),
         ),
       ),
@@ -131,7 +104,7 @@ class CoverTag extends StatelessWidget {
   }
 }
 
-String programMetaLine(Program p) => '${p.levelText} · ${p.weeks} 周 · 每周 ${p.daysPerWeek} 练 · 约 ${p.minutes} 分钟';
+String programMetaLine(Program p) => metaLine([p.levelText, '${p.weeks} 周', '每周 ${p.daysPerWeek} 练', '约 ${p.minutes} 分钟']);
 
 /// 列表里的计划封面卡。
 class ProgramCard extends StatelessWidget {
@@ -166,17 +139,17 @@ class ProgramCard extends StatelessWidget {
             child: ProgramCover(
               program: program,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(AppSpace.s16, AppSpace.s12, AppSpace.s16, AppSpace.s12),
+                padding: const EdgeInsets.all(AppSpace.s16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
-                        if (program.isNew) ...[const CoverTag('新上线', filled: true), const SizedBox(width: 6)],
-                        if (program.featured) ...[const CoverTag('推荐'), const SizedBox(width: 6)],
+                        if (program.isNew) ...[const CoverTag('新上线', filled: true), const SizedBox(width: 8)],
+                        if (program.featured) ...[const CoverTag('推荐'), const SizedBox(width: 8)],
                         if (joined) const CoverTag('已加入'),
                         const Spacer(),
-                        if (favorite) Icon(Icons.star_rounded, size: 20, color: c.accent),
+                        if (favorite) Icon(AppIcons.starOn, size: 18, color: c.onHero),
                       ],
                     ),
                     const Spacer(),
@@ -184,7 +157,7 @@ class ProgramCard extends StatelessWidget {
                       program.name,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: AppText.titleMedium.copyWith(color: c.onHero, fontSize: 19),
+                      style: AppText.titleMedium.copyWith(color: c.onHero),
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -193,7 +166,7 @@ class ProgramCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: AppText.label.copyWith(color: c.onHero2),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 8),
                     Row(
                       children: [
                         Expanded(
@@ -201,11 +174,11 @@ class ProgramCard extends StatelessWidget {
                             programMetaLine(program),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: AppText.caption.copyWith(color: c.onHero2, fontSize: 12),
+                            style: AppText.caption.copyWith(color: c.onHero2),
                           ),
                         ),
                         if (completed > 0)
-                          Text('已练 $completed 节', style: AppText.caption.copyWith(color: c.accentText, fontSize: 12)),
+                          Text('已练 $completed 节', style: AppText.caption.copyWith(color: c.accent, fontWeight: FontWeight.w700)),
                       ],
                     ),
                   ],
@@ -227,20 +200,7 @@ class InfoPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.colors;
-    return DecoratedBox(
-      decoration: BoxDecoration(color: c.sunken, borderRadius: BorderRadius.circular(AppRadius.xs + 4)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon != null) ...[Icon(icon, size: 14, color: c.text2), const SizedBox(width: 4)],
-            Text(label, style: AppText.label.copyWith(color: c.text2)),
-          ],
-        ),
-      ),
-    );
+    return AppTag(label, icon: icon);
   }
 }
 
@@ -258,17 +218,18 @@ class StatBlock extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(label, style: AppText.caption.copyWith(color: c.onHero2)),
+          const SizedBox(height: 2),
           Text.rich(TextSpan(children: [
             TextSpan(
               text: value,
               // 「入门」「进阶」这类文字值用黑体，与数字的视觉高度对齐
               style: _isNumeric(value)
-                  ? AppText.numLarge.copyWith(color: c.onHero)
-                  : AppText.titleMedium.copyWith(color: c.onHero, height: 1.5),
+                  ? AppText.numMedium.copyWith(color: c.onHero)
+                  : AppText.titleMedium.copyWith(color: c.onHero, height: 1.45),
             ),
-            TextSpan(text: ' $unit', style: AppText.caption.copyWith(color: c.onHero2, fontSize: 12)),
+            TextSpan(text: ' $unit', style: AppText.caption.copyWith(color: c.onHero2)),
           ])),
-          Text(label, style: AppText.caption.copyWith(color: c.onHero2)),
         ],
       ),
     );

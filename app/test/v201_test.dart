@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:my_fitness/app/router.dart' show templateRoutes;
 import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/core/db/database_provider.dart';
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/features/auth/auth_providers.dart';
 import 'package:my_fitness/features/calendar/calendar_page.dart';
@@ -191,7 +192,9 @@ void main() {
       expect(filterOf(tester).bodyPart, BodyPart.legs);
       expect(filterOf(tester).equipment, EquipmentGroup.barbell);
 
-      // 点动作：进入详情，还没有加入
+      // 点动作：进入详情，还没有加入（深蹲可能排在第一屏下面，先滚到看得见）
+      await tester.ensureVisible(find.text(squat.nameZh).first);
+      await tester.pumpAndSettle();
       await tester.tap(find.text(squat.nameZh).first);
       await tester.pumpAndSettle();
       expect(find.text('添加动作'), findsOneWidget);
@@ -205,6 +208,8 @@ void main() {
       expect((await plans.listTemplates()).single.exercises, isEmpty);
 
       // 再点进去，点「添加动作」才加入并回到模板页
+      await tester.ensureVisible(find.text(squat.nameZh).first);
+      await tester.pumpAndSettle();
       await tester.tap(find.text(squat.nameZh).first);
       await tester.pumpAndSettle();
       await tester.tap(find.text('添加动作'));
@@ -240,17 +245,17 @@ void main() {
     await plans.createTemplate('拉日');
     await tester.pumpWidget(host(const PlanPage(initialTab: 1)));
     await tester.pumpAndSettle();
-    expect(find.byIcon(Icons.delete_outline_rounded), findsNWidgets(2)); // 在卡片底下，尚未露出
+    expect(find.byIcon(AppIcons.delete), findsNWidgets(2)); // 在卡片底下，尚未露出
     final card = tester.getRect(find.ancestor(of: find.text('推日'), matching: find.byType(Material)).first);
 
     await tester.drag(find.text('推日'), const Offset(-400, 0));
     await tester.pumpAndSettle();
-    final icon = tester.getCenter(find.byIcon(Icons.delete_outline_rounded).first);
+    final icon = tester.getCenter(find.byIcon(AppIcons.delete).first);
     // 红色按钮占卡片宽度 30%，图标居中在最右侧 15% 处
     expect(icon.dx, closeTo(card.right - card.width * 0.15, 3));
     expect((await plans.listTemplates()), hasLength(2)); // 滑一下不会删
 
-    await tester.tap(find.byIcon(Icons.delete_outline_rounded).first);
+    await tester.tap(find.byIcon(AppIcons.delete).first);
     await tester.pumpAndSettle();
     final left = await plans.listTemplates();
     expect(left.map((t) => t.template.name), ['拉日']);

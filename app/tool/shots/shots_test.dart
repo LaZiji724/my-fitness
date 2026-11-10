@@ -96,6 +96,7 @@ void main() {
 
   testWidgets('截图', (tester) async {
     await tester.runAsync(_loadFonts);
+    debugDisableShadows = false; // 截图里要看到真实的阴影
     tester.view.physicalSize = const Size(393 * 2, 852 * 2);
     tester.view.devicePixelRatio = 2;
     tester.view.padding = const FakeViewPadding(top: 47 * 2, bottom: 34 * 2);
@@ -324,7 +325,9 @@ void main() {
 
     Future<void> closeOverlay() async {
       final ctx = router.routerDelegate.navigatorKey.currentContext!;
-      Navigator.of(ctx, rootNavigator: true).pop();
+      // 只关弹窗和底部面板，不动页面
+      Navigator.of(ctx, rootNavigator: true).popUntil((r) => r is! PopupRoute);
+      await tester.pump(const Duration(milliseconds: 400));
       await tester.pump(const Duration(milliseconds: 400));
     }
 
@@ -384,6 +387,16 @@ void main() {
     await step('stats_3', () async {
       await tester.drag(find.byType(ListView).first, const Offset(0, -900));
     });
+    await step('stats_month', () async {
+      router.go('/stats');
+      await settle();
+      await tester.drag(find.byType(ListView).first, const Offset(0, 2000));
+      await settle();
+      await tester.tap(find.text('月').first);
+    });
+    await step('stats_month_2', () async {
+      await tester.drag(find.byType(ListView).first, const Offset(0, -620));
+    });
     await step('profile', () async {
       router.go('/today');
       router.push('/me');
@@ -439,7 +452,7 @@ void main() {
       await tester.drag(find.byType(ListView).first, const Offset(0, -330));
     });
     await step('number_pad', () async {
-      await tester.tap(find.bySemanticsLabel('第 3 组重量').first);
+      await tester.tap(find.text('70').first);
     }, dark: false);
     if (want('number_pad')) await closeOverlay();
     await step('finish_dialog', () async {
@@ -468,7 +481,7 @@ void main() {
         router.routerDelegate.navigatorKey.currentContext!,
         AppUpdate(
           version: '2.9.0',
-          notes: '## 2.9.0\n- 界面全面升级\n- 训练页更清晰\n- 修复若干小问题',
+          notes: '新功能：\n1. 界面全面升级，所有页面换了新的样子。\n2. 训练页顶部固定，用时和进度一直看得到。\n3. 图标换成同一套线条图标。',
           assetUrl: 'https://example.com/a.apk',
           assetName: 'my-fitness-2.9.0.apk',
           assetSize: 91 * 1024 * 1024,
@@ -478,6 +491,7 @@ void main() {
       );
     }, dark: false);
 
+    debugDisableShadows = true;
     await tester.pumpWidget(const SizedBox());
     container.dispose();
     await tester.pump(const Duration(milliseconds: 20));

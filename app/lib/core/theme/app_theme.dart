@@ -108,7 +108,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color success;
   final Color danger;
 
-  /// 热身组 W 徽章
+  /// 热身组 W 徽章（中性灰，靠字母 W 区分，不另起一个颜色）
   final Color warmupBg;
   final Color warmupFg;
 
@@ -121,7 +121,8 @@ class AppColors extends ThemeExtension<AppColors> {
   /// 肌肉热度 5 档：0 组 / 1–3 / 4–7 / 8–12 / 13+（每周）
   final List<Color> heat;
 
-  /// 标签色：日历上区分不同训练日的小圆点
+  /// 标签色：日历上区分不同训练日的小圆点。六个颜色按固定顺序分配，
+  /// 浅色、深色两套都用 dataviz 的校验脚本验过（色弱也分得开），要改先重新跑校验。
   final Color partChest;
   final Color partBack;
   final Color partLegs;
@@ -153,8 +154,8 @@ class AppColors extends ThemeExtension<AppColors> {
     info: Color(0xFFB4B2AC),
     success: Color(0xFF14915C),
     danger: Color(0xFFD92D20),
-    warmupBg: Color(0xFFF8E7B9),
-    warmupFg: Color(0xFF6F4B00),
+    warmupBg: Color(0xFFE4E2DD),
+    warmupFg: Color(0xFF55545A),
     chartBar: Color(0xFFDDDAD4),
     bodyNeutral: Color(0xFFDFDCD6),
     heat: [
@@ -167,9 +168,9 @@ class AppColors extends ThemeExtension<AppColors> {
     partChest: Color(0xFFFF5A1F),
     partBack: Color(0xFF3A6BE0),
     partLegs: Color(0xFF16966A),
-    partShoulders: Color(0xFFD99A06),
+    partShoulders: Color(0xFFC98A00),
     partArms: Color(0xFF8266D9),
-    partCore: Color(0xFF75747A),
+    partCore: Color(0xFFD4488E),
     scrim: Color(0x66121214),
   );
 
@@ -194,8 +195,8 @@ class AppColors extends ThemeExtension<AppColors> {
     info: Color(0xFF5A595E),
     success: Color(0xFF3CC98A),
     danger: Color(0xFFFF6B5E),
-    warmupBg: Color(0xFF3A2F12),
-    warmupFg: Color(0xFFF2C14E),
+    warmupBg: Color(0xFF2E2E31),
+    warmupFg: Color(0xFFC9C8CC),
     chartBar: Color(0xFF323235),
     bodyNeutral: Color(0xFF262628),
     heat: [
@@ -205,12 +206,12 @@ class AppColors extends ThemeExtension<AppColors> {
       Color(0xFFE2541C),
       Color(0xFFFF8A57),
     ],
-    partChest: Color(0xFFFF6A2E),
-    partBack: Color(0xFF6E96FF),
-    partLegs: Color(0xFF3CC98A),
-    partShoulders: Color(0xFFF2C14E),
-    partArms: Color(0xFFA794F5),
-    partCore: Color(0xFF85848A),
+    partChest: Color(0xFFE8602C),
+    partBack: Color(0xFF5580E8),
+    partLegs: Color(0xFF1A8A60),
+    partShoulders: Color(0xFFB88A1C),
+    partArms: Color(0xFF9380E0),
+    partCore: Color(0xFFD45A95),
     scrim: Color(0x99000000),
   );
 
@@ -686,6 +687,9 @@ abstract final class AppTheme {
         circularTrackColor: Colors.transparent,
         linearMinHeight: 4,
         borderRadius: BorderRadius.circular(AppRadius.full),
+        // 进度条就是一根线：不要末端的小圆点，也不要中间的缺口
+        stopIndicatorRadius: 0,
+        trackGap: 0,
         // ignore: deprecated_member_use
         year2023: false,
       ),

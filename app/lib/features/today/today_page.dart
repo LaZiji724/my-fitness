@@ -269,18 +269,24 @@ class TodayPage extends ConsumerWidget {
                   ],
                   if (heroStats.isNotEmpty) ...[
                     const SizedBox(height: AppSpace.s16),
-                    Row(
-                      children: [
-                        for (var i = 0; i < heroStats.length; i++) ...[
-                          if (i > 0) ...[
-                            Container(width: 1, height: 24, margin: const EdgeInsets.symmetric(horizontal: 16), color: c.onHero.withValues(alpha: 0.12)),
+                    // 屏幕很窄或数字很长时整行等比缩小，不换行也不挤出去
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (var i = 0; i < heroStats.length; i++) ...[
+                            if (i > 0) ...[
+                              Container(width: 1, height: 24, margin: const EdgeInsets.symmetric(horizontal: 16), color: c.onHero.withValues(alpha: 0.12)),
+                            ],
+                            Text.rich(TextSpan(children: [
+                              TextSpan(text: heroStats[i].$1, style: AppText.numLarge.copyWith(color: c.onHero, height: 1)),
+                              TextSpan(text: ' ${heroStats[i].$2}', style: AppText.caption.copyWith(color: c.onHero2)),
+                            ])),
                           ],
-                          Text.rich(TextSpan(children: [
-                            TextSpan(text: heroStats[i].$1, style: AppText.numLarge.copyWith(color: c.onHero, height: 1)),
-                            TextSpan(text: ' ${heroStats[i].$2}', style: AppText.caption.copyWith(color: c.onHero2)),
-                          ])),
                         ],
-                      ],
+                      ),
                     ),
                   ],
                   if (preview.isNotEmpty) ...[
@@ -360,7 +366,8 @@ class TodayPage extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(height: AppSpace.s32),
+            // 右边的「全部记录」按钮有 44 高的点击区，上下各多出约 10，这里少留一点对齐其他分区
+            const SizedBox(height: AppSpace.s20),
             SectionTitle(
               '最近训练',
               trailing: PressScale(
