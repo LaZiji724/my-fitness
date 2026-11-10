@@ -1,9 +1,9 @@
-"""动作图与计划封面：照片（free-exercise-db，The Unlicense）+ 原创示意图。动作图保留照片原色，计划封面仍是暖黑白调。
+"""动作图与计划封面：照片（free-exercise-db，The Unlicense）+ 原创示意图。动作图和计划封面都保留照片原色。
 
 动作图 → app/assets/exercises/{slug}_{0,1}.webp（640×480）；新增 / 补图的动作才生成，原有 235 个动作的图不动。
 计划封面 → app/assets/programs/{slug}.webp（640×360）。
 用法（需要联网下载照片，已下载的缓存在 tools/warmup/cache/photos，不进 git）：
-  python3 tools/warmup/build_images.py
+  python3 tools/warmup/build_images.py [--covers-only]
 """
 from __future__ import annotations
 
@@ -146,7 +146,7 @@ def build_program_covers(programs: list[dict], exercises: list[dict]) -> dict[st
 
     def one(item):
         slug, (did, idx) = item
-        save_webp(crop_ratio(photo(did, idx), 16 / 9, (640, 360)), PROG_OUT / f"{slug}.webp", 74)
+        save_webp(crop_ratio(photo(did, idx), 16 / 9, (640, 360), color=True), PROG_OUT / f"{slug}.webp", 74)
 
     with ThreadPoolExecutor(8) as pool:
         list(pool.map(one, chosen.items()))
@@ -157,6 +157,9 @@ def main() -> None:
     sys.path.insert(0, str(ROOT / "tools" / "programs"))
     import build_programs
     exercises, programs = build_programs.build()
+    if "--covers-only" in sys.argv:  # 只重做计划封面
+        print(f"计划封面 {len(build_program_covers(programs, exercises))}")
+        return
     src = build_exercise_images(exercises, build_programs.BASE_COUNT)
     covers = build_program_covers(programs, exercises)
     drawn = sum(1 for v in src.values() if v == "drawn")

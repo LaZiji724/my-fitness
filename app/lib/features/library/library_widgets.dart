@@ -20,7 +20,7 @@ IconData categoryIcon(String? category) => switch (category) {
       _ => AppIcons.catPower,
     };
 
-/// 计划封面：健身房照片 + 自上而下压暗的墨色渐变；没有照片时是墨色底加滚花纹。
+/// 计划封面：彩色健身房照片 + 自上而下轻压暗的墨色渐变；没有照片时是墨色底加滚花纹。
 /// 封面上不放颜色，颜色只留给「新上线」标签。
 class ProgramCover extends StatelessWidget {
   const ProgramCover({
@@ -61,7 +61,7 @@ class ProgramCover extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [const Color(0xFF0B0B0C).withValues(alpha: 0.35), const Color(0xFF0B0B0C).withValues(alpha: 0.88)],
+                  colors: [const Color(0xFF0B0B0C).withValues(alpha: 0.10), const Color(0xFF0B0B0C).withValues(alpha: 0.72)],
                 ),
               ),
             ),
