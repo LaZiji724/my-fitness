@@ -258,7 +258,7 @@ class AppSegmented<T> extends StatelessWidget {
   }
 }
 
-/// 筛选标签：选中是墨色实心，未选中是白底发丝边。
+/// 筛选标签：选中是橙色实心（深色模式是亮色实心），未选中是白底发丝边。
 class AppChip extends StatelessWidget {
   const AppChip({
     super.key,
@@ -282,9 +282,9 @@ class AppChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final fg = selected ? c.bg : c.text;
+    final fg = selected ? c.onSelected : c.text;
     final chip = Material(
-      color: selected ? c.text : c.surface,
+      color: selected ? c.selectedFill : c.surface,
       shape: StadiumBorder(side: BorderSide(color: selected ? Colors.transparent : c.text.withValues(alpha: 0.10), width: 1)),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -299,7 +299,7 @@ class AppChip extends StatelessWidget {
               Text(label, style: AppText.label.copyWith(color: fg, fontWeight: selected ? FontWeight.w700 : FontWeight.w500)),
               if (count != null) ...[
                 const SizedBox(width: 6),
-                Text('$count', style: AppText.numSmall.copyWith(fontSize: 14, color: selected ? c.bg.withValues(alpha: 0.7) : c.text3)),
+                Text('$count', style: AppText.numSmall.copyWith(fontSize: 14, color: selected ? c.onSelected.withValues(alpha: 0.7) : c.text3)),
               ],
               if (trailing != null) ...[const SizedBox(width: 4), Icon(trailing, size: 12, color: selected ? fg : c.text3)],
             ],

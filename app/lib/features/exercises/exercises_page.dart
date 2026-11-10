@@ -190,7 +190,7 @@ class _CategoryButton extends StatelessWidget {
           button: true,
           selected: selected,
           child: Material(
-            color: selected ? c.text : Colors.transparent,
+            color: selected ? c.selectedFill : Colors.transparent,
             borderRadius: BorderRadius.circular(AppRadius.md),
             child: InkWell(
               borderRadius: BorderRadius.circular(AppRadius.md),
@@ -201,7 +201,7 @@ class _CategoryButton extends StatelessWidget {
                   child: Text(
                     label,
                     style: AppText.label.copyWith(
-                      color: selected ? c.bg : c.text2,
+                      color: selected ? c.onSelected : c.text2,
                       fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
                     ),
                   ),
