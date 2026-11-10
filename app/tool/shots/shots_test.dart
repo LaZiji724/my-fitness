@@ -29,7 +29,6 @@ import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_detail_page.dart';
 import 'package:my_fitness/features/exercises/exercise_prefs.dart';
 import 'package:my_fitness/features/exercises/exercise_repository.dart';
-import 'package:my_fitness/features/exercises/exercises_page.dart';
 import 'package:my_fitness/features/friends/friends_providers.dart' show friendsBadgeProvider;
 import 'package:my_fitness/features/library/library_page.dart';
 import 'package:my_fitness/features/library/library_providers.dart';
