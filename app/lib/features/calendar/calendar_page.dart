@@ -249,8 +249,10 @@ class _Grid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    // 点选的格子用墨色实心，和「练过」的淡橙、「今天」的橙圈都分得开
-    final selectedFill = c.text;
+    // 点选的格子：浅色模式用比主橙更深的橙色实心，深色模式保持原来的亮色实心；
+    // 都和「练过」的淡橙、「今天」的橙圈分得开
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final selectedFill = dark ? c.text : c.accentText;
     final rows = cells.length ~/ 7;
     return Column(
       children: [
@@ -345,7 +347,7 @@ class _Grid extends StatelessWidget {
                                   Text(
                                     '${d.day}',
                                     style: AppText.numSmall.copyWith(
-                                      color: isSel ? c.bg : (isToday ? c.accentText : c.text),
+                                      color: isSel ? (selectedFill == c.text ? c.bg : Colors.white) : (isToday ? c.accentText : c.text),
                                       fontWeight: isToday || isSel || trained[i] ? FontWeight.w700 : FontWeight.w500,
                                     ),
                                   ),
