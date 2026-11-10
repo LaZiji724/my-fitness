@@ -6,6 +6,8 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>扫一扫需要使用相机来扫描好友的二维码</string>
 	<key>CFBundleDisplayName</key>
 	<string>我的健身</string>
 	<key>CFBundleExecutable</key>

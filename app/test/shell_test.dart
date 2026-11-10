@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:my_fitness/app/app_shell.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
+import 'package:my_fitness/features/friends/friends_providers.dart';
 
 void main() {
   Widget host(ThemeData theme) {
@@ -15,7 +16,7 @@ void main() {
         StatefulShellRoute.indexedStack(
           builder: (_, _, shell) => AppShell(shell: shell),
           branches: [
-            for (final p in ['today', 'plan', 'calendar', 'exercises', 'stats'])
+            for (final p in ['today', 'plan', 'calendar', 'exercises', 'stats', 'friends'])
               StatefulShellBranch(routes: [
                 GoRoute(path: '/$p', builder: (_, _) => page(p)),
               ]),
@@ -23,15 +24,15 @@ void main() {
         ),
       ],
     );
-    return ProviderScope(child: MaterialApp.router(theme: theme, routerConfig: router));
+    return ProviderScope(overrides: [friendsBadgeProvider.overrideWithValue(0)], child: MaterialApp.router(theme: theme, routerConfig: router));
   }
 
   for (final dark in [false, true]) {
-    testWidgets('底部 5 个分栏可切换（${dark ? '深色' : '浅色'}）', (tester) async {
+    testWidgets('底部 6 个分栏可切换（${dark ? '深色' : '浅色'}）', (tester) async {
       await tester.pumpWidget(host(dark ? AppTheme.dark() : AppTheme.light()));
       await tester.pumpAndSettle();
 
-      for (final label in ['训练', '计划', '日历', '动作', '数据']) {
+      for (final label in ['训练', '计划', '日历', '动作', '数据', '好友']) {
         expect(find.text(label), findsOneWidget);
       }
       expect(find.text('页面-today'), findsOneWidget);
