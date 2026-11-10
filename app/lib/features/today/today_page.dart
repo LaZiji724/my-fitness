@@ -340,7 +340,7 @@ class TodayPage extends ConsumerWidget {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
+                    padding: const EdgeInsets.fromLTRB(4, 12, 4, 12),
                     child: Row(
                       children: [
                         for (var i = 0; i < 7; i++)
@@ -421,26 +421,41 @@ class _WeekDot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    // 练过的天是墨色实心；今天用橙色（没练是橙圈，练了是橙色实心）
-    final fill = trained ? (isToday ? c.accent : c.text) : Colors.transparent;
-    final fg = trained ? (isToday ? c.onAccent : c.bg) : (isToday ? c.accentText : c.text2);
+    // 练过的天是橙色实心；今天再围一圈橙色细环（没练就只有细环）
+    final fill = trained ? c.accent : Colors.transparent;
+    final fg = trained ? c.onAccent : (isToday ? c.accentText : c.text2);
+    final ring = isToday ? c.accent : null;
     return Column(
       children: [
         Text(weekdayNames[date.weekday - 1].substring(1),
             style: AppText.caption.copyWith(color: isToday ? c.text : c.text3, fontWeight: isToday ? FontWeight.w700 : FontWeight.w400)),
-        const SizedBox(height: 8),
-        Container(
-          width: 36,
-          height: 36,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: fill,
-            border: trained
-                ? null
-                : Border.all(color: isToday ? c.accent : c.text.withValues(alpha: 0.10), width: isToday ? 1.5 : 1),
+        const SizedBox(height: 4),
+        // 外面这一格固定 44 高，今天的细环不会把一整排顶歪
+        SizedBox(
+          width: 44,
+          height: 44,
+          child: Center(
+            child: Container(
+              width: 42,
+              height: 42,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: ring != null && trained ? Border.all(color: ring, width: 1.5) : null,
+              ),
+              child: Container(
+                width: ring != null && trained ? 34 : 36,
+                height: ring != null && trained ? 34 : 36,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: fill,
+                  border: trained ? null : Border.all(color: ring ?? c.text.withValues(alpha: 0.10), width: ring != null ? 1.5 : 1),
+                ),
+                child: Text('${date.day}', style: AppText.numSmall.copyWith(color: fg)),
+              ),
+            ),
           ),
-          child: Text('${date.day}', style: AppText.numSmall.copyWith(color: fg)),
         ),
       ],
     );
