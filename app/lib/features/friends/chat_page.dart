@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/app_ui.dart';
+import 'package:my_fitness/core/widgets/avatar_view.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
+import 'package:my_fitness/features/auth/auth_providers.dart';
+import 'package:my_fitness/features/auth/avatars.dart';
 import 'package:my_fitness/features/friends/emoji_panel.dart';
 import 'package:my_fitness/features/friends/friend_models.dart';
 import 'package:my_fitness/features/friends/friend_widgets.dart';
@@ -14,8 +16,14 @@ import 'package:my_fitness/features/friends/friends_providers.dart';
 
 /// 和一个好友的聊天。输入栏参照微信：中间输入框，右侧表情，有字时右侧换成「发送」。
 class ChatPage extends ConsumerStatefulWidget {
-  const ChatPage({super.key, required this.friendId});
+  const ChatPage({super.key, required this.friendId, this.cameFrom});
   final String friendId;
+
+  /// 是从哪一页来的（从好友列表或通知进来为 null）
+  final FriendPage? cameFrom;
+
+  void _toActivity(BuildContext context) =>
+      switchFriendPage(context, friendId, from: FriendPage.chat, cameFrom: cameFrom);
 
   @override
   ConsumerState<ChatPage> createState() => _ChatPageState();
@@ -128,7 +136,7 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
         appBar: AppBar(
           titleSpacing: 0,
           title: GestureDetector(
-            onTap: entry == null ? null : () => context.push('/friends/activity/${widget.friendId}'),
+            onTap: entry == null ? null : () => widget._toActivity(context),
             behavior: HitTestBehavior.opaque,
             child: Row(
               children: [
@@ -147,14 +155,14 @@ class _ChatPageState extends ConsumerState<ChatPage> with WidgetsBindingObserver
                 child: RoundIconButton(
                   icon: AppIcons.barbell,
                   tooltip: '查看最近运动',
-                  onPressed: () => context.push('/friends/activity/${widget.friendId}'),
+                  onPressed: () => widget._toActivity(context),
                 ),
               ),
           ],
         ),
         body: Column(
           children: [
-            Expanded(child: _MessageList(state: chat, friendId: widget.friendId, controller: _scroll, onRetry: (m) {
+            Expanded(child: _MessageList(state: chat, friendId: widget.friendId, friend: entry?.user, me: ref.watch(profileSummaryProvider), controller: _scroll, onRetry: (m) {
               ref.read(chatControllerProvider(widget.friendId).notifier).retry(m);
             }, onReload: () => ref.read(chatControllerProvider(widget.friendId).notifier).reload())),
             if (loadedList && !isFriend)
@@ -303,6 +311,8 @@ class _MessageList extends StatelessWidget {
   const _MessageList({
     required this.state,
     required this.friendId,
+    required this.friend,
+    required this.me,
     required this.controller,
     required this.onRetry,
     required this.onReload,
@@ -310,6 +320,10 @@ class _MessageList extends StatelessWidget {
 
   final ChatState state;
   final String friendId;
+
+  /// 对方 / 我自己：头像用
+  final UserCard? friend;
+  final ProfileSummary? me;
   final ScrollController controller;
   final void Function(ChatMessage) onRetry;
   final VoidCallback onReload;
@@ -353,6 +367,12 @@ class _MessageList extends StatelessWidget {
           final older = i + 1 < reversed.length ? reversed[i + 1] : null;
           final showTime = older == null || m.createdAt.difference(older.createdAt) > _gap;
           final mine = m.senderId != friendId;
+          // 连着发的几条，只在最上面（最早）的一条旁边显示头像；
+          // 对方发了一条之后我再发（或反过来），或者中间隔了一段时间，就在新一组的第一条上重新显示。
+          final groupStart = older == null || showTime || older.senderId != m.senderId;
+          final avatar = mine
+              ? AvatarView(kind: me?.avatarKind ?? 'preset', avatarRef: me?.avatarRef ?? kDefaultAvatarRef, size: _Bubble.avatarSize)
+              : AvatarView(kind: friend?.avatarKind ?? 'preset', avatarRef: friend?.avatarRef ?? kDefaultAvatarRef, size: _Bubble.avatarSize);
           return Column(
             children: [
               if (showTime)
@@ -360,7 +380,7 @@ class _MessageList extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: AppSpace.s12),
                   child: Text(chatTimeLabel(m.createdAt, now), style: AppText.caption.copyWith(color: c.text3)),
                 ),
-              _Bubble(message: m, mine: mine, onRetry: () => onRetry(m)),
+              _Bubble(message: m, mine: mine, avatar: groupStart ? avatar : null, groupStart: groupStart && older != null && !showTime, onRetry: () => onRetry(m)),
             ],
           );
         },
@@ -370,16 +390,25 @@ class _MessageList extends StatelessWidget {
 }
 
 class _Bubble extends StatelessWidget {
-  const _Bubble({required this.message, required this.mine, required this.onRetry});
+  const _Bubble({required this.message, required this.mine, required this.avatar, required this.groupStart, required this.onRetry});
 
   final ChatMessage message;
   final bool mine;
+
+  /// 这一组第一条才有头像，其余只留一块同样宽的空位，让气泡左右对齐
+  final Widget? avatar;
+
+  /// 紧挨着上一组（中间没有时间分隔）的新一组：上面多留一点空隙
+  final bool groupStart;
   final VoidCallback onRetry;
+
+  static const double avatarSize = 36;
+  static const double avatarGap = AppSpace.s8;
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final maxWidth = MediaQuery.sizeOf(context).width * 0.72;
+    final maxWidth = (MediaQuery.sizeOf(context).width - AppSpace.pageGutter * 2 - avatarSize - avatarGap) * 0.8;
     final failed = message.status == MessageStatus.failed;
     final sending = message.status == MessageStatus.sending;
 
@@ -406,12 +435,14 @@ class _Bubble extends StatelessWidget {
       ),
     );
 
+    final slot = SizedBox(width: avatarSize, child: avatar);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
+      padding: EdgeInsets.only(top: groupStart ? 10 : 3, bottom: 3),
       child: Row(
         mainAxisAlignment: mine ? MainAxisAlignment.end : MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (!mine) ...[slot, const SizedBox(width: avatarGap)],
           if (mine && failed) ...[
             PressScale(
               scale: PressScale.smallScale,
@@ -426,6 +457,7 @@ class _Bubble extends StatelessWidget {
             ),
           ],
           Flexible(child: bubble),
+          if (mine) ...[const SizedBox(width: avatarGap), slot],
         ],
       ),
     );

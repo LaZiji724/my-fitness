@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
@@ -17,8 +16,11 @@ import 'package:my_fitness/features/workout/workout_summary_page.dart' show form
 
 /// 好友最近的运动记录。对方设为「仅自己可见」的部分不会出现，只显示一句说明。
 class FriendActivityPage extends ConsumerWidget {
-  const FriendActivityPage({super.key, required this.friendId});
+  const FriendActivityPage({super.key, required this.friendId, this.cameFrom});
   final String friendId;
+
+  /// 是从哪一页来的（从好友列表进来为 null）
+  final FriendPage? cameFrom;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -67,7 +69,7 @@ class FriendActivityPage extends ConsumerWidget {
                           minimumSize: WidgetStatePropertyAll(Size(72, AppSize.buttonSmall + 4)),
                           padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: AppSpace.s16)),
                         ),
-                        onPressed: () => context.push('/friends/chat/$friendId'),
+                        onPressed: () => switchFriendPage(context, friendId, from: FriendPage.activity, cameFrom: cameFrom),
                         child: const Text('聊天'),
                       ),
                     ),

@@ -3,6 +3,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import 'package:my_fitness/core/notifications/notification_taps.dart';
+
 /// 本地定时提醒：应用退到后台或熄屏后，系统会在指定时刻弹出通知。
 /// 抽成接口是为了测试里可以换成假的，不去碰系统插件。
 abstract class ReminderScheduler {
@@ -76,6 +78,7 @@ class LocalNotificationScheduler implements ReminderScheduler {
                 requestSoundPermission: false,
               ),
             ),
+            onDidReceiveNotificationResponse: NotificationTaps.handle,
           );
           return true;
         } catch (e) {

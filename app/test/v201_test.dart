@@ -243,7 +243,7 @@ void main() {
     setViewport(tester);
     final a = await plans.createTemplate('推日');
     await plans.createTemplate('拉日');
-    await tester.pumpWidget(host(const PlanPage(initialTab: 1)));
+    await tester.pumpWidget(host(const PlanPage(initialTab: 2)));
     await tester.pumpAndSettle();
     expect(find.byIcon(AppIcons.delete), findsNWidgets(2)); // 在卡片底下，尚未露出
     final card = tester.getRect(find.ancestor(of: find.text('推日'), matching: find.byType(Material)).first);
@@ -267,7 +267,7 @@ void main() {
   testWidgets('模板列表：左滑后点卡片只是收起，不进入模板，也不删除', (tester) async {
     setViewport(tester);
     await plans.createTemplate('推日');
-    await tester.pumpWidget(host(const PlanPage(initialTab: 1)));
+    await tester.pumpWidget(host(const PlanPage(initialTab: 2)));
     await tester.pumpAndSettle();
     await tester.drag(find.text('推日'), const Offset(-400, 0));
     await tester.pumpAndSettle();

@@ -10,7 +10,9 @@ import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_image.dart';
 import 'package:my_fitness/features/exercises/exercise_repository.dart';
 
-/// 「动作」分栏：左侧部位、顶部搜索、器械筛选、两列动作网格。
+/// 选择动作页：顶部带返回，点动作回调而不是进详情。
+/// 平时的动作库已并入「计划」页的「动作库」分栏（见 [ExercisesBody]）。
+///
 ///
 /// 传入 [onPick] 时进入「选择动作」模式：顶部带返回，点动作回调而不是进详情。
 class ExercisesPage extends ConsumerWidget {
@@ -33,9 +35,6 @@ class ExercisesPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final c = context.colors;
-    final filter = ref.watch(exerciseFilterProvider);
-    final async = ref.watch(exercisesProvider);
-
     return Scaffold(
       body: SafeArea(
         bottom: false,
@@ -58,54 +57,76 @@ class ExercisesPage extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: AppSpace.s8),
-              _SearchField(
-                initial: filter.query,
-                onChanged: ref.read(exerciseFilterProvider.notifier).setQuery,
-              ),
-              const SizedBox(height: AppSpace.s12),
-              Expanded(
-                child: async.when(
-                  loading: () => const Center(child: CircularProgressIndicator()),
-                  error: (e, _) => Center(
-                    child: Text('动作库加载失败', style: AppText.body.copyWith(color: c.danger)),
-                  ),
-                  data: (all) => Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: 56,
-                        child: ListView(
-                          padding: const EdgeInsets.only(bottom: AppSpace.s24),
-                          children: [
-                            for (final p in _parts)
-                              _CategoryButton(
-                                label: p.label,
-                                selected: !filter.isSearching && filter.tab == ExerciseTab.part && p == filter.bodyPart,
-                                onTap: () => ref.read(exerciseFilterProvider.notifier).setBodyPart(p),
-                              ),
-                            _CategoryButton(
-                              label: '激活',
-                              selected: !filter.isSearching && filter.tab == ExerciseTab.activation,
-                              onTap: () => ref.read(exerciseFilterProvider.notifier).setTab(ExerciseTab.activation),
-                            ),
-                            _CategoryButton(
-                              label: '拉伸',
-                              selected: !filter.isSearching && filter.tab == ExerciseTab.stretch,
-                              onTap: () => ref.read(exerciseFilterProvider.notifier).setTab(ExerciseTab.stretch),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(child: _Results(all: all, filter: filter, onPick: onPick)),
-                    ],
-                  ),
-                ),
-              ),
+              Expanded(child: ExercisesBody(onPick: onPick)),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+/// 动作库的内容：搜索框 + 左侧部位栏 + 动作网格。
+/// 既用在「选择动作」页里，也放在「计划」页的「动作库」分栏下。
+/// 自己不带页面外壳和标题，外面要给它一个确定的高度（放进 Expanded）。
+class ExercisesBody extends ConsumerWidget {
+  const ExercisesBody({super.key, this.onPick});
+
+  final ValueChanged<Exercise>? onPick;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final c = context.colors;
+    final filter = ref.watch(exerciseFilterProvider);
+    final async = ref.watch(exercisesProvider);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _SearchField(
+          initial: filter.query,
+          onChanged: ref.read(exerciseFilterProvider.notifier).setQuery,
+        ),
+        const SizedBox(height: AppSpace.s12),
+        Expanded(
+          child: async.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (e, _) => Center(
+              child: Text('动作库加载失败', style: AppText.body.copyWith(color: c.danger)),
+            ),
+            data: (all) => Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 56,
+                  child: ListView(
+                    padding: const EdgeInsets.only(bottom: AppSpace.s24),
+                    children: [
+                      for (final p in ExercisesPage._parts)
+                        _CategoryButton(
+                          label: p.label,
+                          selected: !filter.isSearching && filter.tab == ExerciseTab.part && p == filter.bodyPart,
+                          onTap: () => ref.read(exerciseFilterProvider.notifier).setBodyPart(p),
+                        ),
+                      _CategoryButton(
+                        label: '激活',
+                        selected: !filter.isSearching && filter.tab == ExerciseTab.activation,
+                        onTap: () => ref.read(exerciseFilterProvider.notifier).setTab(ExerciseTab.activation),
+                      ),
+                      _CategoryButton(
+                        label: '拉伸',
+                        selected: !filter.isSearching && filter.tab == ExerciseTab.stretch,
+                        onTap: () => ref.read(exerciseFilterProvider.notifier).setTab(ExerciseTab.stretch),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(child: _Results(all: all, filter: filter, onPick: onPick)),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

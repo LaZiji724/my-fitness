@@ -11,10 +11,10 @@ import 'package:my_fitness/features/auth/login_page.dart';
 import 'package:my_fitness/features/auth/register_page.dart';
 import 'package:my_fitness/features/calendar/calendar_page.dart';
 import 'package:my_fitness/features/exercises/exercise_detail_page.dart';
-import 'package:my_fitness/features/exercises/exercises_page.dart';
 import 'package:my_fitness/features/friends/chat_page.dart';
 import 'package:my_fitness/features/friends/friend_activity_page.dart';
 import 'package:my_fitness/features/friends/friend_search_page.dart';
+import 'package:my_fitness/features/friends/friend_widgets.dart' show FriendPage;
 import 'package:my_fitness/features/friends/friends_page.dart';
 import 'package:my_fitness/features/friends/my_qr_page.dart';
 import 'package:my_fitness/features/friends/privacy_page.dart';
@@ -101,6 +101,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       location: state.matchedLocation,
     ),
     routes: [
+      GoRoute(path: '/exercises', redirect: (_, _) => '/plan?tab=exercises'),
       GoRoute(path: '/login', builder: (_, _) => const LoginPage()),
       GoRoute(path: '/register', builder: (_, _) => const RegisterPage()),
       GoRoute(path: '/me', builder: (_, _) => const ProfilePage()),
@@ -110,11 +111,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/friends/privacy', builder: (_, _) => const PrivacyPage()),
       GoRoute(
         path: '/friends/chat/:id',
-        builder: (_, state) => ChatPage(friendId: state.pathParameters['id']!),
+        builder: (_, state) => ChatPage(friendId: state.pathParameters['id']!, cameFrom: state.extra is FriendPage ? state.extra! as FriendPage : null),
       ),
       GoRoute(
         path: '/friends/activity/:id',
-        builder: (_, state) => FriendActivityPage(friendId: state.pathParameters['id']!),
+        builder: (_, state) => FriendActivityPage(friendId: state.pathParameters['id']!, cameFrom: state.extra is FriendPage ? state.extra! as FriendPage : null),
       ),
       GoRoute(
         path: '/exercise/:slug',
@@ -171,17 +172,15 @@ final routerProvider = Provider<GoRouter>((ref) {
       StatefulShellRoute.indexedStack(
         builder: (_, _, shell) => AppShell(shell: shell),
         branches: [
+          // 顺序要和底栏一致：计划、日历 | 训练 | 数据、好友
           StatefulShellBranch(routes: [
-            GoRoute(path: '/today', builder: (_, _) => const TodayPage()),
-          ]),
-          StatefulShellBranch(routes: [
-            GoRoute(path: '/plan', builder: (_, _) => const PlanPage()),
+            GoRoute(path: '/plan', builder: (_, state) => PlanPage(initialTab: PlanPage.tabFromQuery(state.uri.queryParameters['tab']))),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(path: '/calendar', builder: (_, _) => const CalendarPage()),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/exercises', builder: (_, _) => const ExercisesPage()),
+            GoRoute(path: '/today', builder: (_, _) => const TodayPage()),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(path: '/stats', builder: (_, _) => const StatsPage()),

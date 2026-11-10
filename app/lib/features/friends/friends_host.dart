@@ -7,6 +7,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:my_fitness/app/router.dart';
+import 'package:my_fitness/core/notifications/keep_alive.dart';
+import 'package:my_fitness/core/notifications/notification_avatar.dart';
+import 'package:my_fitness/core/notifications/notification_taps.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/auth/auth_providers.dart';
@@ -14,27 +17,31 @@ import 'package:my_fitness/features/friends/friend_models.dart';
 import 'package:my_fitness/features/friends/friend_widgets.dart';
 import 'package:my_fitness/features/friends/friends_providers.dart';
 
-/// 退到后台时，用系统通知提醒新消息。抽成接口方便测试替换。
+/// 退到后台时，用系统通知提醒新消息：标题是对方的名字，内容是消息，带上对方的圆形头像；
+/// 点一下通知直接进入和他的聊天。抽成接口方便测试替换。
 abstract class ChatNotifier {
-  Future<void> show({required int id, required String title, required String body});
+  Future<void> show({
+    required int id,
+    required String friendId,
+    required String title,
+    required String body,
+    String avatarKind = 'preset',
+    String avatarRef = 'avatar_01',
+  });
   Future<void> cancelAll();
+
+  /// 应用是被点通知启动起来的话，返回对应的好友 id（否则 null）
+  Future<String?> launchedFromChat();
 }
 
 class LocalChatNotifier implements ChatNotifier {
   final _plugin = FlutterLocalNotificationsPlugin();
   Future<bool>? _init;
 
-  static const _details = NotificationDetails(
-    android: AndroidNotificationDetails(
-      'chat_message',
-      '好友消息',
-      channelDescription: '好友发来新消息时提醒',
-      importance: Importance.high,
-      priority: Priority.high,
-      category: AndroidNotificationCategory.message,
-    ),
-    iOS: DarwinNotificationDetails(presentAlert: false, presentBanner: false, presentList: false, presentSound: false),
-  );
+  /// 每个好友最近几条没处理的消息，用来拼成一条「会话式」通知
+  final Map<int, List<Message>> _history = {};
+
+  static const _channel = 'chat_message';
 
   Future<bool> _ensureInit() => _init ??= () async {
         try {
@@ -43,6 +50,7 @@ class LocalChatNotifier implements ChatNotifier {
               android: AndroidInitializationSettings('@mipmap/ic_launcher'),
               iOS: DarwinInitializationSettings(requestAlertPermission: false, requestBadgePermission: false, requestSoundPermission: false),
             ),
+            onDidReceiveNotificationResponse: NotificationTaps.handle,
           );
           return true;
         } catch (e) {
@@ -52,10 +60,59 @@ class LocalChatNotifier implements ChatNotifier {
       }();
 
   @override
-  Future<void> show({required int id, required String title, required String body}) async {
+  Future<void> show({
+    required int id,
+    required String friendId,
+    required String title,
+    required String body,
+    String avatarKind = 'preset',
+    String avatarRef = 'avatar_01',
+  }) async {
     if (!await _ensureInit()) return;
     try {
-      await _plugin.show(id: id, title: title, body: body, notificationDetails: _details);
+      final png = await NotificationAvatar.circlePng(avatarKind, avatarRef);
+      final payload = NotificationTaps.chatPayload(friendId);
+
+      // 安卓：会话样式——头像、名字、消息内容，同一个人连着发多条会叠在同一条通知里
+      final sender = Person(
+        name: title,
+        key: friendId,
+        important: true,
+        icon: png == null ? null : ByteArrayAndroidIcon(png),
+      );
+      final history = _history.putIfAbsent(id, () => []);
+      history.add(Message(body, DateTime.now(), sender));
+      if (history.length > 6) history.removeAt(0);
+
+      final iosAvatar = png == null ? null : await NotificationAvatar.asFile(avatarKind, avatarRef, png);
+      final details = NotificationDetails(
+        android: AndroidNotificationDetails(
+          _channel,
+          '好友消息',
+          channelDescription: '好友发来新消息时提醒',
+          importance: Importance.high,
+          priority: Priority.high,
+          icon: 'ic_stat_chat',
+          category: AndroidNotificationCategory.message,
+          visibility: NotificationVisibility.private,
+          largeIcon: png == null ? null : ByteArrayAndroidBitmap(png),
+          styleInformation: MessagingStyleInformation(
+            const Person(name: '我'),
+            messages: List.of(history),
+            groupConversation: false,
+          ),
+          autoCancel: true,
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: false,
+          presentBanner: false,
+          presentList: false,
+          presentSound: false,
+          threadIdentifier: friendId,
+          attachments: iosAvatar == null ? null : [DarwinNotificationAttachment(iosAvatar)],
+        ),
+      );
+      await _plugin.show(id: id, title: title, body: body, notificationDetails: details, payload: payload);
     } catch (e) {
       debugPrint('消息通知失败：$e');
     }
@@ -63,10 +120,23 @@ class LocalChatNotifier implements ChatNotifier {
 
   @override
   Future<void> cancelAll() async {
+    _history.clear();
     if (!await _ensureInit()) return;
     try {
       await _plugin.cancelAll();
     } catch (_) {}
+  }
+
+  @override
+  Future<String?> launchedFromChat() async {
+    if (!await _ensureInit()) return null;
+    try {
+      final d = await _plugin.getNotificationAppLaunchDetails();
+      if (d?.didNotificationLaunchApp != true) return null;
+      return NotificationTaps.chatFriendId(d!.notificationResponse?.payload);
+    } catch (_) {
+      return null;
+    }
   }
 }
 
@@ -94,10 +164,27 @@ class _FriendsHostState extends ConsumerState<FriendsHost> with WidgetsBindingOb
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    NotificationTaps.handler = _onNotificationTap;
+  }
+
+  /// 点了系统通知：是好友消息就直接进入和他的聊天
+  void _onNotificationTap(String payload) {
+    final friendId = NotificationTaps.chatFriendId(payload);
+    if (friendId == null || !mounted) return;
+    if (ref.read(currentUserIdProvider) == kLocalUserId) return;
+    ref.read(routerProvider).push('/friends/chat/$friendId');
+  }
+
+  /// 登录后补上「点通知才把应用启动起来」的那一次点击
+  Future<void> _openLaunchChat() async {
+    final id = await ref.read(chatNotifierProvider).launchedFromChat() ?? NotificationTaps.chatFriendId(NotificationTaps.takePending());
+    if (id == null || !mounted) return;
+    ref.read(routerProvider).push('/friends/chat/$id');
   }
 
   @override
   void dispose() {
+    if (NotificationTaps.handler == _onNotificationTap) NotificationTaps.handler = null;
     WidgetsBinding.instance.removeObserver(this);
     _sub?.cancel();
     _hide?.cancel();
@@ -127,7 +214,14 @@ class _FriendsHostState extends ConsumerState<FriendsHost> with WidgetsBindingOb
     if (entry == null) return;
     final preview = m.body.replaceAll('\n', ' ');
     if (_background) {
-      ref.read(chatNotifierProvider).show(id: m.senderId.hashCode & 0x7fffffff, title: entry.user.displayName, body: preview);
+      ref.read(chatNotifierProvider).show(
+            id: m.senderId.hashCode & 0x7fffffff,
+            friendId: m.senderId,
+            title: entry.user.displayName,
+            body: preview,
+            avatarKind: entry.user.avatarKind,
+            avatarRef: entry.user.avatarRef,
+          );
       return;
     }
     HapticFeedback.lightImpact();
@@ -138,6 +232,23 @@ class _FriendsHostState extends ConsumerState<FriendsHost> with WidgetsBindingOb
 
   void _dismiss() {
     if (mounted && _toast != null) setState(() => _toast = null);
+  }
+
+  /// 安卓：登录着并且开着「后台接收消息」时，让前台服务保活；否则关掉
+  bool? _keepingAlive;
+  void _syncKeepAlive() {
+    final keep = ref.read(keepAliveProvider);
+    if (!keep.supported) return;
+    final loggedIn = ref.read(currentUserIdProvider) != kLocalUserId;
+    final enabled = ref.read(backgroundMessagesProvider).value ?? true;
+    final want = loggedIn && enabled;
+    if (_keepingAlive == want) return;
+    _keepingAlive = want;
+    if (want) {
+      keep.start();
+    } else {
+      keep.stop();
+    }
   }
 
   Future<void> _askNotificationOnce() async {
@@ -156,9 +267,11 @@ class _FriendsHostState extends ConsumerState<FriendsHost> with WidgetsBindingOb
   @override
   Widget build(BuildContext context) {
     final uid = ref.watch(currentUserIdProvider);
+    ref.listen(backgroundMessagesProvider, (_, _) => _syncKeepAlive());
     if (uid == kLocalUserId) {
       _sub?.cancel();
       _sub = null;
+      WidgetsBinding.instance.addPostFrameCallback((_) => _syncKeepAlive());
       return widget.child;
     }
     // 保持好友总管一直在后台运行；账号变了就重新接上
@@ -166,7 +279,11 @@ class _FriendsHostState extends ConsumerState<FriendsHost> with WidgetsBindingOb
     if (_sub == null) {
       _listen();
       // 登录后第一次，顺便问一下通知权限（之后系统不会再重复问）
-      WidgetsBinding.instance.addPostFrameCallback((_) => _askNotificationOnce());
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _askNotificationOnce();
+        _openLaunchChat();
+        _syncKeepAlive();
+      });
     }
     ref.listen(currentUserIdProvider, (prev, next) {
       if (prev != next) {

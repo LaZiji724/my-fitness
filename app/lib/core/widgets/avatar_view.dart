@@ -31,6 +31,8 @@ class AvatarView extends StatelessWidget {
       image = Image.network(
         url,
         fit: BoxFit.cover,
+        // 头像只显示这么大，不必按原图尺寸解码
+        cacheWidth: (size * MediaQuery.devicePixelRatioOf(context)).round().clamp(64, 1024),
         errorBuilder: (_, _, _) => fallback,
       );
     } else {

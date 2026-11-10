@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/features/auth/auth_providers.dart';
+import 'package:my_fitness/core/widgets/avatar_view.dart';
 import 'package:my_fitness/features/friends/chat_page.dart';
 import 'package:my_fitness/features/friends/emoji_panel.dart';
 import 'package:my_fitness/features/friends/friend_activity_page.dart';
@@ -389,6 +390,51 @@ void main() {
     expect(find.text('走起'), findsOneWidget);
     expect(container.read(friendsControllerProvider).byUser('u-bob')!.unread, 0); // 正在看，不计未读
 
+    await unmount(tester);
+  });
+
+  testWidgets('聊天页：连着发的几条只有最上面一条旁边有头像，换人发言后重新显示', (tester) async {
+    final base = DateTime.now().subtract(const Duration(minutes: 30));
+    ChatMessage msg(String id, String from, String body, int sec) => ChatMessage(
+          id: id,
+          senderId: from,
+          receiverId: from == 'me' ? 'u-bob' : 'me',
+          body: body,
+          createdAt: base.add(Duration(seconds: sec)),
+        );
+    final fake = world();
+    fake.chats['u-bob'] = [
+      msg('a1', 'u-bob', '对方第一条', 0),
+      msg('a2', 'u-bob', '对方第二条', 5),
+      msg('a3', 'u-bob', '对方第三条', 10),
+      msg('b1', 'me', '我第一条', 20),
+      msg('b2', 'me', '我第二条', 25),
+      msg('a4', 'u-bob', '对方又来了', 40),
+    ];
+    await mount(tester, fake, const ChatPage(friendId: 'u-bob'));
+    await tester.pumpAndSettle();
+
+    // 页面顶部标题栏里还有一个对方头像，所以聊天内容里应该是 3 个：对方一组、我一组、对方又一组
+    final inBody = find.descendant(of: find.byType(ListView), matching: find.byType(AvatarView));
+    expect(inBody, findsNWidgets(3));
+
+    double top(Finder f) => tester.getTopLeft(f).dy;
+    final avatars = tester.widgetList<AvatarView>(inBody).toList();
+    expect(avatars.map((a) => a.avatarRef), everyElement(isNotNull));
+    final tops = [for (var i = 0; i < 3; i++) top(inBody.at(i))]..sort();
+    // 三个头像分别和各组「第一条」气泡顶对齐（列表里从上到下依次是：对方一组、我一组、对方又一组）
+    expect(tops[0], closeTo(top(find.text('对方第一条').first) - 10, 3));
+    expect(tops[1], closeTo(top(find.text('我第一条').first) - 10, 3));
+    expect(tops[2], closeTo(top(find.text('对方又来了').first) - 10, 3));
+
+    // 同一组后面几条的左边没有头像：它们的气泡和第一条左对齐
+    expect(tester.getTopLeft(find.text('对方第二条')).dx, tester.getTopLeft(find.text('对方第一条')).dx);
+    expect(tester.getTopRight(find.text('我第二条')).dx, tester.getTopRight(find.text('我第一条')).dx);
+    // 我的头像在右边，对方的在左边
+    final screenW = tester.view.physicalSize.width / tester.view.devicePixelRatio;
+    final xs = [for (var i = 0; i < 3; i++) tester.getCenter(inBody.at(i)).dx]..sort();
+    expect(xs.first, lessThan(screenW / 2));
+    expect(xs.last, greaterThan(screenW / 2));
     await unmount(tester);
   });
 

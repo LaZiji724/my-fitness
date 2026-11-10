@@ -22,6 +22,8 @@ from concurrent.futures import ThreadPoolExecutor
 import requests
 from PIL import Image
 
+from instructions_zh import INSTRUCTIONS_ZH
+
 HERE = pathlib.Path(__file__).resolve().parent
 CACHE = HERE / "cache"
 OUT = HERE / "out"
@@ -139,7 +141,7 @@ def main() -> int:
             "secondary_muscles": src["secondaryMuscles"] or [],
             "equipment": src.get("equipment"),
             "tracking_type": tracking,
-            "instructions_zh": None,
+            "instructions_zh": INSTRUCTIONS_ZH.get(slug),
             "image_paths": [f"{slug}/{i}.webp" for i in range(len(src["images"]))],
         })
     if missing:
