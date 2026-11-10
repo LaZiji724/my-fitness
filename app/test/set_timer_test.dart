@@ -288,17 +288,6 @@ void main() {
     expect(find.byKey(const Key('notify-hint')), findsOneWidget);
   });
 
-  test('测试提醒：权限被拒时说明原因；通过后登记 10 秒后的通知', () async {
-    final denied = _FakeScheduler(granted: false);
-    expect(await runReminderSelfTest(denied, now), contains('通知权限没有开启'));
-    expect(denied.scheduled, isEmpty);
-
-    final ok = _FakeScheduler();
-    expect(await runReminderSelfTest(ok, now), contains('10 秒后弹出'));
-    expect(ok.scheduled.single.id, kTestReminderId);
-    expect(ok.scheduled.single.at, now.add(const Duration(seconds: 10)));
-  });
-
   group('iOS：一开始倒数就登记（不依赖退后台那一瞬间）', () {
     // 平台覆盖必须在测试体结束前恢复
     void iosTest(String name, Future<void> Function(WidgetTester) body) {

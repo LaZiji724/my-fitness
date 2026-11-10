@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:my_fitness/core/notifications/reminder_scheduler.dart';
 import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/app_ui.dart';
@@ -185,14 +184,6 @@ class _SyncSection extends ConsumerWidget {
           row(AppIcons.share, '导出备份', '把全部训练数据保存成一个文件', () => exportBackup(context, ref)),
           const HairDivider(indent: 56),
           row(AppIcons.fileOpen, '导入备份', '从备份文件恢复数据', () => importBackup(context, ref)),
-          const HairDivider(indent: 56),
-          row(AppIcons.bell, '测试提醒', '10 秒后弹一条通知，检查计时提醒能不能用', () async {
-            final msg = await runReminderSelfTest(ref.read(reminderSchedulerProvider), DateTime.now());
-            if (!context.mounted) return;
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(content: Text(msg), duration: const Duration(seconds: 8)));
-          }),
           const HairDivider(indent: 56),
           row(
             AppIcons.update,
