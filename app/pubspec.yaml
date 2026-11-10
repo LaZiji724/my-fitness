@@ -52,6 +52,7 @@ dependencies:
   package_info_plus: ^10.2.2
   url_launcher: ^6.3.3
   crypto: ^3.0.8
+  phosphor_flutter: ^2.1.0
 
 dev_dependencies:
   flutter_test:

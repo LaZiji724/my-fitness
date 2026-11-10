@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/app_ui.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/calendar/calendar_math.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
@@ -78,39 +80,55 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
         child: ListView(
           padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, AppSpace.s32),
           children: [
-            SizedBox(
-              height: 48,
-              child: Row(
-                children: [
-                  Text('日历', style: AppText.titleLarge.copyWith(color: c.text)),
-                  const Spacer(),
-                  PressScale(child: TextButton(onPressed: _today, child: const Text('回到今天'))),
-                ],
-              ),
-            ),
-            Row(
-              children: [
-                PressScale(scale: PressScale.smallScale, child: IconButton(tooltip: '上个月', onPressed: () => _shift(-1), icon: const Icon(Icons.chevron_left_rounded))),
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text('${_month.year}年${_month.month}月', style: AppText.titleSmall.copyWith(color: c.text)),
-                      Text('${inMonth.length} 次 · ${formatVolume(monthVolume)}',
-                          style: AppText.label.copyWith(color: c.text2)),
-                    ],
+            PageHeader(
+              title: '日历',
+              trailing: [
+                PressScale(
+                  child: OutlinedButton(
+                    onPressed: _today,
+                    style: OutlinedButton.styleFrom(shape: const StadiumBorder()),
+                    child: const Text('回到今天'),
                   ),
                 ),
-                PressScale(scale: PressScale.smallScale, child: IconButton(tooltip: '下个月', onPressed: () => _shift(1), icon: const Icon(Icons.chevron_right_rounded))),
               ],
             ),
             const SizedBox(height: AppSpace.s8),
-            Row(
-              children: [
-                for (final d in const ['一', '二', '三', '四', '五', '六', '日'])
-                  Expanded(child: Center(child: Text(d, style: AppText.label.copyWith(color: c.text3)))),
-              ],
-            ),
-            const SizedBox(height: AppSpace.s4),
+            AppCard(
+              padding: const EdgeInsets.fromLTRB(8, 8, 8, 12),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('${_month.year}年${_month.month}月', style: AppText.titleMedium.copyWith(color: c.text)),
+                              Text(metaLine(['${inMonth.length} 次', formatVolume(monthVolume)]), style: AppText.label.copyWith(color: c.text2)),
+                            ],
+                          ),
+                        ),
+                        PressScale(
+                          scale: PressScale.smallScale,
+                          child: IconButton(tooltip: '上个月', onPressed: () => _shift(-1), icon: const Icon(AppIcons.chevronLeft, size: 16)),
+                        ),
+                        PressScale(
+                          scale: PressScale.smallScale,
+                          child: IconButton(tooltip: '下个月', onPressed: () => _shift(1), icon: const Icon(AppIcons.chevronRight, size: 16)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: AppSpace.s12),
+                  Row(
+                    children: [
+                      for (final d in const ['一', '二', '三', '四', '五', '六', '日'])
+                        Expanded(child: Center(child: Text(d, style: AppText.caption.copyWith(color: c.text3)))),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpace.s8),
             _Grid(
               cells: monthCells(_month),
               today: today,
@@ -143,41 +161,46 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
                 return tagById[e.template!.template.id] ?? c.text3;
               },
             ),
-            const SizedBox(height: AppSpace.s12),
-            if (tags.isEmpty)
-              // 没有启用计划：不显示部位图例，提示去启用计划
-              Row(
-                key: const Key('calendar-no-plan-hint'),
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(width: 8, height: 8, decoration: BoxDecoration(color: c.danger, shape: BoxShape.circle)),
-                  const SizedBox(width: 6),
-                  Text('启用计划以显示每日训练任务', style: AppText.label.copyWith(color: c.text2)),
-                ],
-              )
-            else
-              Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 14,
-                runSpacing: 6,
-                children: [
-                  // 图例就是计划里每天练的模板名
-                  for (final t in tags)
+                  const SizedBox(height: AppSpace.s8),
+                  const Padding(padding: EdgeInsets.symmetric(horizontal: 8), child: HairDivider()),
+                  const SizedBox(height: AppSpace.s12),
+                  if (tags.isEmpty)
+                    // 没有启用计划：不显示部位图例，提示去启用计划
                     Row(
-                      mainAxisSize: MainAxisSize.min,
+                      key: const Key('calendar-no-plan-hint'),
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(color: partColor(c, t.part), shape: BoxShape.circle)),
-                        const SizedBox(width: 5),
-                        Text(t.name, style: AppText.label.copyWith(color: c.text2)),
+                        Icon(AppIcons.calendar, size: 16, color: c.text3),
+                        const SizedBox(width: 6),
+                        Text('启用计划以显示每日训练任务', style: AppText.caption.copyWith(color: c.text3)),
+                      ],
+                    )
+                  else
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 16,
+                      runSpacing: 8,
+                      children: [
+                        // 图例就是计划里每天练的模板名
+                        for (final t in tags)
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: BoxDecoration(color: partColor(c, t.part), shape: BoxShape.circle)),
+                              const SizedBox(width: 6),
+                              Text(t.name, style: AppText.caption.copyWith(color: c.text2)),
+                            ],
+                          ),
                       ],
                     ),
                 ],
               ),
-            const SizedBox(height: AppSpace.s24),
-            Text(formatMd(_selected), style: AppText.titleSmall.copyWith(color: c.text)),
+            ),
+            const SizedBox(height: AppSpace.s32),
+            SectionTitle(formatMd(_selected)),
             const SizedBox(height: AppSpace.s12),
             if (selectedWorkouts.isEmpty)
               _EmptyDay(
@@ -221,13 +244,13 @@ class _Grid extends StatelessWidget {
   final bool Function(DateTime) trainedFor;
 
   static const double _cellHeight = 56;
-  static const double _radius = 16;
+  static const double _radius = AppRadius.md;
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    // 点选的框：比「练过」的淡橙更深、比「今天」的描边更浅，介于两者之间
-    final selectedFill = Color.lerp(c.accentSoft, c.accent, 0.3)!;
+    // 点选的格子用墨色实心，和「练过」的淡橙、「今天」的橙圈都分得开
+    final selectedFill = c.text;
     final rows = cells.length ~/ 7;
     return Column(
       children: [
@@ -322,8 +345,7 @@ class _Grid extends StatelessWidget {
                                   Text(
                                     '${d.day}',
                                     style: AppText.numSmall.copyWith(
-                                      fontSize: 18,
-                                      color: isSel ? c.accentText : c.text,
+                                      color: isSel ? c.bg : (isToday ? c.accentText : c.text),
                                       fontWeight: isToday || isSel || trained[i] ? FontWeight.w700 : FontWeight.w500,
                                     ),
                                   ),
@@ -356,18 +378,18 @@ class _Grid extends StatelessWidget {
                               ),
                             ),
                           ),
-                          // 连续两天以上：长框右上角写小字
-                          if (streak >= 2)
+                          // 连续两天以上：长框右上角写小字（选中这格时让给墨色格子）
+                          if (streak >= 2 && !isSel)
                             Positioned(
                               top: 4,
-                              right: 10,
+                              right: 8,
                               width: 96,
                               child: Text(
                                 '连续$streak天',
                                 key: Key('calendar-streak-${dateKeyOf(d)}'),
                                 textAlign: TextAlign.right,
                                 softWrap: false,
-                                style: AppText.label.copyWith(fontSize: 12, height: 1, color: c.accentText),
+                                style: AppText.caption.copyWith(height: 1, color: c.accentText, fontWeight: FontWeight.w600),
                               ),
                             ),
                         ],
@@ -393,31 +415,29 @@ class _WorkoutCard extends StatelessWidget {
     final c = context.colors;
     final w = view.workout;
     final minutes = w.endedAt == null ? 0 : w.endedAt!.difference(w.startedAt).inMinutes;
-    return DecoratedBox(
-      decoration: BoxDecoration(color: c.surface, borderRadius: AppRadius.card),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpace.cardPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(child: Text(w.name ?? '自由训练', style: AppText.titleSmall.copyWith(color: c.text))),
-                Text(formatClock(w.startedAt), style: AppText.label.copyWith(color: c.text3)),
-              ],
-            ),
-            const SizedBox(height: AppSpace.s12),
-            Row(
-              children: [
-                _Stat('$minutes', '分钟'),
-                _Stat(formatVolume(view.volume), '容量'),
-                _Stat('${view.setCount}', '组数'),
-              ],
-            ),
-            const Divider(height: AppSpace.s24),
-            for (final b in view.exercises) _ExerciseLine(block: b, exercise: byId[b.exercise.exerciseId]),
-          ],
-        ),
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(child: Text(w.name ?? '自由训练', style: AppText.titleSmall.copyWith(color: c.text))),
+              Text(formatClock(w.startedAt), style: AppText.numSmall.copyWith(color: c.text3, fontWeight: FontWeight.w500)),
+            ],
+          ),
+          const SizedBox(height: AppSpace.s12),
+          Row(
+            children: [
+              _Stat('$minutes', '分钟'),
+              _Stat(formatVolume(view.volume), '容量'),
+              _Stat('${view.setCount}', '组数'),
+            ],
+          ),
+          const SizedBox(height: AppSpace.s16),
+          const HairDivider(),
+          const SizedBox(height: AppSpace.s8),
+          for (final b in view.exercises) _ExerciseLine(block: b, exercise: byId[b.exercise.exerciseId]),
+        ],
       ),
     );
   }
@@ -435,8 +455,9 @@ class _Stat extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(value, style: AppText.numMedium.copyWith(color: c.text)),
           Text(label, style: AppText.caption.copyWith(color: c.text3)),
+          const SizedBox(height: 2),
+          Text(value, style: AppText.numMedium.copyWith(color: c.text)),
         ],
       ),
     );
@@ -461,14 +482,20 @@ class _ExerciseLine extends StatelessWidget {
           : (top.reps != null ? '${top.reps} 次' : '${top.durationSec ?? 0} 秒');
     }
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
-          Expanded(child: Text(exercise?.nameZh ?? '动作', style: AppText.body.copyWith(color: c.text))),
+          Expanded(
+            child: Text(exercise?.nameZh ?? '动作', maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.label.copyWith(color: c.text)),
+          ),
+          const SizedBox(width: AppSpace.s12),
           Text('${done.length} 组', style: AppText.label.copyWith(color: c.text3)),
           if (best.isNotEmpty) ...[
             const SizedBox(width: AppSpace.s12),
-            Text(best, style: AppText.label.copyWith(color: c.text2)),
+            SizedBox(
+              width: 88,
+              child: Text(best, textAlign: TextAlign.right, style: AppText.label.copyWith(color: c.text2, fontWeight: FontWeight.w500)),
+            ),
           ],
         ],
       ),
@@ -487,35 +514,29 @@ class _EmptyDay extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     final icon = !planned
-        ? Icons.event_busy_outlined
+        ? AppIcons.calendarOff
         : rest
-            ? Icons.self_improvement_rounded
-            : Icons.fitness_center_rounded;
-    return DecoratedBox(
-      decoration: BoxDecoration(color: c.surface, borderRadius: AppRadius.card),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpace.cardPadding),
-        child: Row(
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: planned && !rest ? c.accentSoft : c.sunken,
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-              ),
-              child: Icon(icon, size: 20, color: planned && !rest ? c.accentText : c.text3),
-            ),
-            const SizedBox(width: AppSpace.s12),
-            Expanded(
-              child: Text(text,
-                  style: AppText.body.copyWith(
-                    color: planned ? c.text : c.text2,
-                    fontWeight: planned ? FontWeight.w600 : FontWeight.w400,
-                  )),
-            ),
-          ],
-        ),
+            ? AppIcons.rest
+            : AppIcons.barbell;
+    return AppCard(
+      padding: const EdgeInsets.all(12),
+      child: Row(
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(color: c.text.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(AppRadius.sm)),
+            child: Icon(icon, size: 22, color: planned ? c.text : c.text3),
+          ),
+          const SizedBox(width: AppSpace.s12),
+          Expanded(
+            child: Text(text,
+                style: AppText.body.copyWith(
+                  color: planned ? c.text : c.text2,
+                  fontWeight: planned ? FontWeight.w600 : FontWeight.w400,
+                )),
+          ),
+        ],
       ),
     );
   }

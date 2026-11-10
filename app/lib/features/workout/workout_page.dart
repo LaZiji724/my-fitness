@@ -7,7 +7,9 @@ import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/core/notifications/reminder_scheduler.dart';
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/app_ui.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_image.dart';
@@ -45,14 +47,12 @@ class _NoActiveWorkout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.colors;
     return SafeArea(
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('没有进行中的训练', style: AppText.titleSmall.copyWith(color: c.text)),
-            const SizedBox(height: AppSpace.s16),
+            const EmptyState(icon: AppIcons.barbell, title: '没有进行中的训练', compact: true),
             SizedBox(
               width: 200,
               child: PressScale(child: ElevatedButton(onPressed: () => context.go('/today'), child: const Text('回到首页'))),
@@ -74,25 +74,19 @@ class _WorkoutBody extends ConsumerWidget {
     final done = view.exercises.fold<int>(0, (n, b) => n + b.sets.where((s) => s.completed).length);
     final choice = await showDialog<String>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(done == 0 ? '还没有完成任何一组' : '结束这次训练？'),
-        content: Text(done == 0
+      builder: (ctx) => AppDialog(
+        title: done == 0 ? '还没有完成任何一组' : '结束这次训练？',
+        message: done == 0
             ? '现在结束，这次训练不会被保存。'
             : incomplete > 0
                 ? '还有 $incomplete 组没完成，结束后会被丢弃。'
-                : '已完成全部 $done 组。'),
+                : '已完成全部 $done 组。',
         actions: [
-          PressScale(child: TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('继续练'))),
+          AppDialogAction('继续练', onPressed: () => Navigator.pop(ctx)),
           if (done == 0)
-            PressScale(
-              child: TextButton(
-                onPressed: () => Navigator.pop(ctx, 'discard'),
-                style: TextButton.styleFrom(foregroundColor: context.colors.danger),
-                child: const Text('放弃训练'),
-              ),
-            )
+            AppDialogAction('放弃训练', kind: AppDialogActionKind.danger, onPressed: () => Navigator.pop(ctx, 'discard'))
           else
-            PressScale(child: TextButton(onPressed: () => Navigator.pop(ctx, 'finish'), child: const Text('结束并保存'))),
+            AppDialogAction('结束并保存', kind: AppDialogActionKind.primary, onPressed: () => Navigator.pop(ctx, 'finish')),
         ],
       ),
     );
@@ -115,7 +109,6 @@ class _WorkoutBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final c = context.colors;
     final byId = ref.watch(exerciseByIdProvider);
     final hasSections = view.exercises.any((b) => b.exercise.section != 'main');
     final totalSets = view.exercises.fold<int>(0, (n, b) => n + b.sets.length);
@@ -129,10 +122,10 @@ class _WorkoutBody extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, 240),
             children: [
               _Header(view: view, onFinish: () => _finish(context, ref)),
-              const SizedBox(height: AppSpace.s8),
+              const SizedBox(height: AppSpace.s4),
               _ProgressRow(done: doneSets, total: totalSets),
               if (ref.watch(reminderPermissionProvider) == false) const _NotifyHint(),
-              const SizedBox(height: AppSpace.s12),
+              const SizedBox(height: AppSpace.s16),
               for (final (i, block) in view.exercises.indexed) ...[
                 if (hasSections && (i == 0 || view.exercises[i - 1].exercise.section != block.exercise.section))
                   _SectionLabel(WorkoutSection.fromKey(block.exercise.section)),
@@ -144,21 +137,16 @@ class _WorkoutBody extends ConsumerWidget {
                 ),
                 const SizedBox(height: AppSpace.s12),
               ],
+              if (view.exercises.isEmpty)
+                const EmptyState(icon: AppIcons.barbell, title: '还没有动作', hint: '从动作库里选第一个动作开始吧'),
               PressScale(
                 child: OutlinedButton.icon(
                   onPressed: () => context.push('/workout/pick'),
-                  icon: const Icon(Icons.add_rounded),
+                  icon: const Icon(AppIcons.plus, size: 16),
                   label: const Text('添加动作'),
                   style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
                 ),
               ),
-              if (view.exercises.isEmpty) ...[
-                const SizedBox(height: AppSpace.s24),
-                Center(
-                  child: Text('从动作库里选第一个动作开始吧',
-                      style: AppText.label.copyWith(color: c.text3)),
-                ),
-              ],
             ],
           ),
         ),
@@ -184,17 +172,16 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     return SizedBox(
-      height: 56,
+      height: AppSize.pageHeader,
       child: Row(
         children: [
-          PressScale(
-            scale: PressScale.smallScale,
-            child: IconButton(
-              tooltip: '收起',
-              icon: const Icon(Icons.keyboard_arrow_down_rounded, size: 30),
-              onPressed: () => context.canPop() ? context.pop() : context.go('/today'),
-            ),
+          RoundIconButton(
+            tooltip: '收起',
+            icon: AppIcons.chevronDown,
+            iconSize: 16,
+            onPressed: () => context.canPop() ? context.pop() : context.go('/today'),
           ),
+          const SizedBox(width: AppSpace.s12),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -203,19 +190,19 @@ class _Header extends StatelessWidget {
                 Text(view.workout.name ?? '自由训练',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: AppText.titleSmall.copyWith(color: c.text)),
+                    style: AppText.titleSmall.copyWith(color: c.text, height: 1.3)),
                 _ElapsedAndVolume(view: view),
               ],
             ),
           ),
+          const SizedBox(width: AppSpace.s8),
           PressScale(
-            child: TextButton(
+            child: OutlinedButton(
               onPressed: onFinish,
-              style: TextButton.styleFrom(
-                backgroundColor: c.accentSoft,
-                foregroundColor: c.accentText,
-                minimumSize: const Size(64, 38),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(19)),
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size(64, AppSize.buttonSmall),
+                shape: const StadiumBorder(),
+                textStyle: AppText.label.copyWith(fontWeight: FontWeight.w700),
               ),
               child: const Text('结束'),
             ),
@@ -242,9 +229,9 @@ class _ElapsedAndVolume extends StatelessWidget {
             TextSpan(
                 text: formatDuration(elapsed.isNegative ? Duration.zero : elapsed),
                 style: AppText.numSmall.copyWith(color: c.text)),
-            TextSpan(text: '  · 容量 ', style: AppText.label.copyWith(color: c.text2)),
+            TextSpan(text: '   容量 ', style: AppText.caption.copyWith(color: c.text3)),
             TextSpan(text: formatWeight(view.volume), style: AppText.numSmall.copyWith(color: c.text)),
-            TextSpan(text: ' kg', style: AppText.label.copyWith(color: c.text2)),
+            TextSpan(text: ' kg', style: AppText.caption.copyWith(color: c.text3)),
           ]),
         );
       },
@@ -264,19 +251,19 @@ class _ProgressRow extends StatelessWidget {
       children: [
         Expanded(
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(3),
+            borderRadius: BorderRadius.circular(AppRadius.full),
             child: LinearProgressIndicator(
               value: total == 0 ? 0 : done / total,
-              minHeight: 6,
-              backgroundColor: c.sunken,
+              minHeight: 4,
+              backgroundColor: c.text.withValues(alpha: 0.08),
               color: c.accent,
             ),
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 12),
         Text.rich(TextSpan(children: [
           TextSpan(text: '$done', style: AppText.numSmall.copyWith(color: c.text)),
-          TextSpan(text: ' / $total 组', style: AppText.caption.copyWith(color: c.text2, fontSize: 12)),
+          TextSpan(text: ' / $total 组', style: AppText.caption.copyWith(color: c.text3)),
         ])),
       ],
     );
@@ -294,11 +281,11 @@ class _NotifyHint extends StatelessWidget {
       padding: const EdgeInsets.only(top: AppSpace.s8),
       child: Row(
         children: [
-          Icon(Icons.notifications_off_outlined, size: 16, color: c.text3),
-          const SizedBox(width: 6),
+          Icon(AppIcons.bellOff, size: 16, color: c.text3),
+          const SizedBox(width: 8),
           Expanded(
             child: Text('通知权限没开，退到后台或熄屏时不会弹窗提醒。可在手机的系统设置里打开。',
-                key: const Key('notify-hint'), style: AppText.caption.copyWith(color: c.text3, fontSize: 12)),
+                key: const Key('notify-hint'), style: AppText.caption.copyWith(color: c.text3)),
           ),
         ],
       ),
@@ -330,11 +317,9 @@ class _ExerciseCard extends ConsumerWidget {
           SetEntry(weightKg: s.weightKg, reps: s.reps, kind: s.kind, completed: s.completed),
         ).isNotEmpty);
 
-    return DecoratedBox(
-      decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 14, 12, 8),
-        child: Column(
+    return AppCard(
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
+      child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
@@ -343,10 +328,10 @@ class _ExerciseCard extends ConsumerWidget {
                   dimension: 52,
                   child: exercise == null
                       ? DecoratedBox(
-                          decoration: BoxDecoration(color: c.sunken, borderRadius: BorderRadius.circular(12)),
-                          child: Icon(Icons.fitness_center, color: c.text3),
+                          decoration: BoxDecoration(color: c.sunken, borderRadius: BorderRadius.circular(AppRadius.sm)),
+                          child: Icon(AppIcons.barbell, color: c.text3),
                         )
-                      : ExerciseImage(exercise: exercise!, radius: 12, cacheWidth: 160),
+                      : ExerciseImage(exercise: exercise!, radius: AppRadius.sm, cacheWidth: 160),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -354,11 +339,11 @@ class _ExerciseCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(exercise?.nameZh ?? '未知动作',
-                          style: AppText.titleMedium.copyWith(color: c.text, fontSize: 18)),
+                          maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.titleSmall.copyWith(color: c.text)),
                       Text(
                         exercise == null
                             ? ''
-                            : '${exercise!.primaryMuscles.map(muscleZh).join('·')} · ${exercise!.equipmentGroup.label}',
+                            : metaLine([exercise!.primaryMuscles.map(muscleZh).join('、'), exercise!.equipmentGroup.label]),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: AppText.label.copyWith(color: c.text2),
@@ -370,7 +355,7 @@ class _ExerciseCard extends ConsumerWidget {
                 PressScale(
                   child: PopupMenuButton<String>(
                     tooltip: '动作选项',
-                    icon: Icon(Icons.more_horiz_rounded, color: c.text2),
+                    icon: Icon(AppIcons.more, color: c.text2),
                     onSelected: (v) async {
                       if (v == 'remove') {
                         ref.read(setTimerProvider.notifier).cancel();
@@ -404,20 +389,20 @@ class _ExerciseCard extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             Wrap(
               spacing: 8,
-              runSpacing: 6,
+              runSpacing: 8,
               children: [
-                _InfoChip(last.isEmpty ? '上次 · 暂无记录' : '上次 · ${last.map(_setText).join(' · ')}'),
-                _InfoChip('休息 $restSec 秒'),
+                _InfoChip(label: '上次', value: last.isEmpty ? '暂无记录' : last.map(_setText).join('  '), numeric: last.isNotEmpty),
+                _InfoChip(label: '休息', value: '$restSec 秒'),
               ],
             ),
             if (block.exercise.note != null && block.exercise.note!.trim().isNotEmpty) ...[
               const SizedBox(height: 8),
               Text('要点：${block.exercise.note}', style: AppText.label.copyWith(color: c.text2)),
             ],
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             _SetsHeader(tracking: tracking),
             const SizedBox(height: 4),
             for (var i = 0; i < block.sets.length; i++) ...[
@@ -441,14 +426,13 @@ class _ExerciseCard extends ConsumerWidget {
               child: PressScale(
                 child: TextButton.icon(
                   onPressed: () => repo.addSet(block.exercise.id),
-                  icon: Icon(Icons.add_rounded, size: 18, color: c.text2),
-                  label: Text('添加一组', style: AppText.label.copyWith(color: c.text2)),
-                  style: TextButton.styleFrom(minimumSize: const Size(0, 40)),
+                  icon: Icon(AppIcons.plus, size: 14, color: c.text2),
+                  label: Text('添加一组', style: AppText.label.copyWith(color: c.text2, fontWeight: FontWeight.w500)),
+                  style: TextButton.styleFrom(minimumSize: const Size(0, 44)),
                 ),
               ),
             ),
           ],
-        ),
       ),
     );
   }
@@ -461,18 +445,27 @@ class _ExerciseCard extends ConsumerWidget {
 }
 
 class _InfoChip extends StatelessWidget {
-  const _InfoChip(this.text);
-  final String text;
+  const _InfoChip({required this.label, required this.value, this.numeric = false});
+  final String label;
+  final String value;
+  final bool numeric;
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    return DecoratedBox(
-      decoration: BoxDecoration(color: c.sunken, borderRadius: BorderRadius.circular(8)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Text(text, style: AppText.caption.copyWith(color: c.text2, fontSize: 12)),
-      ),
+    return Container(
+      constraints: const BoxConstraints(minHeight: 28),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(color: c.text.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(AppRadius.sm)),
+      child: Text.rich(TextSpan(children: [
+        TextSpan(text: '$label  ', style: AppText.caption.copyWith(color: c.text3)),
+        TextSpan(
+          text: value,
+          style: numeric
+              ? AppText.numSmall.copyWith(color: c.text2, fontSize: 14, fontWeight: FontWeight.w500)
+              : AppText.caption.copyWith(color: c.text2, fontWeight: FontWeight.w500),
+        ),
+      ])),
     );
   }
 }
@@ -485,13 +478,7 @@ class _PrTag extends StatelessWidget {
     final c = context.colors;
     return Padding(
       padding: const EdgeInsets.only(right: 4),
-      child: DecoratedBox(
-        decoration: BoxDecoration(color: c.hero, borderRadius: BorderRadius.circular(AppRadius.xs)),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-          child: Text('PR', style: AppText.caption.copyWith(color: c.accentText, fontWeight: FontWeight.w700)),
-        ),
-      ),
+      child: AppTag('PR', icon: AppIcons.trophy, color: c.accentText, background: c.accentSoft),
     );
   }
 }
@@ -511,10 +498,10 @@ class _SetsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    final style = AppText.caption.copyWith(color: c.text3, fontSize: 12);
+    final style = AppText.caption.copyWith(color: c.text3);
     final isDuration = tracking == TrackingType.duration;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Row(
         children: [
           SizedBox(width: _colSet, child: Center(child: Text('组', style: style))),
@@ -646,8 +633,9 @@ class _SetRow extends ConsumerWidget {
     final timer = ref.watch(setTimerProvider.select((t) => t?.setId == set.id ? t : null));
     final warm = set.kind == 'warmup';
     final repo = ref.read(workoutRepositoryProvider);
-    final cellBg = done ? c.accentSoft : c.sunken;
-    final cellFg = done ? c.accentText : c.text;
+    // 做完的组退到后面（去掉底色、数字变灰），没做的组留在前面；橙色只留给右边的勾
+    final cellBg = done ? Colors.transparent : c.sunken;
+    final cellFg = done ? c.text2 : c.text;
 
     Widget cell(String text, VoidCallback onTap, double width, String label) => SizedBox(
           width: width,
@@ -684,7 +672,7 @@ class _SetRow extends ConsumerWidget {
     return SizedBox(
       height: AppSize.setRow,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 4),
         child: Row(
           children: [
             SizedBox(
@@ -709,17 +697,17 @@ class _SetRow extends ConsumerWidget {
                   ],
                   child: Center(
                     child: Container(
-                      width: 30,
-                      height: 30,
+                      width: 28,
+                      height: 28,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: warm ? c.warmupBg : (done ? c.accent : c.sunken),
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
+                        color: warm ? c.warmupBg : Colors.transparent,
+                        border: warm ? null : Border.all(color: c.text.withValues(alpha: 0.12), width: 1),
                       ),
                       child: Text(
                         warm ? 'W' : '$number',
-                        style: AppText.numSmall.copyWith(
-                            color: warm ? c.warmupFg : (done ? c.onAccent : c.text2)),
+                        style: AppText.numSmall.copyWith(fontSize: 16, color: warm ? c.warmupFg : (done ? c.text3 : c.text2)),
                       ),
                     ),
                   ),
@@ -728,7 +716,7 @@ class _SetRow extends ConsumerWidget {
             ),
             const SizedBox(width: 8),
             Expanded(
-              child: Text(prevText, maxLines: 1, style: AppText.numSmall.copyWith(color: c.text3, fontSize: 16)),
+              child: Text(prevText, maxLines: 1, style: AppText.numSmall.copyWith(color: c.text3, fontWeight: FontWeight.w500)),
             ),
             const SizedBox(width: 8),
             if (!_isDuration) ...[
@@ -761,13 +749,13 @@ class _SetRow extends ConsumerWidget {
                   child: Material(
                     color: done ? c.accent : Colors.transparent,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      side: done ? BorderSide.none : BorderSide(color: c.line, width: 1.5),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
+                      side: done ? BorderSide.none : BorderSide(color: c.text.withValues(alpha: 0.16), width: 1),
                     ),
                     child: InkWell(
-                      customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
                       onTap: () => _toggle(context, ref),
-                      child: Icon(Icons.check_rounded, color: done ? c.onAccent : c.text3),
+                      child: Icon(AppIcons.check, size: 18, color: done ? c.onAccent : c.text3),
                     ),
                   ),
                 ),
@@ -841,7 +829,7 @@ class _TimerButton extends StatelessWidget {
       child: PressScale(
         scale: PressScale.chipScale,
         child: Material(
-          color: done ? Colors.transparent : (running ? c.sunken : c.accentSoft),
+          color: done ? Colors.transparent : (running ? c.sunken : c.text),
           borderRadius: BorderRadius.circular(AppRadius.sm),
           child: InkWell(
             borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -850,7 +838,7 @@ class _TimerButton extends StatelessWidget {
               child: Text(text,
                   key: Key('set-timer-button-$text'),
                   style: AppText.label.copyWith(
-                    color: done ? c.text3 : (running ? c.text2 : c.accentText),
+                    color: done ? c.text3 : (running ? c.text : c.bg),
                     fontWeight: FontWeight.w700,
                   )),
             ),
@@ -920,12 +908,14 @@ class _DockState extends ConsumerState<_Dock> {
     final next = _nextSet();
     final label = next == null ? '添加动作' : '完成第 ${next.number} 组';
 
+    final nextName = next == null ? null : ref.watch(exerciseByIdProvider)[next.block.exercise.exerciseId]?.nameZh;
+
     return DecoratedBox(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          stops: const [0, 0.26],
+          stops: const [0, 0.3],
           colors: [c.bg.withValues(alpha: 0), c.bg],
         ),
       ),
@@ -934,21 +924,39 @@ class _DockState extends ConsumerState<_Dock> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(12, 28, 12, 12),
           child: DecoratedBox(
-            decoration: BoxDecoration(color: c.hero, borderRadius: BorderRadius.circular(24)),
+            decoration: BoxDecoration(
+              color: c.hero,
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+              border: Border.all(color: c.onHero.withValues(alpha: 0.08), width: AppStroke.hairline),
+              boxShadow: const [
+                BoxShadow(color: Color(0x33000000), blurRadius: 24, spreadRadius: -6, offset: Offset(0, 12)),
+                BoxShadow(color: Color(0x14000000), blurRadius: 4, offset: Offset(0, 2)),
+              ],
+            ),
             child: Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(8),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (rest == null)
                     SizedBox(
-                      height: 36,
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 6),
-                          child: Text('完成一组后自动开始组间休息',
-                              style: AppText.label.copyWith(color: c.onHero2)),
+                      height: 40,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Row(
+                          children: [
+                            Text(next == null ? '全部完成' : '接下来', style: AppText.label.copyWith(color: c.onHero2)),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                next == null ? '可以结束，或再加一个动作' : metaLine([nextName ?? '动作', '第 ${next.number} 组']),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.right,
+                                style: AppText.label.copyWith(color: c.onHero, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     )
@@ -964,19 +972,15 @@ class _DockState extends ConsumerState<_Dock> {
                         return _RestRow(rest: rest, left: left);
                       },
                     ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
                   SizedBox(
                     height: AppSize.buttonLarge,
                     child: PressScale(
                       child: FilledButton.icon(
                         onPressed: _completeNext,
-                        icon: Icon(next == null ? Icons.add_rounded : Icons.check_rounded),
+                        icon: Icon(next == null ? AppIcons.plus : AppIcons.check, size: 18),
                         label: Text(label),
-                        style: FilledButton.styleFrom(
-                          minimumSize: const Size.fromHeight(AppSize.buttonLarge),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                          textStyle: AppText.button.copyWith(fontSize: 17),
-                        ),
+                        style: const ButtonStyle(minimumSize: WidgetStatePropertyAll(Size.fromHeight(AppSize.buttonLarge))),
                       ),
                     ),
                   ),
@@ -1003,14 +1007,14 @@ class _RestRow extends ConsumerWidget {
     final pct = rest.totalSec == 0 ? 0.0 : (left / rest.totalSec).clamp(0.0, 1.0);
 
     Widget chip(String text, VoidCallback onTap, {bool numeric = true}) => Padding(
-          padding: const EdgeInsets.only(left: 6),
+          padding: const EdgeInsets.only(left: 8),
           child: PressScale(
             scale: PressScale.chipScale,
             child: Material(
               color: c.hero2,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
               child: InkWell(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
                 onTap: onTap,
                 child: SizedBox(
                   height: 36,
@@ -1028,42 +1032,47 @@ class _RestRow extends ConsumerWidget {
           ),
         );
 
-    return Column(
-      children: [
-        SizedBox(
-          height: 36,
-          child: Row(
-            children: [
-              const SizedBox(width: 6),
-              if (over)
-                Text('休息结束，开始下一组', style: AppText.body.copyWith(color: c.onHero2, fontSize: 14))
-              else ...[
-                Text('组间休息', style: AppText.label.copyWith(color: c.onHero2)),
-                const SizedBox(width: 10),
-                Text(formatDuration(Duration(seconds: left)),
-                    key: const Key('rest-remaining'),
-                    style: AppText.numLarge.copyWith(color: c.onHero, fontSize: 30, height: 1)),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 4, 4, 0),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 40,
+            child: Row(
+              children: [
+                if (over)
+                  Text('休息结束，开始下一组', style: AppText.label.copyWith(color: c.onHero, fontWeight: FontWeight.w600))
+                else ...[
+                  Text(formatDuration(Duration(seconds: left)),
+                      key: const Key('rest-remaining'), style: AppText.numLarge.copyWith(color: c.onHero, height: 1)),
+                  const SizedBox(width: 8),
+                  Text('组间休息', style: AppText.caption.copyWith(color: c.onHero2)),
+                ],
+                const Spacer(),
+                if (!over) ...[
+                  chip('−15', () => notifier.adjust(-15)),
+                  chip('+15', () => notifier.adjust(15)),
+                ],
+                chip(over ? '关闭' : '跳过', notifier.skip, numeric: false),
               ],
-              const Spacer(),
-              if (!over) ...[
-                chip('−15', () => notifier.adjust(-15)),
-                chip('+15', () => notifier.adjust(15)),
-              ],
-              chip(over ? '关闭' : '跳过', notifier.skip, numeric: false),
-            ],
+            ),
           ),
-        ),
-        const SizedBox(height: 10),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(2),
-          child: LinearProgressIndicator(
-            value: over ? 0 : pct,
-            minHeight: 4,
-            backgroundColor: c.hero2,
-            color: c.accent,
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(AppRadius.full),
+              child: LinearProgressIndicator(
+                value: over ? 0 : pct,
+                minHeight: 3,
+                backgroundColor: c.hero2,
+                color: c.accent,
+              ),
+            ),
           ),
-        ),
-      ],
+          const SizedBox(height: 4),
+        ],
+      ),
     );
   }
 }
@@ -1077,7 +1086,7 @@ class _SectionLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.colors;
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpace.s8),
+      padding: const EdgeInsets.fromLTRB(4, 4, 4, 8),
       child: Text(section.label, style: AppText.label.copyWith(color: c.text2, fontWeight: FontWeight.w700)),
     );
   }

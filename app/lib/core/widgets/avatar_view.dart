@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 
 /// 圆形头像：preset 读 App 内置图片，custom 读 Supabase Storage 的公开地址。
@@ -21,7 +22,7 @@ class AvatarView extends StatelessWidget {
     final c = context.colors;
     final fallback = ColoredBox(
       color: c.sunken,
-      child: Icon(Icons.person_rounded, size: size * 0.6, color: c.text3),
+      child: Icon(AppIcons.userOn, size: size * 0.6, color: c.text3),
     );
     final Widget image;
     if (kind == 'custom') {

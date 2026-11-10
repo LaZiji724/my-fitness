@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/app_ui.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/plan/plan_widgets.dart' show EmptyCard, EstimateHint;
 import 'package:my_fitness/features/plan/plan_estimate.dart';
@@ -43,8 +44,7 @@ class TodayPreviewPage extends ConsumerWidget {
             sliver: SliverList.list(children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: AppSpace.s12),
-                child: Text('点动作可以看动作并调整运动量，点 ✕ 去掉今天不练的动作，长按卡片上下拖动可以排序。'
-                    '这些只影响今天这次训练，不会改动模板。',
+                child: Text('这里的改动只影响今天这次训练，不会改动模板。长按卡片可以拖动排序。',
                     style: AppText.label.copyWith(color: c.text2)),
               ),
               if (view.exercises.isEmpty)
@@ -93,27 +93,24 @@ class TodayPreviewPage extends ConsumerWidget {
           ),
         ],
       ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, AppSpace.s12),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              EstimateHint(label: estimateLabel(view.exercises, byId)),
-              PressScale(
-                child: FilledButton(
-                  style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
-                  onPressed: view.exercises.isEmpty
-                      ? null
-                      : () async {
-                          await startTodayPlan(ref);
-                          if (context.mounted) context.go('/workout');
-                        },
-                  child: const Text('开始训练'),
-                ),
+      bottomNavigationBar: BottomActionBar(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            EstimateHint(label: estimateLabel(view.exercises, byId)),
+            PressScale(
+              child: FilledButton(
+                style: const ButtonStyle(minimumSize: WidgetStatePropertyAll(Size.fromHeight(AppSize.buttonLarge))),
+                onPressed: view.exercises.isEmpty
+                    ? null
+                    : () async {
+                        await startTodayPlan(ref);
+                        if (context.mounted) context.go('/workout');
+                      },
+                child: const Text('开始训练'),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
+import 'package:my_fitness/core/widgets/app_ui.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/plan/plan_providers.dart';
 import 'package:my_fitness/features/plan/plan_widgets.dart';
@@ -46,16 +48,21 @@ class WorkoutSummaryPage extends ConsumerWidget {
       final unit = m?.group(2) ?? '';
       return Expanded(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text.rich(
-              TextSpan(children: [
-                TextSpan(text: number, style: AppText.numLarge.copyWith(color: c.onHero)),
-                if (unit.isNotEmpty) TextSpan(text: ' $unit', style: AppText.label.copyWith(color: c.onHero2)),
-              ]),
-              maxLines: 1,
-            ),
-            const SizedBox(height: 2),
             Text(label, style: AppText.caption.copyWith(color: c.onHero2)),
+            const SizedBox(height: 4),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text.rich(
+                TextSpan(children: [
+                  TextSpan(text: number, style: AppText.numLarge.copyWith(color: c.onHero, height: 1)),
+                  if (unit.isNotEmpty) TextSpan(text: ' $unit', style: AppText.caption.copyWith(color: c.onHero2)),
+                ]),
+                maxLines: 1,
+              ),
+            ),
           ],
         ),
       );
@@ -64,63 +71,59 @@ class WorkoutSummaryPage extends ConsumerWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpace.pageGutter),
+          padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s16, AppSpace.pageGutter, AppSpace.s12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: AppSpace.s16),
+              const SizedBox(height: AppSpace.s24),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
-                  width: 56,
-                  height: 56,
-                  decoration: BoxDecoration(color: c.accent, shape: BoxShape.circle),
-                  child: Icon(Icons.local_fire_department_rounded, size: 32, color: c.onAccent),
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(color: c.accent, borderRadius: BorderRadius.circular(AppRadius.md)),
+                  child: Icon(AppIcons.fire, size: 26, color: c.onAccent),
                 ),
               ),
-              const SizedBox(height: AppSpace.s16),
+              const SizedBox(height: AppSpace.s20),
               Text('训练完成', style: AppText.titleLarge.copyWith(color: c.text)),
               const SizedBox(height: AppSpace.s4),
               Text(
                   summary.auto
                       ? '你有一阵子没操作了，已自动保存，时长算到最后一次操作'
                       : (prs.isEmpty ? '这次练得不错，记录已保存' : '破了 ${prs.length} 个动作的纪录，记录已保存'),
-                  style: AppText.body.copyWith(color: c.text2)),
+                  style: AppText.label.copyWith(color: c.text2)),
               const SizedBox(height: AppSpace.s24),
-              DecoratedBox(
-                decoration: BoxDecoration(color: c.hero, borderRadius: AppRadius.card),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpace.s20, horizontal: AppSpace.s8),
-                  child: Row(
-                    children: [
-                      stat(formatSpan(summary.duration), '时长'),
-                      stat(formatVolume(summary.volume), '总容量'),
-                      stat('${summary.setCount}', '完成组数'),
-                    ],
-                  ),
+              HeroCard(
+                child: Row(
+                  children: [
+                    stat(formatSpan(summary.duration), '时长'),
+                    stat(formatVolume(summary.volume), '总容量'),
+                    stat('${summary.setCount}', '完成组数'),
+                  ],
                 ),
               ),
-              const SizedBox(height: AppSpace.s24),
+              const SizedBox(height: AppSpace.s32),
               if (prs.isNotEmpty) ...[
-                Text('本次纪录', style: AppText.titleSmall.copyWith(color: c.text)),
+                const SectionTitle('本次纪录'),
                 const SizedBox(height: AppSpace.s12),
                 Expanded(
-                  child: ListView(
-                    children: [
-                      for (final e in prs)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: AppSpace.s8),
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(color: c.surface, borderRadius: AppRadius.card),
-                            child: Padding(
-                              padding: const EdgeInsets.all(AppSpace.s16),
+                  child: SingleChildScrollView(
+                    child: AppCard(
+                      padding: EdgeInsets.zero,
+                      child: Column(
+                        children: [
+                          for (final (i, e) in prs.indexed) ...[
+                            if (i > 0) const HairDivider(indent: 64),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: AppSpace.s16, vertical: AppSpace.s12),
                               child: Row(
                                 children: [
                                   Container(
-                                    width: 40,
-                                    height: 40,
-                                    decoration: BoxDecoration(color: c.accentSoft, shape: BoxShape.circle),
-                                    child: Icon(Icons.emoji_events_rounded, size: 22, color: c.accentText),
+                                    width: 36,
+                                    height: 36,
+                                    decoration: BoxDecoration(color: c.accentSoft, borderRadius: BorderRadius.circular(AppRadius.sm)),
+                                    child: Icon(AppIcons.trophy, size: 18, color: c.accentText),
                                   ),
                                   const SizedBox(width: AppSpace.s12),
                                   Expanded(
@@ -129,26 +132,27 @@ class WorkoutSummaryPage extends ConsumerWidget {
                                       children: [
                                         Text(byId[e.key]?.nameZh ?? '动作',
                                             style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
-                                        Text(e.value.map(prLabel).join(' · '),
-                                            style: AppText.label.copyWith(color: c.accentText)),
+                                        Text(e.value.map(prLabel).join('、'), style: AppText.label.copyWith(color: c.accentText)),
                                       ],
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                          ),
-                        ),
-                    ],
+                          ],
+                        ],
+                      ),
+                    ),
                   ),
                 ),
+                const SizedBox(height: AppSpace.s12),
               ] else
                 const Spacer(),
               _SaveTemplateButton(workoutId: summary.workoutId),
               const SizedBox(height: AppSpace.s12),
               PressScale(
                 child: FilledButton(
-                  style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.buttonLarge)),
+                  style: const ButtonStyle(minimumSize: WidgetStatePropertyAll(Size.fromHeight(AppSize.buttonLarge))),
                   onPressed: () => context.go('/today'),
                   child: const Text('完成'),
                 ),
@@ -190,11 +194,10 @@ class _SaveTemplateButtonState extends ConsumerState<_SaveTemplateButton> {
   @override
   Widget build(BuildContext context) {
     return PressScale(
-      child: OutlinedButton.icon(
+      child: ElevatedButton.icon(
         onPressed: _saved ? null : _save,
-        icon: Icon(_saved ? Icons.check_rounded : Icons.bookmark_add_outlined),
+        icon: Icon(_saved ? AppIcons.check : AppIcons.saveTemplate, size: 18),
         label: Text(_saved ? '已存为模板' : '存为模板'),
-        style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(AppSize.button)),
       ),
     );
   }

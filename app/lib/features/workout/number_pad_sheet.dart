@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 
@@ -111,7 +112,7 @@ class _NumberPadState extends State<_NumberPad> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(widget.title, style: AppText.titleSmall.copyWith(color: c.text)),
+                Text(widget.title, style: AppText.titleMedium.copyWith(color: c.text)),
                 Text(widget.hint, style: AppText.label.copyWith(color: c.text3)),
               ],
             ),
@@ -128,10 +129,9 @@ class _NumberPadState extends State<_NumberPad> {
                     children: [
                       Text(_text.isEmpty ? '0' : _text,
                           key: const Key('pad-value'),
-                          style: AppText.numLarge.copyWith(
-                              color: _text.isEmpty ? c.text3 : c.text, fontSize: 44)),
-                      const SizedBox(width: 4),
-                      Text(widget.unit, style: AppText.label.copyWith(color: c.text2)),
+                          style: AppText.numDisplay.copyWith(color: _text.isEmpty ? c.text3 : c.text)),
+                      const SizedBox(width: 6),
+                      Text(widget.unit, style: AppText.label.copyWith(color: c.text3)),
                     ],
                   ),
                 ),
@@ -139,27 +139,27 @@ class _NumberPadState extends State<_NumberPad> {
                   _StepButton(label: '+${_format(s)}', onTap: () => _step(s)),
               ],
             ),
-            const SizedBox(height: AppSpace.s12),
+            const SizedBox(height: AppSpace.s20),
             GridView.count(
               crossAxisCount: 3,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               mainAxisSpacing: 8,
               crossAxisSpacing: 8,
-              childAspectRatio: 2.3,
+              childAspectRatio: 2.2,
               children: [
                 for (final k in keys)
                   PressScale(
                     scale: PressScale.chipScale,
                     child: Material(
-                      color: c.sunken,
-                      borderRadius: BorderRadius.circular(14),
+                      color: k == '⌫' || k == '.' ? Colors.transparent : c.sunken,
+                      borderRadius: BorderRadius.circular(AppRadius.md),
                       child: InkWell(
-                        borderRadius: BorderRadius.circular(14),
+                        borderRadius: BorderRadius.circular(AppRadius.md),
                         onTap: () => _key(k),
                         child: Center(
                           child: k == '⌫'
-                              ? Icon(Icons.backspace_outlined, color: c.text)
+                              ? Icon(AppIcons.backspace, color: c.text)
                               : Text(k, style: AppText.numMedium.copyWith(color: c.text)),
                         ),
                       ),
@@ -194,14 +194,17 @@ class _StepButton extends StatelessWidget {
       child: PressScale(
         scale: PressScale.chipScale,
         child: Material(
-          color: c.sunken,
-          borderRadius: BorderRadius.circular(12),
+          color: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.sm),
+            side: BorderSide(color: c.text.withValues(alpha: 0.14), width: 1),
+          ),
           child: InkWell(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(AppRadius.sm),
             onTap: onTap,
             child: SizedBox(
               width: 52,
-              height: 44,
+              height: 40,
               child: Center(child: Text(label, style: AppText.numSmall.copyWith(color: c.text))),
             ),
           ),
