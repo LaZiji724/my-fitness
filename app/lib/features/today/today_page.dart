@@ -6,6 +6,7 @@ import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/app_ui.dart';
 import 'package:my_fitness/core/widgets/avatar_view.dart';
+import 'package:my_fitness/features/profile/avatar_edit_sheet.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/auth/auth_providers.dart';
 import 'package:my_fitness/features/calendar/calendar_math.dart';
@@ -207,6 +208,7 @@ class TodayPage extends ConsumerWidget {
                       label: '我的',
                       child: GestureDetector(
                         onTap: () => context.push('/me'),
+                        onLongPress: () => showAvatarSheet(context),
                         child: Container(
                           padding: const EdgeInsets.all(2),
                           decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: c.text.withValues(alpha: 0.12), width: 1)),

@@ -121,6 +121,9 @@ abstract final class AppIcons {
   static const IconData listDetail = IconData(0xeadc, fontFamily: _regular); // listChecks
   static const IconData refreshSmall = IconData(0xe036, fontFamily: _bold); // arrowClockwise
   static const IconData warnSmall = IconData(0xe4e2, fontFamily: _fill); // warningCircle
+  static const IconData camera = IconData(0xe10e, fontFamily: _fill); // camera
+  static const IconData cameraSmall = IconData(0xe10e, fontFamily: _bold); // camera
+  static const IconData photo = IconData(0xe2ca, fontFamily: _regular); // image
   static const IconData cameraOff = IconData(0xe110, fontFamily: _regular); // cameraSlash
   static const IconData flashlight = IconData(0xe246, fontFamily: _regular); // flashlight
   static const IconData flashlightOn = IconData(0xe246, fontFamily: _fill); // flashlight

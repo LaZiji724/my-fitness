@@ -6,7 +6,9 @@ import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/app_ui.dart';
 import 'package:my_fitness/core/widgets/avatar_view.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
+import 'package:my_fitness/core/notifications/keep_alive.dart';
 import 'package:my_fitness/features/auth/auth_providers.dart';
+import 'package:my_fitness/features/profile/avatar_edit_sheet.dart';
 import 'package:my_fitness/features/sync/backup_actions.dart';
 import 'package:my_fitness/features/sync/sync_chip.dart';
 import 'package:my_fitness/features/sync/sync_providers.dart';
@@ -87,11 +89,7 @@ class ProfilePage extends ConsumerWidget {
           AppCard(
             child: Row(
               children: [
-                AvatarView(
-                  kind: profile?.avatarKind ?? 'preset',
-                  avatarRef: profile?.avatarRef ?? 'avatar_01',
-                  size: 64,
-                ),
+                const _EditableAvatar(),
                 const SizedBox(width: AppSpace.s16),
                 Expanded(
                   child: Column(
@@ -106,6 +104,12 @@ class ProfilePage extends ConsumerWidget {
               ],
             ),
           ),
+          if (ref.watch(keepAliveProvider).supported) ...[
+            const SizedBox(height: AppSpace.s32),
+            const SectionTitle('消息提醒'),
+            const SizedBox(height: AppSpace.s12),
+            const _BackgroundMessagesCard(),
+          ],
           const SizedBox(height: AppSpace.s32),
           const SectionTitle('数据与同步'),
           const SizedBox(height: AppSpace.s12),
@@ -121,6 +125,98 @@ class ProfilePage extends ConsumerWidget {
           const SizedBox(height: AppSpace.s16),
           Center(child: Text('数据保存在本机，并自动同步到你的账号', style: AppText.caption.copyWith(color: c.text3))),
         ],
+      ),
+    );
+  }
+}
+
+/// 「后台接收好友消息」开关（安卓）：打开后通知栏会常驻一条静默提示，应用退到后台也能收到消息通知。
+class _BackgroundMessagesCard extends ConsumerWidget {
+  const _BackgroundMessagesCard();
+
+  Future<void> _toggle(WidgetRef ref, bool on) async {
+    await ref.read(backgroundMessagesProvider.notifier).set(on);
+    if (!on) return;
+    // 顺便请系统「不要为了省电限制这个应用」，不然手机息屏一阵子后会掐掉网络，消息就晚了
+    final keep = ref.read(keepAliveProvider);
+    if (!await keep.isIgnoringBatteryOptimizations()) {
+      await keep.requestIgnoreBatteryOptimizations();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final c = context.colors;
+    final on = ref.watch(backgroundMessagesProvider).value ?? true;
+    return AppCard(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          Icon(AppIcons.chat, size: 24, color: c.text),
+          const SizedBox(width: AppSpace.s16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('后台接收好友消息', style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
+                Text('退到后台也能弹出消息通知，通知栏会常驻一条静默提示',
+                    style: AppText.label.copyWith(color: c.text2, height: 1.4)),
+              ],
+            ),
+          ),
+          const SizedBox(width: AppSpace.s8),
+          Switch(value: on, onChanged: (v) => _toggle(ref, v)),
+        ],
+      ),
+    );
+  }
+}
+
+/// 「我的」里的大头像：右下角一个相机小角标，点一下换头像。
+class _EditableAvatar extends ConsumerWidget {
+  const _EditableAvatar();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final c = context.colors;
+    final profile = ref.watch(profileSummaryProvider);
+    return PressScale(
+      scale: PressScale.chipScale,
+      child: Semantics(
+        button: true,
+        label: '更换头像',
+        child: GestureDetector(
+          onTap: () => showAvatarSheet(context),
+          child: SizedBox(
+            width: 72,
+            height: 72,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned.fill(
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: AvatarView(kind: profile?.avatarKind ?? 'preset', avatarRef: profile?.avatarRef ?? 'avatar_01', size: 64),
+                  ),
+                ),
+                Positioned(
+                  right: 0,
+                  bottom: 0,
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: c.accent,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: c.surface, width: 2),
+                    ),
+                    child: Icon(AppIcons.cameraSmall, size: 12, color: c.onAccent),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

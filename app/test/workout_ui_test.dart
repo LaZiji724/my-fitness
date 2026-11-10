@@ -7,6 +7,8 @@ import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/core/db/database_provider.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
+import 'package:my_fitness/features/exercises/exercise_detail_page.dart';
+import 'package:my_fitness/features/exercises/exercise_image.dart';
 import 'package:my_fitness/features/exercises/exercise_prefs.dart';
 import 'package:my_fitness/features/exercises/exercise_repository.dart';
 import 'package:my_fitness/features/workout/workout_math.dart';
@@ -80,6 +82,27 @@ void main() {
     await tester.tap(find.bySemanticsLabel('完成第 1 组').first);
     await tester.pump();
     expect(find.text('先填重量和次数'), findsOneWidget);
+  });
+
+  testWidgets('训练中点动作卡片的图片和名字：进入动作详情页看大图，返回后训练还在', (tester) async {
+    final w = await repo.startWorkout();
+    await repo.addExercise(w.id, bench.id);
+    await tester.pumpWidget(host(
+      const WorkoutPage(),
+      extra: [GoRoute(path: '/exercise/:slug', builder: (_, st) => ExerciseDetailPage(slug: st.pathParameters['slug']!))],
+    ));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(bench.nameZh).first);
+    await tester.pumpAndSettle();
+    // 详情页：两张大图（起、止）和动作要领
+    expect(find.byType(ExerciseImage), findsNWidgets(bench.imageCount));
+    await tester.scrollUntilVisible(find.text('动作要领'), 300);
+    expect(find.text(bench.instructionsZh!), findsOneWidget);
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    expect(find.bySemanticsLabel('完成第 1 组'), findsWidgets);
   });
 
   testWidgets('填好重量次数后打勾：该组完成并开始休息计时', (tester) async {

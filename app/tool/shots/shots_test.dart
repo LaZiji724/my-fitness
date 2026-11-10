@@ -29,7 +29,7 @@ import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_detail_page.dart';
 import 'package:my_fitness/features/exercises/exercise_prefs.dart';
 import 'package:my_fitness/features/exercises/exercise_repository.dart';
-import 'package:my_fitness/features/exercises/exercises_page.dart';
+import 'package:my_fitness/features/friends/friends_providers.dart' show friendsBadgeProvider;
 import 'package:my_fitness/features/library/library_page.dart';
 import 'package:my_fitness/features/library/library_providers.dart';
 import 'package:my_fitness/features/library/library_repository.dart';
@@ -225,11 +225,13 @@ void main() {
         StatefulShellRoute.indexedStack(
           builder: (_, _, shell) => AppShell(shell: shell),
           branches: [
-            StatefulShellBranch(routes: [GoRoute(path: '/today', builder: (_, _) => const TodayPage())]),
-            StatefulShellBranch(routes: [GoRoute(path: '/plan', builder: (_, _) => const PlanPage())]),
+            StatefulShellBranch(routes: [
+              GoRoute(path: '/plan', builder: (_, st) => PlanPage(initialTab: PlanPage.tabFromQuery(st.uri.queryParameters['tab']))),
+            ]),
             StatefulShellBranch(routes: [GoRoute(path: '/calendar', builder: (_, _) => const CalendarPage())]),
-            StatefulShellBranch(routes: [GoRoute(path: '/exercises', builder: (_, _) => const ExercisesPage())]),
+            StatefulShellBranch(routes: [GoRoute(path: '/today', builder: (_, _) => const TodayPage())]),
             StatefulShellBranch(routes: [GoRoute(path: '/stats', builder: (_, _) => const StatsPage())]),
+            StatefulShellBranch(routes: [GoRoute(path: '/friends', builder: (_, _) => const Scaffold(body: Center(child: Text('好友'))))]),
           ],
         ),
       ],
@@ -247,6 +249,7 @@ void main() {
       profileSummaryProvider.overrideWithValue(const ProfileSummary(
           username: 'hotchicken', displayName: 'Hotchicken', avatarKind: 'preset', avatarRef: 'avatar_03')),
       todayProvider.overrideWithValue(today),
+      friendsBadgeProvider.overrideWithValue(0),
       syncControllerProvider.overrideWith(_IdleSync.new),
       currentVersionProvider.overrideWith((ref) async => '2.8.0'),
     ]);
@@ -366,10 +369,10 @@ void main() {
       router.go('/calendar');
     });
     await step('exercises', () async {
-      router.go('/exercises');
+      router.go('/plan?tab=exercises');
     });
     await step('exercise_detail', () async {
-      router.go('/exercises');
+      router.go('/plan?tab=exercises');
       router.push('/exercise/${ex('杠铃卧推').slug}');
     });
     await step('exercise_add', () async {

@@ -339,6 +339,18 @@ class _ExerciseCard extends ConsumerWidget {
           children: [
             Row(
               children: [
+                // 点图片和名字这一块，进入动作详情页看大图和要领
+                Expanded(
+                  child: Semantics(
+                    button: exercise != null,
+                    label: exercise == null ? null : '查看 ${exercise!.nameZh} 详情',
+                    child: PressScale(
+                      scale: PressScale.cardScale,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
+                        onTap: exercise == null ? null : () => context.push('/exercise/${exercise!.slug}'),
+                        child: Row(
+                          children: [
                 SizedBox.square(
                   dimension: 52,
                   child: exercise == null
@@ -364,6 +376,12 @@ class _ExerciseCard extends ConsumerWidget {
                         style: AppText.label.copyWith(color: c.text2),
                       ),
                     ],
+                  ),
+                ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 if (hasPr) const _PrTag(),

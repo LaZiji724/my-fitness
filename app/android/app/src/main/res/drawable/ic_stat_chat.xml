@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 通知栏小图标：一个对话气泡（只用透明度，系统会染成白色/灰色） -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M12,3C6.99,3 3,6.63 3,11.1c0,2.2 0.97,4.2 2.55,5.65L4.8,20.4c-0.1,0.45 0.37,0.8 0.77,0.57l3.85,-2.15c0.84,0.2 1.71,0.31 2.58,0.31 5.01,0 9,-3.63 9,-8.13C21,6.63 17.01,3 12,3z" />
+</vector>

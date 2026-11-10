@@ -14,15 +14,27 @@ import 'package:my_fitness/features/plan/plan_providers.dart';
 import 'package:my_fitness/features/plan/plan_repository.dart';
 import 'package:my_fitness/features/plan/plan_widgets.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
+import 'package:my_fitness/features/exercises/exercises_page.dart' show ExercisesBody;
 import 'package:my_fitness/features/library/library_providers.dart';
 import 'package:my_fitness/features/workout/workout_providers.dart';
 
 const _weekdays = ['一', '二', '三', '四', '五', '六', '日'];
 
-/// 「计划」分栏：计划（N 天一循环）和模板（一次训练的动作清单）。
+/// 「计划」分栏：计划（N 天一循环）、动作库（所有动作）和模板（一次训练的动作清单）。
 class PlanPage extends ConsumerStatefulWidget {
   const PlanPage({super.key, this.initialTab = 0});
+
+  /// 0 计划，1 动作库，2 模板
   final int initialTab;
+
+  static const tabLabels = ['计划', '动作库', '模板'];
+
+  /// 地址里 `?tab=` 的写法转成分栏序号：plan / exercises / templates
+  static int tabFromQuery(String? q) => switch (q) {
+        'exercises' => 1,
+        'templates' => 2,
+        _ => 0,
+      };
 
   @override
   ConsumerState<PlanPage> createState() => _PlanPageState();
@@ -32,18 +44,38 @@ class _PlanPageState extends ConsumerState<PlanPage> {
   late int _tab = widget.initialTab;
 
   @override
+  void didUpdateWidget(PlanPage old) {
+    super.didUpdateWidget(old);
+    if (old.initialTab != widget.initialTab) _tab = widget.initialTab;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    const gutter = EdgeInsets.symmetric(horizontal: AppSpace.pageGutter);
     return Scaffold(
       body: SafeArea(
         bottom: false,
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, AppSpace.s32),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const PageHeader(title: '计划'),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s8, AppSpace.pageGutter, 0),
+              child: PageHeader(title: '计划'),
+            ),
             const SizedBox(height: AppSpace.s8),
-            SegmentTabs(labels: const ['计划', '模板'], index: _tab, onChanged: (i) => setState(() => _tab = i)),
+            Padding(
+              padding: gutter,
+              child: SegmentTabs(labels: PlanPage.tabLabels, index: _tab, onChanged: (i) => setState(() => _tab = i)),
+            ),
             const SizedBox(height: AppSpace.s16),
-            if (_tab == 0) const _PlansTab() else const _TemplatesTab(),
+            Expanded(
+              child: _tab == 1
+                  ? const Padding(padding: gutter, child: ExercisesBody())
+                  : ListView(
+                      padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, 0, AppSpace.pageGutter, AppSpace.s32),
+                      children: [if (_tab == 0) const _PlansTab() else const _TemplatesTab()],
+                    ),
+            ),
           ],
         ),
       ),

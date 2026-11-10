@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_fitness/app/app_shell.dart';
+import 'package:my_fitness/core/theme/app_icons.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/friends/friends_providers.dart';
@@ -16,7 +17,7 @@ void main() {
         StatefulShellRoute.indexedStack(
           builder: (_, _, shell) => AppShell(shell: shell),
           branches: [
-            for (final p in ['today', 'plan', 'calendar', 'exercises', 'stats', 'friends'])
+            for (final p in ['plan', 'calendar', 'today', 'stats', 'friends'])
               StatefulShellBranch(routes: [
                 GoRoute(path: '/$p', builder: (_, _) => page(p)),
               ]),
@@ -28,14 +29,23 @@ void main() {
   }
 
   for (final dark in [false, true]) {
-    testWidgets('底部 6 个分栏可切换（${dark ? '深色' : '浅色'}）', (tester) async {
+    testWidgets('底部 5 个分栏可切换（${dark ? '深色' : '浅色'}）', (tester) async {
       await tester.pumpWidget(host(dark ? AppTheme.dark() : AppTheme.light()));
       await tester.pumpAndSettle();
 
-      for (final label in ['训练', '计划', '日历', '动作', '数据', '好友']) {
+      for (final label in ['计划', '日历', '训练', '数据', '好友']) {
         expect(find.text(label), findsOneWidget);
       }
       expect(find.text('页面-today'), findsOneWidget);
+
+      // 「训练」在正中间，比两侧的分栏项更靠下的标签位置相同，但圆钮更大
+      final train = tester.getCenter(find.text('训练')).dx;
+      final screen = tester.view.physicalSize.width / tester.view.devicePixelRatio;
+      expect(train, closeTo(screen / 2, 1));
+      expect(tester.getCenter(find.text('计划')).dx, lessThan(tester.getCenter(find.text('日历')).dx));
+      expect(tester.getCenter(find.text('数据')).dx, lessThan(tester.getCenter(find.text('好友')).dx));
+      expect(tester.getCenter(find.text('日历')).dx, lessThan(train));
+      expect(tester.getCenter(find.text('数据')).dx, greaterThan(train));
 
       await tester.tap(find.text('日历'));
       await tester.pumpAndSettle();
@@ -65,6 +75,18 @@ void main() {
     await tester.pumpAndSettle();
     expect(scaleOf('日历'), 1);
     expect(find.text('页面-calendar'), findsOneWidget);
+  });
+
+  testWidgets('点正中间的训练圆钮回到首页', (tester) async {
+    await tester.pumpWidget(host(AppTheme.light()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('好友'));
+    await tester.pumpAndSettle();
+    expect(find.text('页面-friends'), findsOneWidget);
+    // 圆钮本身（不是文字）也能点
+    await tester.tap(find.byIcon(AppIcons.navTrain));
+    await tester.pumpAndSettle();
+    expect(find.text('页面-today'), findsOneWidget);
   });
 
   test('主题令牌：浅色与深色都能取到颜色扩展', () {

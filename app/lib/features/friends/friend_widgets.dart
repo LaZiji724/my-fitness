@@ -1,10 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/core/widgets/avatar_view.dart';
 import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/friends/friend_models.dart';
 import 'package:my_fitness/features/friends/friends_repository.dart';
+
+/// 好友的两个页面：聊天、运动记录。两页顶部都有按钮互相跳转。
+///
+/// 从好友列表进到其中一页后，再点按钮去另一页：另一页压在上面；
+/// 在另一页里再点回来，则是直接退回下面那一页，而不是再压一层新的。
+/// 这样不管来回点多少次，页面栈最多只有「好友列表、一页、另一页」三层，连按两次返回就一定退出这位好友。
+enum FriendPage { chat, activity }
+
+/// 在 [from] 这一页里点「去 [to] 页」。[cameFrom] 是进入 [from] 时的上一页（从列表进来为 null）。
+void switchFriendPage(BuildContext context, String friendId, {required FriendPage from, required FriendPage? cameFrom}) {
+  final to = from == FriendPage.chat ? FriendPage.activity : FriendPage.chat;
+  if (cameFrom == to && context.canPop()) {
+    context.pop();
+    return;
+  }
+  final path = to == FriendPage.chat ? '/friends/chat/$friendId' : '/friends/activity/$friendId';
+  context.push(path, extra: from);
+}
 
 /// 用户头像，外面一圈很淡的细线（和首页左上角头像同款）。
 class UserAvatar extends StatelessWidget {

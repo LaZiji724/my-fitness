@@ -37,15 +37,14 @@ void main() {
       }
     });
 
-    test('每个动作都有起止两张图，文件都在；补充动作都有动作要点', () {
+    test('每个动作都有起止两张图，文件都在；所有动作都有动作要领', () {
       for (final e in all) {
         expect(e.imageCount, 2, reason: e.slug);
         for (var i = 0; i < e.imageCount; i++) {
           expect(File(e.imageAsset(i)).existsSync(), isTrue, reason: e.imageAsset(i));
         }
-        if (e.slug.startsWith('fc_') || e.slug.startsWith('wu_')) {
-          expect(e.instructionsZh?.trim(), isNotEmpty, reason: e.slug);
-        }
+        // 3.2.0 起，所有动作都写全了动作要领
+        expect(e.instructionsZh?.trim().length ?? 0, greaterThanOrEqualTo(8), reason: e.slug);
       }
     });
 
