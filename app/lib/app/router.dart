@@ -12,6 +12,13 @@ import 'package:my_fitness/features/auth/register_page.dart';
 import 'package:my_fitness/features/calendar/calendar_page.dart';
 import 'package:my_fitness/features/exercises/exercise_detail_page.dart';
 import 'package:my_fitness/features/exercises/exercises_page.dart';
+import 'package:my_fitness/features/friends/chat_page.dart';
+import 'package:my_fitness/features/friends/friend_activity_page.dart';
+import 'package:my_fitness/features/friends/friend_search_page.dart';
+import 'package:my_fitness/features/friends/friends_page.dart';
+import 'package:my_fitness/features/friends/my_qr_page.dart';
+import 'package:my_fitness/features/friends/privacy_page.dart';
+import 'package:my_fitness/features/friends/scan_page.dart';
 import 'package:my_fitness/features/library/library_page.dart';
 import 'package:my_fitness/features/library/program_detail_page.dart';
 import 'package:my_fitness/features/library/session_detail_page.dart';
@@ -97,6 +104,18 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/login', builder: (_, _) => const LoginPage()),
       GoRoute(path: '/register', builder: (_, _) => const RegisterPage()),
       GoRoute(path: '/me', builder: (_, _) => const ProfilePage()),
+      GoRoute(path: '/friends/search', builder: (_, _) => const FriendSearchPage()),
+      GoRoute(path: '/friends/scan', builder: (_, _) => const ScanPage()),
+      GoRoute(path: '/friends/qr', builder: (_, _) => const MyQrPage()),
+      GoRoute(path: '/friends/privacy', builder: (_, _) => const PrivacyPage()),
+      GoRoute(
+        path: '/friends/chat/:id',
+        builder: (_, state) => ChatPage(friendId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/friends/activity/:id',
+        builder: (_, state) => FriendActivityPage(friendId: state.pathParameters['id']!),
+      ),
       GoRoute(
         path: '/exercise/:slug',
         builder: (_, state) => ExerciseDetailPage(slug: state.pathParameters['slug']!),
@@ -166,6 +185,9 @@ final routerProvider = Provider<GoRouter>((ref) {
           ]),
           StatefulShellBranch(routes: [
             GoRoute(path: '/stats', builder: (_, _) => const StatsPage()),
+          ]),
+          StatefulShellBranch(routes: [
+            GoRoute(path: '/friends', builder: (_, _) => const FriendsPage()),
           ]),
         ],
       ),

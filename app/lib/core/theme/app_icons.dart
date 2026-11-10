@@ -24,6 +24,8 @@ abstract final class AppIcons {
   static const IconData navExercisesOn = IconData(0xed5c, fontFamily: _fill); // personSimpleTaiChi
   static const IconData navStats = IconData(0xe150, fontFamily: _regular); // chartBar
   static const IconData navStatsOn = IconData(0xe150, fontFamily: _fill); // chartBar
+  static const IconData navFriends = IconData(0xe4d6, fontFamily: _regular); // users
+  static const IconData navFriendsOn = IconData(0xe4d6, fontFamily: _fill); // users
 
   // 导航
   static const IconData back = IconData(0xe058, fontFamily: _regular); // arrowLeft
@@ -98,4 +100,28 @@ abstract final class AppIcons {
   static const IconData catCardio = IconData(0xe730, fontFamily: _regular); // personSimpleRun
   static const IconData catPower = IconData(0xe2de, fontFamily: _regular); // lightning
   static const IconData catGroup = IconData(0xe68e, fontFamily: _regular); // usersThree
+
+  // 好友与聊天
+  static const IconData friends = IconData(0xe4d6, fontFamily: _regular); // users
+  static const IconData userAdd = IconData(0xe4d0, fontFamily: _regular); // userPlus
+  static const IconData userRemove = IconData(0xe4ce, fontFamily: _regular); // userMinus
+  static const IconData qrCode = IconData(0xe3e6, fontFamily: _regular); // qrCode
+  static const IconData scan = IconData(0xebb6, fontFamily: _regular); // scan
+  static const IconData chat = IconData(0xe168, fontFamily: _regular); // chatCircle
+  static const IconData emoji = IconData(0xe436, fontFamily: _regular); // smiley
+  static const IconData keyboard = IconData(0xe2d8, fontFamily: _regular); // keyboard
+  static const IconData send = IconData(0xe396, fontFamily: _fill); // paperPlaneRight
+  static const IconData privacy = IconData(0xe40c, fontFamily: _regular); // shieldCheck
+  static const IconData privacySmall = IconData(0xe40c, fontFamily: _bold); // shieldCheck
+  static const IconData lockSmall = IconData(0xe308, fontFamily: _bold); // lockSimple
+  static const IconData eyeSmall = IconData(0xe220, fontFamily: _bold); // eye
+  static const IconData eyeOffSmall = IconData(0xe224, fontFamily: _bold); // eyeSlash
+  static const IconData clock = IconData(0xe19a, fontFamily: _regular); // clock
+  static const IconData scale = IconData(0xe750, fontFamily: _regular); // scales
+  static const IconData listDetail = IconData(0xeadc, fontFamily: _regular); // listChecks
+  static const IconData refreshSmall = IconData(0xe036, fontFamily: _bold); // arrowClockwise
+  static const IconData warnSmall = IconData(0xe4e2, fontFamily: _fill); // warningCircle
+  static const IconData cameraOff = IconData(0xe110, fontFamily: _regular); // cameraSlash
+  static const IconData flashlight = IconData(0xe246, fontFamily: _regular); // flashlight
+  static const IconData flashlightOn = IconData(0xe246, fontFamily: _fill); // flashlight
 }
