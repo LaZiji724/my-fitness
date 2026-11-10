@@ -130,7 +130,7 @@ class _BodyState extends ConsumerState<_Body> {
               children: [
                 for (var i = 0; i < e.imageCount; i++) ...[
                   if (i > 0) const SizedBox(width: AppSpace.s8),
-                  Expanded(child: ExerciseImage(exercise: e, index: i, radius: AppRadius.md, cacheWidth: 600, mono: false)),
+                  Expanded(child: ExerciseImage(exercise: e, index: i, radius: AppRadius.md, cacheWidth: 600)),
                 ],
               ],
             ),
