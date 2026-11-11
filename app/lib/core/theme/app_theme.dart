@@ -85,13 +85,6 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color text2;
   final Color text3;
 
-  /// 深色模式（背景比较暗）
-  bool get isDark => bg.computeLuminance() < 0.4;
-
-  /// 选中项的底色和字色：浅色模式是炭火橙实心 + 墨色字，未选中回到白底；深色模式是亮色实心
-  Color get selectedFill => isDark ? text : accent;
-  Color get onSelected => isDark ? bg : onAccent;
-
   /// 炭火橙：只用于「下一步」主操作、今天、进行中、破纪录
   final Color accent;
 
@@ -629,7 +622,7 @@ abstract final class AppTheme {
         border: OutlineInputBorder(borderRadius: AppRadius.button, borderSide: BorderSide.none),
         enabledBorder: OutlineInputBorder(borderRadius: AppRadius.button, borderSide: BorderSide.none),
         disabledBorder: OutlineInputBorder(borderRadius: AppRadius.button, borderSide: BorderSide.none),
-        focusedBorder: OutlineInputBorder(borderRadius: AppRadius.button, borderSide: BorderSide(color: c.isDark ? c.text : c.accent, width: 1.5)),
+        focusedBorder: OutlineInputBorder(borderRadius: AppRadius.button, borderSide: BorderSide(color: c.text, width: 1.5)),
         errorBorder: OutlineInputBorder(borderRadius: AppRadius.button, borderSide: BorderSide(color: c.danger, width: 1.5)),
         focusedErrorBorder: OutlineInputBorder(borderRadius: AppRadius.button, borderSide: BorderSide(color: c.danger, width: 1.5)),
       ),

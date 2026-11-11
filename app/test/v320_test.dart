@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' show AuthException, PostgrestException, StorageException;
 import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/core/db/database_provider.dart';
 import 'package:my_fitness/core/notifications/notification_taps.dart';
@@ -213,7 +215,18 @@ void main() {
       await tester.pumpAndSettle();
       expect(fake.presets, isEmpty);
       expect(find.text('从相册选择照片'), findsOneWidget);
-      expect(find.text('头像没换成功，请检查网络后重试'), findsOneWidget);
+      expect(find.text('网络不通，请检查网络后重试'), findsOneWidget);
+    });
+  });
+
+  group('换头像的失败提示', () {
+    test('服务器拒绝时说出原因，不再一律说成网络问题', () {
+      expect(avatarErrorText(const StorageException('new row violates row-level security policy', statusCode: '403')),
+          contains('403'));
+      expect(avatarErrorText(const PostgrestException(message: 'bad')), contains('保存资料失败'));
+      expect(avatarErrorText(const AuthException('expired')), contains('重新登录'));
+      expect(avatarErrorText(TimeoutException('slow')), contains('超时'));
+      expect(avatarErrorText(Exception('offline')), contains('网络不通'));
     });
   });
 
