@@ -269,6 +269,8 @@ class _OutgoingRow extends ConsumerWidget {
 Future<void> showFriendSheet(BuildContext context, FriendEntry entry) {
   return showModalBottomSheet<void>(
     context: context,
+    // 开在最外层：弹层盖住整个底栏，不会被中间凸起的「训练」圆钮压住
+    useRootNavigator: true,
     builder: (ctx) => _FriendSheet(entry: entry),
   );
 }
@@ -311,7 +313,7 @@ class _FriendSheet extends ConsumerWidget {
     final u = entry.user;
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(AppSpace.s20, AppSpace.s4, AppSpace.s20, AppSpace.s12),
+        padding: const EdgeInsets.fromLTRB(AppSpace.s20, AppSpace.s4, AppSpace.s20, AppSpace.s24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -349,7 +351,7 @@ class _FriendSheet extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: AppSpace.s8),
+            const SizedBox(height: AppSpace.s12),
             TextButton(
               onPressed: () => _confirmRemove(context, ref),
               style: TextButton.styleFrom(foregroundColor: c.text3, textStyle: AppText.label),
@@ -381,6 +383,7 @@ Future<void> showAddFriendSheet(BuildContext context) {
   final router = GoRouter.of(context);
   return showModalBottomSheet<void>(
     context: context,
+    useRootNavigator: true,
     builder: (ctx) {
       final c = ctx.colors;
       void go(String path) {

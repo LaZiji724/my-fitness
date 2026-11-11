@@ -68,6 +68,7 @@ class TodayPage extends ConsumerWidget {
     final c = context.colors;
     final picked = await showModalBottomSheet<String>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       builder: (ctx) => SafeArea(
         child: ConstrainedBox(

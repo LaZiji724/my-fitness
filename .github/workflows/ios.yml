@@ -83,6 +83,8 @@ jobs:
         run: |
           notes=".github/release-notes/${IOS_VERSION}.md"
           { [ -f "$notes" ] && cat "$notes" && echo; echo "未签名 IPA，需用全能签 / AltStore / Sideloadly 等工具自行签名后安装 iPhone。"; } > /tmp/notes.md
+          # 同一个版本号重新发布时，先删掉旧的 Release 和标签（没有就跳过）
+          gh release delete "ios-v${IOS_VERSION}" --cleanup-tag --yes --repo "$GITHUB_REPOSITORY" || true
           gh release create "ios-v${IOS_VERSION}" app/my-fitness-ios-*-unsigned.ipa \
             --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --latest=false \
             --title "我的健身 苹果版 ${IOS_VERSION}（未签名 IPA）" \

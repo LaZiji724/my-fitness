@@ -121,6 +121,8 @@ jobs:
         run: |
           notes=".github/release-notes/${V}.md"
           { [ -f "$notes" ] && cat "$notes" && echo; echo "安卓安装包，直接安装即可覆盖旧版，数据保留。"; } > /tmp/notes.md
+          # 同一个版本号重新发布时，先删掉旧的 Release 和标签（没有就跳过）
+          gh release delete "v${V}" --cleanup-tag --yes --repo "$GITHUB_REPOSITORY" || true
           gh release create "v${V}" app/my-fitness-*.apk \
             --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --latest \
             --title "我的健身 ${V}" \
