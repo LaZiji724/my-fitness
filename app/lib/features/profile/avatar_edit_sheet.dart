@@ -45,15 +45,16 @@ class _AvatarEditSheetState extends ConsumerState<AvatarEditSheet> {
     final messenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
     try {
-      await job();
+      // 国内直连有时很慢，给足时间，但不要一直转圈
+      await job().timeout(const Duration(seconds: 90));
       navigator.pop();
       messenger
         ..hideCurrentSnackBar()
         ..showSnackBar(const SnackBar(content: Text('头像已更换')));
-    } catch (_) {
+    } catch (e) {
       if (!mounted) return;
       setState(() => _busy = false);
-      _toast('头像没换成功，请检查网络后重试');
+      _toast(avatarErrorText(e));
     }
   }
 

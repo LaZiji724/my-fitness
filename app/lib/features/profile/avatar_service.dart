@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,10 +41,12 @@ class SupabaseAvatarUpdater implements AvatarUpdater {
     final old = _currentCustomPath();
     // 每次换新文件名：地址变了，别人和本机的图片缓存才会跟着刷新
     final path = '$uid/avatar_${DateTime.now().millisecondsSinceEpoch}.png';
+    // 文件名每次都是新的，不需要覆盖（upsert）。upsert 会额外要求「查看」权限，
+    // 云端头像桶没给这个权限，之前上传就是被它拒掉的。
     await _client.storage.from(bucket).uploadBinary(
           path,
           png,
-          fileOptions: const FileOptions(contentType: 'image/png', upsert: true),
+          fileOptions: const FileOptions(contentType: 'image/png', upsert: false),
         );
     await _save('custom', path);
     if (old != path) await _removeQuietly(old);
@@ -70,6 +73,15 @@ class SupabaseAvatarUpdater implements AvatarUpdater {
       // 旧图删不掉不影响使用
     }
   }
+}
+
+/// 换头像失败时给用户看的话：区分「网络不通」和「服务器拒绝」，别一律说成网络问题。
+String avatarErrorText(Object error) {
+  if (error is TimeoutException) return '上传超时了，请换个网络或稍后再试';
+  if (error is StorageException) return '头像没传上去（服务器返回 ${error.statusCode ?? '未知'}：${error.message}）';
+  if (error is PostgrestException) return '头像传上去了，但保存资料失败（${error.message}）';
+  if (error is AuthException) return '登录状态失效了，请退出后重新登录';
+  return '网络不通，请检查网络后重试';
 }
 
 final avatarUpdaterProvider = Provider<AvatarUpdater>(

@@ -270,7 +270,7 @@ class _CategoryRail extends ConsumerWidget {
                   button: true,
                   selected: cat == selected,
                   child: Material(
-                    color: cat == selected ? c.selectedFill : Colors.transparent,
+                    color: cat == selected ? c.text : Colors.transparent,
                     borderRadius: BorderRadius.circular(AppRadius.md),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(AppRadius.md),
@@ -282,7 +282,7 @@ class _CategoryRail extends ConsumerWidget {
                             cat.label,
                             maxLines: 1,
                             style: AppText.label.copyWith(
-                              color: cat == selected ? c.onSelected : c.text2,
+                              color: cat == selected ? c.bg : c.text2,
                               fontWeight: cat == selected ? FontWeight.w700 : FontWeight.w500,
                             ),
                           ),

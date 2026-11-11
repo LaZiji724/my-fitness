@@ -216,7 +216,7 @@ class _Choice extends StatelessWidget {
       child: AppCard(
         color: selected ? c.surface : c.bg,
         radius: AppRadius.md,
-        borderColor: selected ? c.selectedFill : null,
+        borderColor: selected ? c.text : null,
         borderWidth: selected ? 1.5 : AppStroke.hairline,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         onTap: onTap,
@@ -231,7 +231,7 @@ class _Choice extends StatelessWidget {
                 ],
               ),
             ),
-            if (selected) Icon(AppIcons.check, size: 18, color: c.isDark ? c.text : c.accentText),
+            if (selected) Icon(AppIcons.check, size: 18, color: c.text),
           ],
         ),
       ),

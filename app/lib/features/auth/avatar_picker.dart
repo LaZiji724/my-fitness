@@ -37,7 +37,7 @@ class AvatarPicker extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: ref == selected ? c.selectedFill : Colors.transparent,
+                      color: ref == selected ? c.text : Colors.transparent,
                       width: 2,
                     ),
                   ),

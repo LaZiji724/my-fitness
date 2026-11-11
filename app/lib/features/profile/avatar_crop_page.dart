@@ -12,14 +12,14 @@ import 'package:my_fitness/core/widgets/press_scale.dart';
 /// 头像裁切：照片自动铺满一个圆，可以拖动、双指缩放来调整，点「使用」得到裁好的正方形 PNG
 /// （显示头像的地方会再切成圆形）。
 ///
-/// 返回 [Uint8List]（512×512 的 PNG）；点返回或取消返回 null。
+/// 返回 [Uint8List]（384×384 的 PNG）；点返回或取消返回 null。
 class AvatarCropPage extends StatefulWidget {
   const AvatarCropPage({super.key, required this.imageBytes});
 
   final Uint8List imageBytes;
 
   /// 输出边长（像素）
-  static const outputSize = 512;
+  static const outputSize = 384;
 
   static Future<Uint8List?> open(BuildContext context, Uint8List bytes) =>
       Navigator.of(context).push<Uint8List>(MaterialPageRoute(fullscreenDialog: true, builder: (_) => AvatarCropPage(imageBytes: bytes)));

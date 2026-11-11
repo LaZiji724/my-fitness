@@ -355,7 +355,8 @@ class _TrainButton extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: selected ? c.accent : c.hero,
+                  // 浅色模式下没选中时和页面背景同色（不是黑的）；深色模式保持墨色
+                  color: selected ? c.accent : (Theme.of(context).brightness == Brightness.dark ? c.hero : c.bg),
                 ),
                 child: Icon(
                   selected ? item.selectedIcon : item.icon,
