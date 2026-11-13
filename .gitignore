@@ -24,3 +24,6 @@ app/android/local.properties
 *.iml
 tools/warmup/cache/
 tools/warmup/__pycache__/
+
+# 编辑器（IntelliJ / Android Studio）本地配置
+.idea/
