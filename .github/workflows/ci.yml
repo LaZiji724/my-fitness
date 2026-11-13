@@ -1,0 +1,40 @@
+# 自动检查：每次开 PR、往 PR 推代码、合并到 main 时，跑一遍代码检查和全部测试。
+# 不打包、不发布，也不需要任何 Secret。
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.47.9"
+          channel: stable
+          cache: true
+
+      - name: 依赖
+        working-directory: app
+        run: flutter pub get
+
+      - name: 代码检查
+        working-directory: app
+        run: dart analyze
+
+      - name: 测试
+        working-directory: app
+        run: flutter test

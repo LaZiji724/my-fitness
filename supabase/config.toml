@@ -1,0 +1,3 @@
+# Supabase 命令行工具的最小配置。发布流程（release.yml）用它把 supabase/migrations/ 里还没执行的 SQL
+# 自动执行到云端数据库（supabase link + supabase db push）。其余设置都用工具自带的默认值。
+project_id = "my-fitness"

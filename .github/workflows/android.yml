@@ -1,5 +1,6 @@
-# 安卓版打包：在 GitHub 云端编译并用正式密钥签名，产出 APK，可直接发布到 Release。
-# 手动运行：Actions → android-apk → Run workflow；勾选 publish 会同时发布 Release（版本号取自 app/pubspec.yaml）。
+# 安卓版打包：在 GitHub 云端编译并用正式密钥签名，产出 APK（上传为 Actions 的构建产物，不发布）。
+# 发版请运行 release（发布）工作流，它会同时调用本流程和 ios-ipa，把两个安装包放进同一个 Release。
+# 单独手动运行：Actions → android-apk → Run workflow，只打包，方便测试。版本号取自 app/pubspec.yaml。
 # 需要仓库 Settings → Secrets and variables → Actions 里有：
 #   SUPABASE_URL、SUPABASE_ANON_KEY（anon / publishable key，与 ios-ipa 共用）
 #   ANDROID_KEYSTORE_BASE64（签名密钥文件 .jks 的 base64 文本）、ANDROID_KEYSTORE_PASSWORD、
@@ -9,14 +10,10 @@ name: android-apk
 
 on:
   workflow_dispatch:
-    inputs:
-      publish:
-        description: 打好后发布到 GitHub Release（并标为最新版）
-        type: boolean
-        default: false
+  workflow_call:
 
 permissions:
-  contents: write
+  contents: read
 
 env:
   # 历史版本（1.x ~ 2.1.0）正式签名证书的 SHA-256 指纹（公开信息，不是密钥）
@@ -112,31 +109,3 @@ jobs:
           name: my-fitness-android-apk
           path: app/my-fitness-*.apk
           retention-days: 30
-
-      - name: 发布 Release
-        if: ${{ inputs.publish }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-          V: ${{ steps.ver.outputs.name }}
-        run: |
-          notes=".github/release-notes/${V}.md"
-          { [ -f "$notes" ] && cat "$notes" && echo; echo "安卓安装包，直接安装即可覆盖旧版，数据保留。"; } > /tmp/notes.md
-          # 同一个版本号重新发布时，先删掉旧的 Release 和标签（没有就跳过）
-          gh release delete "v${V}" --cleanup-tag --yes --repo "$GITHUB_REPOSITORY" || true
-          gh release create "v${V}" app/my-fitness-*.apk \
-            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --latest \
-            --title "我的健身 ${V}" \
-            --notes-file /tmp/notes.md
-
-      # 备用下载源：把安装包和「最新版本信息」同步一份到 Supabase 存储。
-      # 国内网络连不上 GitHub 时，App 里的「检查更新」会改走这里。需要 Secret：SUPABASE_SERVICE_KEY
-      # （没配置就只警告、跳过，不影响上面的 Release）。
-      - name: 同步到备用下载源（Supabase）
-        if: ${{ inputs.publish }}
-        continue-on-error: true
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          MIRRORS: ${{ vars.MIRRORS }}
-          V: ${{ steps.ver.outputs.name }}
-        run: tools/publish_mirror.sh android "$V" "v${V}" "app/my-fitness-${V}.apk" /tmp/notes.md

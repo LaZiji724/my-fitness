@@ -56,12 +56,31 @@ flutter build apk --release --dart-define-from-file=env.json
 把 APK 发到手机（数据线、网盘、微信文件传输都行），点开安装；第一次需要允许「安装未知来源应用」。
 升级时直接安装新版本即可，数据保留。版本号在 `app/pubspec.yaml` 的 `version:`（`1.0.0+1` 里 `+` 后面每次发布要加 1）。
 
+## 发布新版本
+
+1. 把 `app/pubspec.yaml` 的 `version:` 加一（如 `3.2.2+28` → `3.3.0+29`），在 `.github/release-notes/<版本号>.md` 写更新说明。
+2. GitHub 仓库 → Actions → **release** → Run workflow，勾选 publish。
+3. 流程会：把 `supabase/migrations/` 里还没执行的 SQL 自动执行到云端 → 同时打安卓 APK 和苹果 IPA（都会先跑检查和测试）
+   → 两个包放进同一个 Release（tag `v<版本号>`）→ 同步到备用下载源。任何一步失败都不会发布。
+
+需要的仓库 Secret（Settings → Secrets and variables → Actions）：
+
+- `SUPABASE_URL`、`SUPABASE_ANON_KEY`：打包时写进 App。
+- `ANDROID_KEYSTORE_BASE64`、`ANDROID_KEYSTORE_PASSWORD`、`ANDROID_KEY_ALIAS`、`ANDROID_KEY_PASSWORD`：安卓正式签名。
+- `SUPABASE_SERVICE_KEY`：同步备用下载源（没配置就跳过）。
+- `SUPABASE_ACCESS_TOKEN`（Supabase 后台右上角头像 → Account preferences → Access Tokens 新建）和
+  `SUPABASE_DB_PASSWORD`（建项目时设的数据库密码，忘了可在 Project Settings → Database 里重置）：
+  发布时自动执行数据库 SQL（没配置就跳过，需要自己去 SQL Editor 执行）。
+
+只想试打包不发布：不勾 publish，或单独运行 android-apk / ios-ipa，安装包在那次运行的 Artifacts 里。
+每次开 PR 或合并到 main，ci 工作流会自动跑 `dart analyze` 和 `flutter test`。
+
 ## 应用内更新
 
 「我的 → 检查更新」（每次启动也会自动检查一次）读取本仓库的 GitHub Release（仓库需保持公开）：
-安卓取最新的 `v*` 发布，在 App 里下载 APK 后调起系统安装器覆盖安装，第一次需在系统设置里允许「安装未知应用」；
-苹果取最新的 `ios-v*` 发布，下载未签名 IPA 后用分享面板交给全能签等工具签名安装（iOS 不允许 App 自己安装未签名包）。
-发版时可在 `.github/release-notes/<版本号>.md` 写更新说明，会显示在更新弹窗里。
+安卓取最新发布里的 APK，在 App 里下载后调起系统安装器覆盖安装，第一次需在系统设置里允许「安装未知应用」；
+苹果取最新发布里的未签名 IPA，用分享面板交给全能签等工具签名安装（iOS 不允许 App 自己安装未签名包）。
+3.2.2 及以前苹果版单独发在 `ios-v*`，之后两个平台都在同一个 `v*` 发布里，App 两种都认。
 
 ### 备用下载源（国内连不上 GitHub 时）
 
@@ -71,7 +90,7 @@ flutter build apk --release --dart-define-from-file=env.json
 - **下载**：按顺序试 Supabase 备用服务器 → GitHub 官方 → 两个 GitHub 加速代理（`ghfast.top`、`gh-proxy.com`）。
   一条失败（连不上、超时、太慢、文件校验不对）自动换下一条，最多轮 3 圈；已下载的部分保留，换线路或点「重试」都从断点继续。
   下载完会校验大小和 SHA-256。仍不行时，弹窗里有「用浏览器下载」，列出各条线路的链接。
-- **备用服务器的内容**由发布流程自动同步：`android.yml` / `ios.yml` 发布 Release 后会运行 `tools/publish_mirror.sh`，
+- **备用服务器的内容**由发布流程自动同步：`release.yml` 发布 Release 后会运行 `tools/publish_mirror.sh`，
   把安装包切成每段 40MB（Supabase 免费版单文件上限 50MB）传到公开存储桶 `app-releases`，并写入最新版本信息，旧版本自动清理。
   这一步需要仓库 Secret `SUPABASE_SERVICE_KEY`（Supabase 的 secret key，只放在 GitHub Secrets 里，不要写进代码或聊天）；没配置会跳过并给出警告，不影响 GitHub Release。
 - 加速代理会不定期失效：可以在仓库 Settings → Secrets and variables → Actions → Variables 里新建变量 `MIRRORS`（空格分隔的代理前缀，如 `https://ghfast.top/ https://gh-proxy.com/`），下次发布时写进版本信息，覆盖 App 自带的列表，无需改代码。
@@ -150,3 +169,5 @@ export SUPABASE_SERVICE_ROLE_KEY=你的 service_role 密钥
 1. 在 Supabase 的 SQL Editor 里执行 `supabase/migrations/20261103000000_program_library.sql`（建表和新列）。
 2. 执行 `supabase/seed/program_library.sql`（补充动作 + 计划镜像，可重复执行）。
 3. 再安装新版 APK。新版本第一次同步前，云端必须已经完成第 1 步，否则同步会提示缺表。
+
+（配置了 `SUPABASE_ACCESS_TOKEN` / `SUPABASE_DB_PASSWORD` 之后，`supabase/migrations/` 里的 SQL 会在发版时自动执行，不用再手动跑；`supabase/seed/` 下的种子数据仍需手动执行。）
