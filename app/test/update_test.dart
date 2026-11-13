@@ -70,7 +70,7 @@ void main() {
     expect(compareVersions([2, 3, 0], [2, 3, 0]), 0);
   });
 
-  test('安卓只看 v 开头的 apk，苹果只看 ios-v 开头的 ipa，跳过草稿', () {
+  test('分开发布时：安卓只拿 apk，苹果只拿 ipa，跳过草稿', () {
     final a = findUpdate(releases: releases, ios: false, current: '2.2.3');
     expect(a?.version, '2.3.0');
     expect(a?.assetName, 'my-fitness-2.3.0.apk');
@@ -78,6 +78,53 @@ void main() {
     expect(i?.assetName, 'my-fitness-ios-2.3.0-unsigned.ipa');
     expect(findUpdate(releases: releases, ios: false, current: '2.3.0'), isNull);
     expect(findUpdate(releases: releases, ios: true, current: '2.3.1'), isNull);
+  });
+
+  test('3.2.2 之后安卓和苹果合在同一个 v 开头的发布里，两边都能找到自己的安装包', () {
+    final merged = [
+      {
+        'tag_name': 'v3.3.0',
+        'draft': false,
+        'prerelease': false,
+        'body': '说明',
+        'html_url': 'https://github.com/x/y/releases/tag/v3.3.0',
+        'assets': [
+          {'name': 'my-fitness-3.3.0.apk', 'browser_download_url': 'https://example.com/a.apk', 'size': 10},
+          {'name': 'my-fitness-ios-3.3.0-unsigned.ipa', 'browser_download_url': 'https://example.com/i.ipa', 'size': 20},
+        ],
+      },
+      release('v3.2.2', 'my-fitness-3.2.2.apk'),
+      release('ios-v3.2.2', 'my-fitness-ios-3.2.2-unsigned.ipa'),
+    ];
+    final a = findUpdate(releases: merged, ios: false, current: '3.2.2');
+    expect(a?.version, '3.3.0');
+    expect(a?.assetName, 'my-fitness-3.3.0.apk');
+    final i = findUpdate(releases: merged, ios: true, current: '3.2.2');
+    expect(i?.version, '3.3.0');
+    expect(i?.assetName, 'my-fitness-ios-3.3.0-unsigned.ipa');
+    // 旧的分开发布仍然能找到
+    expect(findUpdate(releases: merged, ios: true, current: '3.2.1')?.version, '3.3.0');
+    expect(findUpdate(releases: merged.skip(1).toList(), ios: true, current: '3.2.1')?.assetName,
+        'my-fitness-ios-3.2.2-unsigned.ipa');
+  });
+
+  test('releases.atom：苹果版 3.2.2 以前只认 ios-v，之后认 v；安卓不认 ios-v', () {
+    String atom(List<String> tags) => tags.map((t) => '<link href="https://github.com/x/y/releases/tag/$t"/>').join('\n');
+    final i = findUpdateFromAtom(atom: atom(['v3.3.0', 'ios-v3.2.2', 'v3.2.2']), ios: true, current: '3.2.1');
+    expect(i?.version, '3.3.0');
+    expect(i?.assetUrl, 'https://github.com/$kRepo/releases/download/v3.3.0/my-fitness-ios-3.3.0-unsigned.ipa');
+    final old = findUpdateFromAtom(atom: atom(['v3.2.2', 'ios-v3.2.1']), ios: true, current: '3.2.0');
+    expect(old?.version, '3.2.1');
+    expect(old?.assetUrl, contains('/ios-v3.2.1/'));
+    final a = findUpdateFromAtom(atom: atom(['ios-v3.3.0', 'v3.2.2']), ios: false, current: '3.2.1');
+    expect(a?.version, '3.2.2');
+  });
+
+  test('备用服务器的更新信息没写 tag 时，按版本推出正确的 GitHub 地址', () {
+    String url(String v, bool ios) => updateFromManifest({'version': v}, ios: ios, current: '1.0.0', fileUrl: (p) => p)!.assetUrl;
+    expect(url('3.2.2', true), endsWith('/ios-v3.2.2/my-fitness-ios-3.2.2-unsigned.ipa'));
+    expect(url('3.3.0', true), endsWith('/v3.3.0/my-fitness-ios-3.3.0-unsigned.ipa'));
+    expect(url('3.3.0', false), endsWith('/v3.3.0/my-fitness-3.3.0.apk'));
   });
 
   Future<void> pumpDialog(WidgetTester tester, FakeService svc, FakeInstaller inst) async {

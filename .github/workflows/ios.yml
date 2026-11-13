@@ -1,27 +1,17 @@
-# 苹果版（iPhone）打包：在 GitHub 的 macOS 机器上编译，产出「未签名」的 IPA，
+# 苹果版（iPhone）打包：在 GitHub 的 macOS 机器上编译，产出「未签名」的 IPA（上传为 Actions 的构建产物，不发布），
 # 再用全能签 / AltStore / Sideloadly 等工具自己签名安装。
+# 发版请运行 release（发布）工作流，它会同时调用本流程和 android-apk，把两个安装包放进同一个 Release。
+# 单独手动运行：Actions → ios-ipa → Run workflow，只打包，方便测试。版本号取自 app/pubspec.yaml。
 # 需要仓库 Settings → Secrets and variables → Actions 里有（与 keepalive 共用）：
 #   SUPABASE_URL、SUPABASE_ANON_KEY（anon / publishable key，可公开，不是 service_role）
-# 手动运行：Actions → ios-ipa → Run workflow；勾选 publish 会同时发布 Release。
 name: ios-ipa
 
 on:
   workflow_dispatch:
-    inputs:
-      publish:
-        description: 打好后发布到 GitHub Release
-        type: boolean
-        default: false
-  push:
-    paths:
-      - ".github/workflows/ios.yml"
+  workflow_call:
 
 permissions:
-  contents: write
-
-env:
-  IOS_VERSION: "3.2.2"
-  IOS_BUILD: "28"
+  contents: read
 
 jobs:
   build:
@@ -36,6 +26,13 @@ jobs:
           channel: stable
           cache: true
 
+      - name: 读取版本号
+        id: ver
+        run: |
+          v=$(grep '^version:' app/pubspec.yaml | awk '{print $2}')
+          echo "name=${v%%+*}" >> "$GITHUB_OUTPUT"
+          echo "code=${v##*+}" >> "$GITHUB_OUTPUT"
+
       - name: 写入 Supabase 配置
         working-directory: app
         env:
@@ -47,25 +44,28 @@ jobs:
           fi
           printf '{"SUPABASE_URL":"%s","SUPABASE_ANON_KEY":"%s","AUTH_EMAIL_DOMAIN":"myfit.app"}' "$URL" "$KEY" > env.json
 
-      - name: 依赖与检查
+      - name: 依赖、检查与测试
         working-directory: app
         run: |
           flutter pub get
           dart analyze
+          flutter test
 
       - name: 编译（不签名）
         working-directory: app
         run: |
           flutter build ios --release --no-codesign \
-            --build-name "$IOS_VERSION" --build-number "$IOS_BUILD" \
+            --build-name "${{ steps.ver.outputs.name }}" --build-number "${{ steps.ver.outputs.code }}" \
             --dart-define-from-file=env.json
 
       - name: 打成 IPA
         working-directory: app
+        env:
+          V: ${{ steps.ver.outputs.name }}
         run: |
           rm -rf ipa && mkdir -p ipa/Payload
           cp -R build/ios/iphoneos/Runner.app ipa/Payload/
-          (cd ipa && zip -qry "../my-fitness-ios-${IOS_VERSION}-unsigned.ipa" Payload)
+          (cd ipa && zip -qry "../my-fitness-ios-${V}-unsigned.ipa" Payload)
           rm -f env.json
           ls -l my-fitness-ios-*.ipa
           shasum -a 256 my-fitness-ios-*.ipa
@@ -75,28 +75,3 @@ jobs:
           name: my-fitness-ios-unsigned-ipa
           path: app/my-fitness-ios-*-unsigned.ipa
           retention-days: 30
-
-      - name: 发布 Release
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          notes=".github/release-notes/${IOS_VERSION}.md"
-          { [ -f "$notes" ] && cat "$notes" && echo; echo "未签名 IPA，需用全能签 / AltStore / Sideloadly 等工具自行签名后安装 iPhone。"; } > /tmp/notes.md
-          # 同一个版本号重新发布时，先删掉旧的 Release 和标签（没有就跳过）
-          gh release delete "ios-v${IOS_VERSION}" --cleanup-tag --yes --repo "$GITHUB_REPOSITORY" || true
-          gh release create "ios-v${IOS_VERSION}" app/my-fitness-ios-*-unsigned.ipa \
-            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --latest=false \
-            --title "我的健身 苹果版 ${IOS_VERSION}（未签名 IPA）" \
-            --notes-file /tmp/notes.md
-
-      # 备用下载源：把 ipa 和「最新版本信息」同步一份到 Supabase 存储（国内连不上 GitHub 时 App 改走这里）。
-      # 需要 Secret：SUPABASE_SERVICE_KEY；没配置就只警告、跳过，不影响上面的 Release。
-      - name: 同步到备用下载源（Supabase）
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish }}
-        continue-on-error: true
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          MIRRORS: ${{ vars.MIRRORS }}
-        run: tools/publish_mirror.sh ios "$IOS_VERSION" "ios-v${IOS_VERSION}" "app/my-fitness-ios-${IOS_VERSION}-unsigned.ipa" /tmp/notes.md

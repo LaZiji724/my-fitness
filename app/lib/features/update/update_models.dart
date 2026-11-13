@@ -115,6 +115,20 @@ int compareVersions(List<int> a, List<int> b) {
 
 String _assetNameFor(String version, bool ios) => ios ? 'my-fitness-ios-$version-unsigned.ipa' : 'my-fitness-$version.apk';
 
+/// 安卓和苹果分开发布的最后一个版本。之后安卓 APK 和苹果 IPA 放在同一个 `v<版本号>` 的 Release 里，
+/// 之前苹果版单独用 `ios-v<版本号>`。
+const kLastSplitRelease = [3, 2, 2];
+
+/// 苹果版某个版本所在的 tag：3.2.2 及以前是 `ios-v…`，之后和安卓共用 `v…`。
+String _tagFor(List<int> ver, bool ios) =>
+    ios && compareVersions(ver, kLastSplitRelease) <= 0 ? 'ios-v${ver.join('.')}' : 'v${ver.join('.')}';
+
+/// 这个 tag 可能带有本平台的安装包吗？`ios-v…` 只有苹果包；`v…` 一直有安卓包，3.2.2 之后也有苹果包。
+bool _tagMayHave(String tag, List<int> ver, bool ios) {
+  if (tag.startsWith('ios-')) return ios;
+  return !ios || compareVersions(ver, kLastSplitRelease) > 0;
+}
+
 String? _cleanSha(Object? raw) {
   final s = '${raw ?? ''}'.trim().toLowerCase().replaceFirst('sha256:', '');
   return RegExp(r'^[0-9a-f]{64}$').hasMatch(s) ? s : null;
@@ -122,8 +136,8 @@ String? _cleanSha(Object? raw) {
 
 /// 从 GitHub `releases` 接口返回的列表里找出本平台最新、且比 [current] 新的版本。
 ///
-/// 安卓发布的 tag 形如 `v2.3.0`（附 .apk），苹果形如 `ios-v2.3.0`（附 .ipa），
-/// 两条线在同一个仓库里，所以要按 tag 前缀和附件类型分开挑。
+/// 3.2.2 及以前安卓发布的 tag 形如 `v2.3.0`（附 .apk），苹果形如 `ios-v2.3.0`（附 .ipa）；
+/// 之后两个平台合在同一个 `v…` 发布里，所以按附件类型挑本平台的安装包。
 AppUpdate? findUpdate({
   required List<dynamic> releases,
   required bool ios,
@@ -138,7 +152,7 @@ AppUpdate? findUpdate({
     if (r is! Map) continue;
     if (r['draft'] == true || r['prerelease'] == true) continue;
     final tag = '${r['tag_name'] ?? ''}';
-    if (tag.startsWith('ios-') != ios) continue;
+    if (!ios && tag.startsWith('ios-')) continue;
     final ver = parseVersion(tag);
     if (ver == null || compareVersions(ver, cur) <= 0) continue;
     if (bestVer != null && compareVersions(ver, bestVer) <= 0) continue;
@@ -176,7 +190,7 @@ AppUpdate? updateFromManifest(
   final asset = json['asset'] is Map ? json['asset'] as Map : const {};
   final name = '${asset['name'] ?? _assetNameFor(version, ios)}';
   final size = (asset['size'] as num?)?.toInt() ?? 0;
-  final tag = '${json['tag'] ?? (ios ? 'ios-v$version' : 'v$version')}';
+  final tag = '${json['tag'] ?? _tagFor(ver, ios)}';
 
   DownloadSource? storage;
   final parts = json['parts'];
@@ -225,9 +239,9 @@ AppUpdate? findUpdateFromAtom({
   List<int>? bestVer;
   for (final m in RegExp(r'/releases/tag/([^"<\s]+)"').allMatches(atom)) {
     final tag = Uri.decodeComponent(m.group(1)!);
-    if (tag.startsWith('ios-') != ios) continue;
     final ver = parseVersion(tag);
-    if (ver == null || compareVersions(ver, cur) <= 0) continue;
+    if (ver == null || !_tagMayHave(tag, ver, ios)) continue;
+    if (compareVersions(ver, cur) <= 0) continue;
     if (bestVer != null && compareVersions(ver, bestVer) <= 0) continue;
     final version = ver.join('.');
     final name = _assetNameFor(version, ios);

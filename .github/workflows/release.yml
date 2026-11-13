@@ -1,0 +1,168 @@
+# 发布：一次运行同时打安卓 APK 和苹果 IPA，放进同一个 Release（tag 为 v<版本号>）。
+# 手动运行：Actions → release → Run workflow；勾选 publish 才会真正发布，不勾只打包（两个包在 Actions 的构建产物里）。
+# 版本号只看 app/pubspec.yaml 的 version:（如 3.3.0+29，发版前 + 前后都要加）。
+# 发布说明写在 .github/release-notes/<版本号>.md，会显示在 App 的更新弹窗里。
+#
+# 发布时按顺序：
+#   1. 把 supabase/migrations/ 里还没执行过的 SQL 自动执行到云端数据库（保证新版 App 用到的表和字段已经存在）。
+#      需要 Secret：SUPABASE_ACCESS_TOKEN、SUPABASE_DB_PASSWORD（没配置就警告并跳过这一步，不影响发布）。
+#   2. 同时打安卓包（含检查、测试、签名指纹校验）和苹果包（含检查、测试），见 android.yml / ios.yml。
+#   3. 两个包都成功才发布 Release；同一个版本号重新发布时，会先删掉这个版本旧的 Release 和标签。
+#   4. 把两个包同步到 Supabase 备用下载源（需要 SUPABASE_SERVICE_KEY，没配置就跳过）。
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 打好后发布到 GitHub Release（并标为最新版）
+        type: boolean
+        default: false
+  # 改动发布相关的文件时自动试打一次包（不发布、不动数据库），确认流程没写坏
+  push:
+    paths:
+      - ".github/workflows/release.yml"
+      - ".github/workflows/android.yml"
+      - ".github/workflows/ios.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.ver.outputs.name }}
+      publish: ${{ steps.ver.outputs.publish }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: 读取版本号
+        id: ver
+        run: |
+          v=$(grep '^version:' app/pubspec.yaml | awk '{print $2}')
+          echo "name=${v%%+*}" >> "$GITHUB_OUTPUT"
+          echo "版本号：$v"
+          if [ "${{ github.event_name }}" = workflow_dispatch ] && [ "${{ inputs.publish }}" = true ]; then
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  database:
+    needs: prepare
+    if: ${{ needs.prepare.outputs.publish == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 检查配置
+        id: cfg
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: |
+          if [ -z "$SUPABASE_ACCESS_TOKEN" ] || [ -z "$SUPABASE_DB_PASSWORD" ] || [ -z "$SUPABASE_URL" ]; then
+            echo "::warning::没有配置 SUPABASE_ACCESS_TOKEN / SUPABASE_DB_PASSWORD，已跳过「自动执行数据库 SQL」。这次如果有新的 SQL 文件，需要你自己到 Supabase 后台执行。"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # 项目编号就是 SUPABASE_URL 里 https:// 和 .supabase.co 中间那一段
+          ref=$(echo "$SUPABASE_URL" | sed -E 's#^https?://([^.]+)\..*#\1#')
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+
+      - uses: supabase/setup-cli@v1
+        if: ${{ steps.cfg.outputs.skip == 'false' }}
+        with:
+          version: latest
+
+      - name: 执行还没执行过的 SQL
+        if: ${{ steps.cfg.outputs.skip == 'false' }}
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          REF: ${{ steps.cfg.outputs.ref }}
+        run: |
+          supabase link --project-ref "$REF"
+          echo "== 本地和云端的执行记录"
+          supabase migration list
+          echo "== 将要执行"
+          supabase db push --dry-run
+          supabase db push --yes
+          echo "== 执行后"
+          supabase migration list
+
+  android:
+    needs: [prepare, database]
+    if: ${{ !failure() && !cancelled() }}
+    uses: ./.github/workflows/android.yml
+    secrets: inherit
+
+  ios:
+    needs: [prepare, database]
+    if: ${{ !failure() && !cancelled() }}
+    uses: ./.github/workflows/ios.yml
+    secrets: inherit
+
+  publish:
+    needs: [prepare, android, ios]
+    if: ${{ !failure() && !cancelled() && needs.prepare.outputs.publish == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    env:
+      V: ${{ needs.prepare.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: 整理安装包和说明
+        run: |
+          ls -l dist
+          test -f "dist/my-fitness-${V}.apk" || { echo "::error::没找到安卓安装包 my-fitness-${V}.apk"; exit 1; }
+          test -f "dist/my-fitness-ios-${V}-unsigned.ipa" || { echo "::error::没找到苹果安装包 my-fitness-ios-${V}-unsigned.ipa"; exit 1; }
+          notes=".github/release-notes/${V}.md"
+          base=/tmp/base.md; : > "$base"
+          [ -f "$notes" ] && { cat "$notes"; echo; } > "$base"
+          android_line="安卓：下载 my-fitness-${V}.apk 直接安装即可覆盖旧版，数据保留。"
+          ios_line="苹果：my-fitness-ios-${V}-unsigned.ipa 是未签名包，需用全能签 / AltStore / Sideloadly 等工具签名后安装。"
+          { cat "$base"; echo "$android_line"; echo; echo "$ios_line"; } > /tmp/notes.md
+          { cat "$base"; echo "$android_line"; } > /tmp/notes-android.md
+          { cat "$base"; echo "$ios_line"; } > /tmp/notes-ios.md
+
+      - name: 发布 Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # 同一个版本号重新发布时（比如上次发布失败），先删掉这个版本旧的 Release 和标签（没有就跳过）
+          gh release delete "v${V}" --cleanup-tag --yes --repo "$GITHUB_REPOSITORY" || true
+          gh release create "v${V}" "dist/my-fitness-${V}.apk" "dist/my-fitness-ios-${V}-unsigned.ipa" \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --latest \
+            --title "我的健身 ${V}" \
+            --notes-file /tmp/notes.md
+
+      # 备用下载源：把两个安装包和「最新版本信息」同步一份到 Supabase 存储。
+      # 国内网络连不上 GitHub 时，App 里的「检查更新」会改走这里。需要 Secret：SUPABASE_SERVICE_KEY
+      # （没配置就只警告、跳过，不影响上面的 Release）。
+      - name: 同步安卓包到备用下载源（Supabase）
+        continue-on-error: true
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          MIRRORS: ${{ vars.MIRRORS }}
+        run: tools/publish_mirror.sh android "$V" "v${V}" "dist/my-fitness-${V}.apk" /tmp/notes-android.md
+
+      - name: 同步苹果包到备用下载源（Supabase）
+        continue-on-error: true
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          MIRRORS: ${{ vars.MIRRORS }}
+        run: tools/publish_mirror.sh ios "$V" "v${V}" "dist/my-fitness-ios-${V}-unsigned.ipa" /tmp/notes-ios.md
