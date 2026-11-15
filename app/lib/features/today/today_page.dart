@@ -127,10 +127,11 @@ class TodayPage extends ConsumerWidget {
     // 最近训练分成「今天」和「过去」：只有今天的才能继续
     final todayKey = dateKeyOf(today);
     final todays = completed.where((w) => w.workout.localDate == todayKey).toList();
-    final past = completed.where((w) => w.workout.localDate != todayKey).toList();
+    // 一组都没做的暂停训练只在「今天」里留个「继续」入口，不算进过去和本周统计
+    final past = completed.where((w) => w.workout.localDate != todayKey && w.hasCompleted).toList();
 
     final weekStart = DateTime(today.year, today.month, today.day - 6);
-    final recent = completed.where((w) => !w.workout.startedAt.isBefore(weekStart)).toList();
+    final recent = completed.where((w) => !w.workout.startedAt.isBefore(weekStart) && w.hasCompleted).toList();
     final days = recent.map((w) => w.workout.localDate).toSet();
     final weekVol = recent.fold<double>(0, (s, w) => s + w.volume);
     final weekSets = recent.fold<int>(0, (s, w) => s + w.setCount);
@@ -566,7 +567,14 @@ class _RecentRow extends StatelessWidget {
               children: [
                 Text(w.name ?? '自由训练',
                     maxLines: 1, overflow: TextOverflow.ellipsis, style: AppText.body.copyWith(color: c.text, fontWeight: FontWeight.w600)),
-                Text(metaLine(['$minutes 分钟', formatVolume(view.volume), '${view.setCount} 组']),
+                Text(
+                    metaLine([
+                      // 自动暂停的训练还留着没做的组，今天可以接着练
+                      if (onContinue != null && view.unfinishedCount > 0) '已暂停，还剩 ${view.unfinishedCount} 组',
+                      '$minutes 分钟',
+                      formatVolume(view.volume),
+                      '${view.setCount} 组',
+                    ]),
                     style: AppText.label.copyWith(color: c.text2)),
               ],
             ),

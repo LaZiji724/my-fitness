@@ -307,6 +307,21 @@ void main() {
       expect((await lib.watchJoined().first)[p.id], planId);
     });
 
+    test('一组都没做就被自动暂停的训练不算「已练几节」，做过一组的才算', () async {
+      final p = bySlug('treadmill-starter');
+      final planId = await lib.join(p);
+      final tid = (await plans.getPlan(planId))!.dayAt(0)!.templateId!;
+      final w = await plans.startFromTemplate(workouts, tid, planId: planId);
+      await workouts.pauseWorkout(w.id);
+      expect((await lib.watchCompletedCounts().first)[p.id], isNull);
+
+      await workouts.resumeWorkout(w.id);
+      final first = (await workouts.loadWorkout(w.id))!.exercises.expand((b) => b.sets).first;
+      await workouts.setCompleted(first.id, true);
+      await workouts.pauseWorkout(w.id);
+      expect((await lib.watchCompletedCounts().first)[p.id], 1);
+    });
+
     test('收藏：同一计划在同一账号下 id 固定，取消后再收藏会复原同一行', () async {
       final p = bySlug('glute-home-start');
       expect(lib.favoriteId(p.id), lib.favoriteId(p.id));

@@ -1,6 +1,9 @@
 package com.hotchicken.my_fitness
 
 import android.content.Intent
+import android.media.AudioAttributes
+import android.media.AudioManager
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
@@ -12,6 +15,38 @@ import io.flutter.plugin.common.MethodChannel
 import java.io.File
 
 class MainActivity : FlutterActivity() {
+    // 组间休息结束的铃声（应用在前台时由这里放；后台由带同一铃声的通知来响）。
+    // 走「闹钟」音频通道：手机调成静音 / 振动也会响，音量跟闹钟音量。
+    private var bellPlayer: MediaPlayer? = null
+
+    private fun ringBell(): Boolean {
+        return try {
+            bellPlayer?.release()
+            val attrs = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ALARM)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build()
+            val audio = getSystemService(AUDIO_SERVICE) as AudioManager
+            val player = MediaPlayer.create(this, R.raw.rest_bell, attrs, audio.generateAudioSessionId())
+                ?: return false
+            player.setOnCompletionListener {
+                it.release()
+                if (bellPlayer === it) bellPlayer = null
+            }
+            bellPlayer = player
+            player.start()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    override fun onDestroy() {
+        bellPlayer?.release()
+        bellPlayer = null
+        super.onDestroy()
+    }
+
     // 后台接收好友消息：启停前台服务、检查 / 申请「忽略电池优化」（不被省电策略掐网）
     private fun configureKeepAlive(flutterEngine: FlutterEngine) {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.hotchicken.my_fitness/keep_alive")
@@ -71,6 +106,13 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         configureKeepAlive(flutterEngine)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.hotchicken.my_fitness/bell")
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "ring" -> result.success(ringBell())
+                    else -> result.notImplemented()
+                }
+            }
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.hotchicken.my_fitness/installer")
             .setMethodCallHandler { call, result ->
                 when (call.method) {

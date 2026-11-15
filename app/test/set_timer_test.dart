@@ -9,6 +9,7 @@ import 'package:my_fitness/core/db/app_database.dart';
 import 'package:my_fitness/core/db/database_provider.dart';
 import 'package:my_fitness/core/notifications/reminder_host.dart';
 import 'package:my_fitness/core/notifications/reminder_scheduler.dart';
+import 'package:my_fitness/core/notifications/rest_bell.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_repository.dart';
@@ -31,7 +32,7 @@ class _FakeScheduler implements ReminderScheduler {
   final bool granted;
   int permissionAsked = 0;
   int cancelAllCalls = 0;
-  final scheduled = <({int id, DateTime at, String title, String body})>[];
+  final scheduled = <({int id, DateTime at, String title, String body, bool bell})>[];
 
   @override
   Future<bool> requestPermission() async {
@@ -40,8 +41,9 @@ class _FakeScheduler implements ReminderScheduler {
   }
 
   @override
-  Future<String?> schedule({required int id, required DateTime at, required String title, required String body}) async {
-    scheduled.add((id: id, at: at, title: title, body: body));
+  Future<String?> schedule(
+      {required int id, required DateTime at, required String title, required String body, bool bell = false}) async {
+    scheduled.add((id: id, at: at, title: title, body: body, bell: bell));
     return null;
   }
 
@@ -54,10 +56,22 @@ class _FakeScheduler implements ReminderScheduler {
   Future<void> cancelAll() async => cancelAllCalls++;
 }
 
+/// 记下响了几次铃，和真实现一样只在安卓上由应用自己响。
+class _FakeBell implements RestBell {
+  int rings = 0;
+
+  @override
+  bool get ringsInApp => defaultTargetPlatform == TargetPlatform.android;
+
+  @override
+  Future<void> ring() async => rings++;
+}
+
 void main() {
   late AppDatabase db;
   late WorkoutRepository repo;
   late _FakeScheduler scheduler;
+  late _FakeBell bell;
   var now = DateTime.utc(2026, 11, 4, 10);
   final all = loadSeed();
   final plank = all.firstWhere((e) => e.trackingType == TrackingType.duration);
@@ -66,6 +80,7 @@ void main() {
     db = AppDatabase.forTesting(NativeDatabase.memory());
     repo = WorkoutRepository(db, userId: () => 'u1');
     scheduler = _FakeScheduler();
+    bell = _FakeBell();
     now = DateTime.utc(2026, 11, 4, 10);
   });
   tearDown(() => db.close());
@@ -91,6 +106,7 @@ void main() {
         exerciseRepositoryProvider.overrideWithValue(_FakeRepo(all)),
         clockProvider.overrideWithValue(() => now),
         reminderSchedulerProvider.overrideWithValue(scheduler),
+        restBellProvider.overrideWithValue(bell),
       ],
       child: ReminderHost(child: MaterialApp.router(theme: AppTheme.light(), routerConfig: router)),
     );
@@ -276,6 +292,79 @@ void main() {
     expect(scheduler.scheduled, isEmpty);
   });
 
+  testWidgets('休息结束：应用在前台（不在训练页也一样）响一次铃', (tester) async {
+    await tester.pumpWidget(host(const SizedBox()));
+    final container = ProviderScope.containerOf(tester.element(find.byType(SizedBox).first));
+
+    container.read(restTimerProvider.notifier).start(60, now: now);
+    await tester.pump();
+    await advance(tester, 59);
+    expect(bell.rings, 0);
+    await advance(tester, 1);
+    expect(bell.rings, 1);
+    await advance(tester, 30);
+    expect(bell.rings, 1); // 只响一次
+
+    // 中途加了 15 秒：按新的结束时刻响
+    container.read(restTimerProvider.notifier).start(60, now: now);
+    await tester.pump();
+    await advance(tester, 50);
+    container.read(restTimerProvider.notifier).adjust(15);
+    await tester.pump();
+    await advance(tester, 10);
+    expect(bell.rings, 1);
+    await advance(tester, 15);
+    expect(bell.rings, 2);
+
+    // 跳过休息：不响
+    container.read(restTimerProvider.notifier).start(60, now: now);
+    await tester.pump();
+    await advance(tester, 10);
+    container.read(restTimerProvider.notifier).skip();
+    await tester.pump();
+    await advance(tester, 60);
+    expect(bell.rings, 2);
+  });
+
+  testWidgets('休息结束：在后台由带铃声的通知来响，应用自己不响', (tester) async {
+    await tester.pumpWidget(host(const SizedBox()));
+    final container = ProviderScope.containerOf(tester.element(find.byType(SizedBox).first));
+
+    container.read(restTimerProvider.notifier).start(60, now: now);
+    await tester.pump();
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    await tester.pump();
+    final rest = scheduler.scheduled.singleWhere((s) => s.id == kRestReminderId);
+    expect(rest.bell, isTrue);
+    await advance(tester, 90);
+    expect(bell.rings, 0);
+
+    // 回到前台时休息早就结束了：通知已经响过，不再补响
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump();
+    await advance(tester, 5);
+    expect(bell.rings, 0);
+
+    // 回前台后还在倒数的休息：到点照常响
+    container.read(restTimerProvider.notifier).start(20, now: now);
+    await tester.pump();
+    await advance(tester, 20);
+    expect(bell.rings, 1);
+  });
+
+  testWidgets('动作计时的通知不用休息铃声', (tester) async {
+    await timedWorkout();
+    await tester.pumpWidget(host(const WorkoutPage()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('开始'));
+    await tester.pump();
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    await tester.pump();
+    expect(scheduler.scheduled.singleWhere((s) => s.id == kSetTimerReminderId).bell, isFalse);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump();
+  });
+
   testWidgets('通知权限被拒绝时训练页给出提示', (tester) async {
     scheduler = _FakeScheduler(granted: false);
     await timedWorkout();
@@ -334,6 +423,10 @@ void main() {
       await tester.pump();
       expect(scheduler.scheduled.map((s) => s.id), contains(kRestReminderId));
       expect(scheduler.scheduled.last.at, now.add(const Duration(seconds: 60)));
+      // iPhone：铃声由这条通知在前台放，应用自己不再响一遍
+      expect(scheduler.scheduled.last.bell, isTrue);
+      await advance(tester, 61);
+      expect(bell.rings, 0);
     });
   });
 }

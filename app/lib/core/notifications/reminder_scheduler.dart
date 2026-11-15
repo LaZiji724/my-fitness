@@ -12,12 +12,14 @@ abstract class ReminderScheduler {
   Future<bool> requestPermission();
 
   /// 在 [at] 时刻弹出通知；同一个 [id] 重复调用会覆盖上一次。
+  /// [bell] 为 true 时用休息结束的铃声（安卓走闹钟音量，静音模式下也会响）。
   /// 成功返回 null，失败返回原因。
   Future<String?> schedule({
     required int id,
     required DateTime at,
     required String title,
     required String body,
+    bool bell = false,
   });
 
   /// 取消某一个还没触发的提醒。
@@ -63,6 +65,36 @@ class LocalNotificationScheduler implements ReminderScheduler {
       presentList: false,
       presentSound: true,
       presentBadge: false,
+    ),
+  );
+
+  /// 休息结束：单独一个通知渠道，带铃声。
+  /// 安卓的渠道一旦建好，声音就改不了了，所以铃声用新的渠道 id，不去改原来的 timer_done。
+  /// 声音走「闹钟」用途：手机调成静音 / 振动时也会响（和闹钟一样，跟闹钟音量走）。
+  static const _bellChannelId = 'rest_bell';
+  static const _bellDetails = NotificationDetails(
+    android: AndroidNotificationDetails(
+      _bellChannelId,
+      '休息结束铃声',
+      channelDescription: '组间休息结束时响铃提醒',
+      importance: Importance.max,
+      priority: Priority.high,
+      category: AndroidNotificationCategory.alarm,
+      visibility: NotificationVisibility.public,
+      playSound: true,
+      sound: RawResourceAndroidNotificationSound('rest_bell'),
+      audioAttributesUsage: AudioAttributesUsage.alarm,
+      enableVibration: true,
+      autoCancel: true,
+    ),
+    // iOS 在前台也会放这个铃声（presentSound），所以应用开着的时候休息结束也会响
+    iOS: DarwinNotificationDetails(
+      presentAlert: false,
+      presentBanner: false,
+      presentList: false,
+      presentSound: true,
+      presentBadge: false,
+      sound: 'rest_bell.wav',
     ),
   );
 
@@ -117,6 +149,7 @@ class LocalNotificationScheduler implements ReminderScheduler {
     required DateTime at,
     required String title,
     required String body,
+    bool bell = false,
   }) async {
     if (!await _ensureInit()) return '通知组件初始化失败';
     try {
@@ -133,7 +166,7 @@ class LocalNotificationScheduler implements ReminderScheduler {
         id: id,
         // 只表示一个绝对时刻，用 UTC 即可，不依赖手机时区数据库
         scheduledDate: tz.TZDateTime.from(at, tz.UTC),
-        notificationDetails: _details,
+        notificationDetails: bell ? _bellDetails : _details,
         androidScheduleMode: mode,
         title: title,
         body: body,

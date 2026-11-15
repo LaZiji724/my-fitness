@@ -25,7 +25,8 @@ class StatsPage extends ConsumerWidget {
     final c = context.colors;
     final view = ref.watch(statsViewProvider);
     final today = ref.watch(todayProvider);
-    final all = ref.watch(completedWorkoutsProvider).value ?? const <WorkoutView>[];
+    // 一组都没做的自动暂停训练不算
+    final all = (ref.watch(completedWorkoutsProvider).value ?? const <WorkoutView>[]).where((w) => w.hasCompleted).toList();
     final byId = ref.watch(exerciseByIdProvider);
     final range = view.range;
     final window = view.window;

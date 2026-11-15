@@ -232,4 +232,29 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('首页'), findsOneWidget);
   });
+
+  testWidgets('自动暂停的总结页：说明没做的都留着，点「继续训练」原样接着练', (tester) async {
+    final summary = await tester.runAsync(() async {
+      final w = await repo.startWorkout();
+      await repo.addExercise(w.id, bench.id, defaultSets: 3, exactSets: true);
+      return (await repo.pauseWorkout(w.id))!;
+    });
+    await tester.pumpWidget(host(WorkoutSummaryPage(summary: summary!), extra: [
+      GoRoute(path: '/workout', builder: (_, _) => const Scaffold(body: Text('训练页'))),
+    ]));
+    await tester.pumpAndSettle();
+
+    expect(find.text('训练已暂停'), findsOneWidget);
+    expect(find.textContaining('还有 3 组没做，都留着'), findsOneWidget);
+    expect(find.text('存为模板'), findsNothing);
+
+    await tester.tap(find.text('继续训练'));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
+    await tester.pumpAndSettle();
+    expect(find.text('训练页'), findsOneWidget);
+    final active = await tester.runAsync(() => repo.activeWorkout());
+    expect(active?.id, summary.workoutId);
+    final view = await tester.runAsync(() => repo.loadWorkout(summary.workoutId));
+    expect(view!.exercises.single.sets, hasLength(3));
+  });
 }

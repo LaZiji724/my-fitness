@@ -28,6 +28,12 @@ class WorkoutView {
 
   double get volume => volumeOf(entries);
   int get setCount => workingSetCount(entries);
+
+  /// 至少完成了一组（热身组也算）。一组都没做的暂停训练不进统计和日历。
+  bool get hasCompleted => exercises.any((b) => b.sets.any((s) => s.completed));
+
+  /// 还没做的组数。手动结束会清掉没做的组，所以已结束的训练里还有没做的组，就是被自动暂停的。
+  int get unfinishedCount => exercises.fold(0, (n, b) => n + b.sets.where((s) => !s.completed).length);
 }
 
 /// 训练结束时的总结。
@@ -40,6 +46,8 @@ class WorkoutSummary {
     required this.exerciseCount,
     required this.prs,
     this.auto = false,
+    this.paused = false,
+    this.unfinished = 0,
   });
 
   final String workoutId;
@@ -53,6 +61,12 @@ class WorkoutSummary {
 
   /// 是不是长时间没有操作、由应用自动结束的
   final bool auto;
+
+  /// 是不是自动暂停（没做完的都还留着，今天可以接着练）
+  final bool paused;
+
+  /// 暂停时还没做的组数
+  final int unfinished;
 }
 
 class WorkoutRepository {
@@ -443,18 +457,18 @@ class WorkoutRepository {
   ///
   /// [endedAt] 用于自动结束：长时间没操作时，把结束时刻记在「最后一次操作」那一刻，
   /// 多出来的空闲时间不计入时长。不传则为现在。
-  Future<WorkoutSummary?> finishWorkout(String workoutId, {DateTime? endedAt, bool auto = false}) async {
-    final t = _now();
-    final view = await loadWorkout(workoutId);
-    if (view == null) return null;
+  DateTime _clampEnd(WorkoutView view, DateTime? endedAt, DateTime t) {
     var end = endedAt ?? t;
     if (end.isAfter(t)) end = t;
     if (end.isBefore(view.workout.startedAt)) end = view.workout.startedAt;
+    return end;
+  }
 
-    // 先算 PR（要在丢弃前、用结束前的历史）
+  /// 这次训练打破的纪录（要用结束前的历史来比）。
+  Future<Map<String, Set<PrKind>>> _prsOf(WorkoutView view) async {
     final prs = <String, Set<PrKind>>{};
     for (final block in view.exercises) {
-      final best = await bestBefore(block.exercise.exerciseId, excludeWorkoutId: workoutId);
+      final best = await bestBefore(block.exercise.exerciseId, excludeWorkoutId: view.workout.id);
       for (final s in block.sets) {
         final hit = detectPr(
           best,
@@ -463,6 +477,40 @@ class WorkoutRepository {
         if (hit.isNotEmpty) prs.putIfAbsent(block.exercise.exerciseId, () => {}).addAll(hit);
       }
     }
+    return prs;
+  }
+
+  /// 长时间没操作时自动暂停：记下结束时刻让计时停住，但没做完的动作和组一个都不删，
+  /// 一组都没做也不丢弃。同一天回来点「继续」就原样接着练。
+  Future<WorkoutSummary?> pauseWorkout(String workoutId, {DateTime? endedAt}) async {
+    final t = _now();
+    final view = await loadWorkout(workoutId);
+    if (view == null || view.workout.endedAt != null) return null;
+    final end = _clampEnd(view, endedAt, t);
+    final prs = await _prsOf(view);
+    await (_db.update(_db.workouts)..where((w) => w.id.equals(workoutId))).write(
+        WorkoutsCompanion(endedAt: Value(end), updatedAt: Value(t), dirty: const Value(true)));
+    return WorkoutSummary(
+      workoutId: workoutId,
+      duration: end.difference(view.workout.startedAt),
+      volume: view.volume,
+      setCount: view.setCount,
+      exerciseCount: view.exercises.where((b) => b.sets.any((s) => s.completed)).length,
+      prs: prs,
+      auto: true,
+      paused: true,
+      unfinished: view.unfinishedCount,
+    );
+  }
+
+  Future<WorkoutSummary?> finishWorkout(String workoutId, {DateTime? endedAt, bool auto = false}) async {
+    final t = _now();
+    final view = await loadWorkout(workoutId);
+    if (view == null) return null;
+    final end = _clampEnd(view, endedAt, t);
+
+    // 先算 PR（要在丢弃前、用结束前的历史）
+    final prs = await _prsOf(view);
 
     final hasCompleted = view.exercises.any((b) => b.sets.any((s) => s.completed));
     if (!hasCompleted) {

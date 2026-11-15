@@ -82,18 +82,19 @@ class ProgramLibraryRepository {
 
   // ------------------------------------------------------------------ 进度
 
-  /// 每个计划已完成的训练节数（不含放弃的）。
+  /// 每个计划已完成的训练节数（不含放弃的，也不含一组都没做就被自动暂停的）。
   Stream<Map<String, int>> watchCompletedCounts() {
-    final w = _db.workouts;
-    final count = w.id.count();
-    final q = _db.selectOnly(w)
-      ..addColumns([w.sourceProgramId, count])
-      ..where(w.sourceProgramId.isNotNull() &
-          w.endedAt.isNotNull() &
-          w.deletedAt.isNull() &
-          w.userId.equals(_userId()))
-      ..groupBy([w.sourceProgramId]);
-    return q.watch().map((rows) => {for (final r in rows) r.read(w.sourceProgramId)!: r.read(count) ?? 0});
+    final q = _db.customSelect(
+      'SELECT w.source_program_id AS pid, COUNT(*) AS n FROM workouts w '
+      'WHERE w.source_program_id IS NOT NULL AND w.ended_at IS NOT NULL '
+      'AND w.deleted_at IS NULL AND w.user_id = ? '
+      'AND EXISTS (SELECT 1 FROM workout_sets s JOIN workout_exercises e ON e.id = s.workout_exercise_id '
+      'WHERE e.workout_id = w.id AND s.completed = 1 AND s.deleted_at IS NULL AND e.deleted_at IS NULL) '
+      'GROUP BY w.source_program_id',
+      variables: [Variable<String>(_userId())],
+      readsFrom: {_db.workouts, _db.workoutExercises, _db.workoutSets},
+    );
+    return q.watch().map((rows) => {for (final r in rows) r.read<String>('pid'): r.read<int>('n')});
   }
 
   /// 来自计划库的计划：计划库计划 id → 我的计划 id。
