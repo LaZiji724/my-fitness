@@ -35,6 +35,23 @@ class WorkoutSummaryPage extends ConsumerWidget {
 
   final WorkoutSummary summary;
 
+  /// 自动暂停后接着练：计时从暂停处接着走，没做完的组都还在。
+  Future<void> _resume(BuildContext context, WidgetRef ref) async {
+    final w = await ref.read(workoutRepositoryProvider).resumeWorkout(summary.workoutId);
+    if (!context.mounted) return;
+    if (w == null) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(const SnackBar(content: Text('现在没法继续这次训练')));
+      context.go('/today');
+      return;
+    }
+    // 和首页点「继续」一样：训练页压在首页上面，返回能回到首页
+    final router = GoRouter.of(context);
+    router.go('/today');
+    router.push('/workout');
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final c = context.colors;
@@ -86,12 +103,16 @@ class WorkoutSummaryPage extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: AppSpace.s20),
-              Text('训练完成', style: AppText.titleLarge.copyWith(color: c.text)),
+              Text(summary.paused ? '训练已暂停' : '训练完成', style: AppText.titleLarge.copyWith(color: c.text)),
               const SizedBox(height: AppSpace.s4),
               Text(
-                  summary.auto
-                      ? '你有一阵子没操作了，已自动保存，时长算到最后一次操作'
-                      : (prs.isEmpty ? '这次练得不错，记录已保存' : '破了 ${prs.length} 个动作的纪录，记录已保存'),
+                  summary.paused
+                      ? (summary.unfinished > 0
+                          ? '5 分钟没操作，已自动暂停，时长算到最后一次操作。还有 ${summary.unfinished} 组没做，都留着'
+                          : '5 分钟没操作，已自动暂停，时长算到最后一次操作。动作都留着，可以接着加')
+                      : summary.auto
+                          ? '你有一阵子没操作了，已自动保存，时长算到最后一次操作'
+                          : (prs.isEmpty ? '这次练得不错，记录已保存' : '破了 ${prs.length} 个动作的纪录，记录已保存'),
                   style: AppText.label.copyWith(color: c.text2)),
               const SizedBox(height: AppSpace.s24),
               HeroCard(
@@ -148,15 +169,33 @@ class WorkoutSummaryPage extends ConsumerWidget {
                 const SizedBox(height: AppSpace.s12),
               ] else
                 const Spacer(),
-              _SaveTemplateButton(workoutId: summary.workoutId),
-              const SizedBox(height: AppSpace.s12),
-              PressScale(
-                child: FilledButton(
-                  style: const ButtonStyle(minimumSize: WidgetStatePropertyAll(Size.fromHeight(AppSize.buttonLarge))),
-                  onPressed: () => context.go('/today'),
-                  child: const Text('完成'),
+              if (summary.paused) ...[
+                PressScale(
+                  child: ElevatedButton(
+                    style: const ButtonStyle(minimumSize: WidgetStatePropertyAll(Size.fromHeight(AppSize.buttonLarge))),
+                    onPressed: () => context.go('/today'),
+                    child: const Text('先回首页'),
+                  ),
                 ),
-              ),
+                const SizedBox(height: AppSpace.s12),
+                PressScale(
+                  child: FilledButton(
+                    style: const ButtonStyle(minimumSize: WidgetStatePropertyAll(Size.fromHeight(AppSize.buttonLarge))),
+                    onPressed: () => _resume(context, ref),
+                    child: const Text('继续训练'),
+                  ),
+                ),
+              ] else ...[
+                _SaveTemplateButton(workoutId: summary.workoutId),
+                const SizedBox(height: AppSpace.s12),
+                PressScale(
+                  child: FilledButton(
+                    style: const ButtonStyle(minimumSize: WidgetStatePropertyAll(Size.fromHeight(AppSize.buttonLarge))),
+                    onPressed: () => context.go('/today'),
+                    child: const Text('完成'),
+                  ),
+                ),
+              ],
             ],
           ),
         ),

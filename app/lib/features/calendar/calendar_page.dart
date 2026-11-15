@@ -47,7 +47,8 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
   Widget build(BuildContext context) {
     final c = context.colors;
     final today = ref.watch(todayProvider);
-    final all = ref.watch(completedWorkoutsProvider).value ?? const <WorkoutView>[];
+    // 一组都没做的自动暂停训练不算练过
+    final all = (ref.watch(completedWorkoutsProvider).value ?? const <WorkoutView>[]).where((w) => w.hasCompleted).toList();
     final byId = ref.watch(exerciseByIdProvider);
     final plans = ref.watch(plansProvider).value ?? const [];
     final templates = ref.watch(templatesProvider).value ?? const [];

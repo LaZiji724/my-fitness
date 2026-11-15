@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:my_fitness/core/notifications/reminder_scheduler.dart';
+import 'package:my_fitness/core/notifications/rest_bell.dart';
 import 'package:my_fitness/features/workout/set_timer.dart';
 import 'package:my_fitness/features/workout/workout_providers.dart';
 
@@ -14,6 +17,10 @@ import 'package:my_fitness/features/workout/workout_providers.dart';
 /// - iOS：一开始倒数就登记（通知自带「前台不显示」），不依赖退后台那一瞬间
 ///   能不能来得及登记；停止/结束/跳过时取消。
 /// 回到前台时还会补上后台期间已经结束的动作计时。
+///
+/// 组间休息结束一定响铃：
+/// - 应用在前台（在哪个页面都一样）：安卓由应用自己放铃声；iOS 由提前登记的通知放铃声。
+/// - 退到后台或熄屏：到点弹出的通知自带同一个铃声。
 class ReminderHost extends ConsumerStatefulWidget {
   const ReminderHost({super.key, required this.child});
   final Widget child;
@@ -25,6 +32,8 @@ class ReminderHost extends ConsumerStatefulWidget {
 class _ReminderHostState extends ConsumerState<ReminderHost> with WidgetsBindingObserver {
   bool _background = false;
   bool _asked = false;
+  Timer? _bellTimer;
+  DateTime? _rungFor; // 已经响过铃的那次休息（按结束时刻区分），免得重复响
 
   @override
   void initState() {
@@ -34,8 +43,35 @@ class _ReminderHostState extends ConsumerState<ReminderHost> with WidgetsBinding
 
   @override
   void dispose() {
+    _bellTimer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  DateTime _now() => ref.read(clockProvider)();
+
+  /// 应用在前台时，按当前休息的结束时刻定一个闹钟，到点响铃。
+  /// 已经过了结束时刻的不补响（多半是在后台结束的，通知已经响过了）。
+  void _armBell() {
+    _bellTimer?.cancel();
+    _bellTimer = null;
+    final rest = ref.read(restTimerProvider);
+    if (_background || rest == null || _rungFor == rest.endsAt) return;
+    if (!ref.read(restBellProvider).ringsInApp) return;
+    final left = rest.endsAt.difference(_now());
+    if (left.isNegative) return;
+    _bellTimer = Timer(left, _ringIfDue);
+  }
+
+  void _ringIfDue() {
+    final rest = ref.read(restTimerProvider);
+    if (!mounted || _background || rest == null || _rungFor == rest.endsAt) return;
+    if (rest.endsAt.isAfter(_now())) {
+      _armBell(); // 休息被加时了，重新定
+      return;
+    }
+    _rungFor = rest.endsAt;
+    ref.read(restBellProvider).ring();
   }
 
   @override
@@ -45,6 +81,7 @@ class _ReminderHostState extends ConsumerState<ReminderHost> with WidgetsBinding
       case AppLifecycleState.paused:
         if (!_background) {
           _background = true;
+          _bellTimer?.cancel(); // 后台交给带铃声的通知
           _sync();
         }
       case AppLifecycleState.resumed:
@@ -53,6 +90,7 @@ class _ReminderHostState extends ConsumerState<ReminderHost> with WidgetsBinding
           ref.read(reminderSchedulerProvider).cancelAll();
           ref.read(setTimerProvider.notifier).finishIfDue();
           _sync(); // iOS：还在倒数的要重新登记
+          _armBell();
         }
       case AppLifecycleState.inactive:
       case AppLifecycleState.detached:
@@ -64,12 +102,12 @@ class _ReminderHostState extends ConsumerState<ReminderHost> with WidgetsBinding
   void _sync() {
     final eager = defaultTargetPlatform == TargetPlatform.iOS;
     if (!_background && !eager) return;
-    final now = ref.read(clockProvider)();
+    final now = _now();
     final scheduler = ref.read(reminderSchedulerProvider);
 
-    void apply(int id, DateTime? endsAt, String title, String body) {
+    void apply(int id, DateTime? endsAt, String title, String body, {bool bell = false}) {
       if (endsAt != null && endsAt.isAfter(now)) {
-        scheduler.schedule(id: id, at: endsAt, title: title, body: body);
+        scheduler.schedule(id: id, at: endsAt, title: title, body: body, bell: bell);
       } else if (!_background) {
         // 前台：计时已经停止或结束，撤掉之前登记的（后台时不动，免得撤掉已弹出的）
         scheduler.cancel(id);
@@ -80,7 +118,7 @@ class _ReminderHostState extends ConsumerState<ReminderHost> with WidgetsBinding
     apply(kSetTimerReminderId, set?.endsAt, '计时结束',
         set == null ? '' : '${set.label} 完成了，休息一下');
     final rest = ref.read(restTimerProvider);
-    apply(kRestReminderId, rest?.endsAt, '休息结束', '该开始下一组了');
+    apply(kRestReminderId, rest?.endsAt, '休息结束', '该开始下一组了', bell: true);
   }
 
   /// 第一次开始计时时问一次通知权限；被拒绝则记下来，训练页给出提示。
@@ -101,6 +139,7 @@ class _ReminderHostState extends ConsumerState<ReminderHost> with WidgetsBinding
     ref.listen(restTimerProvider, (prev, next) {
       if (prev == null && next != null) _askPermission();
       _sync();
+      _armBell();
     });
     return widget.child;
   }

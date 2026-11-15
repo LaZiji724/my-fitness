@@ -12,22 +12,17 @@ import 'package:my_fitness/features/workout/set_timer.dart';
 import 'package:my_fitness/features/workout/workout_providers.dart';
 import 'package:my_fitness/features/workout/workout_repository.dart';
 
-/// 忘记点「结束」时自动收尾（界面上没有任何设置，悄悄生效）。
+/// 忘记点「结束」时自动暂停（界面上没有任何设置，悄悄生效）。
 ///
-/// - 所有动作都做完（含最后一组的休息结束）后，1 分钟没有任何操作 → 自动保存并结束；
-/// - 还有动作没做完，2 分钟没有任何操作 → 同样自动结束；
-/// - 一组都还没完成时放宽到 10 分钟（刚到健身房、在换衣服，不该被丢掉）。
-/// 结束时刻记在「最后一次操作 / 最后一次休息结束」那一刻，多出来的空闲时间不计入时长。
-const Duration kIdleAfterAllDone = Duration(minutes: 1);
-const Duration kIdleUnfinished = Duration(minutes: 2);
-const Duration kIdleNothingDone = Duration(minutes: 10);
+/// 5 分钟里没有任何操作（点屏幕、加动作、勾组都算操作），就自动暂停训练：
+/// 不管动作做没做完、做了几组，都是 5 分钟。
+/// 暂停只是让计时停住：没做完的动作和组全部保留，同一天回来点「继续」原样接着练。
+/// 暂停时刻记在「最后一次操作 / 最后一次休息结束」那一刻，多出来的空闲时间不计入时长。
+/// 正在倒数的休息 / 动作计时不算空闲，从倒数结束那一刻起才开始计 5 分钟。
+const Duration kAutoPauseIdle = Duration(minutes: 5);
 
-/// 这次训练的空闲上限。
-Duration idleLimitFor(WorkoutView view) {
-  final sets = view.exercises.expand((b) => b.sets).toList();
-  if (!sets.any((s) => s.completed)) return kIdleNothingDone;
-  return sets.every((s) => s.completed) ? kIdleAfterAllDone : kIdleUnfinished;
-}
+/// 这次训练的空闲上限（目前一律 5 分钟）。
+Duration idleLimitFor(WorkoutView view) => kAutoPauseIdle;
 
 /// 训练里数据库记录到的最近一次改动时间。
 DateTime lastDbActivity(WorkoutView view) {
@@ -43,11 +38,11 @@ DateTime lastDbActivity(WorkoutView view) {
   return t;
 }
 
-/// 该不该自动结束？该则返回应当记下的结束时刻，否则返回 null。
+/// 该不该自动暂停？该则返回应当记下的暂停时刻，否则返回 null。
 ///
 /// [lastTouch] 是最后一次点屏幕的时间；[holdUntil] 是仍在倒数的休息 / 动作计时的结束时刻
 /// （计时没走完时不算空闲，走完那一刻起才开始计空闲）。
-DateTime? autoEndAt({
+DateTime? autoPauseAt({
   required WorkoutView view,
   required DateTime now,
   DateTime? lastTouch,
@@ -107,7 +102,7 @@ class WorkoutActivityStore {
 final workoutActivityStoreProvider =
     Provider<WorkoutActivityStore>((ref) => WorkoutActivityStore(ref.watch(appDatabaseProvider)));
 
-/// 包在整个应用外面：记录最后一次操作，定时检查，并在回到前台 / 重新打开时补做检查。
+/// 包在整个应用外面：记录最后一次操作，定时检查，并在回到前台 / 重新打开时补做检查，该暂停时自动暂停。
 class AutoEndHost extends ConsumerStatefulWidget {
   const AutoEndHost({super.key, required this.child, this.checkEvery = const Duration(seconds: 5)});
   final Widget child;
@@ -219,7 +214,7 @@ class _AutoEndHostState extends ConsumerState<AutoEndHost> with WidgetsBindingOb
     if (_busy || !mounted) return;
     final view = ref.read(activeWorkoutProvider).value;
     if (view == null || view.workout.id != _workoutId) return;
-    final end = autoEndAt(view: view, now: _now(), lastTouch: _touch, holdUntil: _hold ?? _timersEnd());
+    final end = autoPauseAt(view: view, now: _now(), lastTouch: _touch, holdUntil: _hold ?? _timersEnd());
     if (end == null) return;
 
     _busy = true;
@@ -230,7 +225,7 @@ class _AutoEndHostState extends ConsumerState<AutoEndHost> with WidgetsBindingOb
       final onWorkoutPage = router.routerDelegate.currentConfiguration.uri.path.startsWith('/workout');
       ref.read(restTimerProvider.notifier).skip();
       ref.read(setTimerProvider.notifier).cancel();
-      final summary = await ref.read(workoutRepositoryProvider).finishWorkout(id, endedAt: end, auto: true);
+      final summary = await ref.read(workoutRepositoryProvider).pauseWorkout(id, endedAt: end);
       await ref.read(workoutActivityStoreProvider).clear(id);
       if (onWorkoutPage && mounted) {
         if (summary == null) {

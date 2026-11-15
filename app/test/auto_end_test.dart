@@ -39,48 +39,94 @@ void main() {
     return (await repo.loadWorkout(w.id))!;
   }
 
-  test('全部做完：空闲不足 1 分钟不结束，满 1 分钟按最后一次操作结算', () async {
+  test('全部做完：空闲不足 5 分钟不暂停，满 5 分钟按最后一次操作结算', () async {
     final view = await setup();
     final last = clock; // 09:10 最后一次操作
-    expect(autoEndAt(view: view, now: last.add(const Duration(seconds: 59))), isNull);
-    expect(autoEndAt(view: view, now: last.add(const Duration(minutes: 1))), last);
+    expect(autoPauseAt(view: view, now: last.add(const Duration(minutes: 4, seconds: 59))), isNull);
+    expect(autoPauseAt(view: view, now: last.add(const Duration(minutes: 5))), last);
   });
 
-  test('全部做完后还在休息：从休息结束那一刻起才计 1 分钟，时长不含空闲', () async {
+  test('全部做完后还在休息：从休息结束那一刻起才计 5 分钟，时长不含空闲', () async {
     final view = await setup();
     final restEnd = clock.add(const Duration(seconds: 90));
-    expect(autoEndAt(view: view, now: restEnd, holdUntil: restEnd), isNull);
-    expect(autoEndAt(view: view, now: restEnd.add(const Duration(seconds: 59)), holdUntil: restEnd), isNull);
-    expect(autoEndAt(view: view, now: restEnd.add(const Duration(minutes: 1)), holdUntil: restEnd), restEnd);
+    expect(autoPauseAt(view: view, now: restEnd, holdUntil: restEnd), isNull);
+    expect(autoPauseAt(view: view, now: restEnd.add(const Duration(minutes: 4, seconds: 59)), holdUntil: restEnd), isNull);
+    expect(autoPauseAt(view: view, now: restEnd.add(const Duration(minutes: 5)), holdUntil: restEnd), restEnd);
   });
 
-  test('还有动作没做完：2 分钟没操作才结束，点过屏幕就重新计时', () async {
+  test('还有动作没做完：同样 5 分钟没操作才暂停，点过屏幕就重新计时', () async {
     final view = await setup(done: 1);
     final last = clock;
-    expect(autoEndAt(view: view, now: last.add(const Duration(minutes: 1, seconds: 59))), isNull);
-    expect(autoEndAt(view: view, now: last.add(const Duration(minutes: 2))), last);
-    final touch = last.add(const Duration(minutes: 1));
-    expect(autoEndAt(view: view, now: last.add(const Duration(minutes: 2)), lastTouch: touch), isNull);
-    expect(autoEndAt(view: view, now: touch.add(const Duration(minutes: 2)), lastTouch: touch), touch);
+    expect(autoPauseAt(view: view, now: last.add(const Duration(minutes: 4, seconds: 59))), isNull);
+    expect(autoPauseAt(view: view, now: last.add(const Duration(minutes: 5))), last);
+    final touch = last.add(const Duration(minutes: 3));
+    expect(autoPauseAt(view: view, now: last.add(const Duration(minutes: 5)), lastTouch: touch), isNull);
+    expect(autoPauseAt(view: view, now: touch.add(const Duration(minutes: 5)), lastTouch: touch), touch);
   });
 
-  test('一组都没完成：放宽到 10 分钟', () async {
+  test('一组都没完成：也是 5 分钟', () async {
     final view = await setup(done: 0);
     final last = view.workout.updatedAt;
-    expect(autoEndAt(view: view, now: last.add(const Duration(minutes: 9))), isNull);
-    expect(autoEndAt(view: view, now: last.add(const Duration(minutes: 10))), last);
+    expect(autoPauseAt(view: view, now: last.add(const Duration(minutes: 4))), isNull);
+    expect(autoPauseAt(view: view, now: last.add(const Duration(minutes: 5))), last);
   });
 
-  test('自动结束：时长只算到最后一次操作，扣掉多出来的空闲', () async {
-    final view = await setup();
-    final started = view.workout.startedAt;
+  test('自动暂停：时长只算到最后一次操作，没做完的组和动作都保留', () async {
+    final w = await repo.startWorkout();
+    final bench = await repo.addExercise(w.id, 'ex-bench', defaultSets: 3, exactSets: true);
+    await repo.addExercise(w.id, 'ex-squat', defaultSets: 2, exactSets: true);
+    final sets = (await repo.loadWorkout(w.id))!.exercises.firstWhere((b) => b.exercise.id == bench).sets;
+    await repo.updateSet(sets.first.id, weightKg: 60, reps: 10);
+    clock = clock.add(const Duration(minutes: 10));
+    await repo.setCompleted(sets.first.id, true);
     final end = clock; // 最后一次操作
-    clock = end.add(const Duration(minutes: 1)); // 过了 1 分钟才被发现
-    final s = await repo.finishWorkout(view.workout.id, endedAt: end, auto: true);
-    expect(s!.duration, end.difference(started));
+    clock = end.add(const Duration(minutes: 5)); // 过了 5 分钟才被发现
+
+    final s = await repo.pauseWorkout(w.id, endedAt: end);
+    expect(s!.paused, isTrue);
     expect(s.auto, isTrue);
-    final saved = (await repo.loadWorkout(view.workout.id))!.workout;
-    expect(saved.endedAt, end);
+    expect(s.duration, const Duration(minutes: 10));
+    expect(s.setCount, 1);
+    expect(s.unfinished, 4);
+
+    final saved = (await repo.loadWorkout(w.id))!;
+    expect(saved.workout.endedAt, end);
+    expect(saved.exercises, hasLength(2)); // 一个没做的深蹲也还在
+    expect(saved.exercises.expand((b) => b.sets), hasLength(5));
+    expect(saved.unfinishedCount, 4);
+    expect(await repo.activeWorkout(), isNull);
+
+    // 回来继续：原样接着练，时长不含暂停的时间
+    clock = clock.add(const Duration(minutes: 30));
+    final resumed = await repo.resumeWorkout(w.id);
+    expect(resumed, isNotNull);
+    expect(clock.difference(resumed!.startedAt), const Duration(minutes: 10));
+    final again = (await repo.loadWorkout(w.id))!;
+    expect(again.exercises.expand((b) => b.sets), hasLength(5));
+    expect(again.exercises.expand((b) => b.sets).where((x) => x.completed), hasLength(1));
+  });
+
+  test('自动暂停：一组都没做也不丢弃，回来还能继续', () async {
+    final w = await repo.startWorkout();
+    await repo.addExercise(w.id, 'ex-bench', defaultSets: 3, exactSets: true);
+    final end = clock;
+    clock = clock.add(const Duration(minutes: 5));
+    final s = await repo.pauseWorkout(w.id, endedAt: end);
+    expect(s, isNotNull);
+    expect(s!.setCount, 0);
+    final saved = (await repo.loadWorkout(w.id))!;
+    expect(saved.workout.deletedAt, isNull);
+    expect(saved.hasCompleted, isFalse);
+    expect(saved.exercises.single.sets, hasLength(3));
+    expect(await repo.resumeWorkout(w.id), isNotNull);
+  });
+
+  test('手动结束照旧：没做的组会被清掉', () async {
+    final view = await setup(done: 1);
+    final s = await repo.finishWorkout(view.workout.id);
+    expect(s!.paused, isFalse);
+    final saved = (await repo.loadWorkout(view.workout.id))!;
+    expect(saved.unfinishedCount, 0);
   });
 
   test('同一天继续训练：动作和组保留，计时接着走，不含中间停掉的时间', () async {
@@ -153,14 +199,14 @@ class _Host {
 }
 
 void hostTests() {
-  testWidgets('应用在前台：全部做完后 1 分钟没操作 → 自动结束，时长不含空闲，并跳到总结页', (tester) async {
+  testWidgets('应用在前台：5 分钟没操作 → 自动暂停，时长不含空闲，没做的组保留，并跳到总结页', (tester) async {
     final db = AppDatabase.forTesting(NativeDatabase.memory());
     addTearDown(db.close);
     var now = DateTime(2026, 11, 8, 9, 0);
     final repo = WorkoutRepository(db, userId: () => 'u1', now: () => now);
     final w = await repo.startWorkout();
-    await repo.addExercise(w.id, 'ex-bench', defaultSets: 1, exactSets: true);
-    final set = (await repo.loadWorkout(w.id))!.exercises.single.sets.single;
+    await repo.addExercise(w.id, 'ex-bench', defaultSets: 2, exactSets: true);
+    final set = (await repo.loadWorkout(w.id))!.exercises.single.sets.first;
     await repo.updateSet(set.id, weightKg: 50, reps: 8);
     now = DateTime(2026, 11, 8, 9, 10);
     await repo.setCompleted(set.id, true); // 最后一次操作 09:10
@@ -173,9 +219,14 @@ void hostTests() {
     ]);
     await tester.pumpWidget(_Host.build(db: db, repo: repo, clock: () => now, router: router));
     await tester.pump(const Duration(seconds: 2));
-    expect((await repo.activeWorkout())?.id, w.id); // 才过了几秒，不会结束
+    expect((await repo.activeWorkout())?.id, w.id); // 才过了几秒，不会暂停
 
-    now = DateTime(2026, 11, 8, 9, 11, 5); // 空闲 65 秒
+    now = DateTime(2026, 11, 8, 9, 14, 50); // 空闲 4 分 50 秒，还不到
+    await tester.pump(const Duration(seconds: 2));
+    await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 100)));
+    expect((await repo.activeWorkout())?.id, w.id);
+
+    now = DateTime(2026, 11, 8, 9, 15, 5); // 空闲 5 分 5 秒
     await tester.pump(const Duration(seconds: 2));
     await tester.pump(const Duration(milliseconds: 200));
     await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 200)));
@@ -184,6 +235,7 @@ void hostTests() {
     expect(await repo.activeWorkout(), isNull);
     final saved = (await repo.loadWorkout(w.id))!.workout;
     expect(saved.endedAt, DateTime(2026, 11, 8, 9, 10));
+    expect((await repo.loadWorkout(w.id))!.unfinishedCount, 1); // 没做的第 2 组还在
     expect(find.text('总结页'), findsOneWidget);
     await tester.pumpWidget(const SizedBox());
     await tester.pump(const Duration(milliseconds: 10));
