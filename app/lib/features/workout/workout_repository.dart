@@ -185,6 +185,12 @@ class WorkoutRepository {
         WorkoutExercisesCompanion(section: Value(section), updatedAt: Value(_now()), dirty: const Value(true)));
   }
 
+  /// 训练中改某个动作的组间休息（秒）；之后每组完成都按新的时间倒计时。
+  Future<void> setRestSec(String workoutExerciseId, int restSec) async {
+    await (_db.update(_db.workoutExercises)..where((e) => e.id.equals(workoutExerciseId))).write(
+        WorkoutExercisesCompanion(restSec: Value(restSec.clamp(0, 3600)), updatedAt: Value(_now()), dirty: const Value(true)));
+  }
+
   /// 训练中把动作在「按次数 / 按时间」之间切换后，给还没完成的组补上对应的目标量。
   Future<void> retargetSets(String workoutExerciseId, {required bool timed, int? seconds, int? reps}) async {
     final t = _now();

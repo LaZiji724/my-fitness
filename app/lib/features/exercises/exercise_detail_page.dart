@@ -251,7 +251,7 @@ class _Section extends StatelessWidget {
 }
 
 /// 动作的设置块：放进哪个模块、按次数还是按时间、组数、次数或秒数、负重。
-/// 添加动作时叫「加入设置」；修改模板里已有的动作时还多出热身组和组间休息。
+/// 添加动作时叫「加入设置」；修改模板里已有的动作时还多出热身组。组间休息两种情况都能调。
 class _DosePanel extends StatelessWidget {
   const _DosePanel({
     required this.exercise,
@@ -350,26 +350,25 @@ class _DosePanel extends StatelessWidget {
               value: dose.weightKg,
               onChanged: (v) => onChanged(v == null ? dose.copyWith(clearWeight: true) : dose.copyWith(weightKg: v)),
             ),
-          if (isEditing) ...[
-            if (!dose.timed)
-              StepperField(
-                label: '热身组',
-                value: dose.warmupSets ?? 0,
-                min: 0,
-                max: 10,
-                unit: ' 组',
-                onChanged: (v) => onChanged(dose.copyWith(warmupSets: v)),
-              ),
+          if (isEditing && !dose.timed)
             StepperField(
-              label: '组间休息',
-              value: dose.restSec ?? 90,
+              label: '热身组',
+              value: dose.warmupSets ?? 0,
               min: 0,
-              max: 600,
-              step: 15,
-              unit: ' 秒',
-              onChanged: (v) => onChanged(dose.copyWith(restSec: v)),
+              max: 10,
+              unit: ' 组',
+              onChanged: (v) => onChanged(dose.copyWith(warmupSets: v)),
             ),
-          ],
+          // 添加动作和修改已有动作都能调组间休息
+          StepperField(
+            label: '组间休息',
+            value: dose.restSec ?? 90,
+            min: 0,
+            max: 600,
+            step: 15,
+            unit: ' 秒',
+            onChanged: (v) => onChanged(dose.copyWith(restSec: v)),
+          ),
           const SizedBox(height: AppSpace.s8),
           Text(
             _summary(exercise, dose, adding: !isEditing),
