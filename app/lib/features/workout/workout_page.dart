@@ -14,6 +14,7 @@ import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_image.dart';
 import 'package:my_fitness/features/exercises/exercise_prefs.dart';
+import 'package:my_fitness/features/plan/plan_widgets.dart' show StepperField;
 import 'package:my_fitness/features/workout/number_pad_sheet.dart';
 import 'package:my_fitness/features/workout/set_timer.dart';
 import 'package:my_fitness/features/workout/workout_math.dart';
@@ -428,7 +429,11 @@ class _ExerciseCard extends ConsumerWidget {
               runSpacing: 8,
               children: [
                 _InfoChip(label: '上次', value: last.isEmpty ? '暂无记录' : last.map(_setText).join('  '), numeric: last.isNotEmpty),
-                _InfoChip(label: '休息', value: '$restSec 秒'),
+                _InfoChip(
+                  label: '休息',
+                  value: '$restSec 秒',
+                  onTap: () => _editRest(context, repo, block.exercise.id, restSec),
+                ),
               ],
             ),
             if (block.exercise.note != null && block.exercise.note!.trim().isNotEmpty) ...[
@@ -477,16 +482,72 @@ class _ExerciseCard extends ConsumerWidget {
   }
 }
 
-class _InfoChip extends StatelessWidget {
-  const _InfoChip({required this.label, required this.value, this.numeric = false});
-  final String label;
-  final String value;
-  final bool numeric;
+/// 训练中改这个动作的组间休息：弹出步进器，改动立刻保存，之后每组完成都按新时间倒计时。
+Future<void> _editRest(BuildContext context, WorkoutRepository repo, String workoutExerciseId, int restSec) =>
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (_) => _RestSheet(repo: repo, workoutExerciseId: workoutExerciseId, restSec: restSec),
+    );
+
+class _RestSheet extends StatefulWidget {
+  const _RestSheet({required this.repo, required this.workoutExerciseId, required this.restSec});
+  final WorkoutRepository repo;
+  final String workoutExerciseId;
+  final int restSec;
+
+  @override
+  State<_RestSheet> createState() => _RestSheetState();
+}
+
+class _RestSheetState extends State<_RestSheet> {
+  late int _rest = widget.restSec;
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
-    return Container(
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(AppSpace.pageGutter, AppSpace.s16, AppSpace.pageGutter, AppSpace.s16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('组间休息', style: AppText.titleSmall.copyWith(color: c.text)),
+            const SizedBox(height: AppSpace.s4),
+            Text('只改这个动作，每组完成后按新时间倒计时', style: AppText.label.copyWith(color: c.text2)),
+            const SizedBox(height: AppSpace.s8),
+            StepperField(
+              label: '休息时间',
+              value: _rest,
+              min: 0,
+              max: 600,
+              step: 15,
+              unit: ' 秒',
+              onChanged: (v) {
+                setState(() => _rest = v);
+                widget.repo.setRestSec(widget.workoutExerciseId, v);
+              },
+            ),
+            const SizedBox(height: AppSpace.s12),
+            FilledButton(onPressed: () => Navigator.pop(context), child: const Text('完成')),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _InfoChip extends StatelessWidget {
+  const _InfoChip({required this.label, required this.value, this.numeric = false, this.onTap});
+  final String label;
+  final String value;
+  final bool numeric;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    final chip = Container(
       constraints: const BoxConstraints(minHeight: 28),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(color: c.text.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(AppRadius.sm)),
@@ -498,7 +559,17 @@ class _InfoChip extends StatelessWidget {
               ? AppText.numSmall.copyWith(color: c.text2, fontSize: 14, fontWeight: FontWeight.w500)
               : AppText.caption.copyWith(color: c.text2, fontWeight: FontWeight.w500),
         ),
+        if (onTap != null) WidgetSpan(alignment: PlaceholderAlignment.middle, child: Padding(
+          padding: const EdgeInsets.only(left: 4),
+          child: Icon(AppIcons.edit, size: 12, color: c.text3),
+        )),
       ])),
+    );
+    if (onTap == null) return chip;
+    return Semantics(
+      button: true,
+      label: '修改$label',
+      child: InkWell(borderRadius: BorderRadius.circular(AppRadius.sm), onTap: onTap, child: chip),
     );
   }
 }

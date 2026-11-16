@@ -56,6 +56,7 @@ class WorkoutPickDetailPage extends ConsumerWidget {
                 defaultReps: dose.timed ? null : dose.reps,
                 defaultDurationSec: dose.timed ? dose.seconds : null,
                 defaultWeightKg: dose.weightKg,
+                restSec: dose.restSec,
                 tracking: dose.timed ? TrackingType.duration : exercise.repsVariant,
                 fallbackReps: exercise.defaultReps,
                 fallbackSeconds: exercise.defaultSeconds,

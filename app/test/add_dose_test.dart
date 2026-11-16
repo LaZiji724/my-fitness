@@ -65,6 +65,25 @@ void main() {
     expect(e.targetWeightKg, isNull);
   });
 
+  test('添加动作时设的组间休息：写进模板，也写进训练；训练中还能再改', () async {
+    final id = await plans.createTemplate('休息');
+    await plans.addTemplateExercise(
+      id,
+      bench.id,
+      exercise: bench,
+      dose: const ExerciseDose(section: WorkoutSection.main, timed: false, sets: 3, reps: 8, seconds: 30, restSec: 150),
+    );
+    expect((await plans.getTemplate(id))!.exercises.single.restSec, 150);
+
+    final w = await workouts.startWorkout();
+    final weId = await workouts.addExercise(w.id, bench.id, restSec: 120);
+    var ex = (await workouts.loadWorkout(w.id))!.exercises.single.exercise;
+    expect(ex.restSec, 120);
+    await workouts.setRestSec(weId, 45);
+    ex = (await workouts.loadWorkout(w.id))!.exercises.single.exercise;
+    expect(ex.restSec, 45);
+  });
+
   test('不传 dose 时行为和以前一样（正式训练、不设负重）', () async {
     final id = await plans.createTemplate('旧');
     await plans.addTemplateExercise(id, bench.id, exercise: bench);

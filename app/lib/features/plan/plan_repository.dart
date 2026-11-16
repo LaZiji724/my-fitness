@@ -148,6 +148,7 @@ class PlanRepository {
           repsMax: timed ? const Value(null) : Value(reps ?? 12),
           targetDurationSec: timed ? Value(dose?.seconds ?? exercise?.defaultSeconds ?? 30) : const Value(null),
           targetWeightKg: Value(dose?.weightKg),
+          restSec: Value(dose?.restSec?.clamp(0, 3600)),
         ));
     await _touchTemplate(templateId, t);
   }
