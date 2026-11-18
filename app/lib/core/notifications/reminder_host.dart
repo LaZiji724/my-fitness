@@ -18,7 +18,7 @@ import 'package:my_fitness/features/workout/workout_providers.dart';
 ///   能不能来得及登记；停止/结束/跳过时取消。
 /// 回到前台时还会补上后台期间已经结束的动作计时。
 ///
-/// 组间休息结束一定响铃：
+/// 组间休息结束、动作计时（按时间记的动作）结束，都一定响铃（同一个铃声）：
 /// - 应用在前台（在哪个页面都一样）：安卓由应用自己放铃声；iOS 由提前登记的通知放铃声。
 /// - 退到后台或熄屏：到点弹出的通知自带同一个铃声。
 class ReminderHost extends ConsumerStatefulWidget {
@@ -34,6 +34,9 @@ class _ReminderHostState extends ConsumerState<ReminderHost> with WidgetsBinding
   bool _asked = false;
   Timer? _bellTimer;
   DateTime? _rungFor; // 已经响过铃的那次休息（按结束时刻区分），免得重复响
+  Timer? _setBellTimer;
+  DateTime? _setBellEndsAt; // 当前给哪一次动作计时定了铃
+  DateTime? _setRungFor; // 已经响过铃的那次动作计时
 
   @override
   void initState() {
@@ -44,6 +47,7 @@ class _ReminderHostState extends ConsumerState<ReminderHost> with WidgetsBinding
   @override
   void dispose() {
     _bellTimer?.cancel();
+    _setBellTimer?.cancel();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
@@ -74,6 +78,45 @@ class _ReminderHostState extends ConsumerState<ReminderHost> with WidgetsBinding
     ref.read(restBellProvider).ring();
   }
 
+  /// 动作计时（按时间记的动作）：应用在前台时，到点响铃。
+  /// 计时到点后状态会立刻被清掉（这一组打勾、转入休息），所以铃声按定闹钟时记下的结束时刻来响，
+  /// 不再回头看状态；只有计时被手动停止（还没到点）才取消。
+  void _armSetBell() {
+    final set = ref.read(setTimerProvider);
+    if (set == null) {
+      final ends = _setBellEndsAt;
+      // 没到点就没了 = 手动停止，不响；到点时留给已经定好的闹钟去响
+      if (ends != null && ends.isAfter(_now())) _cancelSetBell();
+      return;
+    }
+    if (_setBellEndsAt == set.endsAt) return;
+    _cancelSetBell();
+    if (_background || _setRungFor == set.endsAt) return;
+    if (!ref.read(restBellProvider).ringsInApp) return;
+    final left = set.endsAt.difference(_now());
+    if (left.isNegative) return;
+    _setBellEndsAt = set.endsAt;
+    _setBellTimer = Timer(left, () => _ringSetIfDue(set.endsAt));
+  }
+
+  void _cancelSetBell() {
+    _setBellTimer?.cancel();
+    _setBellTimer = null;
+    _setBellEndsAt = null;
+  }
+
+  void _ringSetIfDue(DateTime endsAt) {
+    if (!mounted || _background || _setBellEndsAt != endsAt || _setRungFor == endsAt) return;
+    if (endsAt.isAfter(_now())) {
+      _setBellTimer = Timer(endsAt.difference(_now()), () => _ringSetIfDue(endsAt));
+      return;
+    }
+    _setRungFor = endsAt;
+    _setBellEndsAt = null;
+    _setBellTimer = null;
+    ref.read(restBellProvider).ring();
+  }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
@@ -82,6 +125,7 @@ class _ReminderHostState extends ConsumerState<ReminderHost> with WidgetsBinding
         if (!_background) {
           _background = true;
           _bellTimer?.cancel(); // 后台交给带铃声的通知
+          _cancelSetBell();
           _sync();
         }
       case AppLifecycleState.resumed:
@@ -91,6 +135,7 @@ class _ReminderHostState extends ConsumerState<ReminderHost> with WidgetsBinding
           ref.read(setTimerProvider.notifier).finishIfDue();
           _sync(); // iOS：还在倒数的要重新登记
           _armBell();
+          _armSetBell();
         }
       case AppLifecycleState.inactive:
       case AppLifecycleState.detached:
@@ -116,7 +161,8 @@ class _ReminderHostState extends ConsumerState<ReminderHost> with WidgetsBinding
 
     final set = ref.read(setTimerProvider);
     apply(kSetTimerReminderId, set?.endsAt, '计时结束',
-        set == null ? '' : '${set.label} 完成了，休息一下');
+        set == null ? '' : '${set.label} 完成了，休息一下',
+        bell: true);
     final rest = ref.read(restTimerProvider);
     apply(kRestReminderId, rest?.endsAt, '休息结束', '该开始下一组了', bell: true);
   }
@@ -135,6 +181,7 @@ class _ReminderHostState extends ConsumerState<ReminderHost> with WidgetsBinding
     ref.listen(setTimerProvider, (prev, next) {
       if (prev == null && next != null) _askPermission();
       _sync();
+      _armSetBell();
     });
     ref.listen(restTimerProvider, (prev, next) {
       if (prev == null && next != null) _askPermission();
