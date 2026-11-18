@@ -13,6 +13,7 @@ import 'package:my_fitness/core/notifications/rest_bell.dart';
 import 'package:my_fitness/core/theme/app_theme.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercise_repository.dart';
+import 'package:my_fitness/features/workout/set_timer.dart';
 import 'package:my_fitness/features/workout/workout_page.dart';
 import 'package:my_fitness/features/workout/workout_providers.dart';
 import 'package:my_fitness/features/workout/workout_repository.dart';
@@ -352,7 +353,35 @@ void main() {
     expect(bell.rings, 1);
   });
 
-  testWidgets('动作计时的通知不用休息铃声', (tester) async {
+  testWidgets('动作计时结束：应用在前台响一次铃，手动停止不响', (tester) async {
+    await timedWorkout();
+    await tester.pumpWidget(host(const WorkoutPage()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('开始'));
+    await tester.pump();
+    await advance(tester, 29);
+    expect(bell.rings, 0);
+    await advance(tester, 1);
+    await tester.pumpAndSettle();
+    expect(bell.rings, 1);
+    await advance(tester, 5);
+    expect(bell.rings, 1); // 只响一次
+
+    // 再来一组：中途点停止，不响
+    final container = ProviderScope.containerOf(tester.element(find.byType(WorkoutPage)));
+    container.read(restTimerProvider.notifier).skip();
+    container.read(setTimerProvider.notifier).start(
+        setId: 'x', label: '平板支撑 第 2 组', seconds: 30, restSec: 60);
+    await tester.pump();
+    await advance(tester, 10);
+    container.read(setTimerProvider.notifier).cancel();
+    await tester.pump();
+    await advance(tester, 60);
+    expect(bell.rings, 1);
+  });
+
+  testWidgets('动作计时的通知也带铃声', (tester) async {
     await timedWorkout();
     await tester.pumpWidget(host(const WorkoutPage()));
     await tester.pumpAndSettle();
@@ -360,7 +389,7 @@ void main() {
     await tester.pump();
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
     await tester.pump();
-    expect(scheduler.scheduled.singleWhere((s) => s.id == kSetTimerReminderId).bell, isFalse);
+    expect(scheduler.scheduled.singleWhere((s) => s.id == kSetTimerReminderId).bell, isTrue);
     tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
     await tester.pump();
   });
