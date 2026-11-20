@@ -62,7 +62,8 @@ class _FakeBell implements RestBell {
   int rings = 0;
 
   @override
-  bool get ringsInApp => defaultTargetPlatform == TargetPlatform.android;
+  bool get ringsInApp =>
+      defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS;
 
   @override
   Future<void> ring() async => rings++;
@@ -452,10 +453,10 @@ void main() {
       await tester.pump();
       expect(scheduler.scheduled.map((s) => s.id), contains(kRestReminderId));
       expect(scheduler.scheduled.last.at, now.add(const Duration(seconds: 60)));
-      // iPhone：铃声由这条通知在前台放，应用自己不再响一遍
+      // iPhone：这条通知在前台不出声（presentSound=false），前台由应用自己用媒体通道响一次
       expect(scheduler.scheduled.last.bell, isTrue);
       await advance(tester, 61);
-      expect(bell.rings, 0);
+      expect(bell.rings, 1);
     });
   });
 }

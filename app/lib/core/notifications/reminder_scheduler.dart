@@ -12,7 +12,7 @@ abstract class ReminderScheduler {
   Future<bool> requestPermission();
 
   /// 在 [at] 时刻弹出通知；同一个 [id] 重复调用会覆盖上一次。
-  /// [bell] 为 true 时用休息结束的铃声（安卓走闹钟音量，静音模式下也会响）。
+  /// [bell] 为 true 时用休息结束的铃声（安卓走媒体音量；退后台时的 iPhone 通知声音受系统静音开关控制）。
   /// 成功返回 null，失败返回原因。
   Future<String?> schedule({
     required int id,
@@ -68,10 +68,11 @@ class LocalNotificationScheduler implements ReminderScheduler {
     ),
   );
 
-  /// 休息结束：单独一个通知渠道，带铃声。
-  /// 安卓的渠道一旦建好，声音就改不了了，所以铃声用新的渠道 id，不去改原来的 timer_done。
-  /// 声音走「闹钟」用途：手机调成静音 / 振动时也会响（和闹钟一样，跟闹钟音量走）。
-  static const _bellChannelId = 'rest_bell';
+  /// 休息 / 动作计时结束：单独一个通知渠道，带铃声。
+  /// 安卓的渠道一旦建好，声音就改不了了，所以改用途时换新的渠道 id（旧的 rest_bell 是「闹钟」用途，不再使用）。
+  /// 声音走「媒体」用途：音量跟媒体音量，不再受铃声 / 静音模式限制；
+  /// 正在放的音乐由系统自动压低，铃声结束后恢复。
+  static const _bellChannelId = 'rest_bell_media';
   static const _bellDetails = NotificationDetails(
     android: AndroidNotificationDetails(
       _bellChannelId,
@@ -83,16 +84,17 @@ class LocalNotificationScheduler implements ReminderScheduler {
       visibility: NotificationVisibility.public,
       playSound: true,
       sound: RawResourceAndroidNotificationSound('rest_bell'),
-      audioAttributesUsage: AudioAttributesUsage.alarm,
+      audioAttributesUsage: AudioAttributesUsage.media,
       enableVibration: true,
       autoCancel: true,
     ),
-    // iOS 在前台也会放这个铃声（presentSound），所以应用开着的时候休息结束也会响
+    // iOS：presentSound=false 只表示「应用在前台时通知不出声」（前台由应用自己用媒体通道放，
+    // 才能无视静音开关并压低音乐）；退到后台时通知仍带着 rest_bell.wav 响。
     iOS: DarwinNotificationDetails(
       presentAlert: false,
       presentBanner: false,
       presentList: false,
-      presentSound: true,
+      presentSound: false,
       presentBadge: false,
       sound: 'rest_bell.wav',
     ),
