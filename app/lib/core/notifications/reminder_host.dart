@@ -19,8 +19,11 @@ import 'package:my_fitness/features/workout/workout_providers.dart';
 /// 回到前台时还会补上后台期间已经结束的动作计时。
 ///
 /// 组间休息结束、动作计时（按时间记的动作）结束，都一定响铃（同一个铃声）：
-/// - 应用在前台（在哪个页面都一样）：安卓由应用自己放铃声；iOS 由提前登记的通知放铃声。
-/// - 退到后台或熄屏：到点弹出的通知自带同一个铃声。
+/// - 应用在前台（在哪个页面都一样）：应用自己用「媒体」通道放铃声（安卓、iPhone 一样）：
+///   音量跟媒体音量，静音也能听到，比平时小一点点；正在放的音乐只会被压低，不会被打断。
+///   iPhone 提前登记的通知在前台不出声，免得响两遍。
+/// - 退到后台或熄屏：到点弹出的通知自带同一个铃声（安卓用媒体用途的渠道；
+///   iPhone 的通知声音由系统控制，会受静音开关影响）。
 class ReminderHost extends ConsumerStatefulWidget {
   const ReminderHost({super.key, required this.child});
   final Widget child;
