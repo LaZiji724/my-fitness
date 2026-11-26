@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:my_fitness/features/library/library_providers.dart';
 import 'package:my_fitness/features/library/library_repository.dart';
 import 'package:my_fitness/features/library/program.dart';
+import 'package:my_fitness/features/plan/plan_math.dart';
 import 'package:my_fitness/features/plan/plan_providers.dart';
+import 'package:my_fitness/features/plan/start_date_sheet.dart';
 import 'package:my_fitness/features/plan/plan_widgets.dart';
 import 'package:my_fitness/features/workout/workout_providers.dart';
 
@@ -63,15 +65,12 @@ Future<void> joinProgram(BuildContext context, WidgetRef ref, Program program) a
 
 /// 「添加到日历」：选开始日期，把计划设为当前计划，日历与首页按周安排显示每天练什么。
 Future<void> addProgramToCalendar(BuildContext context, WidgetRef ref, Program program) async {
-  final today = ref.read(todayProvider);
-  final picked = await showDatePicker(
-    context: context,
-    initialDate: today,
-    firstDate: today.subtract(const Duration(days: 30)),
-    lastDate: today.add(const Duration(days: 365)),
-    helpText: '选择开始的那一周',
-    confirmText: '确定',
-    cancelText: '取消',
+  final picked = await showStartDateSheet(
+    context,
+    today: ref.read(todayProvider),
+    planName: program.name,
+    alignToMonday: true,
+    confirmLabel: '添加到日历',
   );
   if (picked == null || !context.mounted) return;
 
@@ -91,7 +90,7 @@ Future<void> addProgramToCalendar(BuildContext context, WidgetRef ref, Program p
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
     ..showSnackBar(SnackBar(
-      content: Text('已添加到日历：从 ${picked.month} 月 ${picked.day} 日所在的周开始，按周一至周日安排'),
+      content: Text('已添加到日历：从 ${startDateLabel(mondayOf(picked))} 开始，按周一至周日安排'),
       action: SnackBarAction(label: '看日历', onPressed: () => context.go('/calendar')),
     ));
 }

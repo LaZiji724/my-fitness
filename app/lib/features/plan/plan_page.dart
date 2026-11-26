@@ -12,6 +12,7 @@ import 'package:my_fitness/features/plan/plan_math.dart';
 import 'package:my_fitness/features/plan/plan_estimate.dart';
 import 'package:my_fitness/features/plan/plan_providers.dart';
 import 'package:my_fitness/features/plan/plan_repository.dart';
+import 'package:my_fitness/features/plan/start_date_sheet.dart';
 import 'package:my_fitness/features/plan/plan_widgets.dart';
 import 'package:my_fitness/features/exercises/exercise.dart';
 import 'package:my_fitness/features/exercises/exercises_page.dart' show ExercisesBody;
@@ -304,7 +305,7 @@ class _PlanRow extends ConsumerWidget {
           const SizedBox(width: AppSpace.s8),
           PressScale(
             child: OutlinedButton(
-              onPressed: () => ref.read(planRepositoryProvider).activatePlan(plan.plan.id),
+              onPressed: () => activatePlanWithStartDate(context, ref, plan),
               child: const Text('设为当前'),
             ),
           ),

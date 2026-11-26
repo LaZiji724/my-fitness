@@ -9,6 +9,7 @@ import 'package:my_fitness/core/widgets/press_scale.dart';
 import 'package:my_fitness/features/plan/plan_providers.dart';
 import 'package:my_fitness/features/plan/plan_repository.dart';
 import 'package:my_fitness/features/plan/plan_widgets.dart';
+import 'package:my_fitness/features/plan/start_date_sheet.dart';
 
 /// 编辑计划：改名、循环天数、每一天练哪个模板，并可设为当前计划。
 class PlanEditPage extends ConsumerWidget {
@@ -192,8 +193,8 @@ class PlanEditPage extends ConsumerWidget {
             : PressScale(
                 child: FilledButton(
                   style: const ButtonStyle(minimumSize: WidgetStatePropertyAll(Size.fromHeight(AppSize.buttonLarge))),
-                  onPressed: () => repo.activatePlan(planId),
-                  child: const Text('设为当前计划（从今天开始）'),
+                  onPressed: () => activatePlanWithStartDate(context, ref, plan),
+                  child: const Text('设为当前计划'),
                 ),
               ),
       ),
